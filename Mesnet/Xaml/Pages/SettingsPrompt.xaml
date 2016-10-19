@@ -1,0 +1,16 @@
+﻿<Window x:Class="Mesnet.Xaml.Pages.SettingsPrompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="{DynamicResource settings}" Height="300" Width="300" Icon="/Assets/applogo.ico" WindowStartupLocation="CenterOwner">
+    <StackPanel>
+        <GroupBox Header="{DynamicResource applang}" Margin="5,10,5,0" >
+            <StackPanel>
+                <RadioButton x:Name="englishbtn" Content="English" FontSize="15" Margin="10" Checked="englishbtn_Checked"/>
+                <RadioButton x:Name="turkishbtn" Content="Türkçe" FontSize="15" Margin="10" Checked="turkishbtn_Checked"/>
+            </StackPanel>
+        </GroupBox>
+    </StackPanel>
+</Window>

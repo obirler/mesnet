@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F5B8C086-AE3F-4896-97AA-2C26E40C8CB1}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mesnet</RootNamespace>
+    <AssemblyName>Mesnet</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="ZoomAndPan">
+      <HintPath>..\..\Mes.Net\ZoomAndPan.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Xaml\Pages\BeamPrompt.xaml.cs">
+      <DependentUpon>BeamPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\ConcentratedLoadPrompt.xaml.cs">
+      <DependentUpon>ConcentratedLoadPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\CrossSolve.xaml.cs">
+      <DependentUpon>CrossSolve.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\DistributedLoadPrompt.xaml.cs">
+      <DependentUpon>DistributedLoadPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\RotatePrompt.xaml.cs">
+      <DependentUpon>RotatePrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\SettingsPrompt.xaml.cs">
+      <DependentUpon>SettingsPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Inertia.xaml.cs">
+      <DependentUpon>Inertia.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\BasicSupport.xaml.cs">
+      <DependentUpon>BasicSupport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\BasicSupportItem.xaml.cs">
+      <DependentUpon>BasicSupportItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Beam.xaml.cs">
+      <DependentUpon>Beam.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\BeamItem.xaml.cs">
+      <DependentUpon>BeamItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ButtonItem.xaml.cs">
+      <DependentUpon>ButtonItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ConcentratedLoad.xaml.cs">
+      <DependentUpon>ConcentratedLoad.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ConcentratedLoadFunction.xaml.cs">
+      <DependentUpon>ConcentratedLoadFunction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ConcentratedLoadItem.xaml.cs">
+      <DependentUpon>ConcentratedLoadItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Deflection.xaml.cs">
+      <DependentUpon>Deflection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\DistributedLoad.xaml.cs">
+      <DependentUpon>DistributedLoad.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\DistributedLoadItem.xaml.cs">
+      <DependentUpon>DistributedLoadItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ElasticityItem.xaml.cs">
+      <DependentUpon>ElasticityItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\endcircle.xaml.cs">
+      <DependentUpon>endcircle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Force.xaml.cs">
+      <DependentUpon>Force.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ForceExplorer.xaml.cs">
+      <DependentUpon>ForceExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\ForceItem.xaml.cs">
+      <DependentUpon>ForceItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\InertiaFunction.xaml.cs">
+      <DependentUpon>InertiaFunction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\InertiaItem.xaml.cs">
+      <DependentUpon>InertiaItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Information.xaml.cs">
+      <DependentUpon>Information.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\LeftFixedSupport.xaml.cs">
+      <DependentUpon>LeftFixedSupport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\LeftFixedSupportItem.xaml.cs">
+      <DependentUpon>LeftFixedSupportItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\LengthItem.xaml.cs">
+      <DependentUpon>LengthItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\LoadFunction.xaml.cs">
+      <DependentUpon>LoadFunction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\LoadItem.xaml.cs">
+      <DependentUpon>LoadItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Moment.xaml.cs">
+      <DependentUpon>Moment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\MomentExplorer.xaml.cs">
+      <DependentUpon>MomentExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\MomentItem.xaml.cs">
+      <DependentUpon>MomentItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\RightFixedSupport.xaml.cs">
+      <DependentUpon>RightFixedSupport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\RightFixedSupportItem.xaml.cs">
+      <DependentUpon>RightFixedSupportItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\SlidingSupport.xaml.cs">
+      <DependentUpon>SlidingSupport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\SlidingSupportItem.xaml.cs">
+      <DependentUpon>SlidingSupportItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Stress.xaml.cs">
+      <DependentUpon>Stress.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\StressExplorer.xaml.cs">
+      <DependentUpon>StressExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\StressItem.xaml.cs">
+      <DependentUpon>StressItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\User Controls\Text.xaml.cs">
+      <DependentUpon>Text.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Global.cs" />
+    <Compile Include="Classes\Math\Algebra.cs" />
+    <Compile Include="Classes\Math\ConjugatePoly.cs" />
+    <Compile Include="Classes\Math\ConjugateTerm.cs" />
+    <Compile Include="Classes\Math\ConjugateTermCollection.cs" />
+    <Compile Include="Classes\Math\dijkstras.cs" />
+    <Compile Include="Classes\Math\DotCollection.cs" />
+    <Compile Include="Classes\Math\PiecewiseConjugatePoly.cs" />
+    <Compile Include="Classes\Math\PiecewisePoly.cs" />
+    <Compile Include="Classes\Math\Poly.cs" />
+    <Compile Include="Classes\Math\SimpsonIntegrator.cs" />
+    <Compile Include="Classes\Math\Term.cs" />
+    <Compile Include="Classes\Math\TermCollection.cs" />
+    <Compile Include="Classes\Math\TPolygon.cs" />
+    <Compile Include="Classes\Math\TransformGeometry.cs" />
+    <Compile Include="Classes\Math\TrapezeIntegrator.cs" />
+    <Compile Include="Classes\Math\Triangle.cs" />
+    <Compile Include="Classes\Tools\Logger.cs" />
+    <Compile Include="Classes\Tools\Member.cs" />
+    <Compile Include="Classes\Tools\MyDebug.cs" />
+    <Compile Include="Classes\Ui\CardinalSplineShape.cs" />
+    <Compile Include="Classes\Ui\DragCanvas.cs" />
+    <Compile Include="Classes\Ui\MouseHandlingMode.cs" />
+    <Compile Include="Classes\Ui\ScaleToPercentConverter.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Xaml\Pages\BeamPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\ConcentratedLoadPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\CrossSolve.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\DistributedLoadPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\RotatePrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\SettingsPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Inertia.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Resources\LanguageEn.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Xaml\Resources\LanguageTr.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Xaml\User Controls\BasicSupport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\BasicSupportItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Beam.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\BeamItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ButtonItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ConcentratedLoad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ConcentratedLoadFunction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ConcentratedLoadItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Deflection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\DistributedLoad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\DistributedLoadItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ElasticityItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\endcircle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Force.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ForceExplorer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\ForceItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\InertiaFunction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\InertiaItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Information.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\LeftFixedSupport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\LeftFixedSupportItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\LengthItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\LoadFunction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\LoadItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Moment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\MomentExplorer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\MomentItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\RightFixedSupport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\RightFixedSupportItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\SlidingSupport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\SlidingSupportItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Stress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\StressExplorer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\StressItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\Text.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\Som\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\applogo.ico" />
+    <Resource Include="Assets\moment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="logomsmall.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

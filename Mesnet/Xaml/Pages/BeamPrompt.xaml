@@ -1,0 +1,463 @@
+﻿<Window x:Class="Mesnet.Xaml.Pages.BeamPrompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:Mesnet.Classes.Ui"
+        mc:Ignorable="d"
+        Title="{DynamicResource addbeam}" Height="450" Icon="/Assets/applogo.ico" Width="580" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320*"/>
+            <ColumnDefinition Width="225*"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Visible">
+            <StackPanel Grid.Column="0" Width="320">
+
+                <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
+
+                    <TextBlock Text="{DynamicResource beamlength}" VerticalAlignment="Center"/>
+                    <TextBox x:Name="length" Text="1" Width="40" Height="21" TextAlignment="Center" Margin="5,0,5,2" LostFocus="length_LostFocus" Background="White" TabIndex="0" GotFocus="length_GotFocus"/>
+                    <TextBlock Text="m" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
+                    <TextBlock Text="{DynamicResource elasticitymodulus}" VerticalAlignment="Center"/>
+                    <TextBox x:Name="elasticitymodulus" Text="200" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="elasticitymodulus_LostFocus" TabIndex="1" GotFocus="elasticitymodulus_GotFocus"/>
+                    <TextBlock Text="GPa" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
+                    <TextBlock Text="{DynamicResource angle}" VerticalAlignment="Center"/>
+                    <TextBox x:Name="angletbx" Text="0" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
+                    <TextBlock Text="Degree" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <CheckBox x:Name="stresscbx" Content="{DynamicResource performstressanalalysis}" Margin="10,10,0,5" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+
+                <StackPanel x:Name="maxstressstk" Visibility="Collapsed" Orientation="Horizontal" Height="23" Margin="10,5,0,0" HorizontalAlignment="Left">
+                    <TextBlock Text="{DynamicResource maxstress}" VerticalAlignment="Center"/>
+                    <TextBox x:Name="maxstresstbx" Text="0" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
+                    <TextBlock Text="MPa" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <Border Height="1"  BorderThickness="0,1,0,0" BorderBrush="#FFC3C2C2" Background="#FFE1E1E1" Margin="0,5,0,5"/>
+
+                <Expander x:Name="uiexpand" Margin="5,5,0,5" Header="{DynamicResource uniforminertia}" Width="300" IsExpanded="true" Expanded="uiexpand_Expanded" >
+
+                    <StackPanel Orientation="Vertical" Background="#FFDADADA" Margin="5,0,0,0">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Height="90" Margin="10,5,0,0" VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="49,-7,53,67">
+                                    <TextBlock Text="I" FontSize="20"/>
+                                    <TextBlock Text="0" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+
+                                <Grid Margin="0,18,0,17" Height="45">
+                                    <Polygon Points="2,2 104,2 104,4 2,4" Fill="Black"/>
+
+                                    <Polygon Points="2,4 4,4 4,40 2,40" Fill="Black"/>
+
+                                    <Polygon Points="102,4 104,4 104,40 102,40" Fill="Black"/>
+
+                                    <Polygon Points="0,40 110,40 110,38 120,41 110,44 110,42 0,42" Fill="Black"/>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="0,60,105,0">
+                                    <TextBlock Text="x" FontSize="20"/>
+                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="95,60,10,0">
+                                    <TextBlock Text="x" FontSize="20"/>
+                                    <TextBlock Text="2" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="I" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="0" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="ui" Text="1" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="uix1" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="uix2" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <StackPanel x:Name="uistressanalyzestk" Visibility="Collapsed" Orientation="Horizontal">
+
+                            <Grid Height="55" Margin="10,5,0,0" VerticalAlignment="Top">
+                                <Grid>
+                                    <Polygon Points="2,2 104,2 104,4 2,4" Fill="Black"/>
+                                    <ui:CardinalSplineShape Stroke="Black" StrokeThickness="2">
+                                        <ui:CardinalSplineShape.Points>40,2 45,20 40,40 50,50 60,40 55,20 60,2</ui:CardinalSplineShape.Points>
+                                    </ui:CardinalSplineShape>
+
+                                    <Polygon Points="55,50 60,50 60,51 55,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="65,50 70,50 70,51 65,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="75,50 80,50 80,51 75,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="75,4 78,10 76,10 76,44 78,44 75,50 72,44 74,44 74,10 72,10 75,4" Fill="Black"></Polygon>
+
+                                    <Polygon Points="49.5,25 50.5,25 50.5,27 52.5,27 52.5,28 50.5,28 50.5,30 49.5,30 49.5,28 47.5,28 47.5,27 49.5,27" Fill="Black"></Polygon>
+
+                                    <Polygon Points="20,27 25,27 25,28 20,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="30,27 35,27 35,28 30,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="40,27 45,27 45,28 40,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="25,4 28,10 26,10 26,21 28,21 25,27 22,21 24,21 24,10 22,10 25,4" Fill="Black"></Polygon>
+                                </Grid>
+
+                                <TextBlock Text="e" Margin="10,0,0,0" FontSize="20"/>
+
+                                <TextBlock Text="d" Margin="80,12,0,0" FontSize="20"/>
+                            </Grid>
+
+                            <StackPanel Margin="23,0,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="e" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="eui" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="d" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="dui" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <Button x:Name="uibtn" IsEnabled="True" Content="{DynamicResource add}" Margin="20,10,20,10" Height="25" BorderBrush="{x:Null}" Background="#FFC7C5C5" Click="uibtn_Click" />
+
+                    </StackPanel>
+
+                </Expander>
+
+                <Expander x:Name="liexpand" Margin="5,5,0,5" Header="{DynamicResource uniformvaryinginertia}" Width="300" Expanded="liexpand_Expanded" >
+
+                    <StackPanel Orientation="Vertical" Background="#FFDADADA" Margin="5,0,0,0">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Height="100" Margin="10,0,0,0">
+
+                                <StackPanel Orientation="Horizontal" Height="30" Width="30" Margin="0,17,90,43">
+                                    <TextBlock Text="I" FontSize="20"></TextBlock>
+                                    <TextBlock Text="1" FontSize="12" Margin="0,12,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Height="30" Width="20" Margin="90,0,10,60">
+                                    <TextBlock Text="" FontSize="20"></TextBlock>
+                                    <TextBlock Text="2" FontSize="12" Margin="0,12,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <Grid Margin="0,30,0,15" Height="45">
+
+                                    <Polygon Points="2,25 104,4 104,2 2,23" Fill="Black"/>
+
+                                    <Polygon Points="2,24 4,24 4,40 2,40" Fill="Black"/>
+
+                                    <Polygon Points="102,4 104,4 104,40 102,40" Fill="Black"/>
+
+                                    <Polygon Points="0,40 110,40 110,38 120,41 110,44 110,42 0,42" Fill="Black"/>
+
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="0,70,105,0">
+                                    <TextBlock Text="x" FontSize="20"/>
+                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="95,70,10,0">
+                                    <TextBlock Text="x" FontSize="20"/>
+                                    <TextBlock Text="2" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="I" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="li1" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="I" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="li2" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="lix1" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="24,0,0,0">
+                                        <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="lix2" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <StackPanel x:Name="listressanalyzestk" Visibility="Collapsed" Orientation="Horizontal">
+
+                            <Grid Height="55" Margin="10,5,0,0" VerticalAlignment="Top">
+                                <Grid>
+                                    <Polygon Points="2,2 104,2 104,4 2,4" Fill="Black"/>
+                                    <ui:CardinalSplineShape Stroke="Black" StrokeThickness="2">
+                                        <ui:CardinalSplineShape.Points>40,2 45,20 40,40 50,50 60,40 55,20 60,2</ui:CardinalSplineShape.Points>
+                                    </ui:CardinalSplineShape>
+
+                                    <Polygon Points="55,50 60,50 60,51 55,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="65,50 70,50 70,51 65,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="75,50 80,50 80,51 75,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="75,4 78,10 76,10 76,44 78,44 75,50 72,44 74,44 74,10 72,10 75,4" Fill="Black"></Polygon>
+
+                                    <Polygon Points="49.5,25 50.5,25 50.5,27 52.5,27 52.5,28 50.5,28 50.5,30 49.5,30 49.5,28 47.5,28 47.5,27 49.5,27" Fill="Black"></Polygon>
+
+                                    <Polygon Points="20,27 25,27 25,28 20,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="30,27 35,27 35,28 30,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="40,27 45,27 45,28 40,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="25,4 28,10 26,10 26,21 28,21 25,27 22,21 24,21 24,10 22,10 25,4" Fill="Black"></Polygon>
+                                </Grid>
+
+                                <TextBlock Text="e" Margin="10,0,0,0" FontSize="20"/>
+
+                                <TextBlock Text="d" Margin="80,12,0,0" FontSize="20"/>
+                            </Grid>
+
+                            <StackPanel Margin="23,0,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="e(x)" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="eli" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="d(x)" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="dli" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <Button x:Name="libtn" IsEnabled="False" Content="{DynamicResource add}" Margin="20,10,20,10" Height="25" BorderBrush="{x:Null}" Background="#FFC7C5C5" Click="libtn_Click"/>
+                    </StackPanel>
+
+                </Expander>
+
+                <Expander x:Name="viexpand" Margin="5,5,0,5" Header="{DynamicResource varyinginertia}" Width="300" Expanded="viexpand_Expanded">
+
+                    <StackPanel Orientation="Vertical"  Margin="5,0,0,0" Background="#FFDADADA">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Height="90" Margin="10,0,0,0" Width="120">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="37,0,50,60">
+                                    <TextBlock Text="I(x)" FontSize="20"/>
+                                </StackPanel>
+
+                                <Grid Margin="0,18,0,17" Height="45">
+
+                                    <ui:CardinalSplineShape Stroke="Black" StrokeThickness="2">
+                                        <ui:CardinalSplineShape.Points>2.5,19 25,5 50,20 75,5 103.5,20</ui:CardinalSplineShape.Points>
+                                    </ui:CardinalSplineShape>
+
+                                    <Polygon Points="2,18.2 4,18.2 4,40 2,40" Fill="Black"/>
+
+                                    <Polygon Points="102,19.1 104,19.1 104,40 102,40" Fill="Black"/>
+
+                                    <Polygon Points="0,40 110,40 110,38 120,41 110,44 110,42 0,42" Fill="Black"/>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="0,60,105,0">
+                                    <TextBlock Text="x" FontSize="20"/>
+                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="30" Margin="95,60,10,0">
+                                    <TextBlock Text="x" FontSize="20"/>
+                                    <TextBlock Text="2" FontSize="12" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="5,0,0,0">
+                                        <TextBlock Text="I(x)=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="vi" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="vix1" IsEnabled="False" Width="50" Height="21" Margin="3,2,0,0"></TextBox>
+                                    <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="vix2" IsEnabled="False" Width="50" Height="21" Margin="3,2,0,0"></TextBox>
+                                    <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel x:Name="vistressanalyzestk" Visibility="Collapsed" Orientation="Horizontal">
+
+                            <Grid Height="55" Margin="10,5,0,0" VerticalAlignment="Top">
+                                <Grid>
+                                    <Polygon Points="2,2 104,2 104,4 2,4" Fill="Black"/>
+                                    <ui:CardinalSplineShape Stroke="Black" StrokeThickness="2">
+                                        <ui:CardinalSplineShape.Points>40,2 45,20 40,40 50,50 60,40 55,20 60,2</ui:CardinalSplineShape.Points>
+                                    </ui:CardinalSplineShape>
+
+                                    <Polygon Points="55,50 60,50 60,51 55,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="65,50 70,50 70,51 65,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="75,50 80,50 80,51 75,51" Fill="Black"></Polygon>
+
+                                    <Polygon Points="75,4 78,10 76,10 76,44 78,44 75,50 72,44 74,44 74,10 72,10 75,4" Fill="Black"></Polygon>
+
+                                    <Polygon Points="49.5,25 50.5,25 50.5,27 52.5,27 52.5,28 50.5,28 50.5,30 49.5,30 49.5,28 47.5,28 47.5,27 49.5,27" Fill="Black"></Polygon>
+
+                                    <Polygon Points="20,27 25,27 25,28 20,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="30,27 35,27 35,28 30,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="40,27 45,27 45,28 40,28" Fill="Black"></Polygon>
+
+                                    <Polygon Points="25,4 28,10 26,10 26,21 28,21 25,27 22,21 24,21 24,10 22,10 25,4" Fill="Black"></Polygon>
+                                </Grid>
+
+                                <TextBlock Text="e" Margin="10,0,0,0" FontSize="20"/>
+
+                                <TextBlock Text="d" Margin="80,12,0,0" FontSize="20"/>
+                            </Grid>
+
+                            <StackPanel Margin="3,0,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="e(x)" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="evi" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="20,0,0,0">
+                                        <TextBlock Text="d(x)" FontSize="20" VerticalAlignment="Center"/>
+                                        <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBox x:Name="dvi" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBlock Text="cm" FontSize="18" Margin="5,5,0,0"></TextBlock>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <Button x:Name="vibtn" IsEnabled="False" Content="{DynamicResource add}" Margin="20,10,20,10" Height="25" BorderBrush="{x:Null}" Background="#FFC7C5C5" Click="vibtn_Click" />
+
+                    </StackPanel>
+
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <Border BorderBrush="#FFDADADA" BorderThickness="1,0,1,0" Margin="5,0,0,0"></Border>
+            <ScrollViewer Margin="2,0,0,0" VerticalScrollBarVisibility="Visible">
+                <StackPanel>
+                    <StackPanel x:Name="fncstk" Width="206"/>
+                    <Button x:Name="finishbtn" Height="30" Margin="10" Content="{DynamicResource finish}" Visibility="Collapsed" Click="finishbtn_Click" />
+                </StackPanel>
+            </ScrollViewer>
+        </StackPanel>
+
+    </Grid>
+</Window>
+

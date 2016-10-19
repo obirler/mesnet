@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Mesnet.Xaml.User_Controls.DistributedLoadItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal">
+        <Grid Height="20" Width="20">
+            <Polygon Points="4,2 6,2 6,14 8,14 5,18 2,14 4,14" Fill="Black"></Polygon>
+
+            <Polygon Points="14,2 16,2 16,14 18,14 15,18 12,14 14,14" Fill="Black"></Polygon>
+
+            <Polygon Points="2,2 18,2 18,4 2,4" Fill="Black"></Polygon>
+        </Grid>
+
+        <TextBlock Margin="5,0,0,0" x:Name="distload" VerticalAlignment="Center" ></TextBlock>
+    </StackPanel>
+</UserControl>

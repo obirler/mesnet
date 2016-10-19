@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Mesnet.Xaml.User_Controls.ElasticityItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="clr-namespace:Mesnet.Classes.Ui"
+             mc:Ignorable="d">
+    <StackPanel Orientation="Horizontal">
+        <Grid Height="20" Width="20">
+            <ui:CardinalSplineShape Points="2,8 10,12 18,8"  Stroke="Black" StrokeThickness="2"/>
+        </Grid>
+
+        <TextBlock Margin="5,0,0,0" x:Name="elasticity" VerticalAlignment="Center" ></TextBlock>
+    </StackPanel>
+</UserControl>

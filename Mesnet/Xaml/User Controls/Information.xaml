@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Mesnet.Xaml.User_Controls.Information"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal">
+        <Grid Height="20" Width="20">
+            <Ellipse Height="3" Width="3.5" Margin="0,2,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Fill="Black"></Ellipse>
+            <Polygon Points="9,7 11,7 11,17 9,17" Fill="Black"></Polygon>
+        </Grid>
+
+        <TextBlock Margin="5,0,0,0" x:Name="info" VerticalAlignment="Center" ></TextBlock>
+    </StackPanel>
+</UserControl>
+

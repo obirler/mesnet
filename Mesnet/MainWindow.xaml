@@ -1,0 +1,335 @@
+﻿<Window x:Class="Mesnet.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:zoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+        xmlns:ui="clr-namespace:Mesnet.Classes.Ui"
+        mc:Ignorable="d"
+        Title="Mes.Net" Height="768" Width="1366" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
+            <Menu DockPanel.Dock="Top" Background="#FFDADADA" BorderBrush="#FF999999" BorderThickness="0,0,0,1">
+                <MenuItem Header="{DynamicResource filemenu}">
+                    <MenuItem Header="New" />
+                    <MenuItem Header="Open" />
+                    <MenuItem Header="Save" />
+                    <Separator />
+                    <MenuItem Header="Exit" />
+                </MenuItem>
+                <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>
+                <MenuItem x:Name="loadtest" Header="Load Test 1" Click="loadtest_Click"></MenuItem>
+                <MenuItem x:Name="loadtest2" Header="Load Test 2" Click="loadtest2_Click" ></MenuItem>
+                <MenuItem x:Name="loadtest3" Header="Load Test 3" Click="loadtest3_Click" ></MenuItem>
+                <MenuItem x:Name="loadtest4" Header="Load Test 4" Click="loadtest4_Click" ></MenuItem>
+                <MenuItem x:Name="loadtest5" Header="Load Test 5" Click="loadtest5_Click" ></MenuItem>
+                <MenuItem x:Name="devtest" Header="Development Test 1" Click="devtest_Click"></MenuItem>
+                <MenuItem x:Name="devtest2" Header="Development Test 2" Click="devtest2_Click" ></MenuItem>
+                <MenuItem x:Name="stresstest" Header="Stress Test" Click="stresstest_Click"></MenuItem>
+                <MenuItem x:Name="stresstest2" Header="Stress Test 2" Click="stresstest2_Click"></MenuItem>
+                <MenuItem x:Name="solve" Header="Solve" Click="solve_Click"></MenuItem>
+                <MenuItem x:Name="moment" Header="Show Moment" IsEnabled="false" Click="moment_Click" ></MenuItem>
+                <MenuItem x:Name="force" Header="Show Force" IsEnabled="false" Click="force_Click" ></MenuItem>
+                <MenuItem x:Name="deflection" Header="Show Deflection" IsEnabled="false" Click="deflection_Click" ></MenuItem>
+                <MenuItem x:Name="stress" Header="Show Stress" IsEnabled="false" Click="stress_Click" ></MenuItem>
+                <MenuItem x:Name="delete" Header="Clear All" IsEnabled="true" Click="delete_Click" ></MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="350*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="80*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel x:Name="btnstack" Grid.Column="0" Grid.Row="0">
+
+                <Button x:Name="beambtn" Height="30" Width="30" Margin="5,5,5,5" Click="beambtn_Click">
+
+                    <!--<i:Interaction.Behaviors>
+                            <effects:TiltBehavior/>
+                        </i:Interaction.Behaviors>-->
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource addbeam}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+                        <Polygon Points="2,12 24,12 24,14 2,14" Fill="Black"></Polygon>
+                    </Grid>
+                </Button>
+
+                <Button x:Name="fixedsupportbtn" IsEnabled="False"  Height="30" Width="30"  Margin="5,5,5,5" Click="fixedsupportbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource addfixedsupport}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+                        <Polygon Points="17,2 17,24 15,24 15,2 " Fill="Black"/>
+                        <Polygon Points="15,2 9,8 10,9 15,4.2" Fill="Black"/>
+                        <Polygon Points="15,7 9,13 10,14 15,9.2" Fill="Black"/>
+                        <Polygon Points="15,12 9,18 10,19 15,14.2" Fill="Black"/>
+                        <Polygon Points="15,17 9,23 10,24 15,19.2" Fill="Black"/>
+                        <Polygon Points="15,22 13,24 17,24" Fill="Black"/>
+                    </Grid>
+
+                </Button>
+
+                <Button x:Name="basicsupportbtn" IsEnabled="False" Height="30" Width="30"  Margin="5,5,5,5" Click="basicsupportbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource addbasicsupport}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+                        <Polygon Points="13,5 4,21 22,21 13,5 13,8 6.5,19.5 19.5,19.5 13,8" Fill="Black"/>
+                    </Grid>
+
+                </Button>
+
+                <Button x:Name="slidingsupportbtn" IsEnabled="False" Height="30" Width="30"  Margin="5,5,5,5" Click="slidingsupportbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource addslidingsupport}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+                        <Polygon Points="13,2 4,18 22,18 13,2 13,5 6.5,16.5 19.5,16.5 13,5" Fill="Black"/>
+                        <Ellipse Height="5" Width="5" Margin="6,18,15,3" Fill="Black"/>
+                        <Ellipse Height="5" Width="5" Margin="15,18,6,3" Fill="Black"/>
+                    </Grid>
+
+                </Button>
+
+                <Border Height="1"  BorderThickness="0,1,0,0" BorderBrush="#FFC3C2C2" Background="#FFE1E1E1" Margin="0,5,0,5"/>
+
+                <Button x:Name="concentratedloadbtn" IsEnabled="False" Height="30" Width="30"  Margin="5,5,5,5" Click="concentratedloadbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource addpointload}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+
+                        <Polygon Points="12,2 14,2 14,17 17,17 13,24 9,17 12,17" Fill="Black"/>
+
+                    </Grid>
+
+                </Button>
+
+                <Button x:Name="distributedloadbtn" IsEnabled="False" Height="30" Width="30"  Margin="5,5,5,5" Click="distributedloadbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource adddistributedload}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+
+                        <Polygon Points="4,2 22,2 22,4 4,4" Fill="Black"/>
+
+                        <Polygon Points="4,4 6,4 6,17 8,17 5,24 2,17 4,17" Fill="Black"/>
+
+                        <Polygon Points="12,4 14,4 14,17 16,17 13,24 10,17 12,17" Fill="Black"/>
+
+                        <Polygon Points="20,4 22,4 22,17 24,17 21,24 18,17 20,17" Fill="Black"/>
+
+                    </Grid>
+
+                </Button>
+
+                <Border Height="1" BorderThickness="0,1,0,0" BorderBrush="#FFC3C2C2" Background="#FFE1E1E1" Margin="0,5,0,5"/>
+
+                <Button x:Name="rotatebtn" Height="30" Width="30"  Margin="5,5,5,5" Click="rotatebtn_Click" >
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource zoomout}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Canvas Height="26" Width="26">
+
+                        <Polyline Points="12.756,6.004 12.878,6.001 13,6 13.122,6.001 13.244,6.004 13.366,6.01 13.488,6.017 13.61,6.027 13.732,6.038 13.853,6.052 13.974,6.068 14.095,6.086 14.216,6.106 14.336,6.129 14.455,6.153 14.575,6.179 14.693,6.208 14.812,6.239 14.929,6.271 15.047,6.306 15.163,6.343 15.279,6.381 15.394,6.422 15.509,6.465 15.622,6.51 15.735,6.556 15.847,6.605 15.958,6.656 16.069,6.708 16.178,6.763 16.286,6.819 16.394,6.878 16.5,6.938 16.605,7 16.709,7.064 16.812,7.129 16.914,7.197 17.015,7.266 17.114,7.337 17.213,7.41 17.31,7.484 17.405,7.56 17.5,7.638 17.592,7.717 17.684,7.798 17.774,7.881 17.863,7.965 17.95,8.05 18.035,8.137 18.119,8.226 18.202,8.316 18.283,8.408 18.362,8.5 18.44,8.595 18.516,8.69 18.59,8.787 18.663,8.886 18.734,8.985 18.803,9.086 18.871,9.188 18.936,9.291 19,9.395 19.062,9.5 19.122,9.606 19.181,9.714 19.237,9.822 19.292,9.931 19.344,10.042 19.395,10.153 19.444,10.265 19.49,10.378 19.535,10.491 19.578,10.606 19.619,10.721 19.657,10.837 19.694,10.953 19.729,11.071 19.761,11.188 19.792,11.307 19.821,11.425 19.847,11.545 19.871,11.664 19.894,11.784 19.914,11.905 19.932,12.026 19.948,12.147 19.962,12.268 19.973,12.39 19.983,12.512 19.99,12.634 19.996,12.756 19.999,12.878 20,13 19.999,13.122 19.996,13.244 19.99,13.366 19.983,13.488 19.973,13.61 19.962,13.732 19.948,13.853 19.932,13.974 19.914,14.095 19.894,14.216 19.871,14.336 19.847,14.455 19.821,14.575 19.792,14.693 19.761,14.812 19.729,14.929 19.694,15.047 19.657,15.163 19.619,15.279 19.578,15.394 19.535,15.509 19.49,15.622 19.444,15.735 19.395,15.847 19.344,15.958 19.292,16.069 19.237,16.178 19.181,16.286 19.122,16.394 19.062,16.5 19,16.605 18.936,16.709 18.871,16.812 18.803,16.914 18.734,17.015 18.663,17.114 18.59,17.213 18.516,17.31 18.44,17.405 18.362,17.5 18.283,17.592 18.202,17.684 18.119,17.774 18.035,17.863 17.95,17.95 17.863,18.035 17.774,18.119 17.684,18.202 17.592,18.283 17.5,18.362 17.405,18.44 17.31,18.516 17.213,18.59 17.114,18.663 17.015,18.734 16.914,18.803 16.812,18.871 16.709,18.936 16.605,19 16.5,19.062 16.394,19.122 16.286,19.181 16.178,19.237 16.069,19.292 15.958,19.344 15.847,19.395 15.735,19.444 15.622,19.49 15.509,19.535 15.394,19.578 15.279,19.619 15.163,19.657 15.047,19.694 14.929,19.729 14.812,19.761 14.693,19.792 14.575,19.821 14.455,19.847 14.336,19.871 14.216,19.894 14.095,19.914 13.974,19.932 13.853,19.948 13.732,19.962 13.61,19.973 13.488,19.983 13.366,19.99 13.244,19.996 13.122,19.999 13,20 12.878,19.999 12.756,19.996 12.634,19.99 12.512,19.983 12.39,19.973 12.268,19.962 12.147,19.948 12.026,19.932 11.905,19.914 11.784,19.894 11.664,19.871 11.545,19.847 11.425,19.821 11.307,19.792 11.188,19.761 11.071,19.729 10.953,19.694 10.837,19.657 10.721,19.619 10.606,19.578 10.491,19.535 10.378,19.49 10.265,19.444 10.153,19.395 10.042,19.344 9.931,19.292 9.822,19.237 9.714,19.181 9.606,19.122 9.5,19.062 9.395,19 9.291,18.936 9.188,18.871 9.086,18.803 8.985,18.734 8.886,18.663 8.787,18.59 8.69,18.516 8.595,18.44 8.5,18.362 8.408,18.283 8.316,18.202 8.226,18.119 8.137,18.035 8.05,17.95 7.965,17.863 7.881,17.774 7.798,17.684 7.717,17.592 7.638,17.5 7.56,17.405 7.484,17.31 7.41,17.213 7.337,17.114 7.266,17.015 7.197,16.914 7.129,16.812 7.064,16.709 7,16.605 6.938,16.5 6.878,16.394 6.819,16.286 6.763,16.178 6.708,16.069 6.656,15.958 6.605,15.847 6.556,15.735 6.51,15.622 6.465,15.509 6.422,15.394 6.381,15.279 6.343,15.163 6.306,15.047 6.271,14.929 6.239,14.812 6.208,14.693 6.179,14.575 6.153,14.455 6.129,14.336 6.106,14.216 6.086,14.095 6.068,13.974 6.052,13.853 6.038,13.732 6.027,13.61 6.017,13.488 6.01,13.366 6.004,13.244 6.001,13.122 " Width="26" Height="26" StrokeThickness="2" Stroke="Black"></Polyline>
+
+                        <Polygon Width="26" Height="26" Points="13,3 13,9 9,6" Fill="Black"></Polygon>
+
+                    </Canvas>
+
+                </Button>
+
+                <Button x:Name="zoominbtn" Height="30" Width="30" Margin="5,5,5,5" Click="zoominbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource zoomin}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+
+                        <Ellipse Height="15" Width="15" Stroke="Black" StrokeThickness="2"/>
+
+                        <Polygon Points="1.75,23.75 7.75,17.75 9.25,19.25 3.25,25.25" Fill="Black"/>
+
+                        <Polygon Points="20,1 20,8 22,8 22,1" Fill="Black"/>
+
+                        <Polygon Points="17.5,3.5 24.5,3.5 24.5 5.5 17.5,5.5" Fill="Black"/>
+
+                    </Grid>
+
+                </Button>
+
+                <Button x:Name="zoomoutbtn" Height="30" Width="30"  Margin="5,5,5,5" Click="zoomoutbtn_Click">
+
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource zoomout}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+
+                    <Grid Height="26" Width="26">
+
+                        <Ellipse Height="15" Width="15" Stroke="Black" StrokeThickness="2"/>
+
+                        <Polygon Points="1.75,23.75 7.75,17.75 9.25,19.25 3.25,25.25" Fill="Black"/>
+
+                        <Polygon Points="17.5,3.5 24.5,3.5 24.5 5.5 17.5,5.5" Fill="Black"/>
+
+                    </Grid>
+
+                </Button>
+
+                <Slider x:Name="scaleslider" Orientation="Vertical" Height="242" Maximum="10" Minimum="0" HorizontalAlignment="Center" Margin="11,5" ValueChanged="Slider_ValueChanged" LargeChange="20" 
+                TickFrequency="10" 
+                SmallChange="0.01"/>
+
+                <TextBox x:Name="scaletext" Height="25" Margin="2,5,2,0" TextAlignment="Center" TextChanged="scaletext_TextChanged"></TextBox>
+
+            </StackPanel>
+
+            <ScrollViewer Grid.Column="1" Grid.Row="0"
+			    x:Name="scroller"
+                CanContentScroll="True"
+                VerticalScrollBarVisibility="Visible"
+                HorizontalScrollBarVisibility="Visible">
+
+                <zoomAndPan:ZoomAndPanControl
+                    x:Name="zoomAndPanControl"
+                    Background="LightGray"
+	                MouseDown="zoomAndPanControl_MouseDown"
+	                MouseUp="zoomAndPanControl_MouseUp"
+	                MouseMove="zoomAndPanControl_MouseMove"
+	                MouseWheel="zoomAndPanControl_MouseWheel" 
+                    ContentOffsetXChanged="zoomAndPanControl_ContentOffsetXChanged" 
+                    ContentOffsetYChanged="zoomAndPanControl_ContentOffsetYChanged"
+                    ContentScaleChanged="zoomAndPanControl_ScaleChanged">
+
+                    <Grid                      
+                        Width="20000"
+                        Height="20000">
+
+                        <Canvas x:Name="canvas" 
+                            Height="20000" 
+                            Width="20000" 
+                            Background="#FFA0E7FF" 
+                            Cursor="Cross"
+                            Grid.RowSpan="2" MouseEnter="canvas_MouseEnter" MouseLeave="canvas_MouseLeave" MouseMove="canvas_MouseMove">
+                            <Viewbox x:Name="viewbox" Canvas.Left="0" Canvas.Top="0" Stretch="Uniform" Height="20">
+                                <TextBlock x:Name="tooltip" Text="" Background="White" Visibility="Collapsed"></TextBlock>
+                            </Viewbox>
+                            <Rectangle x:Name="horizontalrect" Height="1" Fill="Red" Width="50" Canvas.Top="9999.5" Canvas.Left="9975"></Rectangle>
+                            <Rectangle x:Name="verticalrect" Height="50" Fill="Red" Width="1" Canvas.Top="9975" Canvas.Left="9999.5"></Rectangle>
+                        </Canvas>
+
+                        <Canvas
+						    x:Name="dragZoomCanvas"
+						    Visibility="Collapsed" Grid.RowSpan="2">
+                            <Border 
+							    x:Name="dragZoomBorder"
+							    BorderBrush="Black"
+							    BorderThickness="1"
+							    Background="Silver"
+							    CornerRadius="1"
+							    Opacity="0"/>
+                        </Canvas>
+
+                    </Grid>
+
+                </zoomAndPan:ZoomAndPanControl>
+
+            </ScrollViewer>
+
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1" />
+
+            <Grid Grid.Column="3">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
+                    <TreeView x:Name="tree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                </ScrollViewer>
+
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1" />
+
+                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                </ScrollViewer>
+
+            </Grid>
+
+        </Grid>
+
+        <StackPanel Margin="40,0,0,0" Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock x:Name="coordinate" Text="X : 0  Y : 0" Width="200"/>
+            <TextBlock x:Name="notify" Text="Notify" Margin="30,0,0,0"/>
+        </StackPanel>
+
+    </Grid>
+
+</Window>
+

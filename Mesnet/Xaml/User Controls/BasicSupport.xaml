@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Mesnet.Xaml.User_Controls.BasicSupport"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="16" Width="26">
+
+    <UserControl.RenderTransform>
+        <RotateTransform x:Name="rotateTransform" CenterX="13" CenterY="0"/>
+    </UserControl.RenderTransform>
+
+    <Grid>
+        <Polygon x:Name="p1" Points="13,0 4,16 22,16 13,0 13,3 6.5,14.5 19.5,14.5 13,3" Fill="Black"/>
+    </Grid>
+</UserControl>

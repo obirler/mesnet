@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -388,876 +389,945 @@ namespace Mesnet.Xaml.User_Controls
         /// </summary>
         /// <param name="direction1">The direction of the beam to be connected.</param>
         /// <param name="oldbeam">The beam that this beam will be connected to.</param>
-        /// <param name="direction2">The direction of the beam that this beam will be connected to.</param>
-        /// <param name="manueloverride">if set to <c>true</c> [manueloverride] does not move the beam when it is connected.</param>        
-        public void Connect(Direction direction1, Beam oldbeam, Direction direction2, bool manueloverride = false)
+        /// <param name="direction2">The direction of the beam that this beam will be connected to.</param>        
+        public void Connect(Direction direction1, Beam oldbeam, Direction direction2)
         {
-            if (!manueloverride)
+            if (_isbound && oldbeam.IsBound)
             {
-                if (_isbound && oldbeam.IsBound)
-                {
-                    throw new InvalidOperationException("Both beam has bound");
-                }
-                switch (direction1)
-                {
-                    case Direction.Left:
-
-                        switch (direction2)
-                        {
-                            #region Left-Left
-
-                            case Direction.Left:
-
-                                if (LeftSide != null && oldbeam.LeftSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-
-                                //Left side of this beam will be connected to the left side of oldbeam.
-                                if (oldbeam.LeftSide != null)
-                                {
-                                    if (oldbeam.LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        if (oldbeam.IsBound)
-                                        {
-                                            //We will move this beam
-                                            Canvas.SetLeft(this, oldbeam.LeftPoint.X);
-
-                                            Canvas.SetTop(this, oldbeam.LeftPoint.Y - 7);
-
-                                            oldbeam.SetTransformGeometry(_canvas);
-
-                                            oldbeam.MoveSupports();
-                                        }
-                                        else if (this._isbound)
-                                        {
-                                            //We will move the old beam
-                                            Canvas.SetLeft(oldbeam, LeftPoint.X);
-
-                                            Canvas.SetTop(oldbeam, LeftPoint.Y - 7);
-
-                                            SetTransformGeometry(_canvas);
-
-                                            MoveSupports();
-                                        }
-
-                                        switch (oldbeam.LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = oldbeam.LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(this, Direction.Left);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = oldbeam.LeftSide as BasicSupport;
-
-                                                bs.AddBeam(this, Direction.Left);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (LeftSide != null)
-                                {
-                                    if (LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.LeftPoint.X);
-
-                                        Canvas.SetTop(this, oldbeam.LeftPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Left);
-
-                                                Canvas.SetLeft(ss, LeftPoint.X - 13);
-
-                                                Canvas.SetTop(ss, LeftPoint.Y);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = LeftSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Left);
-
-                                                Canvas.SetLeft(bs, LeftPoint.X - 13);
-
-                                                Canvas.SetTop(bs, LeftPoint.Y);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
-
-                            #endregion
-
-                            #region Left-Right
-
-                            case Direction.Right:
-
-                                if (LeftSide != null && oldbeam.RightSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-                                //Left side of this beam will be connected to the right side of lodbeam.
-                                if (oldbeam.RightSide != null)
-                                {
-                                    if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.RightPoint.X);
-
-                                        Canvas.SetTop(this, oldbeam.RightPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (oldbeam.RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = oldbeam.RightSide as SlidingSupport;
-
-                                                ss.AddBeam(this, Direction.Left);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = oldbeam.RightSide as BasicSupport;
-
-                                                bs.AddBeam(this, Direction.Left);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (LeftSide != null)
-                                {
-                                    if (LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.RightPoint.X);
-
-                                        Canvas.SetTop(this, oldbeam.RightPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Right);
-
-                                                Canvas.SetLeft(ss, LeftPoint.X - 13);
-
-                                                Canvas.SetTop(ss, LeftPoint.Y);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = LeftSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Right);
-
-                                                Canvas.SetLeft(bs, LeftPoint.X - 13);
-
-                                                Canvas.SetTop(bs, LeftPoint.Y);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
-
-                                #endregion
-                        }
-
-                        break;
-
-                    case Direction.Right:
-
-                        switch (direction2)
-                        {
-                            #region Right-Left
-
-                            case Direction.Left:
-
-                                if (RightSide != null && oldbeam.LeftSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-                                //Right side of this beam will be connected to the left side of lodbeam.
-                                if (oldbeam.LeftSide != null)
-                                {
-                                    if (oldbeam.LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.LeftPoint.X - _length * 100);
-
-                                        Canvas.SetTop(this, oldbeam.LeftPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (oldbeam.LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = oldbeam.LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = oldbeam.LeftSide as BasicSupport;
-
-                                                bs.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (RightSide != null)
-                                {
-                                    if (RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.LeftPoint.X - _length * 100);
-
-                                        Canvas.SetTop(this, oldbeam.LeftPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = RightSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Left);
-
-                                                Canvas.SetLeft(ss, RightPoint.X - 13);
-
-                                                Canvas.SetTop(ss, RightPoint.Y);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = RightSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Left);
-
-                                                Canvas.SetLeft(bs, RightPoint.X - 13);
-
-                                                Canvas.SetTop(bs, RightPoint.Y);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
-
-                            #endregion
-
-                            #region Right-Right
-
-                            case Direction.Right:
-
-                                if (RightSide != null && oldbeam.RightSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-                                //Right side of this beam will be connected to the right side of lodbeam.
-                                if (oldbeam.RightSide != null)
-                                {
-                                    if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.RightPoint.X - _length * 100);
-
-                                        Canvas.SetTop(this, oldbeam.RightPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (oldbeam.RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = oldbeam.RightSide as SlidingSupport;
-
-                                                ss.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = oldbeam.RightSide as BasicSupport;
-
-                                                bs.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (RightSide != null)
-                                {
-                                    if (RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        Canvas.SetLeft(this, oldbeam.RightPoint.X - _length * 100);
-
-                                        Canvas.SetTop(this, oldbeam.RightPoint.Y - 7);
-
-                                        SetTransformGeometry(_canvas);
-
-                                        switch (RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = RightSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = RightSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Right);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
-
-                                #endregion
-                        }
-
-                        break;
-                }
+                throw new InvalidOperationException("Both beam has bound");
             }
-            else
+            switch (direction1)
             {
-                //A special case that allows connecting 2 connected beams
+                case Direction.Left:
 
-                switch (direction1)
-                {
-                    case Direction.Left:
+                    switch (direction2)
+                    {
+                        #region Left-Left
 
-                        switch (direction2)
-                        {
-                            #region Left-Left
+                        case Direction.Left:
 
-                            case Direction.Left:
+                            if (LeftSide != null && oldbeam.LeftSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
 
-                                if (LeftSide != null && oldbeam.LeftSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
+                            //Left side of this beam will be connected to the left side of oldbeam.
+                            leftleftconnect(oldbeam);
 
-                                //Left side of this beam will be connected to the left side of oldbeam.
-                                if (oldbeam.LeftSide != null)
-                                {
-                                    if (oldbeam.LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        switch (oldbeam.LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
+                            break;
 
-                                                var ss = oldbeam.LeftSide as SlidingSupport;
+                        #endregion
 
-                                                ss.AddBeam(this, Direction.Left);
+                        #region Left-Right
 
-                                                break;
+                        case Direction.Right:
 
-                                            case "BasicSupport":
+                            if (LeftSide != null && oldbeam.RightSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
 
-                                                var bs = oldbeam.LeftSide as BasicSupport;
+                            //Left side of this beam will be connected to the right side of lodbeam.
+                            leftrightconnect(oldbeam);
 
-                                                bs.AddBeam(this, Direction.Left);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (LeftSide != null)
-                                {
-                                    if (LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        switch (LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Left);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = LeftSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Left);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
+                            break;
 
                             #endregion
+                    }
 
-                            #region Left-Right
+                    break;
 
-                            case Direction.Right:
+                case Direction.Right:
 
-                                if (LeftSide != null && oldbeam.RightSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-                                //Left side of this beam will be connected to the right side of lodbeam.
-                                if (oldbeam.RightSide != null)
-                                {
-                                    if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        switch (oldbeam.RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
+                    switch (direction2)
+                    {
+                        #region Right-Left
 
-                                                var ss = oldbeam.RightSide as SlidingSupport;
+                        case Direction.Left:
 
-                                                ss.AddBeam(this, Direction.Left);
+                            if (RightSide != null && oldbeam.LeftSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
+                            //Right side of this beam will be connected to the left side of oldbeam.
+                            rightleftconnect(oldbeam);
 
-                                                break;
+                            break;
 
-                                            case "BasicSupport":
+                        #endregion
 
-                                                var bs = oldbeam.RightSide as BasicSupport;
+                        #region Right-Right
 
-                                                bs.AddBeam(this, Direction.Left);
+                        case Direction.Right:
 
-                                                break;
+                            if (RightSide != null && oldbeam.RightSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
 
-                                            case "LeftFixedSupport":
+                            //Right side of this beam will be connected to the right side of oldbeam.                             
+                            rightrightconnect(oldbeam);
 
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (LeftSide != null)
-                                {
-                                    if (LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        switch (LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = LeftSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Right);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
-
-                                #endregion
-                        }
-
-                        break;
-
-                    case Direction.Right:
-
-                        switch (direction2)
-                        {
-                            #region Right-Left
-
-                            case Direction.Left:
-
-                                if (RightSide != null && oldbeam.LeftSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-                                //Right side of this beam will be connected to the left side of lodbeam.
-                                if (oldbeam.LeftSide != null)
-                                {
-                                    if (oldbeam.LeftSide.GetType().Name != "LeftFixedSupport")
-                                    {
-                                        switch (oldbeam.LeftSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = oldbeam.LeftSide as SlidingSupport;
-
-                                                ss.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = oldbeam.LeftSide as BasicSupport;
-
-                                                bs.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "RightFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "RightFixedSupport has been bounded to the left side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (RightSide != null)
-                                {
-                                    if (RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        switch (RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = RightSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Left);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = RightSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Left);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
+                            break;
 
                             #endregion
+                    }
 
-                            #region Right-Right
-
-                            case Direction.Right:
-
-                                if (RightSide != null && oldbeam.RightSide != null)
-                                {
-                                    throw new InvalidOperationException("Both beam has supports on the assembly points");
-                                }
-                                //Right side of this beam will be connected to the right side of lodbeam.
-                                if (oldbeam.RightSide != null)
-                                {
-                                    if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        switch (oldbeam.RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = oldbeam.RightSide as SlidingSupport;
-
-                                                ss.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = oldbeam.RightSide as BasicSupport;
-
-                                                bs.AddBeam(this, Direction.Right);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else if (RightSide != null)
-                                {
-                                    if (RightSide.GetType().Name != "RightFixedSupport")
-                                    {
-                                        switch (RightSide.GetType().Name)
-                                        {
-                                            case "SlidingSupport":
-
-                                                var ss = RightSide as SlidingSupport;
-
-                                                ss.AddBeam(oldbeam, Direction.Right);
-
-                                                break;
-
-                                            case "BasicSupport":
-
-                                                var bs = RightSide as BasicSupport;
-
-                                                bs.AddBeam(oldbeam, Direction.Right);
-
-                                                break;
-
-                                            case "LeftFixedSupport":
-
-                                                throw new InvalidOperationException(
-                                                    "LeftFixedSupport has been bounded to the right side of the beam");
-
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException(
-                                            "The side that has a fixed support can not be connected.");
-                                    }
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException(
-                                        "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
-                                }
-
-                                break;
-
-                                #endregion
-                        }
-
-                        break;
-                }
+                    break;
             }
 
             _isbound = true;
             oldbeam.IsBound = true;
+        }
+
+        private void leftleftconnect(Beam oldbeam)
+        {            
+            if (oldbeam.LeftSide != null)
+            {
+                if (oldbeam.LeftSide.GetType().Name != "LeftFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Left, LeftPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+
+                    switch (oldbeam.LeftSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = oldbeam.LeftSide as SlidingSupport;
+                            ss.AddBeam(this, Direction.Left);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = oldbeam.LeftSide as BasicSupport;
+                            bs.AddBeam(this, Direction.Left);
+
+                            break;
+
+                        case "RightFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "RightFixedSupport has been bounded to the left side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else if (LeftSide != null)
+            {
+                if (LeftSide.GetType().Name != "LeftFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        SetPosition(Direction.Left, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Left, LeftPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+
+                    switch (LeftSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = LeftSide as SlidingSupport;
+                            ss.AddBeam(oldbeam, Direction.Left);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = LeftSide as BasicSupport;
+                            bs.AddBeam(oldbeam, Direction.Left);
+
+                            break;
+
+                        case "RightFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "RightFixedSupport has been bounded to the left side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
+            }
+        }
+
+        private void leftrightconnect(Beam oldbeam)
+        {
+            if (oldbeam.RightSide != null)
+            {
+                if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Right, LeftPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+
+                    switch (oldbeam.RightSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = oldbeam.RightSide as SlidingSupport;
+                            ss.AddBeam(this, Direction.Left);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = oldbeam.RightSide as BasicSupport;
+                            bs.AddBeam(this, Direction.Left);
+
+                            break;
+
+                        case "LeftFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "LeftFixedSupport has been bounded to the right side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else if (LeftSide != null)
+            {
+                if (LeftSide.GetType().Name != "LeftFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Right, LeftPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Left, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+
+                    switch (LeftSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = LeftSide as SlidingSupport;
+                            ss.AddBeam(oldbeam, Direction.Right);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = LeftSide as BasicSupport;
+                            bs.AddBeam(oldbeam, Direction.Right);
+
+                            break;
+
+                        case "RightFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "RightFixedSupport has been bounded to the left side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
+            }
+        }
+
+        private void rightleftconnect(Beam oldbeam)
+        {
+            if (oldbeam.LeftSide != null)
+            {
+                if (oldbeam.LeftSide.GetType().Name != "LeftFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Left, RightPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+
+                    switch (oldbeam.LeftSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = oldbeam.LeftSide as SlidingSupport;
+                            ss.AddBeam(this, Direction.Right);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = oldbeam.LeftSide as BasicSupport;
+                            bs.AddBeam(this, Direction.Right);
+
+                            break;
+
+                        case "RightFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "RightFixedSupport has been bounded to the left side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else if (RightSide != null)
+            {
+                if (RightSide.GetType().Name != "RightFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Left, RightPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.LeftPoint);
+                        MoveSupports();
+                    }
+
+                    switch (RightSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = RightSide as SlidingSupport;
+                            ss.AddBeam(oldbeam, Direction.Left);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = RightSide as BasicSupport;
+                            bs.AddBeam(oldbeam, Direction.Left);
+
+                            break;
+
+                        case "LeftFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "LeftFixedSupport has been bounded to the right side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
+            }
+        }
+
+        private void rightrightconnect(Beam oldbeam)
+        {
+            if (oldbeam.RightSide != null)
+            {
+                if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Right, RightPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+
+                    switch (oldbeam.RightSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = oldbeam.RightSide as SlidingSupport;
+                            ss.AddBeam(this, Direction.Right);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = oldbeam.RightSide as BasicSupport;
+                            bs.AddBeam(this, Direction.Right);
+
+                            break;
+
+                        case "LeftFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "LeftFixedSupport has been bounded to the right side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else if (RightSide != null)
+            {
+                if (RightSide.GetType().Name != "RightFixedSupport")
+                {
+                    if (oldbeam.IsBound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+                    else if (this._isbound)
+                    {
+                        //We will move the old beam
+                        oldbeam.SetPosition(Direction.Right, RightPoint);
+                        oldbeam.MoveSupports();
+                    }
+                    else if (!oldbeam.IsBound && !this._isbound)
+                    {
+                        //We will move this beam
+                        SetPosition(Direction.Right, oldbeam.RightPoint);
+                        MoveSupports();
+                    }
+
+                    switch (RightSide.GetType().Name)
+                    {
+                        case "SlidingSupport":
+
+                            var ss = RightSide as SlidingSupport;
+                            ss.AddBeam(oldbeam, Direction.Right);
+
+                            break;
+
+                        case "BasicSupport":
+
+                            var bs = RightSide as BasicSupport;
+                            bs.AddBeam(oldbeam, Direction.Right);
+
+                            break;
+
+                        case "LeftFixedSupport":
+
+                            throw new InvalidOperationException(
+                                "LeftFixedSupport has been bounded to the right side of the beam");
+
+                            break;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "The side that has a fixed support can not be connected.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "In order to add beam to a beam, the beam that is supposed to connected must have a support.");
+            }
+        }
+
+        /// <summary>
+        /// Circular connects the direction1 of the beam to the direction2 of the oldbeam.
+        /// </summary>
+        /// <param name="direction1">The direction of the beam to be connected.</param>
+        /// <param name="oldbeam">The beam that this beam will be connected to.</param>
+        /// <param name="direction2">The direction of the beam that this beam will be connected to.</param>
+        /// <exception cref="InvalidOperationException">
+        /// In order to create circular beam system both beam to be connected need to be bound
+        /// or
+        /// In order to create circular beam system one of the beam to be connected need to have support on connection side
+        /// or
+        /// In order to create circular beam system one of the beam to be connected need to have support on connection side
+        /// or
+        /// Both beam has supports on the assembly points
+        /// or
+        /// Both beam has supports on the assembly points
+        /// or
+        /// Both beam has supports on the assembly points
+        /// </exception>
+        public void CircularConnect(Direction direction1, Beam oldbeam, Direction direction2)
+        {
+            if (!_isbound || !oldbeam.IsBound)
+            {
+                throw new InvalidOperationException("In order to create circular beam system both beam to be connected need to be bound");
+            }
+
+            switch (direction1)
+            {
+                case Direction.Left:
+
+                    switch (direction2)
+                    {
+                        #region Left-Left
+
+                        case Direction.Left:
+
+                            if (LeftSide == null && oldbeam.LeftSide == null)
+                            {
+                                throw new InvalidOperationException("In order to create circular beam system one of the beam to be connected need to have support on connection side");
+                            }
+                            else if (LeftSide != null && oldbeam.LeftSide != null)
+                            {
+                                throw new InvalidOperationException("In order to create circular beam system one of the beam to be connected need to have support on connection side");
+                            }
+
+                            //Left side of this beam will be connected to the left side of oldbeam.
+                            leftleftcircularconnect(oldbeam);
+
+                            break;
+
+                        #endregion
+
+                        #region Left-Right
+
+                        case Direction.Right:
+
+                            if (LeftSide != null && oldbeam.RightSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
+
+                            //Left side of this beam will be connected to the right side of lodbeam.
+                            leftrightcircularconnect(oldbeam);
+
+                            break;
+
+                            #endregion
+                    }
+
+                    break;
+
+                case Direction.Right:
+
+                    switch (direction2)
+                    {
+                        #region Right-Left
+
+                        case Direction.Left:
+
+                            if (RightSide != null && oldbeam.LeftSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
+                            //Right side of this beam will be connected to the left side of oldbeam.
+                            rightleftcircularconnect(oldbeam);
+
+                            break;
+
+                        #endregion
+
+                        #region Right-Right
+
+                        case Direction.Right:
+
+                            if (RightSide != null && oldbeam.RightSide != null)
+                            {
+                                throw new InvalidOperationException("Both beam has supports on the assembly points");
+                            }
+
+                            //Right side of this beam will be connected to the right side of oldbeam.                             
+                            rightrightcircularconnect(oldbeam);
+
+                            break;
+
+                            #endregion
+                    }
+
+                    break;
+            }
+        }
+
+        private void leftleftcircularconnect(Beam oldbeam)
+        {
+            if (oldbeam.LeftSide != null)
+            {
+                switch (oldbeam.LeftSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = oldbeam.LeftSide as SlidingSupport;
+                        ss.AddBeam(this, Direction.Left);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = oldbeam.LeftSide as BasicSupport;
+                        bs.AddBeam(this, Direction.Left);
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "RightFixedSupport has been bounded to the left side of the beam");
+
+                        break;
+                }
+            }
+            else if (LeftSide != null)
+            {
+                switch (LeftSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = LeftSide as SlidingSupport;
+                        ss.AddBeam(oldbeam, Direction.Left);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = LeftSide as BasicSupport;
+                        bs.AddBeam(oldbeam, Direction.Left);
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "RightFixedSupport has been bounded to the left side of the beam");
+
+                        break;
+                }
+            }
+        }
+
+        private void leftrightcircularconnect(Beam oldbeam)
+        {
+            if (oldbeam.RightSide != null)
+            {
+                switch (oldbeam.RightSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = oldbeam.RightSide as SlidingSupport;
+                        ss.AddBeam(this, Direction.Left);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = oldbeam.RightSide as BasicSupport;
+                        bs.AddBeam(this, Direction.Left);
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "LeftFixedSupport has been bounded to the right side of the beam");
+
+                        break;
+                }
+            }
+            else if (LeftSide != null)
+            {
+                switch (LeftSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = LeftSide as SlidingSupport;
+                        ss.AddBeam(oldbeam, Direction.Right);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = LeftSide as BasicSupport;
+                        bs.AddBeam(oldbeam, Direction.Right);
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "RightFixedSupport has been bounded to the left side of the beam");
+
+                        break;
+                }
+            }
+        }
+
+        private void rightrightcircularconnect(Beam oldbeam)
+        {
+            if (oldbeam.RightSide != null)
+            {
+                switch (oldbeam.RightSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = oldbeam.RightSide as SlidingSupport;
+                        ss.AddBeam(this, Direction.Right);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = oldbeam.RightSide as BasicSupport;
+                        bs.AddBeam(this, Direction.Right);
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "LeftFixedSupport has been bounded to the right side of the beam");
+
+                        break;
+                }
+            }
+            else if (RightSide != null)
+            {
+                switch (RightSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = RightSide as SlidingSupport;
+                        ss.AddBeam(oldbeam, Direction.Right);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = RightSide as BasicSupport;
+                        bs.AddBeam(oldbeam, Direction.Right);
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "LeftFixedSupport has been bounded to the right side of the beam");
+
+                        break;
+                }
+            }
+        }
+
+        private void rightleftcircularconnect(Beam oldbeam)
+        {
+            if (oldbeam.LeftSide != null)
+            {
+                switch (oldbeam.LeftSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = oldbeam.LeftSide as SlidingSupport;
+                        ss.AddBeam(this, Direction.Right);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = oldbeam.LeftSide as BasicSupport;
+                        bs.AddBeam(this, Direction.Right);
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "RightFixedSupport has been bounded to the left side of the beam");
+
+                        break;
+                }
+            }
+            else if (RightSide != null)
+            {
+                switch (RightSide.GetType().Name)
+                {
+                    case "SlidingSupport":
+
+                        var ss = RightSide as SlidingSupport;
+                        ss.AddBeam(oldbeam, Direction.Left);
+
+                        break;
+
+                    case "BasicSupport":
+
+                        var bs = RightSide as BasicSupport;
+                        bs.AddBeam(oldbeam, Direction.Left);
+
+                        break;
+
+                    case "RightFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "The side that has a fixed support can not be connected.");
+
+                        break;
+
+                    case "LeftFixedSupport":
+
+                        throw new InvalidOperationException(
+                            "LeftFixedSupport has been bounded to the right side of the beam");
+
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -1682,6 +1752,88 @@ namespace Mesnet.Xaml.User_Controls
             {
                 Canvas.SetTop(this, y - 7);
             }
+        }
+
+        /// <summary>
+        /// Sets the position of desired circle point of the beam.
+        /// </summary>
+        /// <param name="direction">The direction of the circle.</param>
+        /// <param name="x">The x (horizontal) component of desired point.</param>
+        /// <param name="y">The y (vertical) component of desired point.</param>
+        public void SetPosition(Direction direction, double x, double y)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+
+                    Canvas.SetLeft(this, x);
+
+                    if (Height > 0)
+                    {
+                        Canvas.SetTop(this, y - Height / 2);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(this, y - 7);
+                    }
+
+                    break;
+
+                case Direction.Right:
+
+                    Canvas.SetLeft(this, x - Width);
+
+                    if (Height > 0)
+                    {
+                        Canvas.SetTop(this, y - Height / 2);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(this, y - 7);
+                    }
+
+                    break;
+            }
+
+            SetTransformGeometry(_canvas);
+        }
+
+        public void SetPosition(Direction direction, Point point)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+
+                    Canvas.SetLeft(this, point.X);
+
+                    if (Height > 0)
+                    {
+                        Canvas.SetTop(this, point.Y - Height / 2);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(this, point.Y - 7);
+                    }
+
+                    break;
+
+                case Direction.Right:
+
+                    Canvas.SetLeft(this, point.X - Width);
+
+                    if (Height > 0)
+                    {
+                        Canvas.SetTop(this, point.Y - Height / 2);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(this, point.Y - 7);
+                    }
+
+                    break;
+            }
+
+            SetTransformGeometry(_canvas);
         }
 
         /// <summary>
@@ -3479,7 +3631,7 @@ namespace Mesnet.Xaml.User_Controls
                     {
                         case "RightFixedSupport":
 
-                            MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                            MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                             ffsolver();
 
                             break;
@@ -3490,12 +3642,12 @@ namespace Mesnet.Xaml.User_Controls
 
                             if (basic.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                 ffsolver();
                             }
                             else
                             {
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "fbsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "fbsolver has been executed");
                                 fbsolver();
                             }
 
@@ -3507,12 +3659,12 @@ namespace Mesnet.Xaml.User_Controls
 
                             if (sliding.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                 ffsolver();
                             }
                             else
                             {
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "fbsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "fbsolver has been executed");
                                 fbsolver();
                             }
 
@@ -3531,7 +3683,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                 ffsolver();
 
                                 break;
@@ -3542,12 +3694,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "fbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "fbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3559,12 +3711,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3577,7 +3729,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bfsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "bfsolver has been executed");
                                 bfsolver();
 
                                 break;
@@ -3588,12 +3740,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bfsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3605,12 +3757,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bfsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3630,7 +3782,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                 ffsolver();
 
                                 break;
@@ -3641,12 +3793,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "fbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "fbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3658,12 +3810,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "ffsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3676,7 +3828,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bfsolver has been executed");
+                                MyDebug.WriteInformation(this.Name + "crosssupportcases", "bfsolver has been executed");
                                 bfsolver();
 
                                 break;
@@ -3687,12 +3839,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bfsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3704,12 +3856,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bfsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation(this.Name + ": CrossCalculate", "bbsolver has been executed");
+                                    MyDebug.WriteInformation(this.Name + "crosssupportcases", "bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3971,7 +4123,6 @@ namespace Mesnet.Xaml.User_Controls
 
         public void CalculateStress()
         {
-
             double precision = 0.001;
             _stress = new DotCollection();
             double stress = 0;
@@ -4018,6 +4169,7 @@ namespace Mesnet.Xaml.User_Controls
                 _stress.Add(_length, stress);
             }
 
+            /*
             using (StreamWriter stw = new StreamWriter(@"stress.txt"))
             {
                 for (int i = 0; i < _stress.Count; i++)
@@ -4025,6 +4177,7 @@ namespace Mesnet.Xaml.User_Controls
                     stw.WriteLine(_stress[i].Key + " , " + _stress[i].Value * Math.Pow(10, 3));
                 }
             }
+            */
         }
 
         #endregion

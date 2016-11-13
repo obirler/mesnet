@@ -44,9 +44,12 @@ namespace Mesnet.Classes.Tools
         {
             try
             {
-                stw.Flush();
-                stw.Close();
-                _isclosed = true;
+                if (!_isclosed)
+                {
+                    stw.Flush();
+                    stw.Close();
+                    _isclosed = true;
+                }                
             }
             catch (Exception)
             {}

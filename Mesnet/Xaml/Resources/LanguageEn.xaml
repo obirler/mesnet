@@ -50,4 +50,5 @@
     <system:String x:Key="angle">Angle :</system:String>
     <system:String x:Key="performstressanalalysis">Perform Stress Analysis</system:String>
     <system:String x:Key="maxstress">Maximum Allowable Stress</system:String>
+    <system:String x:Key="calculationtype">Calculation Type</system:String>
 </ResourceDictionary>

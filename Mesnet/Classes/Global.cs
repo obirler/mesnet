@@ -168,6 +168,12 @@ namespace Mesnet.Classes
             RightFixedSupport
         }
 
+        public enum CalculationType
+        {
+            SingleThreaded,
+            MultiThreaded
+        }
+
         public static void WritePPolytoConsole(string message, PiecewisePoly ppoly)
         {
             foreach (Poly poly in ppoly)
@@ -188,5 +194,9 @@ namespace Mesnet.Classes
             public double xposition;
             public double yposition;
         }
+
+        public static List<string> LogList = new List<string>();
+
+        public static CalculationType Calculation = CalculationType.MultiThreaded;
     }
 }

@@ -81,7 +81,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.LeftSide = this;
 
-                            beam.IsBound = true;
+                            //beam.IsBound = true;
 
                             break;
 
@@ -93,7 +93,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.RightSide = this;
 
-                            beam.IsBound = true;
+                            //beam.IsBound = true;
 
                             break;
                     }

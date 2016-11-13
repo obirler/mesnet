@@ -352,40 +352,6 @@ namespace Mesnet.Classes.Math
             }
 
             return check;
-
-            /*int polycorners = poly.Count;
-            List<Point> polyPoints = new List<Point>();
-            for (int i = 0; i < poly.Count; i++)
-            {
-                polyPoints.Add(poly[i]);
-            }
-
-            int j = polycorners - 1;
-            double x = point.X;
-            double y = point.Y;
-            bool oddNodes = false;
-
-            for (int i = 0; i < polycorners; i++)
-            {
-                if (((polyPoints[i].Y < y && polyPoints[j].Y >= y)
-                     || (polyPoints[j].Y < y && polyPoints[i].Y >= y))
-                        && (polyPoints[i].X <= x || polyPoints[j].X <= x))
-                {
-                    oddNodes ^= (polyPoints[i].Y + (y - polyPoints[i].Y) / (polyPoints[j].Y - polyPoints[i].Y) * (polyPoints[j].X - polyPoints[i].X) < x);
-                }
-                j = i;
-            }
-
-            if (oddNodes)
-            {
-                MyDebug.WriteInformation("IsInside", "the point is inside of the rectangle");
-            }
-            else
-            {
-                MyDebug.WriteInformation("IsInside", "the point is outside of the rectangle");
-            }
-
-            return oddNodes;*/
         }
 
         public Point LeftPoint

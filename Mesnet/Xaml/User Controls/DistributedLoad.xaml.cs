@@ -50,6 +50,8 @@ namespace Mesnet.Xaml.User_Controls
 
         }
 
+        private MainWindow _mw = (MainWindow)Application.Current.MainWindow;
+
         private double _max;
 
         private double _length;
@@ -71,30 +73,6 @@ namespace Mesnet.Xaml.User_Controls
         public PiecewisePoly LoadPpoly
         {
             get { return _loadppoly; }
-        }
-
-        private void Scale()
-        {
-            loadcanvas.Children.Clear();
-
-            if (_max > 200)
-            {
-                coeff = 200 / _max;
-                Height = 200;
-            }
-            else if (_max < 0)
-            {
-                coeff = 1;
-                Height = 0;
-                Margin = new Thickness(0, -_max, 0, 0);
-            }
-            else
-            {
-                coeff = 200 / Global.maxload;
-                Height = 200 * _max / Global.maxload;
-            }
-
-            draw();
         }
 
         private void draw()
@@ -142,51 +120,11 @@ namespace Mesnet.Xaml.User_Controls
                 var spline = new CardinalSplineShape(points);
                 spline.Stroke = new SolidColorBrush(Colors.Black);
                 spline.StrokeThickness = 1;
-                spline.MouseMove += mousemove;
-                spline.MouseEnter += mouseenter;
-                spline.MouseLeave += mouseleave;
+                spline.MouseMove += _mw.distloadmousemove;
+                spline.MouseEnter += _mw.mouseenter;
+                spline.MouseLeave += _mw.mouseleave;
                 loadcanvas.Children.Add(spline);
             }
-
-            Panel.SetZIndex(viewbox, 1);
-        }
-
-        private void drawnegative()
-        {
-            double calculated = 0;
-
-            double value = 0;
-
-            foreach (Poly poly in _loadppoly)
-            {
-                var points = new PointCollection();
-
-                points.Clear();
-
-                for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
-                {
-                    calculated = coeff * poly.Calculate(i / 100);
-                    value = _max * coeff - calculated;
-                    points.Add(new Point(i, value));
-                    if (i % 10 == 0 && calculated >= 5)
-                    {
-                        drawarrow(i, calculated);
-                    }
-                    else if (i % 10 == 0 && calculated <= -5)
-                    {
-                        drawnegativearrow(i, calculated - _max);
-                    }
-                }
-                var spline = new CardinalSplineShape(points);
-                spline.Stroke = new SolidColorBrush(Colors.Black);
-                spline.StrokeThickness = 1;
-                spline.MouseMove += mousemove;
-                spline.MouseEnter += mouseenter;
-                spline.MouseLeave += mouseleave;
-                loadcanvas.Children.Add(spline);
-            }
-
-            Panel.SetZIndex(viewbox, 1);
         }
 
         /// <summary>
@@ -229,25 +167,6 @@ namespace Mesnet.Xaml.User_Controls
             polygon.Points = points;
             polygon.Fill = new SolidColorBrush(Colors.Black);
             loadcanvas.Children.Add(polygon);
-        }
-
-        private void mousemove(object sender, MouseEventArgs e)
-        {
-            var mousepoint = e.GetPosition(loadcanvas);
-            Canvas.SetTop(viewbox, mousepoint.Y + 12 / Global.Scale);
-            Canvas.SetLeft(viewbox, mousepoint.X + 12 / Global.Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(_loadppoly.Calculate(mousepoint.X / 100), 4);
-            viewbox.Height = 20 / Global.Scale;
-        }
-
-        private void mouseenter(object sender, MouseEventArgs e)
-        {
-            tooltip.Visibility = Visibility.Visible;
-        }
-
-        private void mouseleave(object sender, MouseEventArgs e)
-        {
-            tooltip.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -22,7 +22,16 @@ namespace Mesnet.Xaml.Pages
 
             inertiappoly = new PiecewisePoly();
 
+            _loaded = true;
+
             length.Focus();
+
+            if (inertiappoly.Length == 0)
+            {
+                ui.Text = "1";
+                uix1.Text = "0";
+                uix2.Text = beamlength.ToString();
+            }
         }
 
         /// <summary>
@@ -35,11 +44,19 @@ namespace Mesnet.Xaml.Pages
             InitializeComponent();
 
             inertiappoly = new PiecewisePoly();
-            double beamlen = Math.Sqrt(Math.Pow(start.X - end.X, 2) + Math.Pow(start.Y - end.Y, 2)) / 100;
-            length.Text = beamlen.ToString();
+            beamlength = Math.Sqrt(Math.Pow(start.X - end.X, 2) + Math.Pow(start.Y - end.Y, 2)) / 100;
+            length.Text = beamlength.ToString();
             length.IsEnabled = false;
             angletbx.Text = getAngle(start, end).ToString();
             angletbx.IsEnabled = false;
+            _loaded = true;
+
+            if (inertiappoly.Length == 0)
+            {
+                ui.Text = "1";
+                uix1.Text = "0";
+                uix2.Text = beamlength.ToString();
+            }
         }
 
         public double beamlength = 0;
@@ -57,6 +74,8 @@ namespace Mesnet.Xaml.Pages
         public PiecewisePoly dppoly;
 
         public FunctionType type;
+
+        private bool _loaded = false;
 
         private void length_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -265,38 +284,41 @@ namespace Mesnet.Xaml.Pages
         {
             try
             {
-                ui.IsEnabled = true;
-                uix1.IsEnabled = true;
-                uix2.IsEnabled = true;
-                uibtn.IsEnabled = true;
-
-                if (inertiappoly.Length == 0)
+                if (_loaded)
                 {
-                    ui.Text = "1";
-                    uix1.Text = "0";
-                    uix2.Text = beamlength.ToString();
+                    ui.IsEnabled = true;
+                    uix1.IsEnabled = true;
+                    uix2.IsEnabled = true;
+                    uibtn.IsEnabled = true;
+
+                    if (inertiappoly.Length == 0)
+                    {
+                        ui.Text = "1";
+                        uix1.Text = "0";
+                        uix2.Text = beamlength.ToString();
+                    }
+
+                    li1.IsEnabled = false;
+                    li1.Text = "";
+                    li2.IsEnabled = false;
+                    li2.Text = "";
+                    lix1.IsEnabled = false;
+                    lix1.Text = "";
+                    lix2.IsEnabled = false;
+                    lix2.Text = "";
+                    libtn.IsEnabled = false;
+
+                    vi.IsEnabled = false;
+                    vi.Text = "";
+                    vix1.IsEnabled = false;
+                    vix1.Text = "";
+                    vix2.IsEnabled = false;
+                    vix2.Text = "";
+                    vibtn.IsEnabled = false;
+
+                    liexpand.IsExpanded = false;
+                    viexpand.IsExpanded = false;
                 }
-
-                li1.IsEnabled = false;
-                li1.Text = "";
-                li2.IsEnabled = false;
-                li2.Text = "";
-                lix1.IsEnabled = false;
-                lix1.Text = "";
-                lix2.IsEnabled = false;
-                lix2.Text = "";
-                libtn.IsEnabled = false;
-
-                vi.IsEnabled = false;
-                vi.Text = "";
-                vix1.IsEnabled = false;
-                vix1.Text = "";
-                vix2.IsEnabled = false;
-                vix2.Text = "";
-                vibtn.IsEnabled = false;
-
-                liexpand.IsExpanded = false;
-                viexpand.IsExpanded = false;
             }
             catch (Exception)
             {

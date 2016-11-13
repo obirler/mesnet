@@ -12,5 +12,10 @@
                 <RadioButton x:Name="turkishbtn" Content="Türkçe" FontSize="15" Margin="10" Checked="turkishbtn_Checked"/>
             </StackPanel>
         </GroupBox>
+        <TextBlock Text="{DynamicResource calculationtype}" Margin="10,10,5,0" />
+        <ComboBox x:Name="calculationcbx" Margin="15,10,15,10" SelectionChanged="calculationcbx_SelectionChanged">
+            <ComboBoxItem>Single Threaded</ComboBoxItem>
+            <ComboBoxItem>Multi Threaded</ComboBoxItem>
+        </ComboBox>
     </StackPanel>
 </Window>

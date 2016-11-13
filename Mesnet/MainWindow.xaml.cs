@@ -98,7 +98,7 @@ namespace Mesnet
 
         private int _rightcount = 0;
 
-        private double _maxstress = 0;
+        private double _maxstress = 150;
 
         private void TestCase()
         {
@@ -261,7 +261,7 @@ namespace Mesnet
             beam7.AddInertia(new PiecewisePoly(polies7));
             beam7.Connect(Direction.Left, beam6, Direction.Right);
             beam7.SetAngleLeft(-90);
-            beam7.Connect(Direction.Right, beam3, Direction.Left, true);
+            beam7.CircularConnect(Direction.Right, beam3, Direction.Left);
 
             beam7.core.MouseDown += core_MouseDown;
             beam7.core.MouseUp += core_MouseUp;
@@ -284,7 +284,7 @@ namespace Mesnet
             beam8.AddInertia(new PiecewisePoly(polies8));
             beam8.Connect(Direction.Left, beam3, Direction.Left);
             beam8.SetAngleLeft(-90);
-            beam8.Connect(Direction.Right, beam1, Direction.Left, true);
+            beam8.CircularConnect(Direction.Right, beam1, Direction.Left);
 
             beam8.core.MouseDown += core_MouseDown;
             beam8.core.MouseUp += core_MouseUp;
@@ -414,7 +414,7 @@ namespace Mesnet
             beam5.AddInertia(new PiecewisePoly(polies5));
             beam5.Connect(Direction.Left, beam4, Direction.Right);
             beam5.SetAngleLeft(270);
-            beam5.Connect(Direction.Right, beam1, Direction.Left, true);
+            beam5.CircularConnect(Direction.Right, beam1, Direction.Left);
 
             beam5.core.MouseDown += core_MouseDown;
             beam5.core.MouseUp += core_MouseUp;
@@ -643,7 +643,7 @@ namespace Mesnet
             beam9.AddInertia(new PiecewisePoly(polies9));
             beam9.Connect(Direction.Left, beam8, Direction.Right);
             beam9.SetAngleLeft(-90);
-            beam9.Connect(Direction.Right, beam1, Direction.Left, true);
+            beam9.CircularConnect(Direction.Right, beam1, Direction.Left);
 
             beam9.core.MouseDown += core_MouseDown;
             beam9.core.MouseUp += core_MouseUp;
@@ -683,7 +683,7 @@ namespace Mesnet
             polies11.Add(new Poly("4", 0, beam11.Length));
             beam11.AddInertia(new PiecewisePoly(polies11));
             beam11.Connect(Direction.Left, beam10, Direction.Right);
-            beam11.Connect(Direction.Right, beam4, Direction.Right, true);
+            beam11.CircularConnect(Direction.Right, beam4, Direction.Right);
 
             beam11.core.MouseDown += core_MouseDown;
             beam11.core.MouseUp += core_MouseUp;
@@ -700,7 +700,7 @@ namespace Mesnet
             beam12.AddInertia(new PiecewisePoly(polies12));
             beam12.Connect(Direction.Left, beam10, Direction.Right);
             beam12.SetAngleLeft(90);
-            beam12.Connect(Direction.Right, beam6, Direction.Right, true);
+            beam12.CircularConnect(Direction.Right, beam6, Direction.Right);
 
             beam12.core.MouseDown += core_MouseDown;
             beam12.core.MouseUp += core_MouseUp;
@@ -1375,10 +1375,11 @@ namespace Mesnet
                     tempbeam.core.MouseMove += core_MouseMove;
                     tempbeam.startcircle.MouseDown += StartCircle_MouseDown;
                     tempbeam.endcircle.MouseDown += EndCircle_MouseDown;
-                    tempbeam.Background = new SolidColorBrush(Colors.Transparent);
+                    tempbeam.Background = new SolidColorBrush(Colors.Transparent);                   
                     tempbeam.AddCenter(canvas, x, y);
-                    tempbeam.SetAngleCenter(beamangle);
+                    tempbeam.SetAngleCenter(beamangle);                    
                     tempbeam.CanBeDragged = true;
+                    //tempbeam.ShowCorners(4);
 
                     UpdateTree(tempbeam);
 
@@ -1873,7 +1874,7 @@ namespace Mesnet
                                         }
                                         newbeam.Connect(Direction.Left, assemblybeam, Direction.Left);
                                         newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.Connect(Direction.Right, beam, Direction.Left, true);
+                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
 
                                         newbeam.core.MouseDown += core_MouseDown;
                                         newbeam.core.MouseUp += core_MouseUp;
@@ -1928,7 +1929,7 @@ namespace Mesnet
                                         }
                                         newbeam.Connect(Direction.Left, assemblybeam, Direction.Right);
                                         newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.Connect(Direction.Right, beam, Direction.Left, true);
+                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
 
                                         newbeam.core.MouseDown += core_MouseDown;
                                         newbeam.core.MouseUp += core_MouseUp;
@@ -2043,7 +2044,7 @@ namespace Mesnet
                                         }
                                         newbeam.Connect(Direction.Left, assemblybeam, Direction.Left);
                                         newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.Connect(Direction.Right, beam, Direction.Right, true);
+                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
 
                                         newbeam.core.MouseDown += core_MouseDown;
                                         newbeam.core.MouseUp += core_MouseUp;
@@ -2098,7 +2099,7 @@ namespace Mesnet
                                         }
                                         newbeam.Connect(Direction.Left, assemblybeam, Direction.Right);
                                         newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.Connect(Direction.Right, beam, Direction.Right, true);
+                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
 
                                         newbeam.core.MouseDown += core_MouseDown;
                                         newbeam.core.MouseUp += core_MouseUp;
@@ -2188,7 +2189,7 @@ namespace Mesnet
                     if (assembly)
                     {
                         //There must be a selected beam whose start circle or end circle is also selected. So place the beam to the circle location.
-                        //Because we will imediately connect this beam, we must use the constructor with canvas.
+                        //Because we will immediately connect this beam, we must use the constructor with canvas.
                         var beam = new Beam(canvas, beamdialog.beamlength);
 
                         switch (selectedbeam.circledirection)
@@ -2401,7 +2402,7 @@ namespace Mesnet
                         var leftfixedsupport = new LeftFixedSupport(canvas);
                         leftfixedsupport.AddBeam(selectedbeam);
                         notify.Text = (string)FindResource("fixedsupportput");
-                        UpdateSupportTree(leftfixedsupport);
+                        UpdateSupportTree(leftfixedsupport);                     
                         break;
 
                     case Direction.Right:
@@ -2417,8 +2418,8 @@ namespace Mesnet
 
                         break;
                 }
+                UpdateTree(selectedbeam);
                 SetMouseHandlingMode("fixedsupportbtn_Click", MouseHandlingMode.None);
-                UpdateAllTree();
             }
             else
             {
@@ -2456,8 +2457,8 @@ namespace Mesnet
                 }
                 notify.Text = (string)FindResource("basicsupportput");
                 SetMouseHandlingMode("basicsupportbtn_Click", MouseHandlingMode.None);
-                UpdateSupportTree(basicsupport);
-                UpdateAllTree();
+                UpdateSupportTree(basicsupport);               
+                UpdateTree(selectedbeam);
             }
             else
             {
@@ -2495,7 +2496,7 @@ namespace Mesnet
                 SetMouseHandlingMode("slidingsupportbtn_Click", MouseHandlingMode.None);
                 notify.Text = (string)FindResource("slidingsupportput");
                 UpdateSupportTree(slidingsupport);
-                UpdateAllTree();
+                UpdateTree(selectedbeam);
             }
             else
             {
@@ -2783,9 +2784,9 @@ namespace Mesnet
                 string rightname = "Null";
                 switch (beam.RightSide.GetType().Name)
                 {
-                    case "LeftFixedSupport":
+                    case "RightFixedSupport":
 
-                        rightname = (beam.RightSide as LeftFixedSupport).Name;
+                        rightname = (beam.RightSide as RightFixedSupport).Name;
 
                         break;
 
@@ -3747,52 +3748,6 @@ namespace Mesnet
             }
         }
 
-        private void forceexplorer_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                var tbx = (sender as TextBox);
-                double xvalue = Convert.ToDouble(tbx.Text);
-                var stk = tbx.Parent as StackPanel;
-                var exploreritem = stk.Parent as ForceExplorer;
-                var infoitem = exploreritem.Parent as TreeViewItem;
-                var item1 = infoitem.Parent as TreeViewItem;
-                var item2 = item1.Parent as TreeViewItem;
-                var item3 = item2.Header as ForceItem;
-                var item4 = item3.Parent as TreeViewItem;
-                var beamitem = item4.Parent as TreeViewItem;
-                var beamname = (beamitem.Header as BeamItem).beamname.Text;
-                var beam = GetBeam(beamname);
-                var forcevalue = Math.Round(beam.ZeroForce.Calculate(xvalue), 4);
-                exploreritem.funcvalue.Text = forcevalue.ToString();
-            }
-            catch (Exception)
-            { }
-        }
-
-        private void zeromomentexplorer_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                var tbx = (sender as TextBox);
-                double xvalue = Convert.ToDouble(tbx.Text);
-                var stk = tbx.Parent as StackPanel;
-                var exploreritem = stk.Parent as MomentExplorer;
-                var infoitem = exploreritem.Parent as TreeViewItem;
-                var item1 = infoitem.Parent as TreeViewItem;
-                var item2 = item1.Parent as TreeViewItem;
-                var item3 = item2.Header as MomentItem;
-                var item4 = item3.Parent as TreeViewItem;
-                var beamitem = item4.Parent as TreeViewItem;
-                var beamname = (beamitem.Header as BeamItem).beamname.Text;
-                var beam = GetBeam(beamname);
-                var momentvalue = Math.Round(beam.ZeroMoment.Calculate(xvalue), 4);
-                exploreritem.funcvalue.Text = momentvalue.ToString();
-            }
-            catch (Exception)
-            { }
-        }
-
         private void fixedendforceexplorer_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -3964,6 +3919,11 @@ namespace Mesnet
             UnselectAll();
             btndisableall();
             SetMouseHandlingMode("Reset", MouseHandlingMode.None);
+        }
+
+        public void WriteStatus(string keytext)
+        {
+            notify.Text = (string)FindResource("beamput");
         }
 
         #region Cross Solve
@@ -4919,9 +4879,20 @@ namespace Mesnet
             return name;
         }
 
-        public void momentmousemove(object sender, MouseEventArgs e)
+        public void distloadmousemove(object sender, MouseEventArgs e)
         {
+            Canvas loadcanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            DistributedLoad load = loadcanvas.Parent as DistributedLoad;
+            var mousepoint = e.GetPosition(loadcanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(load.LoadPpoly.Calculate(mousepoint.X / 100), 4) + " kN";
+            viewbox.Height = 20 / Scale;
+        }
 
+        public void momentmousemove(object sender, MouseEventArgs e)
+        {        
             Canvas momentcanvas = (sender as CardinalSplineShape).Parent as Canvas;
             Moment moment = momentcanvas.Parent as Moment;
             var mousepoint = e.GetPosition(momentcanvas);

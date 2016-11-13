@@ -27,6 +27,21 @@ namespace Mesnet.Xaml.Pages
 
                     break;
             }
+
+            switch (Calculation)
+            {
+                case CalculationType.SingleThreaded:
+
+                    calculationcbx.SelectedIndex = 0;
+
+                    break;
+
+                case CalculationType.MultiThreaded:
+
+                    calculationcbx.SelectedIndex = 1;
+
+                    break;
+            }
         }
 
         private void englishbtn_Checked(object sender, RoutedEventArgs e)
@@ -37,6 +52,24 @@ namespace Mesnet.Xaml.Pages
         private void turkishbtn_Checked(object sender, RoutedEventArgs e)
         {
             SetLanguageDictionary("tr-TR");
+        }
+
+        private void calculationcbx_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            switch (calculationcbx.SelectedIndex)
+            {
+                case 0:
+
+                    Calculation = CalculationType.SingleThreaded;
+
+                    break;
+
+                case 1:
+
+                    Calculation = CalculationType.MultiThreaded;
+
+                    break;
+            }
         }
     }
 }

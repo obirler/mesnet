@@ -41,8 +41,6 @@ namespace Mesnet.Xaml.Pages
 
         BackgroundWorker bw = new BackgroundWorker();
 
-        BackgroundWorker bw2 = new BackgroundWorker();
-
         BackgroundWorker bw3 = new BackgroundWorker();
 
         private List<Beam> QueueList = new List<Beam>();
@@ -69,23 +67,55 @@ namespace Mesnet.Xaml.Pages
 
             if (BeamCount > 1)
             {
-                foreach (var item in objects)
+                switch (Calculation)
                 {
-                    if (item.GetType().Name == "Beam")
-                    {
-                        Beam beam = (Beam)item;
-                        QueueList.Add(beam);
-                    }
-                }
+                    case CalculationType.SingleThreaded:
 
-                Thread.Sleep(700);
+                        foreach (var item in objects)
+                        {
+                            if (item.GetType().Name == "Beam")
+                            {
+                                Beam beam = (Beam)item;
+                                Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    calculated++;
+                                    progress.Value = calculated / BeamCount * 100;
+                                    progress.UpdateLayout();
+                                    status.Text = "Calculating " + beam.Name;
+                                }));
+                                beam.CrossCalculate();
+                            }
+                        }
 
-                for (int i = 0; i < Environment.ProcessorCount; i++)
-                {
-                    BackgroundWorker bw = new BackgroundWorker();
-                    bw.DoWork += bwbeam_DoWork;
-                    bwlist.Add(bw);
-                    bw.RunWorkerAsync(i);
+                        bw3.RunWorkerAsync();
+
+                        break;
+
+                    case CalculationType.MultiThreaded:
+
+                        foreach (var item in objects)
+                        {
+                            if (item.GetType().Name == "Beam")
+                            {
+                                Beam beam = (Beam)item;
+                                QueueList.Add(beam);
+                            }
+                        }
+
+                        Thread.Sleep(700);
+
+                        for (int i = 0; i < Environment.ProcessorCount; i++)
+                        {
+                            if (QueueList.Count > 0)
+                            {
+                                BackgroundWorker bw = new BackgroundWorker();
+                                bw.DoWork += bwbeam_DoWork;
+                                bwlist.Add(bw);
+                                bw.RunWorkerAsync(i);
+                            }
+                        }
+
+                        break;
                 }
             }
             else
@@ -114,6 +144,7 @@ namespace Mesnet.Xaml.Pages
                             break;
                     }
                 }
+
             }
         }
 
@@ -127,16 +158,23 @@ namespace Mesnet.Xaml.Pages
             {
                 mutex.WaitOne();
                 cachebeam = QueueList.First();
-                QueueList.Remove(QueueList.First());
-                Dispatcher.BeginInvoke(new Action(() =>
+                if (cachebeam != null)
                 {
-                    calculated++;
-                    progress.Value = calculated / BeamCount * 100;
-                    progress.UpdateLayout();
-                    status.Text = "Calculating " + cachebeam.Name;
-                }));
-                mutex.ReleaseMutex();
-                cachebeam.CrossCalculate();
+                    QueueList.Remove(cachebeam);
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        calculated++;
+                        progress.Value = calculated/BeamCount*100;
+                        progress.UpdateLayout();
+                        status.Text = "Calculating " + cachebeam.Name;
+                    }));
+                    mutex.ReleaseMutex();
+                    cachebeam.CrossCalculate();
+                }
+                else
+                {
+                    mutex.ReleaseMutex();
+                }                
             }
 
             foreach (var worker in bwlist)

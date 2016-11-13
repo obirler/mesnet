@@ -50,4 +50,5 @@
     <system:String x:Key="angle">Açı :</system:String>
     <system:String x:Key="performstressanalalysis">Gerilme Analizi Yap</system:String>
     <system:String x:Key="maxstress">İzin verilen en yüksek gerilme </system:String>
+    <system:String x:Key="calculationtype">Hesaplama Tipi</system:String>
 </ResourceDictionary>

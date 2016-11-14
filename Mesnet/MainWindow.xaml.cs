@@ -1853,39 +1853,57 @@ namespace Mesnet
 
                                 if (beam.IsBound && assemblybeam.IsBound)
                                 {
-                                    SetMouseHandlingMode("StartCircle_MouseDown", MouseHandlingMode.CircularBeamConnection);
-                                    //Both beam is bound. This will be a circular beam system, so the user want to add a beam between 
-                                    //two selected beam instead of connecting them
-                                    var beamdialog = new BeamPrompt(assemblybeam.LeftPoint, beam.LeftPoint);
-                                    beamdialog.maxstresstbx.Text = _maxstress.ToString();
-                                    beamdialog.Owner = this;
-                                    if ((bool)beamdialog.ShowDialog())
+                                    if (assemblybeam.LeftSide != null && beam.LeftSide != null)
                                     {
-                                        var newbeam = new Beam(canvas, beamdialog.beamlength);
-                                        newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
-                                        newbeam.AddInertia(beamdialog.inertiappoly);
-                                        if ((bool)beamdialog.stresscbx.IsChecked)
+                                        if (assemblybeam.LeftSide.GetType().Name != "LeftFixedSupport" &&
+                                            beam.LeftSide.GetType().Name != "LeftFixedSupport")
                                         {
-                                            newbeam.PerformStressAnalysis = true;
-                                            newbeam.AddE(beamdialog.eppoly);
-                                            newbeam.AddD((beamdialog.dppoly));
-                                            _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
-                                            beam.MaxAllowableStress = _maxstress;
+                                            SetMouseHandlingMode("StartCircle_MouseDown",
+                                                MouseHandlingMode.CircularBeamConnection);
+                                            //Both beam is bound. This will be a circular beam system, so the user want to add a beam between 
+                                            //two selected beam instead of connecting them
+                                            var beamdialog = new BeamPrompt(assemblybeam.LeftPoint, beam.LeftPoint);
+                                            beamdialog.maxstresstbx.Text = _maxstress.ToString();
+                                            beamdialog.Owner = this;
+                                            if ((bool) beamdialog.ShowDialog())
+                                            {
+                                                var newbeam = new Beam(canvas, beamdialog.beamlength);
+                                                newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
+                                                newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if ((bool) beamdialog.stresscbx.IsChecked)
+                                                {
+                                                    newbeam.PerformStressAnalysis = true;
+                                                    newbeam.AddE(beamdialog.eppoly);
+                                                    newbeam.AddD((beamdialog.dppoly));
+                                                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
+                                                    beam.MaxAllowableStress = _maxstress;
+                                                }
+                                                newbeam.Connect(Direction.Left, assemblybeam, Direction.Left);
+                                                newbeam.SetAngleLeft(beamdialog.angle);
+                                                newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
+
+                                                newbeam.core.MouseDown += core_MouseDown;
+                                                newbeam.core.MouseUp += core_MouseUp;
+                                                newbeam.core.MouseMove += core_MouseMove;
+                                                newbeam.startcircle.MouseDown += StartCircle_MouseDown;
+                                                newbeam.endcircle.MouseDown += EndCircle_MouseDown;
+
+                                                canvas.UpdateLayout();
+                                                notify.Text = (string) FindResource("beamput");
+                                                UpdateAllTree();
+                                                UpdateAllSupportTree();
+                                                return;
+                                            }
                                         }
-                                        newbeam.Connect(Direction.Left, assemblybeam, Direction.Left);
-                                        newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
-
-                                        newbeam.core.MouseDown += core_MouseDown;
-                                        newbeam.core.MouseUp += core_MouseUp;
-                                        newbeam.core.MouseMove += core_MouseMove;
-                                        newbeam.startcircle.MouseDown += StartCircle_MouseDown;
-                                        newbeam.endcircle.MouseDown += EndCircle_MouseDown;
-
-                                        canvas.UpdateLayout();
-                                        notify.Text = (string)FindResource("beamput");
-                                        UpdateAllTree();
-                                        UpdateAllSupportTree();
+                                        else
+                                        {
+                                            Reset();
+                                            return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Reset();
                                         return;
                                     }
                                 }
@@ -1908,39 +1926,57 @@ namespace Mesnet
 
                                 if (beam.IsBound && assemblybeam.IsBound)
                                 {
-                                    SetMouseHandlingMode("StartCircle_MouseDown", MouseHandlingMode.CircularBeamConnection);
-                                    //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
-                                    //two selected beam instead of connecting them
-                                    var beamdialog = new BeamPrompt(assemblybeam.RightPoint, beam.LeftPoint);
-                                    beamdialog.maxstresstbx.Text = _maxstress.ToString();
-                                    beamdialog.Owner = this;
-                                    if ((bool)beamdialog.ShowDialog())
+                                    if (assemblybeam.RightSide != null && beam.LeftSide != null)
                                     {
-                                        var newbeam = new Beam(canvas, beamdialog.beamlength);
-                                        newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
-                                        newbeam.AddInertia(beamdialog.inertiappoly);
-                                        if ((bool)beamdialog.stresscbx.IsChecked)
+                                        if (assemblybeam.RightSide.GetType().Name != "RightFixedSupport" &&
+                                            beam.LeftSide.GetType().Name != "LeftFixedSupport")
                                         {
-                                            newbeam.PerformStressAnalysis = true;
-                                            newbeam.AddE(beamdialog.eppoly);
-                                            newbeam.AddD((beamdialog.dppoly));
-                                            _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
-                                            beam.MaxAllowableStress = _maxstress;
+                                            SetMouseHandlingMode("StartCircle_MouseDown",
+                                                MouseHandlingMode.CircularBeamConnection);
+                                            //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
+                                            //two selected beam instead of connecting them
+                                            var beamdialog = new BeamPrompt(assemblybeam.RightPoint, beam.LeftPoint);
+                                            beamdialog.maxstresstbx.Text = _maxstress.ToString();
+                                            beamdialog.Owner = this;
+                                            if ((bool) beamdialog.ShowDialog())
+                                            {
+                                                var newbeam = new Beam(canvas, beamdialog.beamlength);
+                                                newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
+                                                newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if ((bool) beamdialog.stresscbx.IsChecked)
+                                                {
+                                                    newbeam.PerformStressAnalysis = true;
+                                                    newbeam.AddE(beamdialog.eppoly);
+                                                    newbeam.AddD((beamdialog.dppoly));
+                                                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
+                                                    beam.MaxAllowableStress = _maxstress;
+                                                }
+                                                newbeam.Connect(Direction.Left, assemblybeam, Direction.Right);
+                                                newbeam.SetAngleLeft(beamdialog.angle);
+                                                newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
+
+                                                newbeam.core.MouseDown += core_MouseDown;
+                                                newbeam.core.MouseUp += core_MouseUp;
+                                                newbeam.core.MouseMove += core_MouseMove;
+                                                newbeam.startcircle.MouseDown += StartCircle_MouseDown;
+                                                newbeam.endcircle.MouseDown += EndCircle_MouseDown;
+
+                                                canvas.UpdateLayout();
+                                                notify.Text = (string) FindResource("beamput");
+                                                UpdateAllTree();
+                                                UpdateAllSupportTree();
+                                                return;
+                                            }
                                         }
-                                        newbeam.Connect(Direction.Left, assemblybeam, Direction.Right);
-                                        newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
-
-                                        newbeam.core.MouseDown += core_MouseDown;
-                                        newbeam.core.MouseUp += core_MouseUp;
-                                        newbeam.core.MouseMove += core_MouseMove;
-                                        newbeam.startcircle.MouseDown += StartCircle_MouseDown;
-                                        newbeam.endcircle.MouseDown += EndCircle_MouseDown;
-
-                                        canvas.UpdateLayout();
-                                        notify.Text = (string)FindResource("beamput");
-                                        UpdateAllTree();
-                                        UpdateAllSupportTree();
+                                        else
+                                        {
+                                            Reset();
+                                            return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Reset();
                                         return;
                                     }
                                 }
@@ -2023,39 +2059,56 @@ namespace Mesnet
 
                                 if (beam.IsBound && assemblybeam.IsBound)
                                 {
-                                    //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
-                                    //two selected beam instead of connecting them
-                                    SetMouseHandlingMode("EndCircle_MouseDown", MouseHandlingMode.CircularBeamConnection);
-                                    var beamdialog = new BeamPrompt(assemblybeam.LeftPoint, beam.RightPoint);
-                                    beamdialog.maxstresstbx.Text = _maxstress.ToString();
-                                    beamdialog.Owner = this;
-                                    if ((bool)beamdialog.ShowDialog())
+                                    if (assemblybeam.LeftSide != null && beam.RightSide != null)
                                     {
-                                        var newbeam = new Beam(canvas, beamdialog.beamlength);
-                                        newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
-                                        newbeam.AddInertia(beamdialog.inertiappoly);
-                                        if ((bool)beamdialog.stresscbx.IsChecked)
+                                        if (assemblybeam.LeftSide.GetType().Name != "LeftFixedSupport" &&
+                                            beam.RightSide.GetType().Name != "RightFixedSupport")
                                         {
-                                            newbeam.PerformStressAnalysis = true;
-                                            newbeam.AddE(beamdialog.eppoly);
-                                            newbeam.AddD((beamdialog.dppoly));
-                                            _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
-                                            beam.MaxAllowableStress = _maxstress;
+                                            //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
+                                            //two selected beam instead of connecting them
+                                            SetMouseHandlingMode("EndCircle_MouseDown", MouseHandlingMode.CircularBeamConnection);
+                                            var beamdialog = new BeamPrompt(assemblybeam.LeftPoint, beam.RightPoint);
+                                            beamdialog.maxstresstbx.Text = _maxstress.ToString();
+                                            beamdialog.Owner = this;
+                                            if ((bool)beamdialog.ShowDialog())
+                                            {
+                                                var newbeam = new Beam(canvas, beamdialog.beamlength);
+                                                newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
+                                                newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if ((bool)beamdialog.stresscbx.IsChecked)
+                                                {
+                                                    newbeam.PerformStressAnalysis = true;
+                                                    newbeam.AddE(beamdialog.eppoly);
+                                                    newbeam.AddD((beamdialog.dppoly));
+                                                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
+                                                    beam.MaxAllowableStress = _maxstress;
+                                                }
+                                                newbeam.Connect(Direction.Left, assemblybeam, Direction.Left);
+                                                newbeam.SetAngleLeft(beamdialog.angle);
+                                                newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
+
+                                                newbeam.core.MouseDown += core_MouseDown;
+                                                newbeam.core.MouseUp += core_MouseUp;
+                                                newbeam.core.MouseMove += core_MouseMove;
+                                                newbeam.startcircle.MouseDown += StartCircle_MouseDown;
+                                                newbeam.endcircle.MouseDown += EndCircle_MouseDown;
+
+                                                canvas.UpdateLayout();
+                                                notify.Text = (string)FindResource("beamput");
+                                                UpdateAllTree();
+                                                UpdateAllSupportTree();
+                                                return;
+                                            }
                                         }
-                                        newbeam.Connect(Direction.Left, assemblybeam, Direction.Left);
-                                        newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
-
-                                        newbeam.core.MouseDown += core_MouseDown;
-                                        newbeam.core.MouseUp += core_MouseUp;
-                                        newbeam.core.MouseMove += core_MouseMove;
-                                        newbeam.startcircle.MouseDown += StartCircle_MouseDown;
-                                        newbeam.endcircle.MouseDown += EndCircle_MouseDown;
-
-                                        canvas.UpdateLayout();
-                                        notify.Text = (string)FindResource("beamput");
-                                        UpdateAllTree();
-                                        UpdateAllSupportTree();
+                                        else
+                                        {
+                                            Reset();
+                                            return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Reset();
                                         return;
                                     }
                                 }
@@ -2078,41 +2131,58 @@ namespace Mesnet
 
                                 if (beam.IsBound && assemblybeam.IsBound)
                                 {
-                                    //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
-                                    //two selected beam instead of connecting them
-                                    SetMouseHandlingMode("EndCircle_MouseDown", MouseHandlingMode.CircularBeamConnection);
-                                    var beamdialog = new BeamPrompt(assemblybeam.RightPoint, beam.RightPoint);
-                                    beamdialog.maxstresstbx.Text = _maxstress.ToString();
-                                    beamdialog.Owner = this;
-                                    if ((bool)beamdialog.ShowDialog())
+                                    if (assemblybeam.RightSide != null && beam.RightSide != null)
                                     {
-                                        var newbeam = new Beam(canvas, beamdialog.beamlength);
-                                        newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
-                                        newbeam.AddInertia(beamdialog.inertiappoly);
-                                        if ((bool)beamdialog.stresscbx.IsChecked)
+                                        if (assemblybeam.RightSide.GetType().Name != "RightFixedSupport" &&
+                                            beam.RightSide.GetType().Name != "RightFixedSupport")
                                         {
-                                            newbeam.PerformStressAnalysis = true;
-                                            newbeam.AddE(beamdialog.eppoly);
-                                            newbeam.AddD((beamdialog.dppoly));
-                                            _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
-                                            beam.MaxAllowableStress = _maxstress;
+                                            //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
+                                            //two selected beam instead of connecting them
+                                            SetMouseHandlingMode("EndCircle_MouseDown", MouseHandlingMode.CircularBeamConnection);
+                                            var beamdialog = new BeamPrompt(assemblybeam.RightPoint, beam.RightPoint);
+                                            beamdialog.maxstresstbx.Text = _maxstress.ToString();
+                                            beamdialog.Owner = this;
+                                            if ((bool)beamdialog.ShowDialog())
+                                            {
+                                                var newbeam = new Beam(canvas, beamdialog.beamlength);
+                                                newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
+                                                newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if ((bool)beamdialog.stresscbx.IsChecked)
+                                                {
+                                                    newbeam.PerformStressAnalysis = true;
+                                                    newbeam.AddE(beamdialog.eppoly);
+                                                    newbeam.AddD((beamdialog.dppoly));
+                                                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
+                                                    beam.MaxAllowableStress = _maxstress;
+                                                }
+                                                newbeam.Connect(Direction.Left, assemblybeam, Direction.Right);
+                                                newbeam.SetAngleLeft(beamdialog.angle);
+                                                newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
+
+                                                newbeam.core.MouseDown += core_MouseDown;
+                                                newbeam.core.MouseUp += core_MouseUp;
+                                                newbeam.core.MouseMove += core_MouseMove;
+                                                newbeam.startcircle.MouseDown += StartCircle_MouseDown;
+                                                newbeam.endcircle.MouseDown += EndCircle_MouseDown;
+
+                                                UpdateSupportTree(assemblybeam.RightSide);
+                                                newbeam.SetAngleRight(beamangle);
+                                                canvas.UpdateLayout();
+                                                notify.Text = (string)FindResource("beamput");
+                                                UpdateAllTree();
+                                                UpdateAllSupportTree();
+                                                return;
+                                            }
                                         }
-                                        newbeam.Connect(Direction.Left, assemblybeam, Direction.Right);
-                                        newbeam.SetAngleLeft(beamdialog.angle);
-                                        newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
-
-                                        newbeam.core.MouseDown += core_MouseDown;
-                                        newbeam.core.MouseUp += core_MouseUp;
-                                        newbeam.core.MouseMove += core_MouseMove;
-                                        newbeam.startcircle.MouseDown += StartCircle_MouseDown;
-                                        newbeam.endcircle.MouseDown += EndCircle_MouseDown;
-
-                                        UpdateSupportTree(assemblybeam.RightSide);
-                                        newbeam.SetAngleRight(beamangle);
-                                        canvas.UpdateLayout();
-                                        notify.Text = (string)FindResource("beamput");
-                                        UpdateAllTree();
-                                        UpdateAllSupportTree();
+                                        else
+                                        {
+                                            Reset();
+                                            return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Reset();
                                         return;
                                     }
                                 }

@@ -4348,6 +4348,22 @@ namespace Mesnet.Xaml.User_Controls
             set { _maxallowablestress = value; }
         }
 
+        public bool IsLeftSelected
+        {
+            get
+            {
+                return _leftcircleseleted;
+            }
+        }
+
+        public bool IsRightSelected
+        {
+            get
+            {
+                return _rightcircleselected;
+            }
+        }
+
         #endregion
 
         #region Cross Properties

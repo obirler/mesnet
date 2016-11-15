@@ -1291,6 +1291,12 @@ namespace Mesnet
         {
             mouseHandlingMode = mode;
 
+            if (mouseHandlingMode == MouseHandlingMode.None)
+            {
+                btnonlybeammode();
+                btndisablerotation();
+            }
+
             if (writetodebug)
             {
                 MyDebug.WriteInformation(sender, mode.ToString());
@@ -1389,7 +1395,7 @@ namespace Mesnet
                 }
 
                 zoomAndPanControl.ReleaseMouseCapture();
-                SetMouseHandlingMode("zoomAndPanControl_MouseUp", MouseHandlingMode.None);
+                SetMouseHandlingMode("zoomAndPanControl_MouseUp", MouseHandlingMode.None);                
                 e.Handled = true;
             }
 
@@ -1778,6 +1784,15 @@ namespace Mesnet
 
                 BringToFront(canvas, beam);
                 btnloadmode();
+
+                if (selectedbeam.LeftSide != null && selectedbeam.RightSide != null && selectedbeam.IsBound)
+                {
+                    btndisablerotation();
+                }
+                else
+                {
+                    btnenablerotation();
+                }
             }
 
             core.ReleaseMouseCapture();
@@ -2579,35 +2594,124 @@ namespace Mesnet
         {
             if (selectedbeam != null)
             {
-                if (selectedbeam.LeftSide == null || selectedbeam.RightSide == null)
+                if (selectedbeam.LeftSide != null && selectedbeam.RightSide != null && selectedbeam.IsBound)
                 {
-                    var rotateprompt = new RotatePrompt();
-                    rotateprompt.Owner = this;
+                    return;
+                }
 
-                    if ((bool)rotateprompt.ShowDialog())
+                var rotateprompt = new RotatePrompt();
+                rotateprompt.Owner = this;
+                if (selectedbeam.LeftSide != null || selectedbeam.RightSide != null)
+                {                 
+                    if ((bool) rotateprompt.ShowDialog())
                     {
-                        if (selectedbeam.LeftSide == null)
+                        if (selectedbeam.LeftSide == null && selectedbeam.RightSide != null)
                         {
-                            if (selectedbeam.RightSide == null)
+                            selectedbeam.SetAngleRight(Convert.ToDouble(rotateprompt.angle.Text));
+
+                            switch (selectedbeam.RightSide.GetType().Name)
                             {
-                                selectedbeam.SetAngleCenter(Convert.ToDouble(rotateprompt.angle.Text));
-                            }
-                            else
-                            {
-                                selectedbeam.SetAngleRight(Convert.ToDouble(rotateprompt.angle.Text));
+                                case "RightFixedSupport":
+
+                                    var rs = selectedbeam.RightSide as RightFixedSupport;
+                                    rs.UpdatePosition(selectedbeam);
+
+                                    break;
+
+                                case "SlidingSupport":
+
+                                    var ss = selectedbeam.RightSide as SlidingSupport;
+                                    if (ss.Members.Count == 1)
+                                    {
+                                        ss.UpdatePosition(selectedbeam);
+                                    }
+                                    
+                                    break;
+
+                                case "BasicSupport":
+
+                                    var bs = selectedbeam.RightSide as BasicSupport;
+                                    if (bs.Members.Count == 1)
+                                    {
+                                        bs.UpdatePosition(selectedbeam);
+                                    }
+
+                                    break;
                             }
                         }
-                        else
+                        else if (selectedbeam.RightSide == null && selectedbeam.LeftSide != null)
                         {
-                            if (selectedbeam.RightSide == null)
+                            selectedbeam.SetAngleLeft(Convert.ToDouble(rotateprompt.angle.Text));
+
+                            switch (selectedbeam.LeftSide.GetType().Name)
+                            {
+                                case "LeftFixedSupport":
+
+                                    var rs = selectedbeam.LeftSide as LeftFixedSupport;
+                                    rs.UpdatePosition(selectedbeam);
+
+                                    break;
+
+                                case "SlidingSupport":
+
+                                    var ss = selectedbeam.LeftSide as SlidingSupport;
+                                    if (ss.Members.Count == 1)
+                                    {
+                                        ss.UpdatePosition(selectedbeam);
+                                    }
+
+                                    break;
+
+                                case "BasicSupport":
+
+                                    var bs = selectedbeam.LeftSide as BasicSupport;
+                                    if (bs.Members.Count == 1)
+                                    {
+                                        bs.UpdatePosition(selectedbeam);
+                                    }
+
+                                    break;
+                            }
+                        }
+                        else if (selectedbeam.RightSide != null && selectedbeam.LeftSide != null && !selectedbeam.IsBound)
+                        {
+                            if (selectedbeam.IsLeftSelected)
                             {
                                 selectedbeam.SetAngleLeft(Convert.ToDouble(rotateprompt.angle.Text));
+                                selectedbeam.MoveSupports();
+                            }
+                            else if (selectedbeam.IsRightSelected)
+                            {
+                                selectedbeam.SetAngleRight(Convert.ToDouble(rotateprompt.angle.Text));
+                                selectedbeam.MoveSupports();
                             }
                             else
                             {
-                                //No rotation. The beam has been bounded with both side it can not be turned
-                            }
+                                selectedbeam.SetAngleCenter(Convert.ToDouble(rotateprompt.angle.Text));
+                                selectedbeam.MoveSupports();
+                            }                          
                         }
+                    }
+                }
+                else if(selectedbeam.IsLeftSelected)
+                {
+                    if ((bool)rotateprompt.ShowDialog())
+                    {
+                        selectedbeam.SetAngleLeft(Convert.ToDouble(rotateprompt.angle.Text));
+                    }
+                }
+                else if (selectedbeam.IsRightSelected)
+                {
+                    if ((bool)rotateprompt.ShowDialog())
+                    {
+                        selectedbeam.SetAngleRight(Convert.ToDouble(rotateprompt.angle.Text));
+                    }
+                }
+                else
+                {
+                    if ((bool)rotateprompt.ShowDialog())
+                    {
+                        selectedbeam.SetAngleCenter(Convert.ToDouble(rotateprompt.angle.Text));
                     }
                 }
             }
@@ -2652,7 +2756,7 @@ namespace Mesnet
         private void btnassemblymode()
         {
             //assembly = true;
-            beambtn.IsEnabled = true;
+            beambtn.IsEnabled = false;
             fixedsupportbtn.IsEnabled = true;
             basicsupportbtn.IsEnabled = true;
             slidingsupportbtn.IsEnabled = true;
@@ -2679,6 +2783,16 @@ namespace Mesnet
             slidingsupportbtn.IsEnabled = true;
             concentratedloadbtn.IsEnabled = false;
             distributedloadbtn.IsEnabled = false;
+        }
+
+        private void btnenablerotation()
+        {
+            rotatebtn.IsEnabled = true;
+        }
+
+        private void btndisablerotation()
+        {
+            rotatebtn.IsEnabled = false;
         }
 
         /// <summary>

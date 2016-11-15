@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Mesnet.Classes.Math;
 using Mesnet.Xaml.User_Controls;
+using static Mesnet.Classes.Global;
 
 namespace Mesnet.Xaml.Pages
 {
@@ -42,6 +44,60 @@ namespace Mesnet.Xaml.Pages
 
         private void udlbtn_Click(object sender, RoutedEventArgs e)
         {
+            double startp;
+            if (double.TryParse(udlx1.Text, out startp))
+            {
+                if (startp < 0 || startp >= BeamLength)
+                {
+                    MessageBox.Show(GetString("invalidstartpoint"));
+                    udlx1.Focus();
+                    return;
+                }
+                if (Loadpolies.Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    udlx1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidstartpoint"));
+                udlx1.Focus();
+                return;
+            }
+
+            double endp;
+            if (double.TryParse(udlx2.Text, out endp))
+            {
+                if (endp > BeamLength || endp <= startp)
+                {
+                    MessageBox.Show(GetString("invalidendpoint"));
+                    udlx2.Focus();
+                    return;
+                }
+                if (Loadpolies.Any(item => endp > item.StartPoint && endp <= item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    udlx2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidendpoint"));
+                udlx2.Focus();
+                return;
+            }
+
+            double load;
+            if (!double.TryParse(ldlload1.Text, out load))
+            {
+                MessageBox.Show(GetString("invalidvalue"));
+                udlload.Focus();
+                return;
+            }
+
             var poly = new Poly(udlload.Text);
             poly.StartPoint = Convert.ToDouble(udlx1.Text);
             poly.EndPoint = Convert.ToDouble(udlx2.Text);
@@ -64,6 +120,68 @@ namespace Mesnet.Xaml.Pages
 
         private void ldlbtn_Click(object sender, RoutedEventArgs e)
         {
+            double startp;
+            if (double.TryParse(ldlx1.Text, out startp))
+            {
+                if (startp < 0 || startp >= BeamLength)
+                {
+                    MessageBox.Show(GetString("invalidstartpoint"));
+                    ldlx1.Focus();
+                    return;
+                }
+                if (Loadpolies.Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    ldlx1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidstartpoint"));
+                ldlx1.Focus();
+                return;
+            }
+
+            double endp;
+            if (double.TryParse(ldlx2.Text, out endp))
+            {
+                if (endp > BeamLength || endp <= startp)
+                {
+                    MessageBox.Show(GetString("invalidendpoint"));
+                    ldlx2.Focus();
+                    return;
+                }
+                if (Loadpolies.Any(item => endp > item.StartPoint && endp <= item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    ldlx2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidendpoint"));
+                ldlx2.Focus();
+                return;
+            }
+
+            double startload;
+            if (!double.TryParse(ldlload1.Text, out startload))
+            {
+                MessageBox.Show(GetString("invalidvalue"));
+                ldlload1.Focus();
+                return;
+            }
+
+            double endload;
+            if (!double.TryParse(ldlload2.Text, out endload))
+            {
+                MessageBox.Show(GetString("invalidvalue"));
+                ldlload2.Focus();
+                return;
+            }
+
             var m = (Convert.ToDouble(ldlload2.Text) - Convert.ToDouble(ldlload1.Text)) /
                     (Convert.ToDouble(ldlx2.Text) - Convert.ToDouble(ldlx1.Text));
 
@@ -128,6 +246,59 @@ namespace Mesnet.Xaml.Pages
 
         private void vdlbtn_Click(object sender, RoutedEventArgs e)
         {
+            double startp;
+            if (double.TryParse(vdlx1.Text, out startp))
+            {
+                if (startp < 0 || startp >= BeamLength)
+                {
+                    MessageBox.Show(GetString("invalidstartpoint"));
+                    vdlx1.Focus();
+                    return;
+                }
+                if (Loadpolies.Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    vdlx1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidstartpoint"));
+                vdlx1.Focus();
+                return;
+            }
+
+            double endp;
+            if (double.TryParse(vdlx2.Text, out endp))
+            {
+                if (endp > BeamLength || endp <= startp)
+                {
+                    MessageBox.Show(GetString("invalidendpoint"));
+                    vdlx2.Focus();
+                    return;
+                }
+                if (Loadpolies.Any(item => endp > item.StartPoint && endp <= item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    vdlx2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidendpoint"));
+                vdlx2.Focus();
+                return;
+            }
+
+            if (!Poly.ValidateExpression(vdlload.Text))
+            {
+                MessageBox.Show(GetString("invalidpolynomial"));
+                vdlload.Focus();
+                return;
+            }
+
             var poly = new Poly(vdlload.Text);
             poly.StartPoint = Convert.ToDouble(vdlx1.Text);
             poly.EndPoint = Convert.ToDouble(vdlx2.Text);

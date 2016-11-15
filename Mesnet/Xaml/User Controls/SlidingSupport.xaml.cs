@@ -121,6 +121,10 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        /// <summary>
+        /// Updates the position of the support according to the beam that is bounded.
+        /// </summary>
+        /// <param name="beam">The reference beam.</param>
         public void UpdatePosition(Beam beam)
         {
             foreach (Member member in Members)
@@ -135,8 +139,6 @@ namespace Mesnet.Xaml.User_Controls
 
                             Canvas.SetTop(this, beam.LeftPoint.Y);
 
-                            beam.LeftSide = this;
-
                             break;
 
                         case Direction.Right:
@@ -145,12 +147,40 @@ namespace Mesnet.Xaml.User_Controls
 
                             Canvas.SetTop(this, beam.RightPoint.Y);
 
-                            beam.RightSide = this;
-
                             break;
                     }
                     SetAngle(beam.Angle);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the position of the support when the bounded beam's position has changes.
+        /// </summary>
+        public void UpdatePosition()
+        {
+            if (Members.Count == 1)
+            {
+                switch (Members[0].Direction)
+                {
+                    case Direction.Left:
+
+                        Canvas.SetLeft(this, Members[0].Beam.LeftPoint.X - 13);
+
+                        Canvas.SetTop(this, Members[0].Beam.LeftPoint.Y);
+
+                        break;
+
+                    case Direction.Right:
+
+                        Canvas.SetLeft(this, Members[0].Beam.RightPoint.X - 13);
+
+                        Canvas.SetTop(this, Members[0].Beam.RightPoint.Y);
+
+                        break;
+                }
+
+                SetAngle(Members[0].Beam.Angle);
             }
         }
 

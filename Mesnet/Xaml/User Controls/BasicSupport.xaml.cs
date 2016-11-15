@@ -11,6 +11,8 @@ namespace Mesnet.Xaml.User_Controls
     /// <summary>
     /// Interaction logic for BasicSupport.xaml
     /// </summary>
+    /// <seealso cref="System.Windows.Controls.UserControl" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class BasicSupport : UserControl
     {
         public BasicSupport(Canvas canvas)
@@ -128,6 +130,10 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        /// <summary>
+        /// Updates the position of the support according to the beam that is bounded.
+        /// </summary>
+        /// <param name="beam">The reference beam.</param>
         public void UpdatePosition(Beam beam)
         {
             foreach (Member member in Members)
@@ -142,8 +148,6 @@ namespace Mesnet.Xaml.User_Controls
 
                             Canvas.SetTop(this, beam.LeftPoint.Y);
 
-                            beam.LeftSide = this;
-
                             break;
 
                         case Direction.Right:
@@ -151,8 +155,6 @@ namespace Mesnet.Xaml.User_Controls
                             Canvas.SetLeft(this, beam.RightPoint.X - 13);
 
                             Canvas.SetTop(this, beam.RightPoint.Y);
-
-                            beam.RightSide = this;
 
                             break;
                     }
@@ -229,35 +231,6 @@ namespace Mesnet.Xaml.User_Controls
         {
             rotateTransform.Angle = angle;
         }
-
-        /*
-        /// <summary>
-        /// Refreshes the member list.
-        /// </summary>
-        private void ReloadMembersCollection()
-        {
-            foreach (var member in Members)
-            {
-                var beam = member.Key.Key;
-                var direction = member.Key.Value;
-
-                switch (direction)
-                {
-                    case Direction.Left:
-
-                        Members[new KeyValuePair<Beam, Direction>(beam, direction)] = beam.LeftEndMoment;
-
-                        break;
-
-                    case Direction.Right:
-
-                        Members[new KeyValuePair<Beam, Direction>(beam, direction)] = beam.RightEndMoment;
-
-                        break;
-                }
-            }
-        }
-        */
 
         #region Cross
 

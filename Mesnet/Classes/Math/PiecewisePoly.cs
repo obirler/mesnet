@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mesnet.Classes.Math
 {
@@ -35,20 +36,7 @@ namespace Mesnet.Classes.Math
         public void Add(Poly poly)
         {
             List.Add(poly);
-
-            _sortlist.Clear();
-
-            foreach (Poly pol in List)
-            {
-                _sortlist.Add(pol);
-            }
-
-            List.Clear();
-
-            foreach (Poly pol in _sortlist)
-            {
-                List.Add(pol);
-            }
+            Sort();
         }
 
         public Poly this[int index]
@@ -68,7 +56,6 @@ namespace Mesnet.Classes.Math
         public int IndexOf(Poly value)
         {
             return (List.IndexOf(value));
-            
         }
 
         public Poly Last()
@@ -88,6 +75,7 @@ namespace Mesnet.Classes.Math
         public void Remove(Poly value)
         {
             List.Remove(value);
+            _sortlist.Remove(value);
         }
 
         public bool Contains(Poly value)

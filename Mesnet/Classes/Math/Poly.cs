@@ -73,7 +73,6 @@ namespace Mesnet.Classes.Math
         /// <returns></returns>
         public override string ToString()
         {
-
             this.Terms.Sort(TermCollection.SortType.DES);           
 
             string result = string.Empty;
@@ -200,6 +199,11 @@ namespace Mesnet.Classes.Math
             return System.Math.Round(max, digit);
         }
 
+        public double Maximum()
+        {
+            return Maximum(_startpoint, _endpoint);
+        }
+
         public double MaxLocation(double startpoint, double endpoint, int digit = 4)
         {
             if (digit < 0)
@@ -310,6 +314,11 @@ namespace Mesnet.Classes.Math
             min = list.Min(x => x.Value);
 
             return System.Math.Round(min, digit);
+        }
+
+        public double Minimum()
+        {
+            return Minimum(_startpoint, _endpoint);
         }
 
         public double MinLocation(double startpoint, double endpoint, int digit = 4)

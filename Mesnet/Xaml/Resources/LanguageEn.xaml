@@ -51,4 +51,9 @@
     <system:String x:Key="performstressanalalysis">Perform Stress Analysis</system:String>
     <system:String x:Key="maxstress">Maximum Allowable Stress</system:String>
     <system:String x:Key="calculationtype">Calculation Type</system:String>
+    <system:String x:Key="notcoveredinertia">Invalid inertia piecewise polynomial. You need to define inertia for all x in range zero to beam length</system:String>
+    <system:String x:Key="minusinertia">Inertia can not be less than or equal to zero</system:String>
+    <system:String x:Key="invalidpolynomial">Invalid polynomial. The poly must only be a function of x.</system:String>
+    <system:String x:Key="invalidrange">Invalid range. There is already a function defined in this range.</system:String>
+    <system:String x:Key="invalidvalue">Invalid value. It must be a real number.</system:String>
 </ResourceDictionary>

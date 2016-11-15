@@ -75,6 +75,10 @@ namespace Mesnet.Xaml.User_Controls
             SetAngle(beam.Angle);
         }
 
+        /// <summary>
+        /// Updates the position of the support according to the beam that is bounded.
+        /// </summary>
+        /// <param name="beam">The reference beam.</param>
         public void UpdatePosition(Beam beam)
         {
             Canvas.SetLeft(this, beam.RightPoint.X);

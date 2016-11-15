@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -130,6 +131,71 @@ namespace Mesnet.Xaml.Pages
         private void uibtn_Click(object sender, RoutedEventArgs e)
         {
             stresscbx.IsEnabled = false;
+
+            double inert;
+            if (double.TryParse(ui.Text, out inert))
+            {
+                if (inert <= 0)
+                {
+                    MessageBox.Show(GetString("minusinertia"));
+                    ui.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidinertia"));
+                ui.Focus();
+                return;
+            }
+
+            double startp;
+            if (double.TryParse(uix1.Text, out startp))
+            {
+                if (startp < 0 || startp >= beamlength)
+                {
+                    MessageBox.Show(GetString("invalidstartpoint"));
+                    uix1.Focus();
+                    return;
+                }
+                if (inertiappoly.Cast<Poly>().Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    uix1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidstartpoint"));
+                uix1.Focus();
+                return;
+            }
+
+            double endp;
+            if (double.TryParse(uix2.Text, out endp))
+            {
+                if (endp > beamlength || endp <= startp)
+                {
+                    MessageBox.Show(GetString("invalidendpoint"));
+                    uix2.Focus();
+                    return;
+                }
+
+                if (inertiappoly.Cast<Poly>().Any(item => endp > item.StartPoint && endp <= item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    uix2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidendpoint"));
+                uix2.Focus();
+                return;
+            }
+
             var ineritiapoly = new Poly(ui.Text);
             ineritiapoly.StartPoint = Convert.ToDouble(uix1.Text);
             ineritiapoly.EndPoint = Convert.ToDouble(uix2.Text);
@@ -173,6 +239,86 @@ namespace Mesnet.Xaml.Pages
 
         private void libtn_Click(object sender, RoutedEventArgs e)
         {
+            double inerts;
+            if (double.TryParse(li1.Text, out inerts))
+            {
+                if (inerts <= 0)
+                {
+                    MessageBox.Show(GetString("minusinertia"));
+                    li1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidinertia"));
+                li1.Focus();
+                return;
+            }
+
+            double inerte;
+            if (double.TryParse(li2.Text, out inerte))
+            {
+                if (inerte <= 0)
+                {
+                    MessageBox.Show(GetString("minusinertia"));
+                    li2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidinertia"));
+                li2.Focus();
+                return;
+            }
+
+            double startp;
+            if (double.TryParse(lix1.Text, out startp))
+            {
+                if (startp < 0 || startp >= beamlength)
+                {
+                    MessageBox.Show(GetString("invalidstartpoint"));
+                    lix1.Focus();
+                    return;
+                }
+                if (inertiappoly.Cast<Poly>().Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    lix1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidstartpoint"));
+                lix1.Focus();
+                return;
+            }
+
+            double endp;
+            if (double.TryParse(lix2.Text, out endp))
+            {
+                if (endp > beamlength || endp <= startp)
+                {
+                    MessageBox.Show(GetString("invalidendpoint"));
+                    lix2.Focus();
+                    return;
+                }
+                if (inertiappoly.Cast<Poly>().Any(item => endp > item.StartPoint && endp <= item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    lix2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidendpoint"));
+                lix2.Focus();
+                return;
+            }
+
             stresscbx.IsEnabled = false;
             var m = (Convert.ToDouble(li2.Text) - Convert.ToDouble(li1.Text)) /
             (Convert.ToDouble(lix2.Text) - Convert.ToDouble(lix1.Text));
@@ -231,7 +377,69 @@ namespace Mesnet.Xaml.Pages
         private void vibtn_Click(object sender, RoutedEventArgs e)
         {
             stresscbx.IsEnabled = false;
+
+            double startp;
+            if (double.TryParse(vix1.Text, out startp))
+            {
+                if (startp < 0 || startp >= beamlength)
+                {
+                    MessageBox.Show(GetString("invalidstartpoint"));
+                    vix1.Focus();
+                    return;
+                }
+                if (inertiappoly.Cast<Poly>().Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    vix1.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidstartpoint"));
+                vix1.Focus();
+                return;
+            }
+
+            double endp;
+            if (double.TryParse(vix2.Text, out endp))
+            {
+                if (endp > beamlength || endp <= startp)
+                {
+                    MessageBox.Show(GetString("invalidendpoint"));
+                    vix2.Focus();
+                    return;
+                }
+                if (inertiappoly.Cast<Poly>().Any(item => endp > item.StartPoint && endp <= item.EndPoint))
+                {
+                    MessageBox.Show(GetString("invalidrange"));
+                    vix2.Focus();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidendpoint"));
+                vix2.Focus();
+                return;
+            }
+
+            if (!Poly.ValidateExpression(vi.Text))
+            {
+                MessageBox.Show(GetString("invalidpolynomial"));
+                vi.Focus();
+                return;
+            }
+
             var poly = new Poly(vi.Text);
+
+            if (poly.Minimum() <= 0)
+            {
+                MessageBox.Show(GetString("minusinertia"));
+                vi.Focus();
+                return;
+            }
+
             poly.StartPoint = Convert.ToDouble(vix1.Text);
             poly.EndPoint = Convert.ToDouble(vix2.Text);
 
@@ -274,10 +482,13 @@ namespace Mesnet.Xaml.Pages
 
         private void finishbtn_Click(object sender, RoutedEventArgs e)
         {
-            beamlength = Convert.ToDouble(length.Text);
-            beamelasticitymodulus = Convert.ToDouble(elasticitymodulus.Text);
-            angle = Convert.ToDouble(angletbx.Text);
-            DialogResult = true;
+            if (validateinertia())
+            {
+                beamlength = Convert.ToDouble(length.Text);
+                beamelasticitymodulus = Convert.ToDouble(elasticitymodulus.Text);
+                angle = Convert.ToDouble(angletbx.Text);
+                DialogResult = true;
+            }
         }
 
         private void uiexpand_Expanded(object sender, RoutedEventArgs e)
@@ -487,6 +698,26 @@ namespace Mesnet.Xaml.Pages
             uistressanalyzestk.Visibility = Visibility.Collapsed;
             listressanalyzestk.Visibility = Visibility.Collapsed;
             vistressanalyzestk.Visibility = Visibility.Collapsed;
+        }
+
+        private bool validateinertia()
+        {
+            for (int i = 1; i < inertiappoly.Count; i++)
+            {
+                if (inertiappoly[i].StartPoint != inertiappoly[i-1].EndPoint)
+                {
+                    MessageBox.Show(GetString("notcoveredinertia"));                 
+                    return false;
+                }
+            }
+
+            if (inertiappoly[0].StartPoint != 0 || inertiappoly.Last().EndPoint != beamlength)
+            {
+                MessageBox.Show(GetString("notcoveredinertia"));
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -51,4 +51,9 @@
     <system:String x:Key="performstressanalalysis">Gerilme Analizi Yap</system:String>
     <system:String x:Key="maxstress">İzin verilen en yüksek gerilme </system:String>
     <system:String x:Key="calculationtype">Hesaplama Tipi</system:String>
+    <system:String x:Key="notcoveredinertia">Geçersiz atalet fonksiyonu. Sıfırdan kiriş boyuna kadar bütün x değerleri için atalet fonksiyonu tanımlanmalı.</system:String>
+    <system:String x:Key="minusinertia">Atalet momenti sıfıra eşit yada sıfırdan küçük olamaz.</system:String>
+    <system:String x:Key="invalidpolynomial">Geçersiz polinom. Polinom sadece x'in fonksiyonu olmalı.</system:String>
+    <system:String x:Key="invalidrange">Geçersiz aralık. Bu aralık için zaten bir fonksiyon tanımlandı.</system:String>
+    <system:String x:Key="invalidvalue">Geçersiz değer. Reel sayı girilmeli.</system:String>
 </ResourceDictionary>

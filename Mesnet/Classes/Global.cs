@@ -174,6 +174,39 @@ namespace Mesnet.Classes
             MultiThreaded
         }
 
+        public enum ObjectType
+        {
+            Beam,
+            LeftFixedSupport,
+            RightFixedSupport,
+            BasicSupport,
+            SlidingSupport,
+            None
+        }
+
+        public static ObjectType GetObjectType(object obj)
+        {
+            switch (obj.GetType().Name)
+            {
+                case "Beam":
+                    return ObjectType.Beam;
+
+                case "BasicSupport":
+                    return ObjectType.BasicSupport;
+
+                case "LeftFixedSupport":
+                    return ObjectType.LeftFixedSupport;
+
+                case "RightFixedSupport":
+                    return ObjectType.RightFixedSupport;
+
+                case "SlidingSupport":
+                    return ObjectType.SlidingSupport;
+            }
+
+            return ObjectType.None;
+        }
+
         public static void WritePPolytoConsole(string message, PiecewisePoly ppoly)
         {
             foreach (Poly poly in ppoly)

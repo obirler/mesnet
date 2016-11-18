@@ -2609,16 +2609,16 @@ namespace Mesnet
                         {
                             selectedbeam.SetAngleRight(Convert.ToDouble(rotateprompt.angle.Text));
 
-                            switch (selectedbeam.RightSide.GetType().Name)
+                            switch (GetObjectType(selectedbeam.RightSide))
                             {
-                                case "RightFixedSupport":
+                                case ObjectType.RightFixedSupport:
 
                                     var rs = selectedbeam.RightSide as RightFixedSupport;
                                     rs.UpdatePosition(selectedbeam);
 
                                     break;
 
-                                case "SlidingSupport":
+                                case ObjectType.SlidingSupport:
 
                                     var ss = selectedbeam.RightSide as SlidingSupport;
                                     if (ss.Members.Count == 1)
@@ -2628,7 +2628,7 @@ namespace Mesnet
                                     
                                     break;
 
-                                case "BasicSupport":
+                                case ObjectType.BasicSupport:
 
                                     var bs = selectedbeam.RightSide as BasicSupport;
                                     if (bs.Members.Count == 1)

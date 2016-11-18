@@ -18,7 +18,7 @@ namespace Mesnet.Xaml.User_Controls
     /// <summary>
     /// Interaction logic for NewBeam.xaml
     /// </summary>
-    public partial class Beam : UserControl
+    public partial class Beam : UserControl 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Beam"/> with specified length. Depre

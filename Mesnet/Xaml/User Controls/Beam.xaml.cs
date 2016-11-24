@@ -3320,8 +3320,7 @@ namespace Mesnet.Xaml.User_Controls
                             break;
 
                         case "BasicSupport":
-
-
+                       
                             var basic = RightSide as BasicSupport;
 
                             if (basic.Members.Count > 1)

@@ -111,7 +111,7 @@ namespace Mesnet.Xaml.Pages
             }
 
             double load;
-            if (!double.TryParse(ldlload1.Text, out load))
+            if (!double.TryParse(udlload.Text, out load))
             {
                 MessageBox.Show(GetString("invalidvalue"));
                 udlload.Focus();
@@ -428,6 +428,14 @@ namespace Mesnet.Xaml.Pages
 
         private void ldlexpand_Expanded(object sender, RoutedEventArgs e)
         {
+            if (Loadpolies.Count == 0)
+            {
+                ldlload1.Text = "10";
+                ldlload2.Text = "20";
+                ldlx1.Text = "0";
+                ldlx2.Text = BeamLength.ToString();
+            }
+
             ldlload1.IsEnabled = true;
             ldlload2.IsEnabled = true;
             ldlx1.IsEnabled = true;
@@ -456,6 +464,13 @@ namespace Mesnet.Xaml.Pages
 
         private void vdlexpand_Expanded(object sender, RoutedEventArgs e)
         {
+            if (Loadpolies.Count == 0)
+            {
+                vdlload.Text = "x^2";
+                vdlx1.Text = "0";
+                vdlx2.Text = BeamLength.ToString();
+            }
+
             vdlload.IsEnabled = true;
             vdlx1.IsEnabled = true;
             vdlx2.IsEnabled = true;

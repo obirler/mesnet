@@ -48,7 +48,7 @@ namespace Mesnet.Xaml.Pages
 
             bw.DoWork += bw_DoWork;
             bw.WorkerReportsProgress = true;
-            bw3.DoWork += LastProcess;
+            bw3.DoWork += bw3LastProcess;
 
             timer.Start();
         }
@@ -96,14 +96,14 @@ namespace Mesnet.Xaml.Pages
                             if (item.GetType().Name == "Beam")
                             {
                                 Beam beam = (Beam)item;
+                                beam.CrossCalculate();
                                 Dispatcher.BeginInvoke(new Action(() =>
                                 {
                                     calculated++;
                                     progress.Value = calculated / BeamCount * 100;
                                     progress.UpdateLayout();
                                     status.Text = "Calculating " + beam.Name;
-                                }));
-                                beam.CrossCalculate();
+                                }));                               
                             }
                         }
 
@@ -217,7 +217,7 @@ namespace Mesnet.Xaml.Pages
             bw.RunWorkerAsync();
         }
 
-        private void LastProcess(object sender, DoWorkEventArgs e)
+        private void bw3LastProcess(object sender, DoWorkEventArgs e)
         {
             if (BeamCount > 1)
             {

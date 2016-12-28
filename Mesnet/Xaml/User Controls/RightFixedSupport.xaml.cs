@@ -38,10 +38,13 @@ namespace Mesnet.Xaml.User_Controls
             canvas.Children.Add(this);
             _id = AddObject(this);
             SupportCount++;
+            _supportid = SupportCount;
             _name = "Right Fixed Support " + SupportCount;
         }
 
         private int _id;
+
+        private int _supportid;
 
         private string _name;
 
@@ -52,35 +55,6 @@ namespace Mesnet.Xaml.User_Controls
         private bool _selected;
 
         private int _crossindex;
-
-        public void Add(Canvas canvas)
-        {
-            canvas.Children.Add(this);
-            _id = AddObject(this);
-        }
-
-        public void Add(Canvas canvas, double x, double y)
-        {
-            canvas.Children.Add(this);
-            _id = AddObject(this);
-
-            Canvas.SetLeft(this, x);
-
-            Canvas.SetTop(this, y);
-        }
-
-        public void Add(Canvas canvas, Point point)
-        {
-            canvas.Children.Add(this);
-            _id = AddObject(this);
-
-            var x = point.X;
-            var y = point.Y;
-
-            Canvas.SetLeft(this, x);
-
-            Canvas.SetTop(this, y - 13);
-        }
 
         public void AddBeam(Beam beam)
         {
@@ -192,6 +166,11 @@ namespace Mesnet.Xaml.User_Controls
         public int Id
         {
             get { return _id; }
+        }
+
+        public int SupportId
+        {
+            get { return _supportid; }
         }
 
         public string Name

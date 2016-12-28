@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
         xmlns:ui="clr-namespace:Mesnet.Classes.Ui"
         mc:Ignorable="d"
-        Title="ConcentratedLoadPrompt" Height="360" Icon="/Assets/applogo.ico" Width="290" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="{DynamicResource addconcentratedload}" Height="380" Icon="/Assets/applogo.ico" Width="290" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Grid>
         <StackPanel>
 
@@ -34,7 +34,7 @@
                             <TextBlock Text="P" FontSize="20" VerticalAlignment="Center"/>
                             <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBox x:Name="load" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                        <TextBox x:Name="load" Text="10" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
                         <TextBlock Text="kN" FontSize="18" Margin="5,5,0,0"></TextBlock>
                     </StackPanel>
 
@@ -43,7 +43,7 @@
                             <TextBlock Text="x" FontSize="20" VerticalAlignment="Center" Margin="3,0,0,0"/>
                             <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBox x:Name="loadx" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                        <TextBox x:Name="loadx" Text="0" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
                         <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
                     </StackPanel>
 
@@ -53,7 +53,7 @@
 
             </StackPanel>
 
-            <ScrollViewer Height="190" Margin="5" VerticalScrollBarVisibility="Visible">
+            <ScrollViewer Height="208" Margin="5" VerticalScrollBarVisibility="Visible">
                 <StackPanel>
                     <StackPanel x:Name="fncstk" />
                     <Button x:Name="finishbtn" Height="30" Margin="5,10,5,5" Content="{DynamicResource finish}" Visibility="Collapsed" Click="finishbtn_Click"/>

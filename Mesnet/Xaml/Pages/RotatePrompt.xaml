@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
         mc:Ignorable="d"
-        Title="RotatePrompt" Height="120" Width="150" WindowStartupLocation="CenterOwner">
+        Title="{DynamicResource rotate}" Height="120" Width="270" Icon="/Assets/rot.ico" WindowStartupLocation="CenterOwner">
     <StackPanel VerticalAlignment="Center">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="Angle :" VerticalAlignment="Center"></TextBlock>
-            <TextBox x:Name="angle" Margin="5,0,0,0" Width="50" Height="25"></TextBox>
+            <TextBlock Text="{DynamicResource angle}" VerticalAlignment="Center"></TextBlock>
+            <TextBox x:Name="angle" Margin="5,0,5,0" Width="50" Height="25"></TextBox>
+            <TextBlock Text="{DynamicResource degree}" VerticalAlignment="Center"></TextBlock>
         </StackPanel>
 
         <Button x:Name="finishbtn" Content="{DynamicResource finish}" Height="30" Margin="10,10,10,5" Click="finishbtn_Click"></Button>

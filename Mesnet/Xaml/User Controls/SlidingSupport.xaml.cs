@@ -39,12 +39,15 @@ namespace Mesnet.Xaml.User_Controls
             _canbedragged = true;
             Members = new List<Member>();
             SupportCount++;
+            _supportid = SupportCount;
             _name = "Sliding Support " + SupportCount;
             canvas.Children.Add(this);
             _id = AddObject(this);
         }
 
         private int _id;
+
+        private int _supportid;
 
         private string _name;
 
@@ -57,31 +60,6 @@ namespace Mesnet.Xaml.User_Controls
         private int _crossindex;
 
         public List<Member> Members;
-
-        public void Add(Canvas canvas, double x, double y)
-        {
-            if (canvas.Children.Contains(this))
-            {
-                canvas.Children.Add(this);
-                _id = AddObject(this);
-            }
-
-            Canvas.SetLeft(this, x);
-
-            Canvas.SetTop(this, y);
-        }
-
-        public void Add(Canvas canvas, Point point)
-        {
-            //canvas.Children.Add(this);
-            //_id = AddObject(this);
-            var x = point.X;
-            var y = point.Y;
-
-            Canvas.SetLeft(this, x - 13);
-
-            Canvas.SetTop(this, y);
-        }
 
         public void AddBeam(Beam beam, Direction direction)
         {
@@ -277,37 +255,6 @@ namespace Mesnet.Xaml.User_Controls
             rotateTransform.Angle = angle;
         }
 
-        /*
-        private void ReloadMembersCollection()
-        {
-            var dict = new Dictionary<KeyValuePair<Beam, Direction>, double>();
-            foreach (var member in Members)
-            {
-                var beam = member.Key.Key;
-                var direction = member.Key.Value;
-
-                switch (direction)
-                {
-                    case Direction.Left:
-
-                        dict.Add(new KeyValuePair<Beam, Direction>(beam, direction), beam.LeftEndMoment);
-                        //Members[new KeyValuePair<Beam, Direction>(beam, direction)] = beam.LeftEndMoment;
-
-                        break;
-
-                    case Direction.Right:
-
-                        dict.Add(new KeyValuePair<Beam, Direction>(beam, direction), beam.RightEndMoment);
-                        //Members[new KeyValuePair<Beam, Direction>(beam, direction)] = beam.RightEndMoment;
-
-                        break;
-                }
-            }
-
-            Members = dict;
-        }
-        */
-
         #region Cross
 
         public bool Seperate()
@@ -344,7 +291,7 @@ namespace Mesnet.Xaml.User_Controls
                         MyDebug.WriteInformation(this.Name + " : Seperate", "Left Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Left, beammoment);
-                        if (Math.Abs(beammoment * beam.CarryOverAB) < 0.00001)
+                        if (Math.Abs(beammoment * beam.CarryOverAB) < CrossLoopTreshold)
                         {
                             isstop = true;
                         }
@@ -377,8 +324,6 @@ namespace Mesnet.Xaml.User_Controls
                 }
                 Logger.NextLine();
             }
-
-            //ReloadMembersCollection();
 
             return isstop;
 
@@ -457,6 +402,11 @@ namespace Mesnet.Xaml.User_Controls
         public int Id
         {
             get { return _id; }
+        }
+
+        public int SupportId
+        {
+            get { return _supportid; }
         }
 
         public string Name

@@ -32,7 +32,7 @@
                 <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="{DynamicResource angle}" VerticalAlignment="Center"/>
                     <TextBox x:Name="angletbx" Text="0" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
-                    <TextBlock Text="Degree" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource degree}" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
                 </StackPanel>
 
                 <CheckBox x:Name="stresscbx" Content="{DynamicResource performstressanalalysis}" Margin="10,10,0,5" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>

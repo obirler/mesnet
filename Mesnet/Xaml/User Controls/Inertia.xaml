@@ -6,7 +6,11 @@
              mc:Ignorable="d" Background="Transparent">
 
     <Border x:Name="border">
-        <Canvas x:Name="inertiacanvas" Background="Transparent"/>
+        <Canvas x:Name="inertiacanvas" Height="0" Background="Transparent">
+            <Canvas.LayoutTransform>
+                <ScaleTransform ScaleX="1" ScaleY="-1" CenterX="0.5" CenterY="0.5"/>
+            </Canvas.LayoutTransform>
+        </Canvas>
     </Border>
 </UserControl>
 

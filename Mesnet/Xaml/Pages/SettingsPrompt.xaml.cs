@@ -19,6 +19,7 @@
 ========================================================================
 */
 using System.Windows;
+using System.Windows.Controls;
 using Mesnet.Properties;
 using static Mesnet.Classes.Global;
 
@@ -67,14 +68,18 @@ namespace Mesnet.Xaml.Pages
         private void englishbtn_Checked(object sender, RoutedEventArgs e)
         {
             SetLanguageDictionary("en-EN");
+            MainWindow mw = App.Current.MainWindow as MainWindow;
+            mw.UpdateLanguages();
         }
 
         private void turkishbtn_Checked(object sender, RoutedEventArgs e)
         {
             SetLanguageDictionary("tr-TR");
+            MainWindow mw = App.Current.MainWindow as MainWindow;
+            mw.UpdateLanguages();
         }
 
-        private void calculationcbx_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void calculationcbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (calculationcbx.SelectedIndex)
             {

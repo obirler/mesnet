@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignWidth="250">
+             d:DesignWidth="250" Margin="0,2,0,2">
     <StackPanel Orientation="Horizontal" Background="#FFDADADA">
 
         <StackPanel>
@@ -25,7 +25,6 @@
             <Grid Height="16" Width="16">
                 <Polygon Points="1,7 1,9 15,9 15,7" Fill="Black"></Polygon>
             </Grid>
-
         </Button>
     </StackPanel>
 </UserControl>

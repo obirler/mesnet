@@ -103,7 +103,7 @@ namespace Mesnet.Classes
             }
             Settings.Default.Save();
             App.Current.Resources.MergedDictionaries.Add(dict);
-        }
+        }      
 
         /// <summary>
         /// Gets the string by key from the current application language.
@@ -240,6 +240,8 @@ namespace Mesnet.Classes
         public static int SupportCount = 0;
 
         public static double SimpsonStep = 0.0001;
+
+        public static double CrossLoopTreshold = 0.00001;
 
         public struct Func
         {

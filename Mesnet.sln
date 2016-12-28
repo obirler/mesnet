@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesnet", "Mesnet\Mesnet.csproj", "{F5B8C086-AE3F-4896-97AA-2C26E40C8CB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{25F6211F-4998-4542-88CA-7E6E118C2473}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F5B8C086-AE3F-4896-97AA-2C26E40C8CB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5B8C086-AE3F-4896-97AA-2C26E40C8CB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5B8C086-AE3F-4896-97AA-2C26E40C8CB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25F6211F-4998-4542-88CA-7E6E118C2473}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25F6211F-4998-4542-88CA-7E6E118C2473}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25F6211F-4998-4542-88CA-7E6E118C2473}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25F6211F-4998-4542-88CA-7E6E118C2473}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

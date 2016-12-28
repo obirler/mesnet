@@ -93,6 +93,8 @@ namespace Mesnet.Xaml.User_Controls
 
         private int _id;
 
+        private int _beamid;
+
         private bool selected;
 
         private double _length;
@@ -170,6 +172,20 @@ namespace Mesnet.Xaml.User_Controls
         private Deflection _deflectiondigram;
 
         private Stress _stressdiagram;
+
+        private bool _directionshown = false;
+
+        private bool _momentshown = false;
+
+        private bool _forceshown = false;
+
+        private bool _stressshown = false;
+
+        private bool _distributedloadshown = false;
+
+        private bool _concentratedloadshown = false;
+
+        private bool _inertiashown = false;
 
         /// <summary>
         /// The left support force of the beam.
@@ -277,6 +293,7 @@ namespace Mesnet.Xaml.User_Controls
                 canvas.Children.Add(this);
                 _id = AddObject(this);
                 BeamCount++;
+                _beamid = BeamCount;
                 _name = "Beam " + BeamCount;
                 Canvas.SetZIndex(this, 1);
             }
@@ -306,6 +323,7 @@ namespace Mesnet.Xaml.User_Controls
                 }
 
                 BeamCount++;
+                _beamid = BeamCount;
                 _name = "Beam " + BeamCount;
 
                 SetTransformGeometry(canvas);
@@ -337,6 +355,7 @@ namespace Mesnet.Xaml.User_Controls
                 }
 
                 BeamCount++;
+                _beamid = BeamCount;
                 _name = "Beam " + BeamCount;
 
                 SetTransformGeometry(canvas);
@@ -388,6 +407,7 @@ namespace Mesnet.Xaml.User_Controls
                 }
 
                 BeamCount++;
+                _beamid = BeamCount;
                 _name = "Beam " + BeamCount;
 
                 SetTransformGeometry(canvas);
@@ -1367,6 +1387,8 @@ namespace Mesnet.Xaml.User_Controls
                 _distributedloads = load.LoadPpoly;
 
                 _distload = load;
+
+                _distributedloadshown = true;
             }
             else if (direction == Direction.Down)
             { }
@@ -1385,6 +1407,8 @@ namespace Mesnet.Xaml.User_Controls
                 _concentratedloads = load.Loads;
 
                 _concload = load;
+
+                _concentratedloadshown = true;
             }
             else if (direction == Direction.Down)
             { }
@@ -1410,6 +1434,7 @@ namespace Mesnet.Xaml.User_Controls
                 upcanvas.Children.Remove(distload);
                 _distributedloads.Clear();
                 _distload = null;
+                _distributedloadshown = false;
             }
         }
 
@@ -1433,67 +1458,34 @@ namespace Mesnet.Xaml.User_Controls
                 upcanvas.Children.Remove(concload);
                 _concentratedloads.Clear();
                 _concload = null;
+                _concentratedloadshown = false;
             }
         }
 
         public void ShowDistLoad()
         {
             _distload.Visibility = Visibility.Visible;
+            _distributedloadshown = true;
         }
 
         public void HideDistLoad()
         {
             _distload.Visibility = Visibility.Hidden;
+            _distributedloadshown = false;
         }
 
         public void ShowConcLoad()
         {
             _concload.Visibility = Visibility.Visible;
+            _concentratedloadshown = true;
         }
 
         public void HideConcLoad()
         {
             _concload.Visibility = Visibility.Hidden;
+            _concentratedloadshown = false;
         }
-
-        public void AddForceDiagram()
-        {
-            var force = new Force(_zeroforce, this);
-            force.Length = _length;
-            upcanvas.Children.Add(force);
-            force.VerticalAlignment = VerticalAlignment.Center;
-            Canvas.SetTop(force, upcanvas.Height / 2 - force.Height);
-            _force = force;
-        }
-
-        public void HideForceDiagram()
-        {
-            if (_force != null)
-            {
-                upcanvas.Children.Remove(_force);
-                _force = null;
-            }
-        }
-
-        public void AddMomentDiagram()
-        {
-            var moment = new Moment(_zeromoment, this);
-            moment.Length = _length;
-            upcanvas.Children.Add(moment);
-            moment.VerticalAlignment = VerticalAlignment.Center;
-            Canvas.SetTop(moment, upcanvas.Height / 2 - moment.Height);
-            _moment = moment;
-        }
-
-        public void HideMomentDiagram()
-        {
-            if (_moment != null)
-            {
-                upcanvas.Children.Remove(_moment);
-                _moment = null;
-            }
-        }
-
+       
         public void AddFixedEndForceDiagram()
         {
             if (_feforce != null)
@@ -1508,6 +1500,7 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(force, 0);
                 _feforce = force;
             }
+            _forceshown = true;
         }
 
         public void HideFixedEndForceDiagram()
@@ -1516,6 +1509,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _feforce.Hide();
             }
+            _forceshown = false;
         }
 
         public void AddFixedEndMomentDiagram()
@@ -1532,6 +1526,7 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(moment, 0);
                 _femoment = moment;
             }
+            _momentshown = true;
         }
 
         public void HideFixedEndMomentDiagram()
@@ -1540,6 +1535,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _femoment.Hide();
             }
+            _momentshown = false;
         }
 
         public void AddInertiaDiagram()
@@ -1551,11 +1547,12 @@ namespace Mesnet.Xaml.User_Controls
             else
             {
                 var inertia = new Inertia(_inertiappoly, _length);
-                inertia.Length = _length;
                 downcanvas.Children.Add(inertia);
+                Canvas.SetBottom(inertia, 0);
+                Canvas.SetLeft(inertia, 0);
                 _inertia = inertia;
             }
-
+            _inertiashown = true;
         }
 
         public void HideInertiaDiagram()
@@ -1565,6 +1562,8 @@ namespace Mesnet.Xaml.User_Controls
                 downcanvas.Children.Remove(_inertia);
                 _inertia = null;
             }
+
+            _inertiashown = false;
         }
 
         public void AddDeflectionDiagram()
@@ -1605,6 +1604,7 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(stress, 0);
                 _stressdiagram = stress;
             }
+            _stressshown = true;
         }
 
         public void HideStressDiagram()
@@ -1613,16 +1613,19 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _stressdiagram.Hide();
             }
+            _stressshown = false;
         }
 
         public void ShowDirectionArrow()
         {
             directionarrow.Visibility = Visibility.Visible;
+            _directionshown = true;
         }
 
         public void HideDirectionArrow()
         {
             directionarrow.Visibility = Visibility.Collapsed;
+            _directionshown = false;
         }
 
         /// <summary>
@@ -2321,13 +2324,6 @@ namespace Mesnet.Xaml.User_Controls
 
                 poly.StartPoint = force.StartPoint;
                 poly.EndPoint = force.EndPoint;
-                //var poly1 = new Poly("-1");
-                //poly1.StartPoint = force.StartPoint;
-                //poly1.EndPoint = force.EndPoint;
-                //var momentpoly = poly * poly1;
-                //momentpoly.StartPoint = force.StartPoint;
-                //momentpoly.EndPoint = force.EndPoint;
-                //_zeromoment.Add(momentpoly);
                 _zeromoment.Add(poly);
                 _zeromoment.Sort();
             }
@@ -3074,9 +3070,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     double conductmoment;
 
-                    switch (RightSide.GetType().Name)
+                    switch (GetObjectType(RightSide))
                     {
-                        case "BasicSupport":
+                        case ObjectType.BasicSupport:
 
                             BasicSupport bs = RightSide as BasicSupport;
 
@@ -3095,7 +3091,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "SlidingSupport":
+                        case ObjectType.SlidingSupport:
 
                             SlidingSupport ss = RightSide as SlidingSupport;
 
@@ -3114,7 +3110,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
 
                             RightFixedSupport rs = RightSide as RightFixedSupport;
 
@@ -3135,9 +3131,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     double conductmoment1;
 
-                    switch (LeftSide.GetType().Name)
+                    switch (GetObjectType(LeftSide))
                     {
-                        case "BasicSupport":
+                        case ObjectType.BasicSupport:
 
                             BasicSupport bs = LeftSide as BasicSupport;
 
@@ -3156,7 +3152,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "SlidingSupport":
+                        case ObjectType.SlidingSupport:
 
                             SlidingSupport ss = LeftSide as SlidingSupport;
 
@@ -3175,7 +3171,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "LeftFixedSupport":
+                        case ObjectType.LeftFixedSupport:
 
                             LeftFixedSupport ls = LeftSide as LeftFixedSupport;
 
@@ -4002,7 +3998,6 @@ namespace Mesnet.Xaml.User_Controls
                     {
                         _mb = Positive(_mb);
                     }
-
                 }
                 else
                 {
@@ -4242,6 +4237,11 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        public int BeamId
+        {
+            get { return _beamid; }
+        }
+
         public double ElasticityModulus
         {
             get { return _elasticity; }
@@ -4381,6 +4381,48 @@ namespace Mesnet.Xaml.User_Controls
             {
                 return _rightcircleselected;
             }
+        }
+
+        public bool DirectionShown
+        {
+            get { return _directionshown; }
+            set { _directionshown = value; }
+        }
+
+        public bool MomentShown
+        {
+            get { return _momentshown; }
+            set { _momentshown = value; }
+        }
+
+        public bool ForceShown
+        {
+            get { return _forceshown; }
+            set { _forceshown = value; }
+        }
+
+        public bool DistributedLoadShown
+        {
+            get { return _distributedloadshown; }
+            set { _distributedloadshown = value; }
+        }
+
+        public bool ConcentratedLoadShown
+        {
+            get { return _concentratedloadshown; }
+            set { _concentratedloadshown = value; }
+        }
+
+        public bool InertiaShown
+        {
+            get { return _inertiashown; }
+            set { _inertiashown = value; }
+        }
+
+        public bool StressShown
+        {
+            get { return _stressshown; }
+            set { _stressshown = value; }
         }
 
         #endregion

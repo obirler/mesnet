@@ -39,9 +39,9 @@ namespace Mesnet.Xaml.User_Controls
 
             _max = _inertiappoly.Max;
 
-            coeff = 100 / _max;
+            coeff = 200 / _max;
 
-            Height = 100;
+            Height = 200;
 
             InitializeComponent();
 

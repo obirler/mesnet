@@ -20,9 +20,11 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Mesnet.Xaml.User_Controls;
+using static Mesnet.Classes.Global;
 
 namespace Mesnet.Xaml.Pages
 {
@@ -38,6 +40,8 @@ namespace Mesnet.Xaml.Pages
             _length = length;
 
             _loads = new List<KeyValuePair<double, double>>();
+
+            loadx.Text = (_length/2).ToString();
         }
 
         private double _length;
@@ -52,7 +56,48 @@ namespace Mesnet.Xaml.Pages
         private void addbtn_Click(object sender, RoutedEventArgs e)
         {
             double x = Convert.ToDouble(loadx.Text);
-            double y = Convert.ToDouble(load.Text);
+
+            if (double.TryParse(loadx.Text, out x))
+            {
+                if (x < 0 || x >= _length)
+                {
+                    MessageBox.Show(GetString("outrange"));
+                    loadx.Focus();
+                    return;
+                }
+
+                if (_loads.Any(item => item.Key == x))
+                {
+                    MessageBox.Show(GetString("invalidpoint"));
+                    loadx.Focus();
+                    return;
+                }                
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidvalue"));
+                loadx.Focus();
+                return;
+            }
+
+
+            double y;
+
+            if (double.TryParse(load.Text, out y))
+            {
+                if (y == 0)
+                {
+                    MessageBox.Show(GetString("invalidconcload"));
+                    load.Focus();
+                    return;                    
+                }
+            }
+            else
+            {
+                MessageBox.Show(GetString("invalidvalue"));
+                load.Focus();
+                return;
+            }
 
             _loads.Add(new KeyValuePair<double, double>(x, y));
 
@@ -67,8 +112,8 @@ namespace Mesnet.Xaml.Pages
             }
             fncstk.Children.Add(fnc);
 
-            load.Text = "";
-            loadx.Text = "";
+            load.Text = "10";
+            loadx.Text = (_length/2).ToString();
         }
 
         private void Remove_Click(object sender, RoutedEventArgs e)

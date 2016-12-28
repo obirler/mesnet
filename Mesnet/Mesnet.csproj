@@ -64,6 +64,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
+    <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />
     <Compile Include="Xaml\Pages\BeamPrompt.xaml.cs">
       <DependentUpon>BeamPrompt.xaml</DependentUpon>
     </Compile>
@@ -203,7 +205,7 @@
     <Compile Include="Classes\Math\ConjugatePoly.cs" />
     <Compile Include="Classes\Math\ConjugateTerm.cs" />
     <Compile Include="Classes\Math\ConjugateTermCollection.cs" />
-    <Compile Include="Classes\Math\dijkstras.cs" />
+    <Compile Include="Classes\Math\Dijkstras.cs" />
     <Compile Include="Classes\Math\DotCollection.cs" />
     <Compile Include="Classes\Math\PiecewiseConjugatePoly.cs" />
     <Compile Include="Classes\Math\PiecewisePoly.cs" />
@@ -440,6 +442,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logomsmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\rot.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

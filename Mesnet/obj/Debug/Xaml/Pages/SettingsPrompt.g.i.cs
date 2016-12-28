@@ -10,7 +10,10 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.CodeDom.Compiler;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
@@ -37,28 +40,28 @@ namespace Mesnet.Xaml.Pages {
     /// <summary>
     /// SettingsPrompt
     /// </summary>
-    public partial class SettingsPrompt : System.Windows.Window, System.Windows.Markup.IComponentConnector {
+    public partial class SettingsPrompt : Window, IComponentConnector {
         
         
         #line 11 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.RadioButton englishbtn;
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal RadioButton englishbtn;
         
         #line default
         #line hidden
         
         
         #line 12 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.RadioButton turkishbtn;
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal RadioButton turkishbtn;
         
         #line default
         #line hidden
         
         
         #line 16 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.ComboBox calculationcbx;
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+        internal ComboBox calculationcbx;
         
         #line default
         #line hidden
@@ -68,54 +71,54 @@ namespace Mesnet.Xaml.Pages {
         /// <summary>
         /// InitializeComponent
         /// </summary>
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
+        [DebuggerNonUserCode()]
+        [GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
         public void InitializeComponent() {
             if (_contentLoaded) {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Mesnet;component/xaml/pages/settingsprompt.xaml", System.UriKind.Relative);
+            Uri resourceLocater = new Uri("/Mesnet;component/xaml/pages/settingsprompt.xaml", UriKind.Relative);
             
             #line 1 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-            System.Windows.Application.LoadComponent(this, resourceLocater);
+            Application.LoadComponent(this, resourceLocater);
             
             #line default
             #line hidden
         }
         
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
-        void System.Windows.Markup.IComponentConnector.Connect(int connectionId, object target) {
+        [DebuggerNonUserCode()]
+        [GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        void IComponentConnector.Connect(int connectionId, object target) {
             switch (connectionId)
             {
             case 1:
-            this.englishbtn = ((System.Windows.Controls.RadioButton)(target));
+            this.englishbtn = ((RadioButton)(target));
             
             #line 11 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-            this.englishbtn.Checked += new System.Windows.RoutedEventHandler(this.englishbtn_Checked);
+            this.englishbtn.Checked += new RoutedEventHandler(this.englishbtn_Checked);
             
             #line default
             #line hidden
             return;
             case 2:
-            this.turkishbtn = ((System.Windows.Controls.RadioButton)(target));
+            this.turkishbtn = ((RadioButton)(target));
             
             #line 12 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-            this.turkishbtn.Checked += new System.Windows.RoutedEventHandler(this.turkishbtn_Checked);
+            this.turkishbtn.Checked += new RoutedEventHandler(this.turkishbtn_Checked);
             
             #line default
             #line hidden
             return;
             case 3:
-            this.calculationcbx = ((System.Windows.Controls.ComboBox)(target));
+            this.calculationcbx = ((ComboBox)(target));
             
             #line 16 "..\..\..\..\Xaml\Pages\SettingsPrompt.xaml"
-            this.calculationcbx.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler(this.calculationcbx_SelectionChanged);
+            this.calculationcbx.SelectionChanged += new SelectionChangedEventHandler(this.calculationcbx_SelectionChanged);
             
             #line default
             #line hidden

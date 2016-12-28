@@ -32,5 +32,15 @@ namespace Mesnet.Xaml.User_Controls
             InitializeComponent();
             content.Content = name;
         }
+
+        public ButtonItem()
+        {
+            InitializeComponent();
+        }
+
+        public void SetName(string name)
+        {
+            content.Content = name;
+        }
     }
 }

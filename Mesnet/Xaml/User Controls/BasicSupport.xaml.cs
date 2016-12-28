@@ -41,12 +41,15 @@ namespace Mesnet.Xaml.User_Controls
             _canbedragged = true;
             Members = new List<Member>();
             SupportCount++;
+            _supportid = SupportCount;
             _name = "Basic Support " + SupportCount;
             canvas.Children.Add(this);
             _id = AddObject(this);
         }
 
         private int _id;
+
+        private int _supportid;
 
         private string _name;
 
@@ -61,28 +64,6 @@ namespace Mesnet.Xaml.User_Controls
         public List<Member> Members;
 
         #region Methods
-
-        public void Add(Canvas canvas, double x, double y)
-        {
-            canvas.Children.Add(this);
-            _id = AddObject(this);
-
-            Canvas.SetLeft(this, x);
-
-            Canvas.SetTop(this, y);
-        }
-
-        public void Add(Canvas canvas, Point point)
-        {
-            canvas.Children.Add(this);
-            _id = AddObject(this);
-            var x = point.X;
-            var y = point.Y;
-
-            Canvas.SetLeft(this, x - 13);
-
-            Canvas.SetTop(this, y);
-        }
 
         public void AddBeam(Beam beam, Direction direction)
         {
@@ -297,7 +278,7 @@ namespace Mesnet.Xaml.User_Controls
                         MyDebug.WriteInformation(this.Name + " : Seperate", "Left Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Left, beammoment);
-                        if (Math.Abs(beammoment * beam.CarryOverAB) < 0.00001)
+                        if (Math.Abs(beammoment * beam.CarryOverAB) < CrossLoopTreshold)
                         {
                             isstop = true;
                         }
@@ -330,8 +311,6 @@ namespace Mesnet.Xaml.User_Controls
                 }
                 Logger.NextLine();
             }
-
-            //ReloadMembersCollection();
 
             return isstop;
 
@@ -412,6 +391,11 @@ namespace Mesnet.Xaml.User_Controls
         public int Id
         {
             get { return _id; }
+        }
+
+        public int SupportId
+        {
+            get { return _supportid; }
         }
 
         public string Name

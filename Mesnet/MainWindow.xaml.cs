@@ -61,13 +61,13 @@ namespace Mesnet
 
             InitializeComponent();
 
-            moment.Header = "Show Moment";
+            //moment.Header = "Show Moment";
 
-            force.Header = "Show Force";
+            //force.Header = "Show Force";
 
-            deflection.Header = "Show Deflection";
+            //deflection.Header = "Show Deflection";
 
-            stress.Header = "Show Stress";
+            //stress.Header = "Show Stress";
 
             scaleslider.Value = zoomAndPanControl.ContentScale;
 
@@ -119,6 +119,12 @@ namespace Mesnet
         private int _rightcount = 0;
 
         private double _maxstress = 150;
+
+        private bool _momentshown = false;
+
+        private bool _forceshown = false;
+
+        private bool _stressshown = false;
 
         private void TestCase()
         {
@@ -320,7 +326,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         private void TestCase2()
@@ -450,7 +456,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         private void TestCase3()
@@ -730,7 +736,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         private void TestCase4()
@@ -994,7 +1000,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         private void DevTest2()
@@ -1131,7 +1137,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         private void StressTest()
@@ -1181,7 +1187,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         private void StressTest2()
@@ -1255,7 +1261,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllTree();
+            UpdateAllBeamTree();
         }
 
         #region zoomandpancontrol
@@ -1407,7 +1413,7 @@ namespace Mesnet
                     tempbeam.CanBeDragged = true;
                     //tempbeam.ShowCorners(4);
 
-                    UpdateTree(tempbeam);
+                    UpdateBeamTree(tempbeam);
 
                     Reset();
 
@@ -1925,7 +1931,7 @@ namespace Mesnet
 
                                                 canvas.UpdateLayout();
                                                 notify.Text = (string) FindResource("beamput");
-                                                UpdateAllTree();
+                                                UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
                                                 return;
                                             }
@@ -1998,7 +2004,7 @@ namespace Mesnet
 
                                                 canvas.UpdateLayout();
                                                 notify.Text = (string) FindResource("beamput");
-                                                UpdateAllTree();
+                                                UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
                                                 return;
                                             }
@@ -2030,7 +2036,7 @@ namespace Mesnet
                                 break;
                         }
                         Reset();
-                        UpdateAllTree();
+                        UpdateAllBeamTree();
                         UpdateAllSupportTree();
                         return;
                     }
@@ -2130,7 +2136,7 @@ namespace Mesnet
 
                                                 canvas.UpdateLayout();
                                                 notify.Text = (string)FindResource("beamput");
-                                                UpdateAllTree();
+                                                UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
                                                 return;
                                             }
@@ -2204,7 +2210,7 @@ namespace Mesnet
                                                 newbeam.SetAngleRight(beamangle);
                                                 canvas.UpdateLayout();
                                                 notify.Text = (string)FindResource("beamput");
-                                                UpdateAllTree();
+                                                UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
                                                 return;
                                             }
@@ -2236,7 +2242,7 @@ namespace Mesnet
                                 break;
                         }
                         Reset();
-                        UpdateAllTree();
+                        UpdateAllBeamTree();
                         UpdateAllSupportTree();
                         return;
                     }
@@ -2380,7 +2386,7 @@ namespace Mesnet
                                 break;
                         }
 
-                        UpdateTree(beam);
+                        UpdateBeamTree(beam);
                         Reset();
                     }
                     else
@@ -2523,7 +2529,7 @@ namespace Mesnet
 
                         break;
                 }
-                UpdateTree(selectedbeam);
+                UpdateBeamTree(selectedbeam);
                 SetMouseHandlingMode("fixedsupportbtn_Click", MouseHandlingMode.None);
             }
             else
@@ -2563,7 +2569,7 @@ namespace Mesnet
                 notify.Text = (string)FindResource("basicsupportput");
                 SetMouseHandlingMode("basicsupportbtn_Click", MouseHandlingMode.None);
                 UpdateSupportTree(basicsupport);               
-                UpdateTree(selectedbeam);
+                UpdateBeamTree(selectedbeam);
             }
             else
             {
@@ -2601,7 +2607,7 @@ namespace Mesnet
                 SetMouseHandlingMode("slidingsupportbtn_Click", MouseHandlingMode.None);
                 notify.Text = (string)FindResource("slidingsupportput");
                 UpdateSupportTree(slidingsupport);
-                UpdateTree(selectedbeam);
+                UpdateBeamTree(selectedbeam);
             }
             else
             {
@@ -2897,15 +2903,14 @@ namespace Mesnet
         /// Updates given beam in the beam tree view.
         /// </summary>
         /// <param name="beam">The beam.</param>
-        private void UpdateTree(Beam beam)
+        private void UpdateBeamTree(Beam beam)
         {
-            var beamitem = new TreeViewItem();
+            var beamitem = new TreeViewBeamItem(beam);
             bool exists = false;
 
-            foreach (TreeViewItem item in tree.Items)
+            foreach (TreeViewBeamItem item in tree.Items)
             {
-                var name = (item.Header as BeamItem).beamname.Text;
-                if (beam.Name == name)
+                if (Equals(beam, item.Beam))
                 {
                     item.Items.Clear();
                     beamitem = item;
@@ -2916,8 +2921,12 @@ namespace Mesnet
 
             if (!exists)
             {
-                beamitem.Header = new BeamItem(beam.Name);
-                tree.Items.Add(beamitem);               
+                beamitem.Header = new BeamItem(GetString("beam") + " " + beam.BeamId);
+                tree.Items.Add(beamitem);
+            }
+            else
+            {
+                beamitem.Header = new BeamItem(GetString("beam") + " " + beam.BeamId);
             }
 
             if (beam.PerformStressAnalysis)
@@ -2938,46 +2947,54 @@ namespace Mesnet
             beamitem.Selected += TreeItemSelected;
 
             var arrowitem = new TreeViewItem();
-            var arrowbutton = new ButtonItem("Show Direction");
+            var arrowbutton = new ButtonItem();
+            if (!beam.DirectionShown)
+            {
+                arrowbutton.SetName(GetString("showdirection"));
+            }
+            else
+            {
+                arrowbutton.SetName(GetString("hidedirection"));
+            }
             arrowitem.Header = arrowbutton;
             arrowbutton.content.Click += arrow_Click;
             beamitem.Items.Add(arrowitem);
 
             var lengthitem = new TreeViewItem();
-            lengthitem.Header = new LengthItem("Length" + " : " + beam.Length + " m");
+            lengthitem.Header = new LengthItem(GetString("length") + " : " + beam.Length + " m");
             beamitem.Items.Add(lengthitem);
 
             var leftsideitem = new TreeViewItem();
 
             if (beam.LeftSide != null)
             {
-                string leftname = "Null";
+                string leftname = GetString("null");
                 switch (beam.LeftSide.GetType().Name)
                 {
                     case "LeftFixedSupport":
 
-                        leftname = (beam.LeftSide as LeftFixedSupport).Name;
+                        leftname = GetString("leftfixedsupport");
 
                         break;
 
                     case "SlidingSupport":
 
-                        leftname = (beam.LeftSide as SlidingSupport).Name;
+                        leftname = GetString("slidingsupport");
 
                         break;
 
                     case "BasicSupport":
 
-                        leftname = (beam.LeftSide as BasicSupport).Name;
+                        leftname = GetString("basicsupport");
 
                         break;
                 }
-                leftsideitem.Header = "Left Side" + " : " + leftname;
+                leftsideitem.Header = GetString("leftside") + " : " + leftname;
                 beamitem.Items.Add(leftsideitem);
             }
             else
             {
-                leftsideitem.Header = "Left Side" + " : Null";
+                leftsideitem.Header = GetString("leftside") + " : " + GetString("null");
                 beamitem.Items.Add(leftsideitem);
             }
 
@@ -2985,46 +3002,54 @@ namespace Mesnet
 
             if (beam.RightSide != null)
             {
-                string rightname = "Null";
+                string rightname = GetString("null");
                 switch (beam.RightSide.GetType().Name)
                 {
                     case "RightFixedSupport":
 
-                        rightname = (beam.RightSide as RightFixedSupport).Name;
+                        rightname = GetString("rightfixedsupport");
 
                         break;
 
                     case "SlidingSupport":
 
-                        rightname = (beam.RightSide as SlidingSupport).Name;
+                        rightname = GetString("slidingsupport");
 
                         break;
 
                     case "BasicSupport":
 
-                        rightname = (beam.RightSide as BasicSupport).Name;
+                        rightname = GetString("basicsupport");
 
                         break;
                 }
-                rightsideitem.Header = "Right Side" + " : " + rightname;
+                rightsideitem.Header = GetString("rightside") + " : " + rightname;
                 beamitem.Items.Add(rightsideitem);
             }
             else
             {
-                rightsideitem.Header = "Right Side" + " : Null";
+                rightsideitem.Header = GetString("rightside") + " : " + GetString("null");
                 beamitem.Items.Add(rightsideitem);
             }
 
             var elasticityitem = new TreeViewItem();
-            elasticityitem.Header = new ElasticityItem("Elasticity Modulus" + " : " + beam.ElasticityModulus + " GPa");
+            elasticityitem.Header = new ElasticityItem(GetString("elasticity") + " : " + beam.ElasticityModulus + " GPa");
             beamitem.Items.Add(elasticityitem);
 
             var inertiaitem = new TreeViewItem();
 
-            inertiaitem.Header = new InertiaItem("Moment of Inertia");
+            inertiaitem.Header = new InertiaItem(GetString("inertia"));
             beamitem.Items.Add(inertiaitem);
 
-            var inertiabutton = new ButtonItem("Show");
+            var inertiabutton = new ButtonItem();
+            if (!beam.InertiaShown)
+            {
+                inertiabutton.SetName(GetString("show"));
+            }
+            else
+            {
+                inertiabutton.SetName(GetString("hide"));
+            }
             inertiabutton.content.Click += showinertia_Click;
             var inertiabuttonitem = new TreeViewItem();
             inertiabuttonitem.Header = inertiabutton;
@@ -3040,10 +3065,18 @@ namespace Mesnet
             if (beam.ConcentratedLoads.Count > 0)
             {
                 var concloaditem = new TreeViewItem();
-                concloaditem.Header = new ConcentratedLoadItem("Concentrated Loads");
+                concloaditem.Header = new ConcentratedLoadItem(GetString("concentratedloads"));
                 beamitem.Items.Add(concloaditem);
 
-                var concloadbutton = new ButtonItem("Hide");
+                var concloadbutton = new ButtonItem();
+                if (!beam.ConcentratedLoadShown)
+                {
+                    concloadbutton.SetName(GetString("show"));
+                }
+                else
+                {
+                    concloadbutton.SetName(GetString("hide"));
+                }
                 concloadbutton.content.Click += showconcload_Click;
 
                 var concloadbuttonitem = new TreeViewItem();
@@ -3061,10 +3094,18 @@ namespace Mesnet
             if (beam.DistributedLoads.Count > 0)
             {
                 var distloaditem = new TreeViewItem();
-                distloaditem.Header = new LoadItem("Distributed Loads");
+                distloaditem.Header = new LoadItem(GetString("distributedloads"));
                 beamitem.Items.Add(distloaditem);
 
-                var distloadbutton = new ButtonItem("Hide");
+                var distloadbutton = new ButtonItem();
+                if (!beam.DistributedLoadShown)
+                {
+                    distloadbutton.SetName(GetString("show"));
+                }
+                else
+                {
+                    distloadbutton.SetName(GetString("hide"));
+                }
                 distloadbutton.content.Click += showdistload_Click;
 
                 var distloadbuttonitem = new TreeViewItem();
@@ -3079,6 +3120,7 @@ namespace Mesnet
                 }
             }
 
+            #region zerofield
             /*
             if (beam.ZeroForce != null)
             {
@@ -3190,13 +3232,23 @@ namespace Mesnet
                 infoitem.Items.Add(exploreritem);
             }
             */
+            #endregion
+
             if (beam.FixedEndForce != null)
             {
                 var forcetitem = new TreeViewItem();
-                forcetitem.Header = new ForceItem("Force Function");
+                forcetitem.Header = new ForceItem(GetString("forcefunction"));
                 beamitem.Items.Add(forcetitem);
 
-                var forcebutton = new ButtonItem("Show");
+                var forcebutton = new ButtonItem();
+                if (!beam.ForceShown)
+                {
+                    forcebutton.SetName(GetString("show"));
+                }
+                else
+                {
+                    forcebutton.SetName(GetString("hide"));
+                }
                 forcebutton.content.Click += showfixedendforce_Click;
                 var forcebuttonitem = new TreeViewItem();
                 forcebuttonitem.Header = forcebutton;
@@ -3210,30 +3262,30 @@ namespace Mesnet
                 }
 
                 var infoitem = new TreeViewItem();
-                var info = new Information("Information");
+                var info = new Information(GetString("information"));
                 infoitem.Header = info;
                 forcetitem.Items.Add(infoitem);
 
                 var leftside = new TreeViewItem();
-                leftside.Header = "Left Side : " + Math.Round(beam.FixedEndForce.Calculate(0), 4) + " kN";
+                leftside.Header = GetString("leftside") + " : " + Math.Round(beam.FixedEndForce.Calculate(0), 4) + " kN";
                 infoitem.Items.Add(leftside);
 
                 var rightside = new TreeViewItem();
-                rightside.Header = "Right Side : " + Math.Round(beam.FixedEndForce.Calculate(beam.Length), 4) + " kN";
+                rightside.Header = GetString("rightside") + " : " + Math.Round(beam.FixedEndForce.Calculate(beam.Length), 4) + " kN";
                 infoitem.Items.Add(rightside);
 
                 var maxvalue = new TreeViewItem();
-                maxvalue.Header = "Max Value : " + Math.Round(beam.FixedEndForce.Max, 4) + " kN";
+                maxvalue.Header = GetString("maxvalue") + " : " + Math.Round(beam.FixedEndForce.Max, 4) + " kN";
                 infoitem.Items.Add(maxvalue);
                 var maxloc = new TreeViewItem();
-                maxloc.Header = "Max Location : " + Math.Round(beam.FixedEndForce.MaxLocation, 4) + " m";
+                maxloc.Header = GetString("maxloc") + " : " + Math.Round(beam.FixedEndForce.MaxLocation, 4) + " m";
                 infoitem.Items.Add(maxloc);
 
                 var minvalue = new TreeViewItem();
-                minvalue.Header = "Min Value : " + Math.Round(beam.FixedEndForce.Min, 4) + " kN";
+                minvalue.Header = GetString("minvalue") + " : " + Math.Round(beam.FixedEndForce.Min, 4) + " kN";
                 infoitem.Items.Add(minvalue);
                 var minloc = new TreeViewItem();
-                minloc.Header = "Min Location : " + Math.Round(beam.FixedEndForce.MinLocation, 4) + " m";
+                minloc.Header = GetString("minloc") + " : " + Math.Round(beam.FixedEndForce.MinLocation, 4) + " m";
                 infoitem.Items.Add(minloc);
 
                 var exploreritem = new TreeViewItem();
@@ -3248,10 +3300,18 @@ namespace Mesnet
             if (beam.FixedEndMoment != null)
             {
                 var momentitem = new TreeViewItem();
-                momentitem.Header = new MomentItem("Moment Function");
+                momentitem.Header = new MomentItem(GetString("momentfunction"));
                 beamitem.Items.Add(momentitem);
 
-                var momentbutton = new ButtonItem("Show");
+                var momentbutton = new ButtonItem();
+                if (!beam.MomentShown)
+                {
+                    momentbutton.SetName(GetString("show"));
+                }
+                else
+                {
+                    momentbutton.SetName(GetString("hide"));
+                }
                 momentbutton.content.Click += showfixedendmoment_Click;
                 var momentbuttonitem = new TreeViewItem();
                 momentbuttonitem.Header = momentbutton;
@@ -3265,30 +3325,30 @@ namespace Mesnet
                 }
 
                 var infoitem = new TreeViewItem();
-                var info = new Information("Information");
+                var info = new Information(GetString("information"));
                 infoitem.Header = info;
                 momentitem.Items.Add(infoitem);
 
                 var leftside = new TreeViewItem();
-                leftside.Header = "Left Side : " + Math.Round(beam.FixedEndMoment.Calculate(0), 4) + " kNm";
+                leftside.Header = GetString("leftside") + " : " + Math.Round(beam.FixedEndMoment.Calculate(0), 4) + " kNm";
                 infoitem.Items.Add(leftside);
 
                 var rightside = new TreeViewItem();
-                rightside.Header = "Right Side : " + Math.Round(beam.FixedEndMoment.Calculate(beam.Length), 4) + " kNm";
+                rightside.Header = GetString("rightside") + " : " + Math.Round(beam.FixedEndMoment.Calculate(beam.Length), 4) + " kNm";
                 infoitem.Items.Add(rightside);
 
                 var maxvalue = new TreeViewItem();
-                maxvalue.Header = "Max Value : " + Math.Round(beam.FixedEndMoment.Max, 4) + " kNm";
+                maxvalue.Header = GetString("maxvalue") + " : " + Math.Round(beam.FixedEndMoment.Max, 4) + " kNm";
                 infoitem.Items.Add(maxvalue);
                 var maxloc = new TreeViewItem();
-                maxloc.Header = "Max Location : " + Math.Round(beam.FixedEndMoment.MaxLocation, 4) + " m";
+                maxloc.Header = GetString("maxloc") + " : " + Math.Round(beam.FixedEndMoment.MaxLocation, 4) + " m";
                 infoitem.Items.Add(maxloc);
 
                 var minvalue = new TreeViewItem();
-                minvalue.Header = "Min Value : " + Math.Round(beam.FixedEndMoment.Min, 4) + " kNm";
+                minvalue.Header = GetString("minvalue") + " : " + Math.Round(beam.FixedEndMoment.Min, 4) + " kNm";
                 infoitem.Items.Add(minvalue);
                 var minloc = new TreeViewItem();
-                minloc.Header = "Min Location : " + Math.Round(beam.FixedEndMoment.MinLocation, 4) + " m";
+                minloc.Header = GetString("minloc") + " : " + Math.Round(beam.FixedEndMoment.MinLocation, 4) + " m";
                 infoitem.Items.Add(minloc);
 
                 var exploreritem = new TreeViewItem();
@@ -3303,40 +3363,48 @@ namespace Mesnet
             if (beam.PerformStressAnalysis && beam.Stress != null)
             {
                 var stressitem = new TreeViewItem();
-                stressitem.Header = new StressItem("Stress Distribution");
+                stressitem.Header = new StressItem(GetString("stressdist"));
                 beamitem.Items.Add(stressitem);
 
-                var stressbutton = new ButtonItem("Show");
+                var stressbutton = new ButtonItem();
+                if (!beam.StressShown)
+                {
+                    stressbutton.SetName(GetString("show"));
+                }
+                else
+                {
+                    stressbutton.SetName(GetString("hide"));
+                }
                 stressbutton.content.Click += showstress_Click;
                 var stressbuttonitem = new TreeViewItem();
                 stressbuttonitem.Header = stressbutton;
                 stressitem.Items.Add(stressbuttonitem);
 
                 var infoitem = new TreeViewItem();
-                var info = new Information("Information");
+                var info = new Information(GetString("information"));
                 infoitem.Header = info;
                 stressitem.Items.Add(infoitem);
 
                 var leftside = new TreeViewItem();
-                leftside.Header = "Left Side : " + Math.Round(beam.Stress.Calculate(0), 4) + " MPa";
+                leftside.Header = GetString("leftside") + " : " + Math.Round(beam.Stress.Calculate(0), 4) + " MPa";
                 infoitem.Items.Add(leftside);
 
                 var rightside = new TreeViewItem();
-                rightside.Header = "Right Side : " + Math.Round(beam.Stress.Calculate(beam.Length), 4) + " MPa";
+                rightside.Header = GetString("rightside") + " : " + Math.Round(beam.Stress.Calculate(beam.Length), 4) + " MPa";
                 infoitem.Items.Add(rightside);
 
                 var maxvalue = new TreeViewItem();
-                maxvalue.Header = "Max Value : " + Math.Round(beam.Stress.YMax, 4) + " MPa";
+                maxvalue.Header = GetString("maxvalue") + " : " + Math.Round(beam.Stress.YMax, 4) + " MPa";
                 infoitem.Items.Add(maxvalue);
                 var maxloc = new TreeViewItem();
-                maxloc.Header = "Max Location : " + Math.Round(beam.Stress.YMaxPosition, 4) + " m";
+                maxloc.Header = GetString("maxloc") + " : " + Math.Round(beam.Stress.YMaxPosition, 4) + " m";
                 infoitem.Items.Add(maxloc);
 
                 var minvalue = new TreeViewItem();
-                minvalue.Header = "Min Value : " + Math.Round(beam.Stress.YMin, 4) + " MPa";
+                minvalue.Header = GetString("minvalue") + " : " + Math.Round(beam.Stress.YMin, 4) + " MPa";
                 infoitem.Items.Add(minvalue);
                 var minloc = new TreeViewItem();
-                minloc.Header = "Min Location : " + Math.Round(beam.Stress.YMinPosition, 4) + " m";
+                minloc.Header = GetString("minloc") + " : " + Math.Round(beam.Stress.YMinPosition, 4) + " m";
                 infoitem.Items.Add(minloc);
 
                 var exploreritem = new TreeViewItem();
@@ -3352,43 +3420,42 @@ namespace Mesnet
         /// <summary>
         /// Updates all the tree view items.
         /// </summary>
-        public void UpdateAllTree()
+        public void UpdateAllBeamTree()
         {
             MyDebug.WriteInformation("MainWindow", "Update All Tree Started");
             foreach (var item in objects)
             {
-                switch (item.GetType().Name)
+                switch (GetObjectType(item))
                 {
-                    case "Beam":
+                    case ObjectType.Beam:
 
                         Beam beam = (Beam)item;
-                        UpdateTree(beam);
+                        UpdateBeamTree(beam);
                         break;
                 }
             }
         }
-
+         
         /// <summary>
         /// Updates given support in the support tree view.
         /// </summary>
         /// <param name="support">The support.</param>
         private void UpdateSupportTree(object support)
         {
-            var supportitem = new TreeViewItem();
+            var supportitem = new TreeViewSupportItem(support);
             bool exists = false;
 
-            switch (support.GetType().Name)
+            switch (GetObjectType(support))
             {
-                case "SlidingSupport":
+                case ObjectType.SlidingSupport:
 
                     var slidingsup = support as SlidingSupport;
 
-                    foreach (TreeViewItem item in supporttree.Items)
+                    foreach (TreeViewSupportItem item in supporttree.Items)
                     {
-                        if (item.Header.GetType().Name == "SlidingSupportItem")
+                        if (GetObjectType(item.Support) == ObjectType.SlidingSupport)
                         {
-                            var name = (item.Header as SlidingSupportItem).support.Text;
-                            if (slidingsup.Name == name)
+                            if (Equals(supportitem.Support, item.Support))
                             {
                                 item.Items.Clear();
                                 supportitem = item;
@@ -3400,41 +3467,55 @@ namespace Mesnet
 
                     if (!exists)
                     {
-                        supportitem.Header = new SlidingSupportItem(slidingsup.Name);
+                        supportitem.Header =
+                            new SlidingSupportItem(GetString("slidingsupport") + " " + slidingsup.SupportId);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
+                    }
+                    else
+                    {
+                        supportitem.Header =
+                            new SlidingSupportItem(GetString("slidingsupport") + " " + slidingsup.SupportId);
                     }
 
                     if (slidingsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
-                        crossitem.Header = "Cross Index : " + slidingsup.CrossIndex;
+                        crossitem.Header = GetString("crossindex") +" : " + slidingsup.CrossIndex;
                         supportitem.Items.Add(crossitem);
                     }
 
                     var slmembersitem = new TreeViewItem();
-                    slmembersitem.Header = "Members";
+                    slmembersitem.Header = GetString("connections");
                     supportitem.Items.Add(slmembersitem);
 
                     foreach (Member member in slidingsup.Members)
                     {
                         var memberitem = new TreeViewItem();
-                        memberitem.Header = new BeamItem(member.Beam.Name + " , " + member.Direction.ToString() + " Side,  " + member.Moment + " kNm");
+                        switch (member.Direction)
+                        {
+                            case Direction.Right:
+                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                break;
+
+                            case Direction.Left:
+                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                break;
+                        }                       
                         slmembersitem.Items.Add(memberitem);
                     }
 
                     break;
 
-                case "BasicSupport":
+                case ObjectType.BasicSupport:
 
                     var basicsup = support as BasicSupport;
 
-                    foreach (TreeViewItem item in supporttree.Items)
+                    foreach (TreeViewSupportItem item in supporttree.Items)
                     {
-                        if (item.Header.GetType().Name == "BasicSupportItem")
+                        if (GetObjectType(item.Support) == ObjectType.BasicSupport)
                         {
-                            var name = (item.Header as BasicSupportItem).support.Text;
-                            if (basicsup.Name == name)
+                            if (Equals(supportitem.Support, item.Support))
                             {
                                 item.Items.Clear();
                                 supportitem = item;
@@ -3446,41 +3527,53 @@ namespace Mesnet
 
                     if (!exists)
                     {
-                        supportitem.Header = new BasicSupportItem(basicsup.Name);
+                        supportitem.Header = new BasicSupportItem(GetString("basicsupport") + " " + basicsup.SupportId);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
+                    }
+                    else
+                    {
+                        supportitem.Header = new BasicSupportItem(GetString("basicsupport") + " " + basicsup.SupportId);
                     }
 
                     if (basicsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
-                        crossitem.Header = "Cross Index : " + basicsup.CrossIndex;
+                        crossitem.Header = GetString("crossindex") + " : " + basicsup.CrossIndex;
                         supportitem.Items.Add(crossitem);
                     }
 
                     var bsmembersitem = new TreeViewItem();
-                    bsmembersitem.Header = "Members";
+                    bsmembersitem.Header = GetString("connections");
                     supportitem.Items.Add(bsmembersitem);
 
                     foreach (Member member in basicsup.Members)
                     {
                         var memberitem = new TreeViewItem();
-                        memberitem.Header = new BeamItem(member.Beam.Name + " , " + member.Direction.ToString() + " Side,  " + member.Moment + " kNm");
+                        switch (member.Direction)
+                        {
+                            case Direction.Right:
+                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                break;
+
+                            case Direction.Left:
+                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                break;
+                        }
                         bsmembersitem.Items.Add(memberitem);
                     }
 
                     break;
 
-                case "LeftFixedSupport":
+                case ObjectType.LeftFixedSupport:
 
                     var lfixedsup = support as LeftFixedSupport;
 
-                    foreach (TreeViewItem item in supporttree.Items)
+                    foreach (TreeViewSupportItem item in supporttree.Items)
                     {
-                        if (item.Header.GetType().Name == "LeftFixedSupportItem")
+                        if (GetObjectType(item.Support) == ObjectType.LeftFixedSupport)
                         {
-                            var name = (item.Header as LeftFixedSupportItem).support.Text;
-                            if (lfixedsup.Name == name)
+                            if (Equals(supportitem.Support, item.Support))
                             {
                                 item.Items.Clear();
                                 supportitem = item;
@@ -3492,38 +3585,52 @@ namespace Mesnet
 
                     if (!exists)
                     {
-                        supportitem.Header = new LeftFixedSupportItem(lfixedsup.Name);
+                        supportitem.Header =
+                            new LeftFixedSupportItem(GetString("leftfixedsupport") + " " + lfixedsup.SupportId);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
+                    }
+                    else
+                    {
+                        supportitem.Header =
+                            new LeftFixedSupportItem(GetString("leftfixedsupport") + " " + lfixedsup.SupportId);
                     }
 
                     if (lfixedsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
-                        crossitem.Header = "Cross Index : " + lfixedsup.CrossIndex;
+                        crossitem.Header = GetString("crossindex") + " : " + lfixedsup.CrossIndex;
                         supportitem.Items.Add(crossitem);
                     }
 
                     var lfmembersitem = new TreeViewItem();
-                    lfmembersitem.Header = "Member";
+                    lfmembersitem.Header = GetString("connection");
                     supportitem.Items.Add(lfmembersitem);
 
                     var lfmemberitem = new TreeViewItem();
-                    lfmemberitem.Header = new BeamItem(lfixedsup.Member.Beam.Name + " , " + lfixedsup.Member.Direction.ToString() + " Side,  " + lfixedsup.Member.Moment + " kNm");
+                    switch (lfixedsup.Member.Direction)
+                    {
+                        case Direction.Right:
+                            lfmemberitem.Header = new BeamItem(GetString("beam") + " " + lfixedsup.Member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(lfixedsup.Member.Moment ,4) + " kNm");
+                            break;
+
+                        case Direction.Left:
+                            lfmemberitem.Header = new BeamItem(GetString("beam") + " " + lfixedsup.Member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(lfixedsup.Member.Moment, 4) + " kNm");
+                            break;
+                    }
                     lfmembersitem.Items.Add(lfmemberitem);
 
                     break;
 
-                case "RightFixedSupport":
+                case ObjectType.RightFixedSupport:
 
                     var rfixedsup = support as RightFixedSupport;
 
-                    foreach (TreeViewItem item in supporttree.Items)
+                    foreach (TreeViewSupportItem item in supporttree.Items)
                     {
-                        if (item.Header.GetType().Name == "RightFixedSupportItem")
+                        if (GetObjectType(item.Support) == ObjectType.RightFixedSupport)
                         {
-                            var name = (item.Header as RightFixedSupportItem).support.Text;
-                            if (rfixedsup.Name == name)
+                            if (Equals(supportitem.Support, item.Support))
                             {
                                 item.Items.Clear();
                                 supportitem = item;
@@ -3536,24 +3643,39 @@ namespace Mesnet
 
                     if (!exists)
                     {
-                        supportitem.Header = new RightFixedSupportItem(rfixedsup.Name);
+                        supportitem.Header =
+                            new LeftFixedSupportItem(GetString("rightfixedsupport") + " " + rfixedsup.SupportId);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
+                    }
+                    else
+                    {
+                        supportitem.Header =
+                           new LeftFixedSupportItem(GetString("rightfixedsupport") + " " + rfixedsup.SupportId);
                     }
 
                     if (rfixedsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
-                        crossitem.Header = "Cross Index : " + rfixedsup.CrossIndex;
+                        crossitem.Header = GetString("crossindex") + " : " + rfixedsup.CrossIndex;
                         supportitem.Items.Add(crossitem);
                     }
 
                     var rfmembersitem = new TreeViewItem();
-                    rfmembersitem.Header = "Member";
+                    rfmembersitem.Header = GetString("connection");
                     supportitem.Items.Add(rfmembersitem);
 
                     var rfmemberitem = new TreeViewItem();
-                    rfmemberitem.Header = new BeamItem(rfixedsup.Member.Beam.Name + " , " + rfixedsup.Member.Direction.ToString() + " Side,  " + rfixedsup.Member.Moment + " kNm");
+                    switch (rfixedsup.Member.Direction)
+                    {
+                        case Direction.Right:
+                            rfmemberitem.Header = new BeamItem(GetString("beam") + " " + rfixedsup.Member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(rfixedsup.Member.Moment, 4) + " kNm");
+                            break;
+
+                        case Direction.Left:
+                            rfmemberitem.Header = new BeamItem(GetString("beam") + " " + rfixedsup.Member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(rfixedsup.Member.Moment, 4) + " kNm");
+                            break;
+                    }
                     rfmembersitem.Items.Add(rfmemberitem);
 
                     break;
@@ -3568,30 +3690,30 @@ namespace Mesnet
             MyDebug.WriteInformation("MainWindow", "Update All Support Tree Started");
             foreach (var item in objects)
             {
-                switch (item.GetType().Name)
+                switch (GetObjectType(item))
                 {
-                    case "SlidingSupport":
+                    case ObjectType.SlidingSupport:
 
                         SlidingSupport sliding = (SlidingSupport)item;
                         UpdateSupportTree(sliding);
 
                         break;
 
-                    case "BasicSupport":
+                    case ObjectType.BasicSupport:
 
                         BasicSupport basic = (BasicSupport)item;
                         UpdateSupportTree(basic);
 
                         break;
 
-                    case "LeftFixedSupport":
+                    case ObjectType.LeftFixedSupport:
 
                         LeftFixedSupport left = (LeftFixedSupport)item;
                         UpdateSupportTree(left);
 
                         break;
 
-                    case "RightFixedSupport":
+                    case ObjectType.RightFixedSupport:
 
                         RightFixedSupport right = (RightFixedSupport)item;
                         UpdateSupportTree(right);
@@ -3743,7 +3865,7 @@ namespace Mesnet
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                UpdateAllTree();
+                UpdateAllBeamTree();
                 UpdateAllSupportTree();
             }));
         }
@@ -3763,18 +3885,17 @@ namespace Mesnet
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var zeroforceitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = zeroforceitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
+            var beamitem = zeroforceitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.DistributedLoadShown)
             {
                 beam.ShowDistLoad();
-                uc.content.Content = "Hide";
+                uc.content.Content = GetString("hide");
             }
-            else if (uc.content.Content == "Hide")
+            else
             {
                 beam.HideDistLoad();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("show");
             }
         }
 
@@ -3788,43 +3909,17 @@ namespace Mesnet
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var zeroforceitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = zeroforceitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
+            var beamitem = zeroforceitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.ConcentratedLoadShown)
             {
                 beam.ShowConcLoad();
-                uc.content.Content = "Hide";
+                uc.content.Content = GetString("hide");
             }
-            else if (uc.content.Content == "Hide")
+            else
             {
                 beam.HideConcLoad();
-                uc.content.Content = "Show";
-            }
-        }
-
-        /// <summary>
-        /// Shows or hides shear forces on the beam.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void showforce_Click(object sender, RoutedEventArgs e)
-        {
-            var uc = (sender as Button).Parent as ButtonItem;
-            var showbuttonitem = uc.Parent as TreeViewItem;
-            var zeroforceitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = zeroforceitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
-            {
-                beam.AddForceDiagram();
-                uc.content.Content = "Hide";
-            }
-            else if (uc.content.Content == "Hide")
-            {
-                beam.HideForceDiagram();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("show");
             }
         }
 
@@ -3837,38 +3932,17 @@ namespace Mesnet
         {
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
-            var beamitem = showbuttonitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show Direction")
+            var beamitem = showbuttonitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.DirectionShown)
             {
                 beam.ShowDirectionArrow();
-                uc.content.Content = "Hide Direction";
+                uc.content.Content = GetString("hidedirection");
             }
-            else if (uc.content.Content == "Hide Direction")
+            else
             {
                 beam.HideDirectionArrow();
-                uc.content.Content = "Show Direction";
-            }
-        }
-
-        private void showzeromoment_Click(object sender, RoutedEventArgs e)
-        {
-            var uc = (sender as Button).Parent as ButtonItem;
-            var showbuttonitem = uc.Parent as TreeViewItem;
-            var zeromomentitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = zeromomentitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
-            {
-                beam.AddMomentDiagram();
-                uc.content.Content = "Hide";
-            }
-            else if (uc.content.Content == "Hide")
-            {
-                beam.HideMomentDiagram();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("showdirection");
             }
         }
 
@@ -3877,18 +3951,17 @@ namespace Mesnet
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var forceitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = forceitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
+            var beamitem = forceitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.ForceShown)
             {
                 beam.AddFixedEndForceDiagram();
-                uc.content.Content = "Hide";
+                uc.content.Content = GetString("hide");
             }
-            else if (uc.content.Content == "Hide")
+            else
             {
                 beam.HideFixedEndForceDiagram();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("show");
             }
         }
 
@@ -3897,18 +3970,17 @@ namespace Mesnet
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var zeromomentitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = zeromomentitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
+            var beamitem = zeromomentitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.MomentShown)
             {
                 beam.AddFixedEndMomentDiagram();
-                uc.content.Content = "Hide";
+                uc.content.Content = GetString("hide");
             }
-            else if (uc.content.Content == "Hide")
+            else
             {
                 beam.HideFixedEndMomentDiagram();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("show");
             }
         }
 
@@ -3917,18 +3989,17 @@ namespace Mesnet
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var inertiaitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = inertiaitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
+            var beamitem = inertiaitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.InertiaShown)
             {
                 beam.AddInertiaDiagram();
-                uc.content.Content = "Hide";
+                uc.content.Content = GetString("hide");
             }
-            else if (uc.content.Content == "Hide")
+            else
             {
                 beam.HideInertiaDiagram();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("show");
             }
         }
 
@@ -3937,18 +4008,17 @@ namespace Mesnet
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var inertiaitem = showbuttonitem.Parent as TreeViewItem;
-            var beamitem = inertiaitem.Parent as TreeViewItem;
-            var beamname = (beamitem.Header as BeamItem).beamname.Text;
-            var beam = GetBeam(beamname);
-            if (uc.content.Content == "Show")
+            var beamitem = inertiaitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.StressShown)
             {
                 beam.AddStressDiagram();
-                uc.content.Content = "Hide";
+                uc.content.Content = GetString("hide");
             }
-            else if (uc.content.Content == "Hide")
+            else
             {
                 beam.HideStressDiagram();
-                uc.content.Content = "Show";
+                uc.content.Content = GetString("show");
             }
         }
 
@@ -3965,9 +4035,8 @@ namespace Mesnet
                 var item2 = item1.Parent as TreeViewItem;
                 var item3 = item2.Header as MomentItem;
                 var item4 = item3.Parent as TreeViewItem;
-                var beamitem = item4.Parent as TreeViewItem;
-                var beamname = (beamitem.Header as BeamItem).beamname.Text;
-                var beam = GetBeam(beamname);
+                var beamitem = item4.Parent as TreeViewBeamItem;
+                var beam = beamitem.Beam;
                 var forcevalue = Math.Round(beam.FixedEndForce.Calculate(xvalue), 4);
                 exploreritem.funcvalue.Text = forcevalue.ToString();
             }
@@ -3988,9 +4057,8 @@ namespace Mesnet
                 var item2 = item1.Parent as TreeViewItem;
                 var item3 = item2.Header as MomentItem;
                 var item4 = item3.Parent as TreeViewItem;
-                var beamitem = item4.Parent as TreeViewItem;
-                var beamname = (beamitem.Header as BeamItem).beamname.Text;
-                var beam = GetBeam(beamname);
+                var beamitem = item4.Parent as TreeViewBeamItem;
+                var beam = beamitem.Beam;
                 var momentvalue = Math.Round(beam.FixedEndMoment.Calculate(xvalue), 4);
                 exploreritem.funcvalue.Text = momentvalue.ToString();
             }
@@ -4011,9 +4079,8 @@ namespace Mesnet
                 var item2 = item1.Parent as TreeViewItem;
                 var item3 = item2.Header as StressItem;
                 var item4 = item3.Parent as TreeViewItem;
-                var beamitem = item4.Parent as TreeViewItem;
-                var beamname = (beamitem.Header as BeamItem).beamname.Text;
-                var beam = GetBeam(beamname);
+                var beamitem = item4.Parent as TreeViewBeamItem;
+                var beam = beamitem.Beam;
                 var stressvalue = Math.Round(beam.Stress.Calculate(xvalue), 4);
                 exploreritem.funcvalue.Text = stressvalue.ToString();
             }
@@ -4144,51 +4211,11 @@ namespace Mesnet
             if ((bool)crossdialog.ShowDialog())
             {
                 force.IsEnabled = true;
-                deflection.IsEnabled = true;
+                //deflection.IsEnabled = true;
                 stress.IsEnabled = true;
                 notify.Text = "Solved";
             }
-        }
-
-        public void ShowMoments()
-        {
-            MyDebug.WriteInformation("MainWindow", "Show Moments Started");
-
-            moment.IsEnabled = true;
-
-            if (moment.Header == "Show Moment")
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.AddFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-                moment.Header = "Hide Moment";
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-                moment.Header = "Show Moment";
-            }
-        }
+        }      
 
         public void CrossLoop()
         {
@@ -4210,10 +4237,9 @@ namespace Mesnet
                 {
                     foreach (var support in objects)
                     {
-                        string name = support.GetType().Name;
-                        switch (name)
+                        switch (GetObjectType(support))
                         {
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var bs = support as BasicSupport;
 
@@ -4228,7 +4254,7 @@ namespace Mesnet
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var ss = support as SlidingSupport;
 
@@ -4249,10 +4275,9 @@ namespace Mesnet
                 {
                     foreach (var support in objects)
                     {
-                        string name = support.GetType().Name;
-                        switch (name)
+                        switch (GetObjectType(support))
                         {
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var bs = support as BasicSupport;
 
@@ -4267,7 +4292,7 @@ namespace Mesnet
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var ss = support as SlidingSupport;
 
@@ -4799,13 +4824,16 @@ namespace Mesnet
         {
             if (objects.Count > 0)
             {
+                hidediagrams();
                 PreCalculate();
             }
         }
 
         private void moment_Click(object sender, RoutedEventArgs e)
         {
-            if (moment.Header == "Show Moment")
+            ShowMoments();
+            /*
+            if (moment.Header == GetString("showmoment"))
             {
                 foreach (var item in objects)
                 {
@@ -4819,7 +4847,8 @@ namespace Mesnet
                             break;
                     }
                 }
-                moment.Header = "Hide Moment";
+
+                moment.Header = Application.Current.FindResource("hidemoment");
             }
             else
             {
@@ -4837,11 +4866,54 @@ namespace Mesnet
                 }
                 moment.Header = "Show Moment";
             }
+            */
+        }
+
+        public void ShowMoments()
+        {
+            MyDebug.WriteInformation("MainWindow", "Show Moments Started");
+
+            moment.IsEnabled = true;
+
+            if (!_momentshown)
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.AddFixedEndMomentDiagram();
+
+                            break;
+                    }
+                }
+                moment.Header = GetString("hidemoment");
+                _momentshown = true;
+            }
+            else
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.HideFixedEndMomentDiagram();
+
+                            break;
+                    }
+                }
+                moment.Header = GetString("showmoment");
+                _momentshown = false;
+            }
         }
 
         private void force_Click(object sender, RoutedEventArgs e)
         {
-            if (force.Header == "Show Force")
+            if (!_forceshown)
             {
                 foreach (var item in objects)
                 {
@@ -4854,8 +4926,10 @@ namespace Mesnet
 
                             break;
                     }
+
+                    force.Header = GetString("hideforce");
+                    _forceshown = true;
                 }
-                force.Header = "Hide Force";
             }
             else
             {
@@ -4871,12 +4945,14 @@ namespace Mesnet
                             break;
                     }
                 }
-                force.Header = "Show Force";
+                force.Header = GetString("showforce");
+                _forceshown = false;
             }
         }
 
         private void deflection_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (deflection.Header == "Show Deflection")
             {
                 foreach (var item in objects)
@@ -4909,11 +4985,12 @@ namespace Mesnet
                 }
                 deflection.Header = "Show Deflection";
             }
+            */
         }
 
         private void stress_Click(object sender, RoutedEventArgs e)
         {
-            if (stress.Header == "Show Stress")
+            if (!_stressshown)
             {
                 foreach (var item in objects)
                 {
@@ -4927,7 +5004,8 @@ namespace Mesnet
                             break;
                     }
                 }
-                stress.Header = "Hide Stress";
+                stress.Header = GetString("hidestress");
+                _stressshown = true;
             }
             else
             {
@@ -4943,7 +5021,8 @@ namespace Mesnet
                             break;
                     }
                 }
-                stress.Header = "Show Stress";
+                stress.Header = GetString("showstress");
+                _stressshown = false;
             }
         }
 
@@ -5139,6 +5218,60 @@ namespace Mesnet
         public void mouseleave(object sender, MouseEventArgs e)
         {
             tooltip.Visibility = Visibility.Collapsed;
+        }
+
+        public void UpdateLanguages()
+        {
+            if (_momentshown)
+            {
+                moment.Header = GetString("hidemoment");
+            }
+            else
+            {
+                moment.Header = GetString("showmoment");
+            }
+
+            if (_forceshown)
+            {
+                force.Header = GetString("hideforce");
+            }
+            else
+            {
+                force.Header = GetString("showforce");
+            }
+
+            if (_stressshown)
+            {
+                stress.Header = GetString("hidestress");
+            }
+            else
+            {
+                stress.Header = GetString("showstress");
+            }
+
+            UpdateAllBeamTree();
+
+            UpdateAllSupportTree();
+        }
+
+        private void hidediagrams()
+        {
+            foreach (var item in objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        beam.HideFixedEndForceDiagram();
+                        beam.HideFixedEndMomentDiagram();
+                        beam.HideInertiaDiagram();
+                        beam.HideDirectionArrow();
+                        beam.HideStressDiagram();
+
+                        break;
+                }
+            }
         }
     }
 }

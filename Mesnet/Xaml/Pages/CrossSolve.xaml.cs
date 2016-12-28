@@ -229,7 +229,7 @@ namespace Mesnet.Xaml.Pages
                     _mw.IndexAll(obj);
                     _mw.CrossLoop();
                     _mw.UpdateBeams();
-                    _mw.UpdateAllTree();
+                    _mw.UpdateAllBeamTree();
                     _mw.UpdateAllSupportTree();
                     _mw.ShowMoments();
                     DialogResult = true;
@@ -242,7 +242,7 @@ namespace Mesnet.Xaml.Pages
                     SetDecimalSeperator();
                     _mw.UpdateBeam();
                     _mw.ShowMoments();
-                    _mw.UpdateAllTree();
+                    _mw.UpdateAllBeamTree();
                     _mw.UpdateAllSupportTree();
                     DialogResult = true;
                 }));

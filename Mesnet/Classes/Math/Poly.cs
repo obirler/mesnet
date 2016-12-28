@@ -93,24 +93,31 @@ namespace Mesnet.Classes.Math
         /// <returns></returns>
         public override string ToString()
         {
-            this.Terms.Sort(TermCollection.SortType.DES);           
-
             string result = string.Empty;
 
-            if (Terms.Count > 0)
+            if (this.Terms != null)
             {
-                foreach (Term t in this.Terms)
+                this.Terms.Sort(TermCollection.SortType.DES);
+
+                if (Terms.Count > 0)
                 {
-                    result += t.ToString();
+                    foreach (Term t in this.Terms)
+                    {
+                        result += t.ToString();
+                    }
+                    if (result.Substring(0, 1) == "+")
+                        result = result.Remove(0, 1);
                 }
-                if (result.Substring(0, 1) == "+")
-                    result = result.Remove(0, 1);
+                else
+                {
+                    result = "0";
+                }
             }
             else
             {
                 result = "0";
             }
-            
+
             return result;
         }
 
@@ -136,7 +143,6 @@ namespace Mesnet.Classes.Math
 
             return result;
         }
-
 
         #endregion
 

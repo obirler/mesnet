@@ -19,6 +19,7 @@
 ========================================================================
 */
 using System.Windows.Controls;
+using static Mesnet.Classes.Global;
 
 namespace Mesnet.Xaml.User_Controls
 {
@@ -27,10 +28,13 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class BasicSupportItem : UserControl
     {
-        public BasicSupportItem(string name)
+        public BasicSupportItem(BasicSupport support)
         {
             InitializeComponent();
-            support.Text = name;
+            Support = support;
+            supportheader.Text = GetString("basicsupport") + " " + Support.SupportId;
         }
+
+        public BasicSupport Support;
     }
 }

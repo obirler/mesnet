@@ -1,0 +1,6 @@
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\TestConsole\bin\Release\TestConsole.exe.config
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\TestConsole\bin\Release\TestConsole.exe
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\TestConsole\bin\Release\TestConsole.pdb
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\TestConsole\obj\Release\TestConsole.csprojResolveAssemblyReference.cache
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\TestConsole\obj\Release\TestConsole.exe
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\TestConsole\obj\Release\TestConsole.pdb

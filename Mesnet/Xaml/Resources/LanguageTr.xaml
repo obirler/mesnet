@@ -95,4 +95,8 @@
     <system:String x:Key="connections">Bağlantılar</system:String>
     <system:String x:Key="connection">Bağlantı</system:String>
     <system:String x:Key="degree">Derece</system:String>
+    <system:String x:Key="calculatingbeam">Hesaplanıyor Kiriş</system:String>
+    <system:String x:Key="crosssolver">Cross Çözücü</system:String>
+    <system:String x:Key="beams">Kirişler</system:String>
+    <system:String x:Key="supports">Mesnetler</system:String>
 </ResourceDictionary>

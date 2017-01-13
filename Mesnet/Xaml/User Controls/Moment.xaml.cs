@@ -54,8 +54,8 @@ namespace Mesnet.Xaml.User_Controls
                 }
                 else
                 {
-                    coeff = -1 * 200 / Global.maxmoment;
-                    //Height = 200 * _max / Global.maxmoment;
+                    coeff = -1 * 200 / Global.MaxMoment;
+                    //Height = 200 * _max / Global.MaxMoment;
                 }
 
             }
@@ -66,8 +66,8 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                coeff = 200 / Global.maxmoment;
-                //Height = 200 * _max / Global.maxmoment;
+                coeff = 200 / Global.MaxMoment;
+                //Height = 200 * _max / Global.MaxMoment;
             }
 
             //Height = 0;

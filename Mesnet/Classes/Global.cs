@@ -34,15 +34,17 @@ namespace Mesnet.Classes
     {
         public static List<object> objects = new List<object>();
 
-        public static double maxmoment = Double.MinValue;
+        public static double MaxMoment = Double.MinValue;
 
-        public static double minmoment = Double.MinValue;
+        public static double MaxForce = Double.MinValue;
 
-        public static double maxload = Double.MinValue;
+        public static double MaxLoad = Double.MinValue;
 
-        public static double maxdeflection = Double.MinValue;
+        public static double MaxDeflection = Double.MinValue;
 
-        public static double maxstress = Double.MinValue;
+        public static double MaxStress = Double.MinValue;
+
+        public static double MaxInertia = Double.MinValue;
             
         /// <summary>
         /// Sets the language of the application using system language.

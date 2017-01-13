@@ -4,7 +4,6 @@ C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\bin\Release\M
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\bin\Release\MoreLinq.dll
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\bin\Release\ZoomAndPan.dll
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\bin\Release\MoreLinq.xml
-C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Mesnet.csprojResolveAssemblyReference.cache
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Xaml\Pages\SettingsPrompt.baml
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Xaml\User Controls\Inertia.baml
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Xaml\Resources\LanguageEn.baml

@@ -15,6 +15,6 @@
             <Polygon Points="8.5,14 12.5,17 12.5,18 8.5,15" Fill="Black"/>
         </Grid>
 
-        <TextBlock Margin="5,0,0,0" x:Name="support" VerticalAlignment="Center" ></TextBlock>
+        <TextBlock Margin="5,0,0,0" x:Name="supportheader" VerticalAlignment="Center" ></TextBlock>
     </StackPanel>
 </UserControl>

@@ -95,4 +95,8 @@
     <system:String x:Key="connections">Connetions</system:String>
     <system:String x:Key="connection">Connetion</system:String>
     <system:String x:Key="degree">Degree</system:String>
+    <system:String x:Key="calculatingbeam">Calculating Beam</system:String>
+    <system:String x:Key="crosssolver">Cross Solver</system:String>
+    <system:String x:Key="beams">Beams</system:String>
+    <system:String x:Key="supports">Supports</system:String>
 </ResourceDictionary>

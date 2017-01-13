@@ -39,7 +39,7 @@ namespace Mesnet.Xaml.User_Controls
             InitializeComponent();
             _beam = beam;
             _stress = stresslist;
-            coeff = 200 / Global.maxstress;
+            coeff = 200 / Global.MaxStress;
 
             draw();
         }
@@ -51,6 +51,10 @@ namespace Mesnet.Xaml.User_Controls
         private MainWindow _mw = (MainWindow)Application.Current.MainWindow;
 
         private double coeff;
+
+        private SolidColorBrush color = new SolidColorBrush(Colors.Green);
+
+        private SolidColorBrush exceedcolor = new SolidColorBrush(Colors.Red);
 
         private void draw()
         {
@@ -108,11 +112,11 @@ namespace Mesnet.Xaml.User_Controls
                 var leftspline = new CardinalSplineShape(leftline);
                 if (Math.Abs(_stress[0].Value) >= _beam.MaxAllowableStress)
                 {
-                    leftspline.Stroke = new SolidColorBrush(Colors.Red);
+                    leftspline.Stroke = exceedcolor;
                 }
                 else
                 {
-                    leftspline.Stroke = new SolidColorBrush(Colors.Lime);
+                    leftspline.Stroke = color;
                 }
                 leftspline.StrokeThickness = 1;
                 stresscanvas.Children.Add(leftspline);
@@ -120,7 +124,14 @@ namespace Mesnet.Xaml.User_Controls
                 var lefttext = new TextBlock();
                 stresscanvas.Children.Add(lefttext);
                 lefttext.Text = Math.Round(_stress[0].Value, 1) + " MPa";
-                lefttext.Foreground = new SolidColorBrush(Colors.Red);
+                if (Math.Abs(_stress[0].Value) >= _beam.MaxAllowableStress)
+                {
+                    lefttext.Foreground = exceedcolor;
+                }
+                else
+                {
+                    lefttext.Foreground = color;
+                }
                 MinSize(lefttext);
                 lefttext.TextAlignment = TextAlignment.Center;
                 RotateAround(lefttext);
@@ -145,11 +156,11 @@ namespace Mesnet.Xaml.User_Controls
                 var rightspline = new CardinalSplineShape(rightline);
                 if (Math.Abs(_stress[_stress.Count - 1].Value) >= _beam.MaxAllowableStress)
                 {
-                    rightspline.Stroke = new SolidColorBrush(Colors.Red);
+                    rightspline.Stroke = exceedcolor;
                 }
                 else
                 {
-                    rightspline.Stroke = new SolidColorBrush(Colors.Lime);
+                    rightspline.Stroke = color;
                 }
                 rightspline.StrokeThickness = 1;
                 stresscanvas.Children.Add(rightspline);
@@ -157,7 +168,14 @@ namespace Mesnet.Xaml.User_Controls
                 var righttext = new TextBlock();
                 stresscanvas.Children.Add(righttext);
                 righttext.Text = Math.Round(_stress[_stress.Count-1].Value, 1) + " MPa";
-                righttext.Foreground = new SolidColorBrush(Colors.Red);
+                if (Math.Abs(_stress[_stress.Count - 1].Value) >= _beam.MaxAllowableStress)
+                {
+                    righttext.Foreground = exceedcolor;
+                }
+                else
+                {
+                    righttext.Foreground = color;
+                }
                 MinSize(righttext);
                 righttext.TextAlignment = TextAlignment.Center;
                 RotateAround(righttext);
@@ -178,7 +196,14 @@ namespace Mesnet.Xaml.User_Controls
                 var maxtext = new TextBlock();
                 stresscanvas.Children.Add(maxtext);
                 maxtext.Text = Math.Round(_stress.YMax, 1) + " MPa";
-                maxtext.Foreground = new SolidColorBrush(Colors.Red);
+                if (Math.Abs(_stress.YMax) >= _beam.MaxAllowableStress)
+                {
+                    maxtext.Foreground = exceedcolor;
+                }
+                else
+                {
+                    maxtext.Foreground = color;
+                }
                 MinSize(maxtext);
                 maxtext.TextAlignment = TextAlignment.Center;
                 RotateAround(maxtext);
@@ -190,13 +215,13 @@ namespace Mesnet.Xaml.User_Controls
                 maxline.Add(new Point(_stress.YMaxPosition * 100, _stress.YMax * coeff));
 
                 var maxspline = new CardinalSplineShape(maxline);
-                if (_stress.YMax >= _beam.MaxAllowableStress)
+                if (Math.Abs(_stress.YMax) >= _beam.MaxAllowableStress)
                 {
-                    maxspline.Stroke = new SolidColorBrush(Colors.Red);
+                    maxspline.Stroke = exceedcolor;
                 }
                 else
                 {
-                    maxspline.Stroke = new SolidColorBrush(Colors.Lime);
+                    maxspline.Stroke = color;
                 }
                 maxspline.StrokeThickness = 1;
                 stresscanvas.Children.Add(maxspline);
@@ -207,7 +232,15 @@ namespace Mesnet.Xaml.User_Controls
                 var mintext = new TextBlock();
                 stresscanvas.Children.Add(mintext);
                 mintext.Text = Math.Round(_stress.YMin, 1) + " MPa";
-                mintext.Foreground = new SolidColorBrush(Colors.Red);
+                mintext.Foreground = exceedcolor;
+                if (Math.Abs(_stress.YMin) >= _beam.MaxAllowableStress)
+                {
+                    mintext.Foreground = exceedcolor;
+                }
+                else
+                {
+                    mintext.Foreground = color;
+                }
                 MinSize(mintext);
                 mintext.TextAlignment = TextAlignment.Center;
                 RotateAround(mintext);
@@ -221,11 +254,11 @@ namespace Mesnet.Xaml.User_Controls
                 var maxspline = new CardinalSplineShape(maxline);
                 if (Math.Abs(_stress.YMin) >= _beam.MaxAllowableStress)
                 {
-                    maxspline.Stroke = new SolidColorBrush(Colors.Red);
+                    maxspline.Stroke = exceedcolor;
                 }
                 else
                 {
-                    maxspline.Stroke = new SolidColorBrush(Colors.Lime);
+                    maxspline.Stroke = color;
                 }
                 maxspline.StrokeThickness = 1;
                 stresscanvas.Children.Add(maxspline);
@@ -238,14 +271,14 @@ namespace Mesnet.Xaml.User_Controls
                 line.Add(new Point(_beam.Length * 100, _beam.MaxAllowableStress * coeff));
 
                 var spline = new CardinalSplineShape(line);
-                spline.Stroke = new SolidColorBrush(Colors.Red);
+                spline.Stroke = exceedcolor;
                 spline.StrokeThickness = 1;
                 stresscanvas.Children.Add(spline);
 
                 var starttext = new TextBlock();
                 stresscanvas.Children.Add(starttext);
                 starttext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
-                starttext.Foreground = new SolidColorBrush(Colors.Red);
+                starttext.Foreground = exceedcolor;
                 MinSize(starttext);
                 starttext.TextAlignment = TextAlignment.Center;
                 RotateAround(starttext);
@@ -256,7 +289,7 @@ namespace Mesnet.Xaml.User_Controls
                 var endtext = new TextBlock();
                 stresscanvas.Children.Add(endtext);
                 endtext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
-                endtext.Foreground = new SolidColorBrush(Colors.Red);
+                endtext.Foreground = exceedcolor;
                 MinSize(endtext);
                 endtext.TextAlignment = TextAlignment.Center;
                 RotateAround(endtext);
@@ -272,14 +305,14 @@ namespace Mesnet.Xaml.User_Controls
                 line.Add(new Point(_beam.Length * 100, -_beam.MaxAllowableStress * coeff));
 
                 var spline = new CardinalSplineShape(line);
-                spline.Stroke = new SolidColorBrush(Colors.Red);
+                spline.Stroke = exceedcolor;
                 spline.StrokeThickness = 1;
                 stresscanvas.Children.Add(spline);
 
                 var starttext = new TextBlock();
                 stresscanvas.Children.Add(starttext);
                 starttext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
-                starttext.Foreground = new SolidColorBrush(Colors.Red);
+                starttext.Foreground = exceedcolor;
                 MinSize(starttext);
                 starttext.TextAlignment = TextAlignment.Center;
                 RotateAround(starttext);
@@ -290,7 +323,7 @@ namespace Mesnet.Xaml.User_Controls
                 var endtext = new TextBlock();
                 stresscanvas.Children.Add(endtext);
                 endtext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
-                endtext.Foreground = new SolidColorBrush(Colors.Red);
+                endtext.Foreground = exceedcolor;
                 MinSize(endtext);
                 endtext.TextAlignment = TextAlignment.Center;
                 RotateAround(endtext);
@@ -320,11 +353,11 @@ namespace Mesnet.Xaml.User_Controls
             var spline = new CardinalSplineShape(points);
             if (isred)
             {
-                spline.Stroke = new SolidColorBrush(Colors.Red);
+                spline.Stroke = exceedcolor;
             }
             else
             {
-                spline.Stroke = new SolidColorBrush(Colors.Lime);
+                spline.Stroke = color;
             }           
             spline.StrokeThickness = 1;
             spline.MouseMove += _mw.stressmousemove;

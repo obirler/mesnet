@@ -40,7 +40,7 @@ namespace Mesnet.Xaml.User_Controls
             _deflection = deflectionlist;
             _max = beam.MaxDeflection;
 
-            coeff = 200 / Global.maxdeflection;
+            coeff = 200 / Global.MaxDeflection;
 
             draw();
         }

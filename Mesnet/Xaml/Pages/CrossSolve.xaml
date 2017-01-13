@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
         mc:Ignorable="d"
-        Title="Cross Solve" Height="150" Width="300" WindowStartupLocation="CenterOwner">
+        Title="{DynamicResource crosssolver}" Height="150" Width="300" Icon="/Assets/solve.ico" WindowStartupLocation="CenterOwner">
     <StackPanel>
         <TextBlock x:Name="status" Height="30" Width="272" TextAlignment="Center" TextWrapping="WrapWithOverflow" Margin="10,20,10,10" />
         <ProgressBar x:Name="progress" IsIndeterminate="False" Height="25" Margin="10,10,10,10" Maximum="100" Minimum="0" ></ProgressBar>

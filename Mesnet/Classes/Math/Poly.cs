@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mesnet.Classes.Tools;
 
 namespace Mesnet.Classes.Math
 {
@@ -468,6 +469,7 @@ namespace Mesnet.Classes.Math
             }
             else
             {
+                MyDebug.WriteError("Poly", "Invalid Polynomial Expression : " + PolyExpression);
                 throw new Exception("Invalid Polynomial Expression");
             }
         }

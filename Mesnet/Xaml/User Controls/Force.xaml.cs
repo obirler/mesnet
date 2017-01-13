@@ -55,8 +55,7 @@ namespace Mesnet.Xaml.User_Controls
                 }
                 else
                 {
-                    coeff = -1 * 200 / Global.maxmoment;
-                    //Height = 200 * _max / Global.maxmoment;
+                    coeff = -1 * 200 / Global.MaxForce;
                 }
 
             }
@@ -67,8 +66,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                coeff = 200 / Global.maxmoment;
-                //Height = 200 * _max / Global.maxmoment;
+                coeff = 200 / Global.MaxForce;
             }
             InitializeComponent();
 
@@ -108,7 +106,7 @@ namespace Mesnet.Xaml.User_Controls
             leftpoints.Add(new Point(0, -coeff * _forceppoly.Calculate(0)));
             leftpoints.Add(new Point(0, 0));
             var leftspline = new CardinalSplineShape(leftpoints);
-            leftspline.Stroke = new SolidColorBrush(Colors.Blue);
+            leftspline.Stroke = color;
             leftspline.StrokeThickness = 1;
             forcecanvas.Children.Add(leftspline);
 
@@ -136,7 +134,7 @@ namespace Mesnet.Xaml.User_Controls
 
                 lastpoint = points.Last();
                 var spline = new CardinalSplineShape(points);
-                spline.Stroke = new SolidColorBrush(Colors.Blue);
+                spline.Stroke = color;
                 spline.StrokeThickness = 1;
                 spline.MouseMove += _mw.forcemousemove;
                 spline.MouseEnter += _mw.mouseenter;
@@ -150,7 +148,7 @@ namespace Mesnet.Xaml.User_Controls
             var point2 = new Point(100 * _length, 0);
             rightpoints.Add(point2);
             var rightspline = new CardinalSplineShape(rightpoints);
-            rightspline.Stroke = new SolidColorBrush(Colors.Blue);
+            rightspline.Stroke = color;
             rightspline.StrokeThickness = 1;
             forcecanvas.Children.Add(rightspline);
 
@@ -162,7 +160,7 @@ namespace Mesnet.Xaml.User_Controls
             starttext = new TextBlock();
             _beam.upcanvas.Children.Add(starttext);
             starttext.Text = Math.Round(_forceppoly.Calculate(0), 1).ToString();
-            starttext.Foreground = new SolidColorBrush(Colors.Blue);
+            starttext.Foreground = color;
             MinSize(starttext);
             starttext.TextAlignment = TextAlignment.Center;
             RotateAround(starttext);
@@ -175,7 +173,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 mintext = new TextBlock();
                 mintext.Text = Math.Round(min, 1).ToString();
-                mintext.Foreground = new SolidColorBrush(Colors.Blue);
+                mintext.Foreground = color;
                 MinSize(mintext);
                 mintext.TextAlignment = TextAlignment.Center;
                 RotateAround(mintext);
@@ -193,7 +191,7 @@ namespace Mesnet.Xaml.User_Controls
                 minpoints.Add(new Point(minlocation * 100, 0));
                 minpoints.Add(new Point(minlocation * 100, -coeff * min));
                 var minspline = new CardinalSplineShape(minpoints);
-                minspline.Stroke = new SolidColorBrush(Colors.Blue);
+                minspline.Stroke = color;
                 forcecanvas.Children.Add(minspline);
             }
 
@@ -202,7 +200,7 @@ namespace Mesnet.Xaml.User_Controls
                 maxtext = new TextBlock();
 
                 maxtext.Text = Math.Round(max, 1).ToString();
-                maxtext.Foreground = new SolidColorBrush(Colors.Blue);
+                maxtext.Foreground = color;
                 MinSize(maxtext);
                 maxtext.TextAlignment = TextAlignment.Center;
                 RotateAround(maxtext);
@@ -220,14 +218,14 @@ namespace Mesnet.Xaml.User_Controls
                 maxpoints.Add(new Point(maxlocation * 100, 0));
                 maxpoints.Add(new Point(maxlocation * 100, -coeff * max));
                 var maxspline = new CardinalSplineShape(maxpoints);
-                maxspline.Stroke = new SolidColorBrush(Colors.Blue);
+                maxspline.Stroke = color;
                 forcecanvas.Children.Add(maxspline);
             }
 
             endtext = new TextBlock();
             _beam.upcanvas.Children.Add(endtext);
             endtext.Text = Math.Round(_forceppoly.Calculate(_beam.Length), 1).ToString();
-            endtext.Foreground = new SolidColorBrush(Colors.Blue);
+            endtext.Foreground = color;
             MinSize(endtext);
             endtext.TextAlignment = TextAlignment.Center;
             RotateAround(endtext);
@@ -244,6 +242,8 @@ namespace Mesnet.Xaml.User_Controls
         }
 
         private double coeff;
+
+        private SolidColorBrush color = new SolidColorBrush(Colors.Blue);
 
         public double Length
         {

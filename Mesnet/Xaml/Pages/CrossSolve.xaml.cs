@@ -93,7 +93,7 @@ namespace Mesnet.Xaml.Pages
 
                         foreach (var item in objects)
                         {
-                            if (item.GetType().Name == "Beam")
+                            if (GetObjectType(item) == ObjectType.Beam)
                             {
                                 Beam beam = (Beam)item;
                                 beam.CrossCalculate();
@@ -102,7 +102,7 @@ namespace Mesnet.Xaml.Pages
                                     calculated++;
                                     progress.Value = calculated / BeamCount * 100;
                                     progress.UpdateLayout();
-                                    status.Text = "Calculating " + beam.Name;
+                                    status.Text = GetString("calculatingbeam") + " " + beam.BeamId;
                                 }));                               
                             }
                         }
@@ -115,7 +115,7 @@ namespace Mesnet.Xaml.Pages
 
                         foreach (var item in objects)
                         {
-                            if (item.GetType().Name == "Beam")
+                            if (GetObjectType(item) == ObjectType.Beam)
                             {
                                 Beam beam = (Beam)item;
                                 QueueList.Add(beam);
@@ -142,9 +142,9 @@ namespace Mesnet.Xaml.Pages
             {
                 foreach (var item in objects)
                 {
-                    switch (item.GetType().Name)
+                    switch (GetObjectType(item))
                     {
-                        case "Beam":
+                        case ObjectType.Beam:
 
                             Beam beam = (Beam)item;
                             Dispatcher.BeginInvoke(new Action(() =>
@@ -152,19 +152,14 @@ namespace Mesnet.Xaml.Pages
                                 calculated++;
                                 progress.Value = calculated / BeamCount * 100;
                                 progress.UpdateLayout();
-                                status.Text = "Calculating " + beam.Name;
+                                status.Text = GetString("calculatingbeam") + " " + beam.BeamId;
                             }));
                             beam.ClapeyronCalculate();
-                            beam.CalculateDeflection();
-                            maxmoment = beam.MaxMoment;
-                            minmoment = beam.MinMoment;
-
                             bw3.RunWorkerAsync();
 
                             break;
                     }
                 }
-
             }
         }
 
@@ -177,24 +172,32 @@ namespace Mesnet.Xaml.Pages
             while (QueueList.Count > 0)
             {
                 mutex.WaitOne();
-                cachebeam = QueueList.First();
-                if (cachebeam != null)
+
+                try
                 {
-                    QueueList.Remove(cachebeam);
-                    Dispatcher.BeginInvoke(new Action(() =>
+                    cachebeam = QueueList.First();
+                    if (cachebeam != null)
                     {
-                        calculated++;
-                        progress.Value = calculated/BeamCount*100;
-                        progress.UpdateLayout();
-                        status.Text = "Calculating " + cachebeam.Name;
-                    }));
-                    mutex.ReleaseMutex();
-                    cachebeam.CrossCalculate();
+                        QueueList.Remove(cachebeam);
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            calculated++;
+                            progress.Value = calculated / BeamCount * 100;
+                            progress.UpdateLayout();
+                            status.Text = GetString("calculatingbeam") + " " + cachebeam.BeamId;
+                        }));
+                        mutex.ReleaseMutex();
+                        cachebeam.CrossCalculate();
+                    }
+                    else
+                    {
+                        mutex.ReleaseMutex();
+                    }
                 }
-                else
+                catch (Exception)
                 {
                     mutex.ReleaseMutex();
-                }                
+                }                                             
             }
 
             foreach (var worker in bwlist)

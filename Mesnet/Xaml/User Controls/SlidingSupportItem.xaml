@@ -13,6 +13,6 @@
             <Ellipse Height="3" Width="3" Fill="Black" Margin="6,14,11,3"/>
             <Ellipse Height="3" Width="3" Fill="Black" Margin="11,14,6,3"/>
         </Grid>
-        <TextBlock Margin="5,0,0,0" x:Name="support" VerticalAlignment="Center" ></TextBlock>
+        <TextBlock Margin="5,0,0,0" x:Name="supportheader" VerticalAlignment="Center" ></TextBlock>
     </StackPanel>
 </UserControl>

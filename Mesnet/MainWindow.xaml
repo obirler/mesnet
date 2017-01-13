@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:zoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
-        xmlns:ui="clr-namespace:Mesnet.Classes.Ui"
         mc:Ignorable="d"
         Title="Mes.Net" Height="768" Width="1366" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized">
 
@@ -17,13 +16,13 @@
 
         <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Top" Background="#FFDADADA" BorderBrush="#FF999999" BorderThickness="0,0,0,1">
-                <MenuItem Header="{DynamicResource filemenu}">
+                <!--<MenuItem Header="{DynamicResource filemenu}">
                     <MenuItem Header="New" />
                     <MenuItem Header="Open" />
                     <MenuItem Header="Save" />
                     <Separator />
                     <MenuItem Header="Exit" />
-                </MenuItem>
+                </MenuItem>-->
                 
                 <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>
 
@@ -288,7 +287,7 @@
                         <Canvas x:Name="canvas" 
                             Height="20000" 
                             Width="20000" 
-                            Background="#B296D7FF" 
+                            Background="#B2A0C8FF" 
                             Cursor="Cross"
                             Grid.RowSpan="2" MouseEnter="canvas_MouseEnter" MouseLeave="canvas_MouseLeave" MouseMove="canvas_MouseMove">
                             <Viewbox x:Name="viewbox" Canvas.Left="0" Canvas.Top="0" Stretch="Uniform" Height="20">
@@ -326,23 +325,30 @@
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
-                    <TreeView x:Name="tree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                <ScrollViewer Grid.Row="0" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource beams}" FontSize="13" Margin="0,0,0,-1" TextAlignment="Center"></TextBlock>
+                        <TreeView x:Name="tree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                    </StackPanel>
+                    
                 </ScrollViewer>
 
-                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1" />
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1"/>
 
-                <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                    <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                <ScrollViewer Grid.Row="2" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource supports}" Height="25" FontSize="13" Margin="0,0,0,-1" TextAlignment="Center"></TextBlock>
+                        <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                    </StackPanel>
                 </ScrollViewer>
-
+                                       
             </Grid>
 
         </Grid>
 
         <StackPanel Margin="40,0,0,0" Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
             <TextBlock x:Name="coordinate" Text="X : 0  Y : 0" Width="200"/>
-            <TextBlock x:Name="notify" Text="" Margin="30,0,0,0"/>
+            <TextBlock x:Name="notify" Visibility="Collapsed" Text="" Margin="30,0,0,0"/>
         </StackPanel>
 
     </Grid>

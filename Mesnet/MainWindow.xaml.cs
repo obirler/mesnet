@@ -142,10 +142,10 @@ namespace Mesnet
             beam1.startcircle.MouseDown += StartCircle_MouseDown;
             beam1.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport = new SlidingSupport(canvas);
+            var slidingsupport = new BasicSupport(canvas);
             slidingsupport.AddBeam(beam1, Direction.Left);
 
-            var slidingsupport1 = new SlidingSupport(canvas);
+            var slidingsupport1 = new BasicSupport(canvas);
             slidingsupport1.AddBeam(beam1, Direction.Right);
 
             var loadpolies1 = new List<Poly>();
@@ -170,7 +170,7 @@ namespace Mesnet
             beam2.startcircle.MouseDown += StartCircle_MouseDown;
             beam2.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport2 = new SlidingSupport(canvas);
+            var slidingsupport2 = new BasicSupport(canvas);
             slidingsupport2.AddBeam(beam2, Direction.Right);
 
             var loadpolies2 = new List<Poly>();
@@ -194,7 +194,7 @@ namespace Mesnet
             beam3.startcircle.MouseDown += StartCircle_MouseDown;
             beam3.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport3 = new SlidingSupport(canvas);
+            var slidingsupport3 = new BasicSupport(canvas);
             slidingsupport3.AddBeam(beam3, Direction.Left);
 
             var loadpolies3 = new List<Poly>();
@@ -219,7 +219,7 @@ namespace Mesnet
             beam4.startcircle.MouseDown += StartCircle_MouseDown;
             beam4.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport4 = new SlidingSupport(canvas);
+            var slidingsupport4 = new BasicSupport(canvas);
             slidingsupport4.AddBeam(beam4, Direction.Right);
 
             var loadpolies4 = new List<Poly>();
@@ -244,7 +244,7 @@ namespace Mesnet
             beam5.startcircle.MouseDown += StartCircle_MouseDown;
             beam5.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport5 = new SlidingSupport(canvas);
+            var slidingsupport5 = new BasicSupport(canvas);
             slidingsupport5.AddBeam(beam5, Direction.Right);
 
             var loadpolies5 = new List<Poly>();
@@ -269,7 +269,7 @@ namespace Mesnet
             beam6.startcircle.MouseDown += StartCircle_MouseDown;
             beam6.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport6 = new SlidingSupport(canvas);
+            var slidingsupport6 = new BasicSupport(canvas);
             slidingsupport6.AddBeam(beam6, Direction.Right);
 
             var loadpolies6 = new List<Poly>();
@@ -1147,6 +1147,10 @@ namespace Mesnet
             var inertiapolies = new List<Poly>();
             inertiapolies.Add(new Poly("416.667+1250x+1250x^2+416.667x^3", 0, beam1.Length));
             beam1.AddInertia(new PiecewisePoly(inertiapolies));
+            if (beam1.MaxInertia > MaxInertia)
+            {
+                MaxInertia = beam1.MaxInertia;
+            }
             beam1.PerformStressAnalysis = true;
             var epolies = new List<Poly>();
             epolies.Add(new Poly("5+5x", 0, beam1.Length));
@@ -1197,6 +1201,10 @@ namespace Mesnet
             var inertiapolies = new List<Poly>();
             inertiapolies.Add(new Poly("416.667+1250x+1250x^2+416.667x^3", 0, beam1.Length));
             beam1.AddInertia(new PiecewisePoly(inertiapolies));
+            if (beam1.MaxInertia > MaxInertia)
+            {
+                MaxInertia = beam1.MaxInertia;
+            }
             beam1.PerformStressAnalysis = true;
             var epolies = new List<Poly>();
             epolies.Add(new Poly("5+5x", 0, beam1.Length));
@@ -1233,6 +1241,10 @@ namespace Mesnet
             var inertiapolies2 = new List<Poly>();
             inertiapolies2.Add(new Poly("416.667+1250x+1250x^2+416.667x^3", 0, beam2.Length));
             beam2.AddInertia(new PiecewisePoly(inertiapolies2));
+            if (beam2.MaxInertia > MaxInertia)
+            {
+                MaxInertia = beam2.MaxInertia;
+            }
             beam2.PerformStressAnalysis = true;
             var epolies2 = new List<Poly>();
             epolies2.Add(new Poly("5+5x", 0, beam2.Length));
@@ -1409,6 +1421,10 @@ namespace Mesnet
                     tempbeam.endcircle.MouseDown += EndCircle_MouseDown;
                     tempbeam.Background = new SolidColorBrush(Colors.Transparent);                   
                     tempbeam.AddCenter(canvas, x, y);
+                    if (tempbeam.MaxInertia > MaxInertia)
+                    {
+                        MaxInertia = tempbeam.MaxInertia;
+                    }
                     tempbeam.SetAngleCenter(beamangle);                    
                     tempbeam.CanBeDragged = true;
                     //tempbeam.ShowCorners(4);
@@ -1896,8 +1912,8 @@ namespace Mesnet
                                 {
                                     if (assemblybeam.LeftSide != null && beam.LeftSide != null)
                                     {
-                                        if (assemblybeam.LeftSide.GetType().Name != "LeftFixedSupport" &&
-                                            beam.LeftSide.GetType().Name != "LeftFixedSupport")
+                                        if (GetObjectType(assemblybeam.LeftSide) != ObjectType.LeftFixedSupport &&
+                                            GetObjectType(beam.LeftSide) != ObjectType.LeftFixedSupport)
                                         {
                                             SetMouseHandlingMode("StartCircle_MouseDown",
                                                 MouseHandlingMode.CircularBeamConnection);
@@ -1911,6 +1927,10 @@ namespace Mesnet
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
                                                 newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if (newbeam.MaxInertia > MaxInertia)
+                                                {
+                                                    MaxInertia = newbeam.MaxInertia;
+                                                }
                                                 if ((bool) beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
@@ -1969,8 +1989,8 @@ namespace Mesnet
                                 {
                                     if (assemblybeam.RightSide != null && beam.LeftSide != null)
                                     {
-                                        if (assemblybeam.RightSide.GetType().Name != "RightFixedSupport" &&
-                                            beam.LeftSide.GetType().Name != "LeftFixedSupport")
+                                        if (GetObjectType(assemblybeam.RightSide) != ObjectType.RightFixedSupport &&
+                                            GetObjectType(beam.LeftSide) != ObjectType.LeftFixedSupport)
                                         {
                                             SetMouseHandlingMode("StartCircle_MouseDown",
                                                 MouseHandlingMode.CircularBeamConnection);
@@ -1984,6 +2004,10 @@ namespace Mesnet
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
                                                 newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if (newbeam.MaxInertia > MaxInertia)
+                                                {
+                                                    MaxInertia = newbeam.MaxInertia;
+                                                }
                                                 if ((bool) beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
@@ -2102,8 +2126,8 @@ namespace Mesnet
                                 {
                                     if (assemblybeam.LeftSide != null && beam.RightSide != null)
                                     {
-                                        if (assemblybeam.LeftSide.GetType().Name != "LeftFixedSupport" &&
-                                            beam.RightSide.GetType().Name != "RightFixedSupport")
+                                        if (GetObjectType(assemblybeam.LeftSide) != ObjectType.LeftFixedSupport &&
+                                            GetObjectType(beam.RightSide) != ObjectType.RightFixedSupport)
                                         {
                                             //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
                                             //two selected beam instead of connecting them
@@ -2116,6 +2140,10 @@ namespace Mesnet
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
                                                 newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if (newbeam.MaxInertia > MaxInertia)
+                                                {
+                                                    MaxInertia = newbeam.MaxInertia;
+                                                }
                                                 if ((bool)beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
@@ -2174,8 +2202,8 @@ namespace Mesnet
                                 {
                                     if (assemblybeam.RightSide != null && beam.RightSide != null)
                                     {
-                                        if (assemblybeam.RightSide.GetType().Name != "RightFixedSupport" &&
-                                            beam.RightSide.GetType().Name != "RightFixedSupport")
+                                        if (GetObjectType(assemblybeam.RightSide) != ObjectType.RightFixedSupport &&
+                                            GetObjectType(beam.RightSide) != ObjectType.RightFixedSupport)
                                         {
                                             //Both beam is bound. This will be a circular beam system, so the user want to add beam between 
                                             //two selected beam instead of connecting them
@@ -2188,6 +2216,10 @@ namespace Mesnet
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
                                                 newbeam.AddInertia(beamdialog.inertiappoly);
+                                                if (newbeam.MaxInertia > MaxInertia)
+                                                {
+                                                    MaxInertia = newbeam.MaxInertia;
+                                                }
                                                 if ((bool)beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
@@ -2290,7 +2322,7 @@ namespace Mesnet
         private void beambtn_Click(object sender, RoutedEventArgs e)
         {
             //Check if there are any beam in the canvas
-            if (objects.Any(x => x.GetType().Name == "Beam"))
+            if (objects.Any(x => GetObjectType(x) == ObjectType.Beam))
             {
                 var beamdialog = new BeamPrompt();
                 beamdialog.maxstresstbx.Text = _maxstress.ToString();
@@ -2309,10 +2341,15 @@ namespace Mesnet
 
                                 if (selectedbeam.LeftSide != null)
                                 {
-                                    if (selectedbeam.LeftSide.GetType().Name != "LeftFixedSupport")
+                                    if (GetObjectType(selectedbeam.LeftSide) != ObjectType.LeftFixedSupport)
                                     {
                                         beam.AddElasticity(beamdialog.beamelasticitymodulus);
                                         beam.AddInertia(beamdialog.inertiappoly);
+                                        if (beam.MaxInertia > MaxInertia)
+                                        {
+                                            MaxInertia = beam.MaxInertia;
+                                        }
+                                                                            
                                         if ((bool)beamdialog.stresscbx.IsChecked)
                                         {
                                             beam.PerformStressAnalysis = true;
@@ -2349,10 +2386,14 @@ namespace Mesnet
 
                                 if (selectedbeam.RightSide != null)
                                 {
-                                    if (selectedbeam.RightSide.GetType().Name != "RightFixedSupport")
+                                    if (GetObjectType(selectedbeam.RightSide) != ObjectType.RightFixedSupport)
                                     {
                                         beam.AddElasticity(beamdialog.beamelasticitymodulus);
                                         beam.AddInertia(beamdialog.inertiappoly);
+                                        if (beam.MaxInertia > MaxInertia)
+                                        {
+                                            MaxInertia = beam.MaxInertia;
+                                        }
                                         if ((bool)beamdialog.stresscbx.IsChecked)
                                         {
                                             beam.PerformStressAnalysis = true;
@@ -2944,7 +2985,7 @@ namespace Mesnet
                 beamitem.Background = new SolidColorBrush(Colors.Transparent);
             }
 
-            beamitem.Selected += TreeItemSelected;
+            beamitem.Selected += BeamTreeItemSelected;
 
             var arrowitem = new TreeViewItem();
             var arrowbutton = new ButtonItem();
@@ -3468,14 +3509,14 @@ namespace Mesnet
                     if (!exists)
                     {
                         supportitem.Header =
-                            new SlidingSupportItem(GetString("slidingsupport") + " " + slidingsup.SupportId);
+                            new SlidingSupportItem(slidingsup);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
                     }
                     else
                     {
                         supportitem.Header =
-                            new SlidingSupportItem(GetString("slidingsupport") + " " + slidingsup.SupportId);
+                            new SlidingSupportItem(slidingsup);
                     }
 
                     if (slidingsup.CrossIndex != null)
@@ -3495,11 +3536,11 @@ namespace Mesnet
                         switch (member.Direction)
                         {
                             case Direction.Right:
-                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
                                 break;
 
                             case Direction.Left:
-                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
                                 break;
                         }                       
                         slmembersitem.Items.Add(memberitem);
@@ -3527,13 +3568,13 @@ namespace Mesnet
 
                     if (!exists)
                     {
-                        supportitem.Header = new BasicSupportItem(GetString("basicsupport") + " " + basicsup.SupportId);
+                        supportitem.Header = new BasicSupportItem(basicsup);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
                     }
                     else
                     {
-                        supportitem.Header = new BasicSupportItem(GetString("basicsupport") + " " + basicsup.SupportId);
+                        supportitem.Header = new BasicSupportItem(basicsup);
                     }
 
                     if (basicsup.CrossIndex != null)
@@ -3553,11 +3594,11 @@ namespace Mesnet
                         switch (member.Direction)
                         {
                             case Direction.Right:
-                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
                                 break;
 
                             case Direction.Left:
-                                memberitem.Header = new BeamItem(GetString("beam") + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
+                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
                                 break;
                         }
                         bsmembersitem.Items.Add(memberitem);
@@ -3586,14 +3627,14 @@ namespace Mesnet
                     if (!exists)
                     {
                         supportitem.Header =
-                            new LeftFixedSupportItem(GetString("leftfixedsupport") + " " + lfixedsup.SupportId);
+                            new LeftFixedSupportItem(lfixedsup);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
                     }
                     else
                     {
                         supportitem.Header =
-                            new LeftFixedSupportItem(GetString("leftfixedsupport") + " " + lfixedsup.SupportId);
+                            new LeftFixedSupportItem(lfixedsup);
                     }
 
                     if (lfixedsup.CrossIndex != null)
@@ -3644,14 +3685,14 @@ namespace Mesnet
                     if (!exists)
                     {
                         supportitem.Header =
-                            new LeftFixedSupportItem(GetString("rightfixedsupport") + " " + rfixedsup.SupportId);
+                            new RightFixedSupportItem(rfixedsup);
                         supporttree.Items.Add(supportitem);
                         supportitem.Selected += SupportTreeItemSelected;
                     }
                     else
                     {
                         supportitem.Header =
-                           new LeftFixedSupportItem(GetString("rightfixedsupport") + " " + rfixedsup.SupportId);
+                           new RightFixedSupportItem(rfixedsup);
                     }
 
                     if (rfixedsup.CrossIndex != null)
@@ -3723,7 +3764,7 @@ namespace Mesnet
             }
         }
 
-        private void TreeItemSelected(object sender, RoutedEventArgs e)
+        private void BeamTreeItemSelected(object sender, RoutedEventArgs e)
         {
             var treeitem = sender as TreeViewItem;
             var name = (treeitem.Header as BeamItem).beamname.Text;
@@ -3763,17 +3804,17 @@ namespace Mesnet
             {
                 case "SlidingSupportItem":
 
-                    var name1 = (treeitem.Header as SlidingSupportItem).support.Text;
+                    var ss = (treeitem.Header as SlidingSupportItem).Support;
 
                     foreach (var item in objects)
                     {
-                        switch (item.GetType().Name)
+                        switch (GetObjectType(item))
                         {
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var slidingsupport = item as SlidingSupport;
 
-                                if (slidingsupport.Name == name1)
+                                if (Equals(ss, slidingsupport))
                                 {
                                     slidingsupport.Select();
                                     return;
@@ -3787,17 +3828,17 @@ namespace Mesnet
 
                 case "BasicSupportItem":
 
-                    var name2 = (treeitem.Header as BasicSupportItem).support.Text;
+                    var bs = (treeitem.Header as BasicSupportItem).Support;
 
                     foreach (var item in objects)
                     {
-                        switch (item.GetType().Name)
+                        switch (GetObjectType(item))
                         {
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basicsupport = item as BasicSupport;
 
-                                if (basicsupport.Name == name2)
+                                if (Equals(bs, basicsupport))
                                 {
                                     basicsupport.Select();
                                     return;
@@ -3811,17 +3852,17 @@ namespace Mesnet
 
                 case "LeftFixedSupportItem":
 
-                    var name3 = (treeitem.Header as LeftFixedSupportItem).support.Text;
+                    var ls = (treeitem.Header as LeftFixedSupportItem).Support;
 
                     foreach (var item in objects)
                     {
-                        switch (item.GetType().Name)
+                        switch (GetObjectType(item))
                         {
-                            case "LeftFixedSupport":
+                            case ObjectType.LeftFixedSupport:
 
                                 var leftfixedsupport = item as LeftFixedSupport;
 
-                                if (leftfixedsupport.Name == name3)
+                                if (Equals(ls, leftfixedsupport))
                                 {
                                     leftfixedsupport.Select();
                                     return;
@@ -3835,17 +3876,17 @@ namespace Mesnet
 
                 case "RightFixedSupportItem":
 
-                    var name4 = (treeitem.Header as RightFixedSupportItem).support.Text;
+                    var rs = (treeitem.Header as RightFixedSupportItem).Support;
 
                     foreach (var item in objects)
                     {
-                        switch (item.GetType().Name)
+                        switch (GetObjectType(item))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 var rightfixedsupport = item as RightFixedSupport;
 
-                                if (rightfixedsupport.Name == name4)
+                                if (Equals(rs, rightfixedsupport))
                                 {
                                     rightfixedsupport.Select();
                                     return;
@@ -4433,6 +4474,10 @@ namespace Mesnet
         {
             List<double> _maxmomentlist = new List<double>();
 
+            List<double> _maxforcelist = new List<double>();
+
+            List<double> _maxstresslist = new List<double>();
+
             foreach (var item in objects)
             {
                 switch (item.GetType().Name)
@@ -4440,20 +4485,19 @@ namespace Mesnet
                     case "Beam":
 
                         Beam beam = item as Beam;
-                        beam.UpdateMoments();
+                        beam.PostCrossUpdate();
                         _maxmomentlist.Add(beam.MaxMoment);
                         _maxmomentlist.Add(beam.MinMoment);
+                        _maxforcelist.Add(beam.MaxForce);
+                        _maxforcelist.Add(beam.MinForce);
+                        _maxstresslist.Add(beam.MaxStress);
                         MyDebug.WriteInformation("UpdateBeams", beam.Name + " has been updated");
-                        if (beam.PerformStressAnalysis)
-                        {
-                            beam.CalculateStress();
-                        }
-                        beam.CalculateDeflection();
-
                         break;
                 }
             }
-            maxmoment = _maxmomentlist.Max(x => Math.Abs(x));
+            MaxMoment = _maxmomentlist.Max(x => Math.Abs(x));
+            MaxForce = _maxforcelist.Max(x => Math.Abs(x));
+            MaxStress = _maxstresslist.Max();
         }
 
         public void UpdateBeam()
@@ -4465,16 +4509,21 @@ namespace Mesnet
                     case "Beam":
 
                         List<double> _maxmomentlist = new List<double>();
+
+                        List<double> _maxforcelist = new List<double>();
+
+                        List<double> _maxstresslist = new List<double>();
                         Beam beam = item as Beam;
+                        beam.PostClapeyronUpdate();
                         _maxmomentlist.Add(beam.MaxMoment);
                         _maxmomentlist.Add(beam.MinMoment);
-                        if (beam.PerformStressAnalysis)
-                        {
-                            beam.CalculateStress();
-                        }
-                        beam.CalculateDeflection();
+                        _maxforcelist.Add(beam.MaxForce);
+                        _maxforcelist.Add(beam.MinForce);
+                        _maxstresslist.Add(beam.MaxStress);
                         MyDebug.WriteInformation("UpdateBeams", beam.Name + " has been updated");
-                        maxmoment = _maxmomentlist.Max(x => Math.Abs(x));
+                        MaxMoment = _maxmomentlist.Max(x => Math.Abs(x));
+                        MaxForce = _maxforcelist.Max(x => Math.Abs(x));
+                        MaxStress = _maxstresslist.Max();
 
                         break;
                 }
@@ -5096,11 +5145,12 @@ namespace Mesnet
         private void delete_Click(object sender, RoutedEventArgs e)
         {
             objects.Clear();
-            maxmoment = Double.MinValue;
-            minmoment = Double.MinValue;
-            maxload = Double.MinValue;
-            maxdeflection = Double.MinValue;
-            maxstress = Double.MinValue;
+            MaxMoment = Double.MinValue;
+            MaxForce = Double.MinValue;
+            MaxInertia = Double.MinValue;
+            MaxLoad = Double.MinValue;
+            MaxDeflection = Double.MinValue;
+            MaxStress = Double.MinValue;
             BeamCount = 0;
             SupportCount = 0;
             canvas.Children.Clear();
@@ -5170,7 +5220,19 @@ namespace Mesnet
             var globalmousepoint = e.GetPosition(canvas);
             Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
             Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(load.LoadPpoly.Calculate(mousepoint.X / 100), 4) + " kN";
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(load.LoadPpoly.Calculate(mousepoint.X / 100), 4) + " kN/m";
+            viewbox.Height = 20 / Scale;
+        }
+
+        public void inertiamousemove(object sender, MouseEventArgs e)
+        {
+            Canvas inertiacanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            Inertia inertia = inertiacanvas.Parent as Inertia;
+            var mousepoint = e.GetPosition(inertiacanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(inertia.InertiaPpoly.Calculate(mousepoint.X / 100), 4) + " cm^4";
             viewbox.Height = 20 / Scale;
         }
 

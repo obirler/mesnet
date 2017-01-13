@@ -263,6 +263,14 @@ namespace Mesnet.Xaml.User_Controls
 
         private double _minmoment;
 
+        private double _maxforce;
+
+        private double _minforce;
+
+        private double _maxinertia;
+
+        private double _maxstress;
+
         private TransformGeometry _outertgeometry;
 
         private TransformGeometry _innertgeometry;
@@ -352,58 +360,6 @@ namespace Mesnet.Xaml.User_Controls
                 else
                 {
                     Canvas.SetTop(this, y - 7);
-                }
-
-                BeamCount++;
-                _beamid = BeamCount;
-                _name = "Beam " + BeamCount;
-
-                SetTransformGeometry(canvas);
-            }
-            else
-            {
-                MyDebug.WriteWarning(this.Name + " : Add", "This beam has already been added to canvas!");
-            }
-        }
-
-        /// <summary>
-        /// (DEPRECATED) Adds the beam in specified canvas on specified point and specified direction. Direction is important when the beam is assembling
-        /// </summary>
-        /// <param name="canvas">The canvas.</param>
-        /// <param name="point">The point.</param>
-        /// <param name="direction">The direction based on the beam that is assembling.</param>
-        public void Add(Canvas canvas, Point point, Direction direction)
-        {
-            if (!canvas.Children.Contains(this))
-            {
-                _canvas = canvas;
-                canvas.Children.Add(this);
-                _id = AddObject(this);
-
-                var x = point.X;
-                var y = point.Y;
-
-                Canvas.SetZIndex(this, 1);
-
-                switch (direction)
-                {
-                    //The beam that is supposed to be added will be added left side of another beam.
-                    case Direction.Left:
-
-                        Canvas.SetLeft(this, x - _length * 100);
-
-                        Canvas.SetTop(this, y - 7);
-
-                        break;
-
-                    //The beam that is supposed to be added will be added right side of another beam.
-                    case Direction.Right:
-
-                        Canvas.SetLeft(this, x);
-
-                        Canvas.SetTop(this, y - 7);
-
-                        break;
                 }
 
                 BeamCount++;
@@ -1546,8 +1502,8 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                var inertia = new Inertia(_inertiappoly, _length);
-                downcanvas.Children.Add(inertia);
+                var inertia = new Inertia(_inertiappoly, this);
+                upcanvas.Children.Add(inertia);
                 Canvas.SetBottom(inertia, 0);
                 Canvas.SetLeft(inertia, 0);
                 _inertia = inertia;
@@ -1559,10 +1515,8 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (_inertia != null)
             {
-                downcanvas.Children.Remove(_inertia);
-                _inertia = null;
+                _inertia.Hide();
             }
-
             _inertiashown = false;
         }
 
@@ -1636,6 +1590,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             _inertiappoly = inertiappoly;
             _izero = _inertiappoly.Min;
+            _maxinertia = _inertiappoly.Max;
         }
 
         /// <summary>
@@ -3954,10 +3909,33 @@ namespace Mesnet.Xaml.User_Controls
 
         #region post-cross
 
+        public void PostCrossUpdate()
+        {
+            updatemoments();
+
+            updateforces();
+
+            if (_stressanalysis)
+            {
+                updatestresses();
+            }
+
+            //updatedeflection();
+        }
+
+        public void PostClapeyronUpdate()
+        {
+            if (_stressanalysis)
+            {
+                updatestresses();
+            }
+            //updatedeflection();
+        }
+
         /// <summary>
         /// Updates the fixed end moment after cross loop.
         /// </summary>
-        public void UpdateMoments()
+        private void updatemoments()
         {
             var polylist = new List<Poly>();
 
@@ -4025,12 +4003,13 @@ namespace Mesnet.Xaml.User_Controls
 
                     if (constant != 0)
                     {
-                        if (Math.Abs(constant) < 0.000001)
+                        if (Math.Abs(constant) < 0.0001)
                         {
                             poly = moment + poly1;
                         }
                         else
                         {
+                            MyDebug.WriteInformation("Special", constant.ToString());
                             var poly3 = new Poly(constant.ToString());
                             poly = moment + poly1 + poly2 * poly3;
                         }
@@ -4099,12 +4078,68 @@ namespace Mesnet.Xaml.User_Controls
 
             _maxmoment = _fixedendmoment.Max;
 
-            _minmoment = _fixedendmoment.Min;
-
-            _fixedendforce = _fixedendmoment.Derivate();
+            _minmoment = _fixedendmoment.Min;          
         }
 
-        public void CalculateDeflection()
+        private void updateforces()
+        {
+            _fixedendforce = _fixedendmoment.Derivate();
+
+            _maxforce = _fixedendforce.Max;
+
+            _minforce = _fixedendforce.Min;
+        }
+
+        private void updatestresses()
+        {
+            double precision = 0.001;
+            _stress = new DotCollection();
+            double stress = 0;
+            double y = 0;
+            double e = 0;
+            double d = 0;
+
+            for (int i = 0; i < _length / precision; i++)
+            {
+                e = _e.Calculate(i * precision);
+                d = _d.Calculate(i * precision);
+                if (e > d - e)
+                {
+                    y = e;
+                }
+                else
+                {
+                    y = d - e;
+                }
+                stress = Math.Pow(10, 3) * _fixedendmoment.Calculate(i * precision) * y / (_inertiappoly.Calculate(i * precision));
+                _stress.Add(i * precision, stress);
+
+                double max = _stress.YMaxAbs;
+
+                if (max > MaxStress)
+                {
+                    _maxstress = max;
+                }
+            }
+
+            if (!_stress.ContainsKey(_length))
+            {
+                e = _e.Calculate(_length);
+                d = _d.Calculate(_length);
+                if (e > d - e)
+                {
+                    y = e;
+                }
+                else
+                {
+                    y = d - e;
+                }
+                stress = Math.Pow(10, 3) * _fixedendmoment.Calculate(_length) * y / (_inertiappoly.Calculate(_length));
+                _stress.Add(_length, stress);
+            }
+        }
+
+        private void updatedeflection()
         {
             double precision = 0.001;
             var function = new List<Func>();
@@ -4129,69 +4164,10 @@ namespace Mesnet.Xaml.User_Controls
 
             _maxdeflection = _deflection.MaxBy(x => x.yposition);
 
-            if (_maxdeflection.yposition > maxdeflection)
+            if (_maxdeflection.yposition > Global.MaxDeflection)
             {
-                maxdeflection = _maxdeflection.yposition;
+                Global.MaxDeflection = _maxdeflection.yposition;
             }
-        }
-
-        public void CalculateStress()
-        {
-            double precision = 0.001;
-            _stress = new DotCollection();
-            double stress = 0;
-            double y = 0;
-            double e = 0;
-            double d = 0;
-
-            for (int i = 0; i < _length / precision; i++)
-            {
-                e = _e.Calculate(i * precision);
-                d = _d.Calculate(i * precision);
-                if (e > d - e)
-                {
-                    y = e;
-                }
-                else
-                {
-                    y = d - e;
-                }
-                stress = Math.Pow(10,3) * _fixedendmoment.Calculate(i * precision) * y / (_inertiappoly.Calculate(i * precision) );
-                _stress.Add(i * precision, stress);
-
-                double max = _stress.YMaxAbs;
-
-                if (max > maxstress)
-                {
-                    maxstress = max;
-                }
-            }
-
-            if (!_stress.ContainsKey(_length))
-            {
-                e = _e.Calculate(_length);
-                d = _d.Calculate(_length);
-                if (e > d - e)
-                {
-                    y = e;
-                }
-                else
-                {
-                    y = d - e;
-                }
-                stress = Math.Pow(10, 3) * _fixedendmoment.Calculate(_length) * y / (_inertiappoly.Calculate(_length));
-                _stress.Add(_length, stress);
-            }
-
-            /*
-            using (StreamWriter stw = new StreamWriter(@"stress.txt"))
-            {
-                for (int i = 0; i < _stress.Count; i++)
-                {
-                    stw.WriteLine(_stress[i].Key + " , " + _stress[i].Value * Math.Pow(10, 3));
-                }
-            }
-            */
         }
 
         #endregion
@@ -4468,6 +4444,26 @@ namespace Mesnet.Xaml.User_Controls
         public double MinMoment
         {
             get { return _minmoment; }
+        }
+
+        public double MaxForce
+        {
+            get { return _maxforce; }
+        }
+
+        public double MinForce
+        {
+            get { return _minforce; }
+        }
+
+        public double MaxInertia
+        {
+            get { return _maxinertia; }
+        }
+
+        public double MaxStress
+        {
+            get { return _maxstress; }
         }
 
         #endregion

@@ -25,9 +25,6 @@
             </Canvas>
 
             <Rectangle x:Name="core" Grid.Row="1" Fill="Black"></Rectangle>
-
-            <Canvas x:Name="downcanvas" Grid.Row="1" Margin="0,2,0,-10" VerticalAlignment="Top" Height="200" Grid.RowSpan="2"/>
-
         </Grid>
 
 

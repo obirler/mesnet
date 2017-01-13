@@ -19,6 +19,7 @@
 ========================================================================
 */
 using System.Windows.Controls;
+using static Mesnet.Classes.Global;
 
 namespace Mesnet.Xaml.User_Controls
 {
@@ -27,10 +28,13 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class SlidingSupportItem : UserControl
     {
-        public SlidingSupportItem(string supportname)
+        public SlidingSupportItem(SlidingSupport support)
         {
             InitializeComponent();
-            support.Text = supportname;
+            Support = support;
+            supportheader.Text = GetString("slidingsupport") + " " + Support.SupportId;
         }
+
+        public SlidingSupport Support;
     }
 }

@@ -218,5 +218,15 @@ namespace Mesnet.Xaml.User_Controls
             textBlock.Width = formattedText.Width;
             textBlock.Height = formattedText.Height;
         }
+
+        public void Show()
+        {
+            Visibility = Visibility.Visible;
+        }
+
+        public void Hide()
+        {
+            Visibility = Visibility.Collapsed;
+        }
     }
 }

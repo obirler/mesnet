@@ -69,6 +69,7 @@ namespace Mesnet.Xaml.Pages
         {
             SetLanguageDictionary("en-EN");
             MainWindow mw = App.Current.MainWindow as MainWindow;
+            UpdateLanguages();
             mw.UpdateLanguages();
         }
 
@@ -76,6 +77,7 @@ namespace Mesnet.Xaml.Pages
         {
             SetLanguageDictionary("tr-TR");
             MainWindow mw = App.Current.MainWindow as MainWindow;
+            UpdateLanguages();
             mw.UpdateLanguages();
         }
 
@@ -95,6 +97,32 @@ namespace Mesnet.Xaml.Pages
 
                     break;
             }
+        }
+
+        public void UpdateLanguages()
+        {
+            calculationcbx.SelectionChanged -= calculationcbx_SelectionChanged;
+
+            calculationcbx.Items.Clear();
+            calculationcbx.Items.Add(GetString("singlethreaded"));
+            calculationcbx.Items.Add(GetString("multithreaded"));
+
+            switch (Calculation)
+            {
+                case CalculationType.SingleThreaded:
+
+                    calculationcbx.SelectedIndex = 0;
+
+                    break;
+
+                case CalculationType.MultiThreaded:
+
+                    calculationcbx.SelectedIndex = 1;
+
+                    break;
+            }
+
+            calculationcbx.SelectionChanged += calculationcbx_SelectionChanged;
         }
     }
 }

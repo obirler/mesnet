@@ -19,6 +19,7 @@
 ========================================================================
 */
 using System.Windows.Controls;
+using static Mesnet.Classes.Global;
 
 namespace Mesnet.Xaml.User_Controls
 {
@@ -27,10 +28,13 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class BeamItem : UserControl
     {
-        public BeamItem(string name)
+        public BeamItem(Beam beam)
         {
             InitializeComponent();
-            beamname.Text = name;
+            Beam = beam;
+            beamname.Text = GetString("beam") + " " + Beam.BeamId;
         }
+
+        public Beam Beam;
     }
 }

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="{DynamicResource settings}" Height="300" Width="300" Icon="/Assets/applogo.ico" WindowStartupLocation="CenterOwner">
+        Title="{DynamicResource settings}" Height="300" Width="300" Icon="/Assets/settingsicon.ico" WindowStartupLocation="CenterOwner">
     <StackPanel>
         <GroupBox Header="{DynamicResource applang}" Margin="5,10,5,0" >
             <StackPanel>
@@ -14,7 +14,7 @@
         </GroupBox>
         <TextBlock Text="{DynamicResource calculationtype}" Margin="10,10,5,0" />
         <ComboBox x:Name="calculationcbx" Margin="15,10,15,10" SelectionChanged="calculationcbx_SelectionChanged">
-            <ComboBoxItem>Single Threaded</ComboBoxItem>
+            <ComboBoxItem >"{DynamicResource singlethreaded}"</ComboBoxItem>
             <ComboBoxItem>Multi Threaded</ComboBoxItem>
         </ComboBox>
     </StackPanel>

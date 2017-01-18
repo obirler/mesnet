@@ -1,0 +1,983 @@
+**************************Cross Solve Algorithm Started****************************
+
+Beam 1 : alfaa = 0.333333333333495
+Beam 1 : alfab = 0.333333333332594
+Beam 1 : beta = 0.166666666666957
+Beam 1 : ka = 640.000000001354
+Beam 1 : kb = 640.000000000851
+Beam 1 : StiffnessA = 10762500
+Beam 1 : StiffnessB = 10762500
+Beam 1 : Clapeyron Ma = -213.333333333979
+Beam 1 : Clapeyron Mb = -213.333333333979
+Beam 1 : Cross Ma = 213.333333333979
+Beam 1 : Cross Mb = -213.333333333979
+
+Beam 2 : alfaa = 0.333333333333299
+Beam 2 : alfab = 0.333288891111226
+Beam 2 : beta = 0.166666665555515
+Beam 2 : ka = 46.4999993000255
+Beam 2 : kb = 43.4999999999799
+Beam 2 : StiffnessA = 57402551.1819
+Beam 2 : StiffnessB = 57410205.4933
+Beam 2 : Clapeyron Ma = -13.5009332418468
+Beam 2 : Clapeyron Mb = -16.5017331951698
+Beam 2 : Cross Ma = 13.5009332418468
+Beam 2 : Cross Mb = -16.5017331951698
+
+Beam 3 : alfaa = 0.3333333333335
+Beam 3 : alfab = 0.333333333332592
+Beam 3 : beta = 0.166666666666956
+Beam 3 : ka = 1920.00000000405
+Beam 3 : kb = 1920.00000000257
+Beam 3 : StiffnessA = 17937500
+Beam 3 : StiffnessB = 17937500.0001
+Beam 3 : Clapeyron Ma = -640.000000001936
+Beam 3 : Clapeyron Mb = -640.000000001937
+Beam 3 : Cross Ma = 640.000000001936
+Beam 3 : Cross Mb = -640.000000001937
+
+Beam 4 : alfaa = 0.33333333333324
+Beam 4 : alfab = 0.333333333333276
+Beam 4 : beta = 0.166666666666743
+Beam 4 : ka = 1162.66666666803
+Beam 4 : kb = 1077.33333333326
+Beam 4 : StiffnessA = 28700000
+Beam 4 : StiffnessB = 28700000
+Beam 4 : Clapeyron Ma = -330.666666666852
+Beam 4 : Clapeyron Mb = -416.000000000579
+Beam 4 : Cross Ma = 330.666666666852
+Beam 4 : Cross Mb = -416.000000000579
+
+Beam 5 : alfaa = 0.333333333333244
+Beam 5 : alfab = 0.333333333333274
+Beam 5 : beta = 0.166666666666743
+Beam 5 : ka = 1760.00000000187
+Beam 5 : kb = 1759.99999999972
+Beam 5 : StiffnessA = 143500000.0001
+Beam 5 : StiffnessB = 143500000.0001
+Beam 5 : Clapeyron Ma = -586.666666667267
+Beam 5 : Clapeyron Mb = -586.666666667268
+Beam 5 : Cross Ma = 586.666666667267
+Beam 5 : Cross Mb = -586.666666667268
+
+Beam 6 : alfaa = 0.333333333333244
+Beam 6 : alfab = 0.333333333333274
+Beam 6 : beta = 0.166666666666743
+Beam 6 : ka = 1760.00000000187
+Beam 6 : kb = 1759.99999999972
+Beam 6 : StiffnessA = 143500000.0001
+Beam 6 : StiffnessB = 143500000.0001
+Beam 6 : Clapeyron Ma = -586.666666667267
+Beam 6 : Clapeyron Mb = -586.666666667268
+Beam 6 : Cross Ma = 586.666666667267
+Beam 6 : Cross Mb = -586.666666667268
+
+Beam 7 : alfaa = 0.33333333333324
+Beam 7 : alfab = 0.333333333333276
+Beam 7 : beta = 0.166666666666743
+Beam 7 : ka = 1077.33333333434
+Beam 7 : kb = 1162.66666666642
+Beam 7 : StiffnessA = 28700000
+Beam 7 : StiffnessB = 28700000
+Beam 7 : Clapeyron Ma = -416.000000000577
+Beam 7 : Clapeyron Mb = -330.66666666685
+Beam 7 : Cross Ma = 416.000000000577
+Beam 7 : Cross Mb = -330.66666666685
+
+Beam 8 : alfaa = 0.333333333333299
+Beam 8 : alfab = 0.333288891111226
+Beam 8 : beta = 0.166666665555515
+Beam 8 : ka = 43.4999994999826
+Beam 8 : kb = 46.4999999999678
+Beam 8 : StiffnessA = 57402551.1819
+Beam 8 : StiffnessB = 57410205.4933
+Beam 8 : Clapeyron Ma = -16.5017331951621
+Beam 8 : Clapeyron Mb = -13.5009332418394
+Beam 8 : Cross Ma = 16.5017331951621
+Beam 8 : Cross Mb = -13.5009332418394
+
+Basic Support 1 : Beam 1 stiffness = 0.157871099909006
+Basic Support 1 : Beam 8 stiffness = 0.842128900090994
+Basic Support 2 : Beam 1 stiffness = 0.157888827388687
+Basic Support 2 : Beam 2 stiffness = 0.842111172611313
+Basic Support 3 : Beam 2 stiffness = 0.551768106956877
+Basic Support 3 : Beam 3 stiffness = 0.172396881940254
+Basic Support 3 : Beam 4 stiffness = 0.275835011102869
+Basic Support 4 : Beam 3 stiffness = 0.172409565318636
+Basic Support 4 : Beam 7 stiffness = 0.275855304509817
+Basic Support 4 : Beam 8 stiffness = 0.551735130171547
+Basic Support 5 : Beam 4 stiffness = 0.16666666666657
+Basic Support 5 : Beam 5 stiffness = 0.83333333333343
+Basic Support 6 : Beam 5 stiffness = 0.5
+Basic Support 6 : Beam 6 stiffness = 0.5
+Basic Support 7 : Beam 6 stiffness = 0.83333333333343
+Basic Support 7 : Beam 7 stiffness = 0.16666666666657
+Cross Solver Initialized
+
+**********************************************STEP : 0*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : 179.785397839567 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = 89.8926989197834
+
+Basic Support 3 : 56.1729494966111 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 28.0864747483056
+
+Basic Support 3 : 89.8767191940767 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 44.9383595970384
+
+**********************************************STEP : 1*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 17.3582505015648 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 8.6791252507824
+
+Basic Support 2 : 92.5814506707842 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 46.2999834804592
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : -61.0194590887372 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -30.5097295443686
+
+Basic Support 4 : -97.6311345419795 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = -48.8155672709897
+
+Basic Support 4 : -195.270947647838 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = -97.6550009186836
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : -35.9341710439336 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = -17.9670855219668
+
+Basic Support 5 : -179.670855219793 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = -89.8354276098966
+
+**********************************************STEP : 2*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -17.5010414429441 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -8.75052072147205
+
+Basic Support 1 : -93.3554829812944 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -46.6777414906472
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : 1.20110624330293 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = 0.600553121651467
+
+Basic Support 3 : 0.375278977914142 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 0.187639488957071
+
+Basic Support 3 : 0.60044636465928 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 0.30022318232964
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : 44.9177138049487 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = 22.4588569024743
+
+Basic Support 6 : 44.9177138049487 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = 22.4588569024743
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 164.186147529358 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 82.0930737646791
+
+Basic Support 7 : 32.8372295058488 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 16.4186147529244
+
+**********************************************STEP : 3*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 1.28678882759145 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.643394413795727
+
+Basic Support 2 : 6.86317877222909 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 3.43227570399177
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 5.18461204504459 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 2.59230602252229
+
+Basic Support 4 : 8.29537927207134 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 4.14768963603567
+
+Basic Support 4 : 16.5914959316497 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 8.29740711541803
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : -3.7931800141318 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = -1.8965900070659
+
+Basic Support 5 : -18.9659000706722 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = -9.4829500353361
+
+**********************************************STEP : 4*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -1.41149417148509 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -0.705747085742547
+
+Basic Support 1 : -7.52930735772864 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -3.76465367886432
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -2.27769417657358 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -1.13884708828679
+
+Basic Support 3 : -0.711652901108053 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.355826450554027
+
+Basic Support 3 : -1.13864464176654 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.569322320883269
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -36.3050618646715 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -18.1525309323357
+
+Basic Support 6 : -36.3050618646715 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -18.1525309323357
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 11.6707010802514 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 5.83535054012568
+
+Basic Support 7 : 2.33414021604865 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 1.16707010802432
+
+**********************************************STEP : 5*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 0.291240811145495 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.145620405572748
+
+Basic Support 2 : 1.55335336288384 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.77683201677821
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 0.509196137996239 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 0.254598068998119
+
+Basic Support 4 : 0.814713820793982 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 0.407356910396991
+
+Basic Support 4 : 1.62950006260376 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 0.814912981308139
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 3.12030887553468 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 1.56015443776734
+
+Basic Support 5 : 15.6015443776843 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 7.80077218884214
+
+**********************************************STEP : 6*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -0.151640462286208 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -0.0758202311431038
+
+Basic Support 1 : -0.808892924594675 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -0.404446462297338
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -1.42995368657439 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.714976843287193
+
+Basic Support 3 : -0.446781091143533 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.223390545571767
+
+Basic Support 3 : -0.714849745825668 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.357424872912834
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -6.81806136448392 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -3.40903068224196
+
+Basic Support 6 : -6.81806136448392 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -3.40903068224196
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 2.50139480987112 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 1.25069740493556
+
+Basic Support 7 : 0.500278961973875 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 0.250139480986937
+
+**********************************************STEP : 7*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 0.124858022784202 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.062429011392101
+
+Basic Support 2 : 0.665939051646085 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.333036119728207
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 0.0651186664316694 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 0.0325593332158347
+
+Basic Support 4 : 0.104189866290671 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 0.0520949331453355
+
+Basic Support 4 : 0.208388994159776 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 0.104215335979304
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 0.627742592525432 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 0.313871296262716
+
+Basic Support 5 : 3.13871296262935 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 1.56935648131467
+
+**********************************************STEP : 8*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -0.0263083264131418 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -0.0131541632065709
+
+Basic Support 1 : -0.140336020958261 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -0.0701680104791304
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -0.374908081949993 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.187454040974996
+
+Basic Support 3 : -0.117137948945337 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.0585689744726685
+
+Basic Support 3 : -0.187420718311494 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.0937103591557472
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -1.4100269431251 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -0.705013471562552
+
+Basic Support 6 : -1.4100269431251 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -0.705013471562552
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 0.544098782014417 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 0.272049391007209
+
+Basic Support 7 : 0.108819756402808 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 0.0544098782014038
+
+**********************************************STEP : 9*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 0.031673794122775 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.0158368970613875
+
+Basic Support 2 : 0.168934410058774 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.0844840984703928
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 0.0128147041662361 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 0.00640735208311805
+
+Basic Support 4 : 0.0205035266659778 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 0.0102517633329889
+
+Basic Support 4 : 0.0410088759182313 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 0.0205085388467075
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 0.133120638452973 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 0.0665603192264865
+
+Basic Support 5 : 0.665603192265329 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 0.332801596132664
+
+**********************************************STEP : 10*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -0.00573789394348229 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -0.00286894697174115
+
+Basic Support 1 : -0.0306075419646067 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -0.0153037709823034
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -0.0868768649485107 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.0434384324742554
+
+Basic Support 3 : -0.0271441941660436 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.0135720970830218
+
+Basic Support 3 : -0.0434307106654277 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.0217153553327138
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -0.302425493569899 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -0.15121274678495
+
+Basic Support 6 : -0.302425493569899 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -0.15121274678495
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 0.117467486209993 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 0.0587337431049967
+
+Basic Support 7 : 0.0234934972419823 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 0.0117467486209911
+
+**********************************************STEP : 11*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 0.00731141784017283 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.00365570892008642
+
+Basic Support 2 : 0.038995961605833 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.0195018803990771
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 0.00295322403770089 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 0.00147661201885045
+
+Basic Support 4 : 0.00472515846032143 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 0.00236257923016072
+
+Basic Support 4 : 0.00945073694638288 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 0.00472631354688608
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 0.02882135035293 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 0.014410675176465
+
+Basic Support 5 : 0.14410675176475 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 0.0720533758823751
+
+**********************************************STEP : 12*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -0.00132327910632335 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -0.000661639553161676
+
+Basic Support 1 : -0.00705874336065171 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -0.00352937168032585
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -0.0195266140103824 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.00976330700519122
+
+Basic Support 3 : -0.00610098214774835 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.00305049107387418
+
+Basic Support 3 : -0.00976157143634295 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.00488078571817147
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -0.065393559493657 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -0.0326967797468285
+
+Basic Support 6 : -0.065393559493657 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -0.0326967797468285
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 0.0252785004305197 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 0.0126392502152598
+
+Basic Support 7 : 0.00505570008610041 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 0.0025278500430502
+
+**********************************************STEP : 13*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 0.00164598258768682 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.000822991293843411
+
+Basic Support 2 : 0.00877896397065821 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.00439035988172617
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 0.000698605750191144 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 0.000349302875095572
+
+Basic Support 4 : 0.00111776920030583 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 0.000558884600152915
+
+Basic Support 4 : 0.0022356377606309 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 0.00111804244409151
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 0.00626292757750108 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 0.00313146378875054
+
+Basic Support 5 : 0.0313146378875272 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 0.0156573189437636
+
+**********************************************STEP : 14*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -0.000306433131166127 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -0.000153216565583064
+
+Basic Support 1 : -0.00163460060675519 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -0.000817300303377595
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -0.00434303659370454 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.00217151829685227
+
+Basic Support 3 : -0.0013569576738251 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.000678478836912552
+
+Basic Support 3 : -0.00217113227810806 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.00108556613905403
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -0.0141482845795053 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -0.00707414228975267
+
+Basic Support 6 : -0.0141482845795053 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -0.00707414228975267
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 0.00542938140801223 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 0.00271469070400611
+
+Basic Support 7 : 0.00108587628160169 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 0.000542938140800845
+
+**********************************************STEP : 15*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 0.000367049661420392 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 0.000183524830710196
+
+Basic Support 2 : 0.0019576852010205 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.000979038369030352
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 0.000164278902527346 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 8.21394512636732E-05
+
+Basic Support 4 : 0.000262846244043754 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 0.000131423122021877
+
+Basic Support 4 : 0.000525715852846403 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 0.000262910498008486
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 0.00135995140480263 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 0.000679975702401315
+
+Basic Support 5 : 0.00679975702401789 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 0.00339987851200895
+
+**********************************************STEP : 16*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -7.04792363819884E-05 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -3.52396181909942E-05
+
+Basic Support 1 : -0.000375956092329925 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -0.000187978046164963
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -0.00096071298310294 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.00048035649155147
+
+Basic Support 3 : -0.000300169438280729 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -0.000150084719140364
+
+Basic Support 3 : -0.000480271101246488 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -0.000240135550623244
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -0.00305728460801902 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -0.00152864230400951
+
+Basic Support 6 : -0.00305728460801902 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -0.00152864230400951
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 0.0011643493183538 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 0.000582174659176901
+
+Basic Support 7 : 0.000232869863670598 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 0.000116434931835299
+
+**********************************************STEP : 17*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 8.14068651746039E-05 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 4.0703432587302E-05
+
+Basic Support 2 : 0.000434189244575446 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.00021713804121218
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 3.82107584406282E-05 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 1.91053792203141E-05
+
+Basic Support 4 : 6.11372135050051E-05 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 3.05686067525026E-05
+
+Basic Support 4 : 0.000122279861579784 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 6.115215877605E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 0.000294796309105833 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 0.000147398154552917
+
+Basic Support 5 : 0.00147398154553019 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 0.000736990772765097
+
+**********************************************STEP : 18*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -1.60800542365729E-05 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -8.04002711828644E-06
+
+Basic Support 1 : -8.57755371024445E-05 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -4.28877685512222E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -0.000211681185532103 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.000105840592766051
+
+Basic Support 3 : -6.61386112952756E-05 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -3.30693056476378E-05
+
+Basic Support 3 : -0.000105821778071851 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -5.29108890359255E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -0.000659582715968554 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -0.000329791357984277
+
+Basic Support 6 : -0.000659582715968554 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -0.000329791357984277
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 0.000249352292674635 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 0.000124676146337317
+
+Basic Support 7 : 4.98704585348922E-05 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 2.49352292674461E-05
+
+**********************************************STEP : 19*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 1.79804775371031E-05 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 8.99023876855155E-06
+
+Basic Support 2 : 9.59001423552672E-05 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 4.79596611918691E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 8.79665411262492E-06 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 4.39832705631246E-06
+
+Basic Support 4 : 1.40746465801999E-05 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 7.03732329009994E-06
+
+Basic Support 4 : 2.8150544274811E-05 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 1.4078087191833E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 6.37837078348117E-05 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 3.18918539174059E-05
+
+Basic Support 5 : 0.000318918539174281 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 0.00015945926958714
+
+**********************************************STEP : 20*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -3.64182199217127E-06 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -1.82091099608564E-06
+
+Basic Support 1 : -1.94265039666037E-05 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -9.71325198330184E-06
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -4.64863759673551E-05 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -2.32431879836776E-05
+
+Basic Support 3 : -1.45244101071262E-05 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -7.26220505356312E-06
+
+Basic Support 3 : -2.32390561712724E-05 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -1.16195280856362E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -0.000142067707997739 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -7.10338539988697E-05
+
+Basic Support 6 : -0.000142067707997739 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -7.10338539988697E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 5.33304422371416E-05 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 2.66652211185708E-05
+
+Basic Support 7 : 1.06660884474209E-05 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 5.33304422371044E-06
+
+**********************************************STEP : 21*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 3.9573411993746E-06 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 1.9786705996873E-06
+
+Basic Support 2 : 2.11067577924592E-05 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 1.05554895720089E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 2.00726333026992E-06 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 1.00363166513496E-06
+
+Basic Support 4 : 3.21162132843188E-06 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 1.60581066421594E-06
+
+Basic Support 4 : 6.42352814223667E-06 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 3.21240642393256E-06
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 1.37755636823457E-05 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 6.88778184117285E-06
+
+Basic Support 5 : 6.88778184117765E-05 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 3.44389092058882E-05
+
+**********************************************STEP : 22*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : -8.19521041491527E-07 will be conducted to Beam 1
+Beam 1 : Left to right conduct moment = -4.09760520745763E-07
+
+Basic Support 1 : -4.3715559951788E-06 will be conducted to Beam 8
+Beam 8 : Right to left conduct moment = -2.1857779975894E-06
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 0
+
+Basic Support 3 : -1.01784127939685E-05 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -5.08920639698426E-06
+
+Basic Support 3 : -3.18018857316467E-06 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = -1.59009428658233E-06
+
+Basic Support 3 : -5.0883017170351E-06 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = -2.54415085851755E-06
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 6 : cross index = 2
+
+Basic Support 6 : -3.05520651409097E-05 will be conducted to Beam 5
+Beam 5 : Right to left conduct moment = -1.52760325704548E-05
+
+Basic Support 6 : -3.05520651409097E-05 will be conducted to Beam 6
+Beam 6 : Left to right conduct moment = -1.52760325704548E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 7 : cross index = 2
+
+Basic Support 7 : 1.13918515864966E-05 will be conducted to Beam 6
+Beam 6 : Right to left conduct moment = 5.69592579324829E-06
+
+Basic Support 7 : 2.27837031729773E-06 will be conducted to Beam 7
+Beam 7 : Left to right conduct moment = 1.13918515864886E-06
+
+**********************************************STEP : 23*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 1
+
+Basic Support 2 : 8.6822544235961E-07 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 4.34112721179805E-07
+
+Basic Support 2 : 4.63074149988156E-06 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 2.31583382409077E-06
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 1
+
+Basic Support 4 : 4.54590076751958E-07 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = 2.27295038375979E-07
+
+Basic Support 4 : 7.27344122803134E-07 will be conducted to Beam 7
+Beam 7 : Right to left conduct moment = 3.63672061401567E-07
+
+Basic Support 4 : 1.45475290021119E-06 will be conducted to Beam 8
+Beam 8 : Left to right conduct moment = 7.27521925395614E-07
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 5 : cross index = 1
+
+Basic Support 5 : 2.97003056933266E-06 will be conducted to Beam 4
+Beam 4 : Right to left conduct moment = 1.48501528466633E-06
+
+Basic Support 5 : 1.48501528466737E-05 will be conducted to Beam 5
+Beam 5 : Left to right conduct moment = 7.42507642333683E-06
+
+Cross loop stopped
+
+Beam 1 Left End Moment = 203.78651061414
+Beam 1 Right End Moment = -203.780064228743
+Beam 2 Left End Moment = 203.780064228743
+Beam 2 Right End Moment = 211.242000035195
+Beam 3 Left End Moment = 612.374983238141
+Beam 3 Right End Moment = -612.384255593816
+Beam 4 Left End Moment = 401.142259586765
+Beam 4 Right End Moment = -407.619223088077
+Beam 5 Left End Moment = 407.619223088077
+Beam 5 Right End Moment = -676.191358350917
+Beam 6 Left End Moment = 676.19137147192
+Beam 6 Right End Moment = -407.615317269856
+Beam 7 Left End Moment = 407.615317633528
+Beam 7 Right End Moment = -401.151630198945
+Beam 8 Left End Moment = -211.223353039196
+Beam 8 Right End Moment = -203.786509452505

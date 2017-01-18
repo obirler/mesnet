@@ -102,3 +102,5 @@ c:\users\itsok\documents\visual studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Mes
 c:\users\itsok\documents\visual studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Mesnet.pdb
 c:\users\itsok\documents\visual studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressExplorer.g.cs
 c:\users\itsok\documents\visual studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressExplorer.baml
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.baml
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.g.cs

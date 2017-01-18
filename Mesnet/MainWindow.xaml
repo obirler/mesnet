@@ -36,6 +36,7 @@
                     <MenuItem x:Name="devtest2" Header="Development Test 2" Click="devtest2_Click" ></MenuItem>
                     <MenuItem x:Name="stresstest" Header="Stress Test" Click="stresstest_Click"></MenuItem>
                     <MenuItem x:Name="stresstest2" Header="Stress Test 2" Click="stresstest2_Click"></MenuItem>
+                    <MenuItem x:Name="inertiatest" Header="Stress Inertia Test"  Click="inertiatest_Click"></MenuItem>
                 </MenuItem>
 
                 <MenuItem x:Name="solve" Header="{DynamicResource solve}" Click="solve_Click"></MenuItem>
@@ -43,6 +44,7 @@
                 <MenuItem x:Name="force" Header="{DynamicResource showforce}" IsEnabled="false" Click="force_Click" ></MenuItem>
                 <!--<MenuItem x:Name="deflection" Header="Show Deflection" IsEnabled="false" Click="deflection_Click" ></MenuItem>-->
                 <MenuItem x:Name="stress" Header="{DynamicResource showstress}" IsEnabled="false" Click="stress_Click" ></MenuItem>
+                <MenuItem x:Name="loads" Header="{DynamicResource showloads}" IsEnabled="false" Click="loads_Click"></MenuItem>
                 <MenuItem x:Name="delete" Header="{DynamicResource clearall}" IsEnabled="true" Click="delete_Click" ></MenuItem>
             </Menu>
         </DockPanel>
@@ -337,7 +339,7 @@
 
                 <ScrollViewer Grid.Row="2" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="{DynamicResource supports}" Height="25" FontSize="13" Margin="0,0,0,-1" TextAlignment="Center"></TextBlock>
+                        <TextBlock Text="{DynamicResource supports}" FontSize="13" Margin="0,0,0,-1" TextAlignment="Center"></TextBlock>
                         <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
                     </StackPanel>
                 </ScrollViewer>

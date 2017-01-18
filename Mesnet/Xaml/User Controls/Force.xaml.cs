@@ -112,10 +112,11 @@ namespace Mesnet.Xaml.User_Controls
 
             Point lastpoint = new Point(0, 0);
 
+            var lastcollection = new PointCollection();
+            
             foreach (Poly poly in _forceppoly)
             {
                 var points = new PointCollection();
-                points.Clear();
 
                 for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
                 {
@@ -132,6 +133,20 @@ namespace Mesnet.Xaml.User_Controls
                     }
                 }
 
+                if (lastcollection != null && lastcollection.Count > 0)
+                {
+                    if (lastcollection.Last().Y != points.First().Y)
+                    {
+                        var interpoints = new PointCollection();
+                        interpoints.Add(lastcollection.Last());
+                        interpoints.Add(points.First());
+                        var interspline = new CardinalSplineShape(interpoints);
+                        interspline.Stroke = color;
+                        interspline.StrokeThickness = 1;
+                        forcecanvas.Children.Add(interspline);
+                    }
+                }
+
                 lastpoint = points.Last();
                 var spline = new CardinalSplineShape(points);
                 spline.Stroke = color;
@@ -140,6 +155,8 @@ namespace Mesnet.Xaml.User_Controls
                 spline.MouseEnter += _mw.mouseenter;
                 spline.MouseLeave += _mw.mouseleave;
                 forcecanvas.Children.Add(spline);
+
+                lastcollection = points;
             }
 
             var rightpoints = new PointCollection();
@@ -159,7 +176,7 @@ namespace Mesnet.Xaml.User_Controls
 
             starttext = new TextBlock();
             _beam.upcanvas.Children.Add(starttext);
-            starttext.Text = Math.Round(_forceppoly.Calculate(0), 1).ToString();
+            starttext.Text = Math.Round(_forceppoly.Calculate(0), 1) + " kN";
             starttext.Foreground = color;
             MinSize(starttext);
             starttext.TextAlignment = TextAlignment.Center;
@@ -172,7 +189,7 @@ namespace Mesnet.Xaml.User_Controls
             if (minlocation != 0 && minlocation != _length)
             {
                 mintext = new TextBlock();
-                mintext.Text = Math.Round(min, 1).ToString();
+                mintext.Text = Math.Round(min, 1) + " kN";
                 mintext.Foreground = color;
                 MinSize(mintext);
                 mintext.TextAlignment = TextAlignment.Center;
@@ -199,7 +216,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 maxtext = new TextBlock();
 
-                maxtext.Text = Math.Round(max, 1).ToString();
+                maxtext.Text = Math.Round(max, 1) + " kN";
                 maxtext.Foreground = color;
                 MinSize(maxtext);
                 maxtext.TextAlignment = TextAlignment.Center;
@@ -224,7 +241,7 @@ namespace Mesnet.Xaml.User_Controls
 
             endtext = new TextBlock();
             _beam.upcanvas.Children.Add(endtext);
-            endtext.Text = Math.Round(_forceppoly.Calculate(_beam.Length), 1).ToString();
+            endtext.Text = Math.Round(_forceppoly.Calculate(_beam.Length), 1) + " kN";
             endtext.Foreground = color;
             MinSize(endtext);
             endtext.TextAlignment = TextAlignment.Center;

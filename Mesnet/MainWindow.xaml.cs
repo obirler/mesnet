@@ -126,6 +126,13 @@ namespace Mesnet
 
         private bool _stressshown = false;
 
+        private bool _loadsshown = false;
+
+        //inertia for test purpose in [cm^4]
+        private double _testi = 70000;
+
+        private double _testdim = 30;
+
         private void TestCase()
         {
             /////////////////////////////// Beam 1 (GA) /////////////////////////////
@@ -324,6 +331,10 @@ namespace Mesnet
             var load8 = new DistributedLoad(ppoly8, beam8.Length);
             beam8.AddLoad(load8, Direction.Up);
 
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
+
             UpdateAllSupportTree();
 
             UpdateAllBeamTree();
@@ -331,13 +342,13 @@ namespace Mesnet
 
         private void TestCase2()
         {
-            /////////////////////////////// Beam 1 (EA) /////////////////////////////
-            var beam1 = new Beam(8);
+            /////////////////////////////// Beam 1 (GA) /////////////////////////////
+            var beam1 = new Beam(16);
             beam1.AddElasticity(205);
             var polies1 = new List<Poly>();
-            polies1.Add(new Poly("5", 0, beam1.Length));
+            polies1.Add(new Poly((3*_testi).ToString(), 0, beam1.Length));
             beam1.AddInertia(new PiecewisePoly(polies1));
-            beam1.AddTopLeft(canvas, 10100, 9400);
+            beam1.AddTopLeft(canvas, 10100, 8600);
 
             beam1.core.MouseDown += core_MouseDown;
             beam1.core.MouseUp += core_MouseUp;
@@ -345,10 +356,10 @@ namespace Mesnet
             beam1.startcircle.MouseDown += StartCircle_MouseDown;
             beam1.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport = new SlidingSupport(canvas);
+            var slidingsupport = new BasicSupport(canvas);
             slidingsupport.AddBeam(beam1, Direction.Left);
 
-            var slidingsupport1 = new SlidingSupport(canvas);
+            var slidingsupport1 = new BasicSupport(canvas);
             slidingsupport1.AddBeam(beam1, Direction.Right);
 
             var loadpolies1 = new List<Poly>();
@@ -357,14 +368,24 @@ namespace Mesnet
             var load1 = new DistributedLoad(ppoly1, beam1.Length);
             beam1.AddLoad(load1, Direction.Up);
 
+            beam1.PerformStressAnalysis = true;
+            var epolies = new List<Poly>();
+            epolies.Add(new Poly((3 * _testdim).ToString(), 0, beam1.Length));
+            beam1.AddE(new PiecewisePoly(epolies));
+            var dpolies = new List<Poly>();
+            dpolies.Add(new Poly((3 * 2 * _testdim).ToString(), 0, beam1.Length));
+            beam1.AddD(new PiecewisePoly(dpolies));
+            beam1.MaxAllowableStress = 150;
+
             /////////////////////////////// Beam 2 (AB) //////////////////////////////
 
-            var beam2 = new Beam(canvas, 8);
+            var beam2 = new Beam(canvas, 3);
             beam2.AddElasticity(205);
             var polies2 = new List<Poly>();
-            polies2.Add(new Poly("5", 0, beam2.Length));
+            polies2.Add(new Poly((3 * _testi).ToString(), 0, beam2.Length));
             beam2.AddInertia(new PiecewisePoly(polies2));
             beam2.Connect(Direction.Left, beam1, Direction.Right);
+            beam2.SetAngleLeft(90);
 
             beam2.core.MouseDown += core_MouseDown;
             beam2.core.MouseUp += core_MouseUp;
@@ -372,24 +393,32 @@ namespace Mesnet
             beam2.startcircle.MouseDown += StartCircle_MouseDown;
             beam2.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport2 = new SlidingSupport(canvas);
+            var slidingsupport2 = new BasicSupport(canvas);
             slidingsupport2.AddBeam(beam2, Direction.Right);
 
             var loadpolies2 = new List<Poly>();
-            loadpolies2.Add(new Poly("10", 0, beam2.Length));
+            loadpolies2.Add(new Poly("10+6.66666666667x", 0, beam2.Length));
             var ppoly2 = new PiecewisePoly(loadpolies2);
             var load2 = new DistributedLoad(ppoly2, beam2.Length);
             beam2.AddLoad(load2, Direction.Up);
 
-            /////////////////////////////// Beam 3 (BC) /////////////////////////////
+            beam2.PerformStressAnalysis = true;
+            var epolies2 = new List<Poly>();
+            epolies2.Add(new Poly((3 * _testdim).ToString(), 0, beam2.Length));
+            beam2.AddE(new PiecewisePoly(epolies2));
+            var dpolies2 = new List<Poly>();
+            dpolies2.Add(new Poly((3 * 2 * _testdim).ToString(), 0, beam2.Length));
+            beam2.AddD(new PiecewisePoly(dpolies2));
+            beam2.MaxAllowableStress = 150;
 
-            var beam3 = new Beam(canvas, 8);
+            /////////////////////////////// Beam 3 (FB) /////////////////////////////
+
+            var beam3 = new Beam(canvas, 16);
             beam3.AddElasticity(205);
             var polies3 = new List<Poly>();
-            polies3.Add(new Poly("2", 0, beam3.Length));
+            polies3.Add(new Poly((5 * _testi).ToString(), 0, beam3.Length));
             beam3.AddInertia(new PiecewisePoly(polies3));
-            beam3.Connect(Direction.Left, beam2, Direction.Right);
-            beam3.SetAngleLeft(90);
+            beam3.Connect(Direction.Right, beam2, Direction.Right);
 
             beam3.core.MouseDown += core_MouseDown;
             beam3.core.MouseUp += core_MouseUp;
@@ -397,24 +426,33 @@ namespace Mesnet
             beam3.startcircle.MouseDown += StartCircle_MouseDown;
             beam3.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport3 = new SlidingSupport(canvas);
-            slidingsupport3.AddBeam(beam3, Direction.Right);
+            var slidingsupport3 = new BasicSupport(canvas);
+            slidingsupport3.AddBeam(beam3, Direction.Left);
 
             var loadpolies3 = new List<Poly>();
-            loadpolies3.Add(new Poly("10+6.25x", 0, beam3.Length));
+            loadpolies3.Add(new Poly("30", 0, beam3.Length));
             var ppoly3 = new PiecewisePoly(loadpolies3);
             var load3 = new DistributedLoad(ppoly3, beam3.Length);
             beam3.AddLoad(load3, Direction.Up);
 
-            /////////////////////////////// Beam 4 (CD) /////////////////////////////
+            beam3.PerformStressAnalysis = true;
+            var epolies3 = new List<Poly>();
+            epolies3.Add(new Poly((5 * _testdim).ToString(), 0, beam3.Length));
+            beam3.AddE(new PiecewisePoly(epolies3));
+            var dpolies3 = new List<Poly>();
+            dpolies3.Add(new Poly((5 * 2 * _testdim).ToString(), 0, beam3.Length));
+            beam3.AddD(new PiecewisePoly(dpolies3));
+            beam3.MaxAllowableStress = 150;
 
-            var beam4 = new Beam(canvas, 16);
+            /////////////////////////////// Beam 4 (BC) /////////////////////////////
+
+            var beam4 = new Beam(canvas, 8);
             beam4.AddElasticity(205);
             var polies4 = new List<Poly>();
-            polies4.Add(new Poly("20", 0, beam4.Length));
+            polies4.Add(new Poly((4 * _testi).ToString(), 0, beam4.Length));
             beam4.AddInertia(new PiecewisePoly(polies4));
-            beam4.Connect(Direction.Left, beam3, Direction.Right);
-            beam4.SetAngleLeft(180);
+            beam4.Connect(Direction.Left, beam2, Direction.Right);
+            beam4.SetAngleLeft(90);
 
             beam4.core.MouseDown += core_MouseDown;
             beam4.core.MouseUp += core_MouseUp;
@@ -422,25 +460,33 @@ namespace Mesnet
             beam4.startcircle.MouseDown += StartCircle_MouseDown;
             beam4.endcircle.MouseDown += EndCircle_MouseDown;
 
-            var slidingsupport4 = new SlidingSupport(canvas);
+            var slidingsupport4 = new BasicSupport(canvas);
             slidingsupport4.AddBeam(beam4, Direction.Right);
 
             var loadpolies4 = new List<Poly>();
-            loadpolies4.Add(new Poly("70", 0, beam4.Length));
+            loadpolies4.Add(new Poly("30+10x", 0, beam4.Length));
             var ppoly4 = new PiecewisePoly(loadpolies4);
             var load4 = new DistributedLoad(ppoly4, beam4.Length);
             beam4.AddLoad(load4, Direction.Up);
+
+            beam4.PerformStressAnalysis = true;
+            var epolies4 = new List<Poly>();
+            epolies4.Add(new Poly((4 * _testdim).ToString(), 0, beam4.Length));
+            beam4.AddE(new PiecewisePoly(epolies4));
+            var dpolies4 = new List<Poly>();
+            dpolies4.Add(new Poly((4 * 2 * _testdim).ToString(), 0, beam4.Length));
+            beam4.AddD(new PiecewisePoly(dpolies4));
+            beam4.MaxAllowableStress = 150;
 
             /////////////////////////////// Beam 5 (CD) /////////////////////////////
 
             var beam5 = new Beam(canvas, 8);
             beam5.AddElasticity(205);
             var polies5 = new List<Poly>();
-            polies5.Add(new Poly("2", 0, beam5.Length));
+            polies5.Add(new Poly((20 * _testi).ToString(), 0, beam5.Length));
             beam5.AddInertia(new PiecewisePoly(polies5));
             beam5.Connect(Direction.Left, beam4, Direction.Right);
-            beam5.SetAngleLeft(270);
-            beam5.CircularConnect(Direction.Right, beam1, Direction.Left);
+            beam5.SetAngleLeft(180);
 
             beam5.core.MouseDown += core_MouseDown;
             beam5.core.MouseUp += core_MouseUp;
@@ -448,11 +494,125 @@ namespace Mesnet
             beam5.startcircle.MouseDown += StartCircle_MouseDown;
             beam5.endcircle.MouseDown += EndCircle_MouseDown;
 
+            var slidingsupport5 = new BasicSupport(canvas);
+            slidingsupport5.AddBeam(beam5, Direction.Right);
+
             var loadpolies5 = new List<Poly>();
-            loadpolies5.Add(new Poly("60-6.25x", 0, beam5.Length));
+            loadpolies5.Add(new Poly("110", 0, beam5.Length));
             var ppoly5 = new PiecewisePoly(loadpolies5);
             var load5 = new DistributedLoad(ppoly5, beam5.Length);
             beam5.AddLoad(load5, Direction.Up);
+
+            beam5.PerformStressAnalysis = true;
+            var epolies5 = new List<Poly>();
+            epolies5.Add(new Poly((20 * _testdim).ToString(), 0, beam5.Length));
+            beam5.AddE(new PiecewisePoly(epolies5));
+            var dpolies5 = new List<Poly>();
+            dpolies5.Add(new Poly((20 * 2 * _testdim).ToString(), 0, beam5.Length));
+            beam5.AddD(new PiecewisePoly(dpolies5));
+            beam5.MaxAllowableStress = 150;
+
+            /////////////////////////////// Beam 6 (DE) /////////////////////////////
+
+            var beam6 = new Beam(canvas, 8);
+            beam6.AddElasticity(205);
+            var polies6 = new List<Poly>();
+            polies6.Add(new Poly((20 * _testi).ToString(), 0, beam6.Length));
+            beam6.AddInertia(new PiecewisePoly(polies6));
+            beam6.Connect(Direction.Left, beam5, Direction.Right);
+            beam6.SetAngleLeft(180);
+
+            beam6.core.MouseDown += core_MouseDown;
+            beam6.core.MouseUp += core_MouseUp;
+            beam6.core.MouseMove += core_MouseMove;
+            beam6.startcircle.MouseDown += StartCircle_MouseDown;
+            beam6.endcircle.MouseDown += EndCircle_MouseDown;
+
+            var slidingsupport6 = new BasicSupport(canvas);
+            slidingsupport6.AddBeam(beam6, Direction.Right);
+
+            var loadpolies6 = new List<Poly>();
+            loadpolies6.Add(new Poly("110", 0, beam6.Length));
+            var ppoly6 = new PiecewisePoly(loadpolies6);
+            var load6 = new DistributedLoad(ppoly6, beam6.Length);
+            beam6.AddLoad(load6, Direction.Up);
+
+            beam6.PerformStressAnalysis = true;
+            var epolies6 = new List<Poly>();
+            epolies6.Add(new Poly((20 * _testdim).ToString(), 0, beam6.Length));
+            beam6.AddE(new PiecewisePoly(epolies6));
+            var dpolies6 = new List<Poly>();
+            dpolies6.Add(new Poly((20 * 2 * _testdim).ToString(), 0, beam6.Length));
+            beam6.AddD(new PiecewisePoly(dpolies6));
+            beam6.MaxAllowableStress = 150;
+
+            /////////////////////////////// Beam 7 (EF) /////////////////////////////
+
+            var beam7 = new Beam(canvas, 8);
+            beam7.AddElasticity(205);
+            var polies7 = new List<Poly>();
+            polies7.Add(new Poly((4 * _testi).ToString(), 0, beam7.Length));
+            beam7.AddInertia(new PiecewisePoly(polies7));
+            beam7.Connect(Direction.Left, beam6, Direction.Right);
+            beam7.SetAngleLeft(-90);
+            beam7.CircularConnect(Direction.Right, beam3, Direction.Left);
+
+            beam7.core.MouseDown += core_MouseDown;
+            beam7.core.MouseUp += core_MouseUp;
+            beam7.core.MouseMove += core_MouseMove;
+            beam7.startcircle.MouseDown += StartCircle_MouseDown;
+            beam7.endcircle.MouseDown += EndCircle_MouseDown;
+
+            var loadpolies7 = new List<Poly>();
+            loadpolies7.Add(new Poly("110-10x", 0, beam7.Length));
+            var ppoly7 = new PiecewisePoly(loadpolies7);
+            var load7 = new DistributedLoad(ppoly7, beam7.Length);
+            beam7.AddLoad(load7, Direction.Up);
+
+            beam7.PerformStressAnalysis = true;
+            var epolies7 = new List<Poly>();
+            epolies7.Add(new Poly((4 * _testdim).ToString(), 0, beam7.Length));
+            beam7.AddE(new PiecewisePoly(epolies7));
+            var dpolies7 = new List<Poly>();
+            dpolies7.Add(new Poly((4 * 2 * _testdim).ToString(), 0, beam7.Length));
+            beam7.AddD(new PiecewisePoly(dpolies7));
+            beam7.MaxAllowableStress = 150;
+
+            /////////////////////////////// Beam 8 (FG) /////////////////////////////
+
+            var beam8 = new Beam(canvas, 3);
+            beam8.AddElasticity(205);
+            var polies8 = new List<Poly>();
+            polies8.Add(new Poly((3 * _testi).ToString(), 0, beam8.Length));
+            beam8.AddInertia(new PiecewisePoly(polies8));
+            beam8.Connect(Direction.Left, beam3, Direction.Left);
+            beam8.SetAngleLeft(-90);
+            beam8.CircularConnect(Direction.Right, beam1, Direction.Left);
+
+            beam8.core.MouseDown += core_MouseDown;
+            beam8.core.MouseUp += core_MouseUp;
+            beam8.core.MouseMove += core_MouseMove;
+            beam8.startcircle.MouseDown += StartCircle_MouseDown;
+            beam8.endcircle.MouseDown += EndCircle_MouseDown;
+
+            var loadpolies8 = new List<Poly>();
+            loadpolies8.Add(new Poly("30-6.66666666667x", 0, beam8.Length));
+            var ppoly8 = new PiecewisePoly(loadpolies8);
+            var load8 = new DistributedLoad(ppoly8, beam8.Length);
+            beam8.AddLoad(load8, Direction.Up);
+
+            beam8.PerformStressAnalysis = true;
+            var epolies8 = new List<Poly>();
+            epolies8.Add(new Poly((3 * _testdim).ToString(), 0, beam8.Length));
+            beam8.AddE(new PiecewisePoly(epolies8));
+            var dpolies8 = new List<Poly>();
+            dpolies8.Add(new Poly((3 * 2 * _testdim).ToString(), 0, beam8.Length));
+            beam8.AddD(new PiecewisePoly(dpolies8));
+            beam8.MaxAllowableStress = 150;
+
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
 
             UpdateAllSupportTree();
 
@@ -734,9 +894,13 @@ namespace Mesnet
             beam12.startcircle.MouseDown += StartCircle_MouseDown;
             beam12.endcircle.MouseDown += EndCircle_MouseDown;
 
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
+
             UpdateAllSupportTree();
 
-            UpdateAllBeamTree();
+            UpdateAllBeamTree();            
         }
 
         private void TestCase4()
@@ -862,6 +1026,14 @@ namespace Mesnet
             var ppoly5 = new PiecewisePoly(loadpolies5);
             var load5 = new DistributedLoad(ppoly5, beam5.Length);
             beam5.AddLoad(load5, Direction.Up);
+
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
+
+            UpdateAllSupportTree();
+
+            UpdateAllBeamTree();
         }
 
         private void TestCase5()
@@ -997,6 +1169,10 @@ namespace Mesnet
             var ppoly5 = new PiecewisePoly(loadpolies5);
             var load5 = new DistributedLoad(ppoly5, 8);
             beam5.AddLoad(load5, Direction.Up);
+
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+               loads.IsEnabled = true;
 
             UpdateAllSupportTree();
 
@@ -1135,6 +1311,10 @@ namespace Mesnet
             var load5 = new DistributedLoad(ppoly5, beam5.Length);
             beam5.AddLoad(load5, Direction.Up);
 
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
+
             UpdateAllSupportTree();
 
             UpdateAllBeamTree();
@@ -1188,6 +1368,10 @@ namespace Mesnet
             var ppoly1 = new PiecewisePoly(loadpolies1);
             var load1 = new DistributedLoad(ppoly1, beam1.Length);
             beam1.AddLoad(load1, Direction.Up);
+
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
 
             UpdateAllSupportTree();
 
@@ -1270,6 +1454,101 @@ namespace Mesnet
             var ppoly2 = new PiecewisePoly(loadpolies2);
             var load2 = new DistributedLoad(ppoly2, beam2.Length);
             beam2.AddLoad(load2, Direction.Up);
+
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
+
+            UpdateAllSupportTree();
+
+            UpdateAllBeamTree();
+        }
+
+        private void InertiaTest()
+        {
+            var beam1 = new Beam(2);
+            beam1.AddElasticity(200);
+            var inertiapolies = new List<Poly>();
+            inertiapolies.Add(new Poly("416.667+625x+312.5x^2+52.0833x^3", 0, beam1.Length));
+            beam1.AddInertia(new PiecewisePoly(inertiapolies));
+
+            beam1.PerformStressAnalysis = true;
+            var epolies = new List<Poly>();
+            epolies.Add(new Poly("5+2.5x", 0, beam1.Length));
+            beam1.AddE(new PiecewisePoly(epolies));
+            var dpolies = new List<Poly>();
+            dpolies.Add(new Poly("10+5x", 0, beam1.Length));
+            beam1.AddD(new PiecewisePoly(dpolies));
+            beam1.MaxAllowableStress = 150;
+            beam1.AddTopLeft(canvas, 10200, 9700);
+
+            beam1.core.MouseDown += core_MouseDown;
+            beam1.core.MouseUp += core_MouseUp;
+            beam1.core.MouseMove += core_MouseMove;
+            beam1.startcircle.MouseDown += StartCircle_MouseDown;
+            beam1.endcircle.MouseDown += EndCircle_MouseDown;
+
+            var leftsupport = new LeftFixedSupport(canvas);
+            leftsupport.AddBeam(beam1);
+
+            var basicsupport1 = new BasicSupport(canvas);
+            basicsupport1.AddBeam(beam1, Direction.Right);
+
+            var loadpolies1 = new List<Poly>();
+            loadpolies1.Add(new Poly("60-15x^2", 0, beam1.Length));
+            var ppoly1 = new PiecewisePoly(loadpolies1);
+            var load1 = new DistributedLoad(ppoly1, beam1.Length);
+            beam1.AddLoad(load1, Direction.Up);
+
+            //////////////////////////////////beam 2//////////////////////////////////
+
+            var beam2 = new Beam(canvas, 3);
+            beam2.AddElasticity(200);
+            var inertiapolies2 = new List<Poly>();
+            inertiapolies2.Add(new Poly("3333.33-20000x+40000x^2-26666.7x^3", 0, 0.25));
+            inertiapolies2.Add(new Poly("416.667", 0.25, 2.75));
+            inertiapolies2.Add(new Poly("-416667+500000x-200000x^2+26666.7x^3", 2.75, beam2.Length));
+            beam2.AddInertia(new PiecewisePoly(inertiapolies2));
+
+            if (beam2.MaxInertia > MaxInertia)
+            {
+                MaxInertia = beam2.MaxInertia;
+            }
+            beam2.PerformStressAnalysis = true;
+            var epolies2 = new List<Poly>();
+            epolies2.Add(new Poly("5+5x", 0, beam2.Length));
+            beam2.AddE(new PiecewisePoly(epolies2));
+            var dpolies2 = new List<Poly>();
+            dpolies2.Add(new Poly("10+10x", 0, beam2.Length));
+            beam2.AddD(new PiecewisePoly(dpolies));
+            beam2.MaxAllowableStress = 150;
+
+            beam2.Connect(Direction.Left, beam1, Direction.Right);
+
+            beam2.core.MouseDown += core_MouseDown;
+            beam2.core.MouseUp += core_MouseUp;
+            beam2.core.MouseMove += core_MouseMove;
+            beam2.startcircle.MouseDown += StartCircle_MouseDown;
+            beam2.endcircle.MouseDown += EndCircle_MouseDown;
+
+            var rightsupport2 = new RightFixedSupport(canvas);
+            rightsupport2.AddBeam(beam2);
+
+            var loadpolies2 = new List<Poly>();
+            loadpolies2.Add(new Poly("-10x+30", 1, beam2.Length));
+            var ppoly2 = new PiecewisePoly(loadpolies2);
+            var load2 = new DistributedLoad(ppoly2, beam2.Length);
+            beam2.AddLoad(load2, Direction.Up);
+
+            var concloadlist = new List<KeyValuePair<double, double>>();
+            var conc = new KeyValuePair<double, double>(0.5, 20);   
+            concloadlist.Add(conc);        
+            var concload2 = new ConcentratedLoad(concloadlist, beam2.Length);
+            beam2.AddLoad(concload2, Direction.Up);
+
+            _loadsshown = true;
+            loads.Header = GetString("hideloads");
+            loads.IsEnabled = true;
 
             UpdateAllSupportTree();
 
@@ -1816,25 +2095,15 @@ namespace Mesnet
                 if (!assembly)
                 {
                     UnselectAll();
+                    UnSelectAllBeamItem();
                 }
                 MyDebug.WriteInformation("core_MouseUp", "clicked");
                 var grid1 = core.Parent as Grid;
                 var grid2 = grid1.Parent as Grid;
                 var beam = grid2.Parent as Beam;
-                beam.Select();
-                selectedbeam = beam;
-
-                BringToFront(canvas, beam);
-                btnloadmode();
-
-                if (selectedbeam.LeftSide != null && selectedbeam.RightSide != null && selectedbeam.IsBound)
-                {
-                    btndisablerotation();
-                }
-                else
-                {
-                    btnenablerotation();
-                }
+                SelectBeam(beam);
+                
+                SelectBeamItem(beam);
             }
 
             core.ReleaseMouseCapture();
@@ -2498,9 +2767,12 @@ namespace Mesnet
 
                 if ((bool)concentratedloadprompt.ShowDialog())
                 {
-                    var loads = concentratedloadprompt.Loads;
-                    var concentratedload = new ConcentratedLoad(loads, selectedbeam.Length);
+                    var load = concentratedloadprompt.Loads;
+                    var concentratedload = new ConcentratedLoad(load, selectedbeam.Length);
                     selectedbeam.AddLoad(concentratedload, Direction.Up);
+                    _loadsshown = true;
+                    loads.Header = GetString("hideloads");
+                    loads.IsEnabled = true;
                 }
 
                 assemblybeam = null;
@@ -2524,6 +2796,9 @@ namespace Mesnet
                     var ppoly = new PiecewisePoly(distloadprompt.Loadpolies);
                     var load = new DistributedLoad(ppoly, selectedbeam.Length);
                     selectedbeam.AddLoad(load, Direction.Up);
+                    _loadsshown = true;
+                    loads.Header = GetString("hideloads");
+                    loads.IsEnabled = true;
                 }
 
                 assemblybeam = null;
@@ -2962,12 +3237,12 @@ namespace Mesnet
 
             if (!exists)
             {
-                beamitem.Header = new BeamItem(GetString("beam") + " " + beam.BeamId);
+                beamitem.Header = new BeamItem(beam);
                 tree.Items.Add(beamitem);
             }
             else
             {
-                beamitem.Header = new BeamItem(GetString("beam") + " " + beam.BeamId);
+                beamitem.Header = new BeamItem(beam);
             }
 
             if (beam.PerformStressAnalysis)
@@ -3533,16 +3808,9 @@ namespace Mesnet
                     foreach (Member member in slidingsup.Members)
                     {
                         var memberitem = new TreeViewItem();
-                        switch (member.Direction)
-                        {
-                            case Direction.Right:
-                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
-                                break;
-
-                            case Direction.Left:
-                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
-                                break;
-                        }                       
+                        var ssbeamitem = new SupportBeamItem(member.Beam.BeamId, member.Direction, member.Moment);
+                        memberitem.Header = ssbeamitem;
+                   
                         slmembersitem.Items.Add(memberitem);
                     }
 
@@ -3591,16 +3859,8 @@ namespace Mesnet
                     foreach (Member member in basicsup.Members)
                     {
                         var memberitem = new TreeViewItem();
-                        switch (member.Direction)
-                        {
-                            case Direction.Right:
-                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
-                                break;
-
-                            case Direction.Left:
-                                memberitem.Header = new BeamItem(GetString("beam") + " " + member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(member.Moment, 4) + " kNm");
-                                break;
-                        }
+                        var bsbeamitem = new SupportBeamItem(member.Beam.BeamId, member.Direction, member.Moment);
+                        memberitem.Header = bsbeamitem;
                         bsmembersitem.Items.Add(memberitem);
                     }
 
@@ -3649,16 +3909,12 @@ namespace Mesnet
                     supportitem.Items.Add(lfmembersitem);
 
                     var lfmemberitem = new TreeViewItem();
-                    switch (lfixedsup.Member.Direction)
-                    {
-                        case Direction.Right:
-                            lfmemberitem.Header = new BeamItem(GetString("beam") + " " + lfixedsup.Member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(lfixedsup.Member.Moment ,4) + " kNm");
-                            break;
 
-                        case Direction.Left:
-                            lfmemberitem.Header = new BeamItem(GetString("beam") + " " + lfixedsup.Member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(lfixedsup.Member.Moment, 4) + " kNm");
-                            break;
-                    }
+                    var lfbeamitem = new SupportBeamItem(lfixedsup.Member.Beam.BeamId, lfixedsup.Member.Direction,
+                        lfixedsup.Member.Moment);
+
+                    lfmemberitem.Header = lfbeamitem;
+
                     lfmembersitem.Items.Add(lfmemberitem);
 
                     break;
@@ -3707,16 +3963,12 @@ namespace Mesnet
                     supportitem.Items.Add(rfmembersitem);
 
                     var rfmemberitem = new TreeViewItem();
-                    switch (rfixedsup.Member.Direction)
-                    {
-                        case Direction.Right:
-                            rfmemberitem.Header = new BeamItem(GetString("beam") + " " + rfixedsup.Member.Beam.BeamId + " , " + GetString("rightside") + ",  " + Math.Round(rfixedsup.Member.Moment, 4) + " kNm");
-                            break;
 
-                        case Direction.Left:
-                            rfmemberitem.Header = new BeamItem(GetString("beam") + " " + rfixedsup.Member.Beam.BeamId + " , " + GetString("leftside") + ",  " + Math.Round(rfixedsup.Member.Moment, 4) + " kNm");
-                            break;
-                    }
+                    var rfbeamitem = new SupportBeamItem(rfixedsup.Member.Beam.BeamId, rfixedsup.Member.Direction,
+                        rfixedsup.Member.Moment);
+
+                    rfmemberitem.Header = rfbeamitem;
+
                     rfmembersitem.Items.Add(rfmemberitem);
 
                     break;
@@ -3766,22 +4018,24 @@ namespace Mesnet
 
         private void BeamTreeItemSelected(object sender, RoutedEventArgs e)
         {
-            var treeitem = sender as TreeViewItem;
-            var name = (treeitem.Header as BeamItem).beamname.Text;
-
             Reset();
+
+            var treeitem = sender as TreeViewItem;
+            var beam = (treeitem.Header as BeamItem).Beam;
+
+            SelectBeamItem(beam);
 
             foreach (var item in objects)
             {
-                switch (item.GetType().Name)
+                switch (GetObjectType(item))
                 {
-                    case "Beam":
+                    case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam1 = item as Beam;
 
-                        if (beam.Name == name)
+                        if (Equals(beam1, beam))
                         {
-                            beam.Select();
+                            SelectBeam(beam1);
                             return;
                         }
 
@@ -3790,6 +4044,38 @@ namespace Mesnet
             }
         }
 
+        /// <summary>
+        /// Selects the beam item corresponds to given beam in beam tree.
+        /// </summary>
+        /// <param name="beam">The beam.</param>
+        private void SelectBeamItem(Beam beam)
+        {
+            foreach (TreeViewBeamItem item in tree.Items)
+            {
+                if (Equals(beam, item.Beam))
+                {
+                    item.Selected -= BeamTreeItemSelected;
+                    item.IsSelected = true;
+                    item.Selected += BeamTreeItemSelected;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unselects all beam items in beam tree.
+        /// </summary>
+        private void UnSelectAllBeamItem()
+        {
+            MyDebug.WriteInformation("MainWindow", "UnSelectAllBeamItem executed");
+            foreach (TreeViewBeamItem item in tree.Items)
+            {
+                item.Selected -= BeamTreeItemSelected;
+                item.IsSelected = false;
+                item.Selected += BeamTreeItemSelected;              
+            }
+        }
+        
         /// <summary>
         /// Executed when any support item selected in the treeview. It selects and highlights corresponding support.
         /// </summary>
@@ -4061,7 +4347,7 @@ namespace Mesnet
                 beam.HideStressDiagram();
                 uc.content.Content = GetString("show");
             }
-        }
+        }       
 
         private void fixedendforceexplorer_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -4230,12 +4516,35 @@ namespace Mesnet
             assembly = false;
             UnselectAll();
             btndisableall();
+            UnSelectAllBeamItem();
             SetMouseHandlingMode("Reset", MouseHandlingMode.None);
         }
 
         public void WriteStatus(string keytext)
         {
             notify.Text = (string)FindResource("beamput");
+        }
+
+        /// <summary>
+        /// Selects the given beam.
+        /// </summary>
+        /// <param name="beam">The beam to be selected.</param>
+        private void SelectBeam(Beam beam)
+        {
+            beam.Select();
+            selectedbeam = beam;
+
+            BringToFront(canvas, beam);
+            btnloadmode();
+
+            if (selectedbeam.LeftSide != null && selectedbeam.RightSide != null && selectedbeam.IsBound)
+            {
+                btndisablerotation();
+            }
+            else
+            {
+                btnenablerotation();
+            }
         }
 
         #region Cross Solve
@@ -5039,7 +5348,72 @@ namespace Mesnet
 
         private void stress_Click(object sender, RoutedEventArgs e)
         {
-            if (!_stressshown)
+            bool check = false;
+
+            foreach (var item in objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.PerformStressAnalysis)
+                        {
+                            check = true;                           
+                        }
+
+                        break;
+                }
+            }
+
+            if (check)
+            {
+                if (!_stressshown)
+                {
+                    foreach (var item in objects)
+                    {
+                        switch (item.GetType().Name)
+                        {
+                            case "Beam":
+
+                                Beam beam = item as Beam;
+                                if (beam.PerformStressAnalysis)
+                                {
+                                    beam.AddStressDiagram();
+                                }
+
+                                break;
+                        }
+                    }
+                    stress.Header = GetString("hidestress");
+                    _stressshown = true;
+                }
+                else
+                {
+                    foreach (var item in objects)
+                    {
+                        switch (item.GetType().Name)
+                        {
+                            case "Beam":
+
+                                Beam beam = item as Beam;
+                                if (beam.PerformStressAnalysis)
+                                {
+                                    beam.HideStressDiagram();
+                                }
+
+                                break;
+                        }
+                    }
+                    stress.Header = GetString("showstress");
+                    _stressshown = false;
+                }
+            }            
+        }
+
+        private void loads_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_loadsshown)
             {
                 foreach (var item in objects)
                 {
@@ -5048,13 +5422,14 @@ namespace Mesnet
                         case "Beam":
 
                             Beam beam = item as Beam;
-                            beam.AddStressDiagram();
+                            beam.ShowDistLoad();
+                            beam.ShowConcLoad();
 
                             break;
                     }
                 }
-                stress.Header = GetString("hidestress");
-                _stressshown = true;
+                loads.Header = GetString("hideloads");
+                _loadsshown = true;               
             }
             else
             {
@@ -5065,14 +5440,17 @@ namespace Mesnet
                         case "Beam":
 
                             Beam beam = item as Beam;
-                            beam.HideStressDiagram();
+                            beam.HideDistLoad();
+                            beam.HideConcLoad();
 
                             break;
                     }
                 }
-                stress.Header = GetString("showstress");
-                _stressshown = false;
+                loads.Header = GetString("showloads");
+                _loadsshown = false;
             }
+
+            UpdateAllBeamTree();
         }
 
         private void loadtest_Click(object sender, RoutedEventArgs e)
@@ -5129,6 +5507,12 @@ namespace Mesnet
             disabletestmenus();
         }
 
+        private void inertiatest_Click(object sender, RoutedEventArgs e)
+        {
+            InertiaTest();
+            disabletestmenus();
+        }
+
         private void disabletestmenus()
         {
             loadtest.IsEnabled = false;
@@ -5140,6 +5524,7 @@ namespace Mesnet
             devtest2.IsEnabled = false;
             stresstest.IsEnabled = false;
             stresstest2.IsEnabled = false;
+            inertiatest.IsEnabled = false;
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)
@@ -5309,6 +5694,15 @@ namespace Mesnet
             else
             {
                 stress.Header = GetString("showstress");
+            }
+
+            if (_loadsshown)
+            {
+                loads.Header = GetString("hideloads");
+            }
+            else
+            {
+                loads.Header = GetString("showloads");
             }
 
             UpdateAllBeamTree();

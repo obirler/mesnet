@@ -112,7 +112,7 @@ namespace Mesnet.Xaml.User_Controls
             foreach (Poly poly in _inertiappoly)
             {
                 var points = new PointCollection();
-                points.Clear();
+                //points.Clear();
 
                 for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
                 {
@@ -156,7 +156,7 @@ namespace Mesnet.Xaml.User_Controls
 
             starttext = new TextBlock();
             _beam.upcanvas.Children.Add(starttext);
-            starttext.Text = Math.Round(_inertiappoly.Calculate(0), 1).ToString();
+            starttext.Text = Math.Round(_inertiappoly.Calculate(0), 1) + " cm^4";
             starttext.Foreground = color;
             MinSize(starttext);
             starttext.TextAlignment = TextAlignment.Center;
@@ -169,7 +169,7 @@ namespace Mesnet.Xaml.User_Controls
             if (minlocation != 0 && minlocation != _length)
             {
                 mintext = new TextBlock();
-                mintext.Text = Math.Round(min, 1).ToString();
+                mintext.Text = Math.Round(min, 1) + " cm^4";
                 mintext.Foreground = color;
                 MinSize(mintext);
                 mintext.TextAlignment = TextAlignment.Center;
@@ -196,7 +196,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 maxtext = new TextBlock();
 
-                maxtext.Text = Math.Round(max, 1).ToString();
+                maxtext.Text = Math.Round(max, 1) + " cm^4";
                 maxtext.Foreground = color;
                 MinSize(maxtext);
                 maxtext.TextAlignment = TextAlignment.Center;
@@ -221,7 +221,7 @@ namespace Mesnet.Xaml.User_Controls
 
             endtext = new TextBlock();
             _beam.upcanvas.Children.Add(endtext);
-            endtext.Text = Math.Round(_inertiappoly.Calculate(_beam.Length), 1).ToString();
+            endtext.Text = Math.Round(_inertiappoly.Calculate(_beam.Length), 1) + " cm^4";
             endtext.Foreground = color;
             MinSize(endtext);
             endtext.TextAlignment = TextAlignment.Center;

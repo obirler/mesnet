@@ -188,5 +188,15 @@ namespace Mesnet.Xaml.User_Controls
             polygon.Fill = new SolidColorBrush(Colors.Black);
             loadcanvas.Children.Add(polygon);
         }
+
+        public void Show()
+        {
+            Visibility = Visibility.Visible;          
+        }
+
+        public void Hide()
+        {
+            Visibility = Visibility.Collapsed;
+        }
     }
 }

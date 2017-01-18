@@ -1420,26 +1420,38 @@ namespace Mesnet.Xaml.User_Controls
 
         public void ShowDistLoad()
         {
-            _distload.Visibility = Visibility.Visible;
-            _distributedloadshown = true;
+            if (_distload != null)
+            {
+                _distload.Show();
+                _distributedloadshown = true;
+            }
         }
 
         public void HideDistLoad()
         {
-            _distload.Visibility = Visibility.Hidden;
-            _distributedloadshown = false;
+            if (_distload != null)
+            {
+                _distload.Hide();
+                _distributedloadshown = false;
+            }
         }
 
         public void ShowConcLoad()
         {
-            _concload.Visibility = Visibility.Visible;
-            _concentratedloadshown = true;
+            if (_concload != null)
+            {
+                _concload.Show();
+                _concentratedloadshown = true;
+            }
         }
 
         public void HideConcLoad()
         {
-            _concload.Visibility = Visibility.Hidden;
-            _concentratedloadshown = false;
+            if (_concload != null)
+            {
+                _concload.Hide();
+                _concentratedloadshown = false;
+            }
         }
        
         public void AddFixedEndForceDiagram()

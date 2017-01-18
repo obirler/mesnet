@@ -69,6 +69,8 @@
     <system:String x:Key="hideforce">Hide Force Distribution</system:String>
     <system:String x:Key="showstress">Show Stress Distribution</system:String>
     <system:String x:Key="hidestress">Hide Stress Distribution</system:String>
+    <system:String x:Key="showloads">Show Loads</system:String>
+    <system:String x:Key="hideloads">Hide Loads</system:String>
     <system:String x:Key="beam">Beam</system:String>
     <system:String x:Key="showdirection">Show Direction</system:String>
     <system:String x:Key="hidedirection">Hide Direction</system:String>
@@ -99,4 +101,6 @@
     <system:String x:Key="crosssolver">Cross Solver</system:String>
     <system:String x:Key="beams">Beams</system:String>
     <system:String x:Key="supports">Supports</system:String>
+    <system:String x:Key="multithreaded">Multi Threaded</system:String>
+    <system:String x:Key="singlethreaded">Single Threaded</system:String>
 </ResourceDictionary>

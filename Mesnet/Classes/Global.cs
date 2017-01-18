@@ -254,6 +254,6 @@ namespace Mesnet.Classes
 
         public static List<string> LogList = new List<string>();
 
-        public static CalculationType Calculation = CalculationType.MultiThreaded;
+        public static CalculationType Calculation = CalculationType.SingleThreaded;
     }
 }

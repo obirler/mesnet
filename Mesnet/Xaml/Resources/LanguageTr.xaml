@@ -69,6 +69,8 @@
     <system:String x:Key="hideforce">Kuvvet Dağılımını Gizle</system:String>
     <system:String x:Key="showstress">Gerilme Dağılımını Göster</system:String>
     <system:String x:Key="hidestress">Gerilme Dağılımını Gizle</system:String>
+    <system:String x:Key="showloads">Yükleri Göster</system:String>
+    <system:String x:Key="hideloads">Yükleri Gizle</system:String>
     <system:String x:Key="beam">Kiriş</system:String>
     <system:String x:Key="showdirection">Yönü Göster</system:String>
     <system:String x:Key="hidedirection">Yönü Gizle</system:String>
@@ -99,4 +101,6 @@
     <system:String x:Key="crosssolver">Cross Çözücü</system:String>
     <system:String x:Key="beams">Kirişler</system:String>
     <system:String x:Key="supports">Mesnetler</system:String>
+    <system:String x:Key="multithreaded">Çok İş Parçacıklı</system:String>
+    <system:String x:Key="singlethreaded">Tek İş Parçacıklı</system:String>
 </ResourceDictionary>

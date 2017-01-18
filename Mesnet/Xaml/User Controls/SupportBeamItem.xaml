@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Mesnet.Xaml.User_Controls.SupportBeamItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"><StackPanel Orientation="Horizontal">
+    <Grid Height="20" Width="20">
+        <Polygon Points="2,9 18,9 18,11 2,11" Fill="Black"></Polygon>
+    </Grid>
+
+    <TextBlock Margin="5,0,0,0" x:Name="header" VerticalAlignment="Center" ></TextBlock>
+</StackPanel>
+</UserControl>

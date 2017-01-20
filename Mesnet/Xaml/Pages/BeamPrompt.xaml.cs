@@ -453,15 +453,15 @@ namespace Mesnet.Xaml.Pages
 
             var poly = new Poly(vi.Text);
 
-            if (poly.Minimum() <= 0)
+            poly.StartPoint = Convert.ToDouble(vix1.Text);
+            poly.EndPoint = Convert.ToDouble(vix2.Text);
+
+            if (poly.Minimum(poly.StartPoint, poly.EndPoint) <= 0)
             {
                 MessageBox.Show(GetString("minusinertia"));
                 vi.Focus();
                 return;
-            }
-
-            poly.StartPoint = Convert.ToDouble(vix1.Text);
-            poly.EndPoint = Convert.ToDouble(vix2.Text);
+            }         
 
             inertiappoly.Add(poly);
 

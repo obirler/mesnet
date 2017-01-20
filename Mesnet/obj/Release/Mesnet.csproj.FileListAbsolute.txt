@@ -102,3 +102,5 @@ C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\M
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Mesnet.exe
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Mesnet.pdb
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Mesnet.csprojResolveAssemblyReference.cache
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Xaml\User Controls\SupportBeamItem.baml
+C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Release\Xaml\User Controls\SupportBeamItem.g.cs

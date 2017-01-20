@@ -1495,7 +1495,7 @@ namespace Mesnet
             basicsupport1.AddBeam(beam1, Direction.Right);
 
             var loadpolies1 = new List<Poly>();
-            loadpolies1.Add(new Poly("60-15x^2", 0, beam1.Length));
+            loadpolies1.Add(new Poly("100-25x^2", 0, beam1.Length));
             var ppoly1 = new PiecewisePoly(loadpolies1);
             var load1 = new DistributedLoad(ppoly1, beam1.Length);
             beam1.AddLoad(load1, Direction.Up);
@@ -1507,7 +1507,7 @@ namespace Mesnet
             var inertiapolies2 = new List<Poly>();
             inertiapolies2.Add(new Poly("3333.33-20000x+40000x^2-26666.7x^3", 0, 0.25));
             inertiapolies2.Add(new Poly("416.667", 0.25, 2.75));
-            inertiapolies2.Add(new Poly("-416667+500000x-200000x^2+26666.7x^3", 2.75, beam2.Length));
+            inertiapolies2.Add(new Poly("-416667+500000x-200000x^2+26666.7x^3", 2.75, 3));
             beam2.AddInertia(new PiecewisePoly(inertiapolies2));
 
             if (beam2.MaxInertia > MaxInertia)
@@ -1516,11 +1516,15 @@ namespace Mesnet
             }
             beam2.PerformStressAnalysis = true;
             var epolies2 = new List<Poly>();
-            epolies2.Add(new Poly("5+5x", 0, beam2.Length));
+            epolies2.Add(new Poly("-20x+10", 0, 0.25));
+            epolies2.Add(new Poly("5", 0.25, 2.75));
+            epolies2.Add(new Poly("20x-50", 2.75, 3));
             beam2.AddE(new PiecewisePoly(epolies2));
             var dpolies2 = new List<Poly>();
-            dpolies2.Add(new Poly("10+10x", 0, beam2.Length));
-            beam2.AddD(new PiecewisePoly(dpolies));
+            dpolies2.Add(new Poly("-40x+20", 0, 0.25));
+            dpolies2.Add(new Poly("10", 0.25, 2.75));
+            dpolies2.Add(new Poly("40x-100", 2.75, 3));
+            beam2.AddD(new PiecewisePoly(dpolies2));
             beam2.MaxAllowableStress = 150;
 
             beam2.Connect(Direction.Left, beam1, Direction.Right);

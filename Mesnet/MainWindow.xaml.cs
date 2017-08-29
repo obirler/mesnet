@@ -28,7 +28,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using Mesnet.Classes;
 using Mesnet.Classes.Math;
 using Mesnet.Classes.Tools;
 using Mesnet.Classes.Ui;
@@ -38,6 +37,10 @@ using Mesnet.Xaml.User_Controls;
 using MoreLinq;
 using ZoomAndPan;
 using static Mesnet.Classes.Global;
+using System.Xml;
+using Mesnet.Classes.IO.Xml;
+using System.Xml.Linq;
+using Mesnet.Classes.IO;
 
 namespace Mesnet
 {
@@ -86,6 +89,12 @@ namespace Mesnet
             timer.Tick += timer_Tick;
 
             Canvas.SetZIndex(viewbox, 1);
+
+            if(App.AssociationPath != null)
+            {
+                open(App.AssociationPath);
+                _savefilepath = App.AssociationPath;
+            }
         }
 
         private object selectedobj;
@@ -133,6 +142,8 @@ namespace Mesnet
 
         private double _testdim = 30;
 
+        private string _savefilepath = null;
+
         private void TestCase()
         {
             /////////////////////////////// Beam 1 (GA) /////////////////////////////
@@ -142,12 +153,6 @@ namespace Mesnet
             polies1.Add(new Poly("3", 0, beam1.Length));
             beam1.AddInertia(new PiecewisePoly(polies1));
             beam1.AddTopLeft(canvas, 10100, 9400);
-
-            beam1.core.MouseDown += core_MouseDown;
-            beam1.core.MouseUp += core_MouseUp;
-            beam1.core.MouseMove += core_MouseMove;
-            beam1.startcircle.MouseDown += StartCircle_MouseDown;
-            beam1.endcircle.MouseDown += EndCircle_MouseDown;
 
             var slidingsupport = new BasicSupport(canvas);
             slidingsupport.AddBeam(beam1, Direction.Left);
@@ -171,12 +176,6 @@ namespace Mesnet
             beam2.Connect(Direction.Left, beam1, Direction.Right);
             beam2.SetAngleLeft(90);
 
-            beam2.core.MouseDown += core_MouseDown;
-            beam2.core.MouseUp += core_MouseUp;
-            beam2.core.MouseMove += core_MouseMove;
-            beam2.startcircle.MouseDown += StartCircle_MouseDown;
-            beam2.endcircle.MouseDown += EndCircle_MouseDown;
-
             var slidingsupport2 = new BasicSupport(canvas);
             slidingsupport2.AddBeam(beam2, Direction.Right);
 
@@ -194,12 +193,6 @@ namespace Mesnet
             polies3.Add(new Poly("5", 0, beam3.Length));
             beam3.AddInertia(new PiecewisePoly(polies3));
             beam3.Connect(Direction.Right, beam2, Direction.Right);
-
-            beam3.core.MouseDown += core_MouseDown;
-            beam3.core.MouseUp += core_MouseUp;
-            beam3.core.MouseMove += core_MouseMove;
-            beam3.startcircle.MouseDown += StartCircle_MouseDown;
-            beam3.endcircle.MouseDown += EndCircle_MouseDown;
 
             var slidingsupport3 = new BasicSupport(canvas);
             slidingsupport3.AddBeam(beam3, Direction.Left);
@@ -220,12 +213,6 @@ namespace Mesnet
             beam4.Connect(Direction.Left, beam2, Direction.Right);
             beam4.SetAngleLeft(90);
 
-            beam4.core.MouseDown += core_MouseDown;
-            beam4.core.MouseUp += core_MouseUp;
-            beam4.core.MouseMove += core_MouseMove;
-            beam4.startcircle.MouseDown += StartCircle_MouseDown;
-            beam4.endcircle.MouseDown += EndCircle_MouseDown;
-
             var slidingsupport4 = new BasicSupport(canvas);
             slidingsupport4.AddBeam(beam4, Direction.Right);
 
@@ -237,25 +224,20 @@ namespace Mesnet
 
             /////////////////////////////// Beam 5 (CD) /////////////////////////////
 
-            var beam5 = new Beam(canvas, 8);
+            var beam5 = new Beam(8);
             beam5.AddElasticity(205);
             var polies5 = new List<Poly>();
             polies5.Add(new Poly("20", 0, beam5.Length));
             beam5.AddInertia(new PiecewisePoly(polies5));
-            beam5.Connect(Direction.Left, beam4, Direction.Right);
-            beam5.SetAngleLeft(180);
+            beam5.AddTopLeft(canvas, 5000, 5000);
 
-            beam5.core.MouseDown += core_MouseDown;
-            beam5.core.MouseUp += core_MouseUp;
-            beam5.core.MouseMove += core_MouseMove;
-            beam5.startcircle.MouseDown += StartCircle_MouseDown;
-            beam5.endcircle.MouseDown += EndCircle_MouseDown;
+            beam5.Connect(Direction.Right, beam4, Direction.Right);
 
             var slidingsupport5 = new BasicSupport(canvas);
-            slidingsupport5.AddBeam(beam5, Direction.Right);
+            slidingsupport5.AddBeam(beam5, Direction.Left);
 
             var loadpolies5 = new List<Poly>();
-            loadpolies5.Add(new Poly("110", 0, beam5.Length));
+            loadpolies5.Add(new Poly("-110", 0, beam5.Length));
             var ppoly5 = new PiecewisePoly(loadpolies5);
             var load5 = new DistributedLoad(ppoly5, beam5.Length);
             beam5.AddLoad(load5, Direction.Up);
@@ -267,14 +249,8 @@ namespace Mesnet
             var polies6 = new List<Poly>();
             polies6.Add(new Poly("20", 0, beam6.Length));
             beam6.AddInertia(new PiecewisePoly(polies6));
-            beam6.Connect(Direction.Left, beam5, Direction.Right);
+            beam6.Connect(Direction.Left, beam5, Direction.Left);
             beam6.SetAngleLeft(180);
-
-            beam6.core.MouseDown += core_MouseDown;
-            beam6.core.MouseUp += core_MouseUp;
-            beam6.core.MouseMove += core_MouseMove;
-            beam6.startcircle.MouseDown += StartCircle_MouseDown;
-            beam6.endcircle.MouseDown += EndCircle_MouseDown;
 
             var slidingsupport6 = new BasicSupport(canvas);
             slidingsupport6.AddBeam(beam6, Direction.Right);
@@ -296,12 +272,6 @@ namespace Mesnet
             beam7.SetAngleLeft(-90);
             beam7.CircularConnect(Direction.Right, beam3, Direction.Left);
 
-            beam7.core.MouseDown += core_MouseDown;
-            beam7.core.MouseUp += core_MouseUp;
-            beam7.core.MouseMove += core_MouseMove;
-            beam7.startcircle.MouseDown += StartCircle_MouseDown;
-            beam7.endcircle.MouseDown += EndCircle_MouseDown;
-
             var loadpolies7 = new List<Poly>();
             loadpolies7.Add(new Poly("110-10x", 0, beam7.Length));
             var ppoly7 = new PiecewisePoly(loadpolies7);
@@ -318,12 +288,6 @@ namespace Mesnet
             beam8.Connect(Direction.Left, beam3, Direction.Left);
             beam8.SetAngleLeft(-90);
             beam8.CircularConnect(Direction.Right, beam1, Direction.Left);
-
-            beam8.core.MouseDown += core_MouseDown;
-            beam8.core.MouseUp += core_MouseUp;
-            beam8.core.MouseMove += core_MouseMove;
-            beam8.startcircle.MouseDown += StartCircle_MouseDown;
-            beam8.endcircle.MouseDown += EndCircle_MouseDown;
 
             var loadpolies8 = new List<Poly>();
             loadpolies8.Add(new Poly("30-6.66666666667x", 0, beam8.Length));
@@ -346,15 +310,9 @@ namespace Mesnet
             var beam1 = new Beam(16);
             beam1.AddElasticity(205);
             var polies1 = new List<Poly>();
-            polies1.Add(new Poly((3*_testi).ToString(), 0, beam1.Length));
+            polies1.Add(new Poly((3 * _testi).ToString(), 0, beam1.Length));
             beam1.AddInertia(new PiecewisePoly(polies1));
             beam1.AddTopLeft(canvas, 10100, 8600);
-
-            beam1.core.MouseDown += core_MouseDown;
-            beam1.core.MouseUp += core_MouseUp;
-            beam1.core.MouseMove += core_MouseMove;
-            beam1.startcircle.MouseDown += StartCircle_MouseDown;
-            beam1.endcircle.MouseDown += EndCircle_MouseDown;
 
             var slidingsupport = new BasicSupport(canvas);
             slidingsupport.AddBeam(beam1, Direction.Left);
@@ -387,12 +345,6 @@ namespace Mesnet
             beam2.Connect(Direction.Left, beam1, Direction.Right);
             beam2.SetAngleLeft(90);
 
-            beam2.core.MouseDown += core_MouseDown;
-            beam2.core.MouseUp += core_MouseUp;
-            beam2.core.MouseMove += core_MouseMove;
-            beam2.startcircle.MouseDown += StartCircle_MouseDown;
-            beam2.endcircle.MouseDown += EndCircle_MouseDown;
-
             var slidingsupport2 = new BasicSupport(canvas);
             slidingsupport2.AddBeam(beam2, Direction.Right);
 
@@ -419,12 +371,6 @@ namespace Mesnet
             polies3.Add(new Poly((5 * _testi).ToString(), 0, beam3.Length));
             beam3.AddInertia(new PiecewisePoly(polies3));
             beam3.Connect(Direction.Right, beam2, Direction.Right);
-
-            beam3.core.MouseDown += core_MouseDown;
-            beam3.core.MouseUp += core_MouseUp;
-            beam3.core.MouseMove += core_MouseMove;
-            beam3.startcircle.MouseDown += StartCircle_MouseDown;
-            beam3.endcircle.MouseDown += EndCircle_MouseDown;
 
             var slidingsupport3 = new BasicSupport(canvas);
             slidingsupport3.AddBeam(beam3, Direction.Left);
@@ -454,12 +400,6 @@ namespace Mesnet
             beam4.Connect(Direction.Left, beam2, Direction.Right);
             beam4.SetAngleLeft(90);
 
-            beam4.core.MouseDown += core_MouseDown;
-            beam4.core.MouseUp += core_MouseUp;
-            beam4.core.MouseMove += core_MouseMove;
-            beam4.startcircle.MouseDown += StartCircle_MouseDown;
-            beam4.endcircle.MouseDown += EndCircle_MouseDown;
-
             var slidingsupport4 = new BasicSupport(canvas);
             slidingsupport4.AddBeam(beam4, Direction.Right);
 
@@ -488,12 +428,6 @@ namespace Mesnet
             beam5.Connect(Direction.Left, beam4, Direction.Right);
             beam5.SetAngleLeft(180);
 
-            beam5.core.MouseDown += core_MouseDown;
-            beam5.core.MouseUp += core_MouseUp;
-            beam5.core.MouseMove += core_MouseMove;
-            beam5.startcircle.MouseDown += StartCircle_MouseDown;
-            beam5.endcircle.MouseDown += EndCircle_MouseDown;
-
             var slidingsupport5 = new BasicSupport(canvas);
             slidingsupport5.AddBeam(beam5, Direction.Right);
 
@@ -521,12 +455,6 @@ namespace Mesnet
             beam6.AddInertia(new PiecewisePoly(polies6));
             beam6.Connect(Direction.Left, beam5, Direction.Right);
             beam6.SetAngleLeft(180);
-
-            beam6.core.MouseDown += core_MouseDown;
-            beam6.core.MouseUp += core_MouseUp;
-            beam6.core.MouseMove += core_MouseMove;
-            beam6.startcircle.MouseDown += StartCircle_MouseDown;
-            beam6.endcircle.MouseDown += EndCircle_MouseDown;
 
             var slidingsupport6 = new BasicSupport(canvas);
             slidingsupport6.AddBeam(beam6, Direction.Right);
@@ -557,12 +485,6 @@ namespace Mesnet
             beam7.SetAngleLeft(-90);
             beam7.CircularConnect(Direction.Right, beam3, Direction.Left);
 
-            beam7.core.MouseDown += core_MouseDown;
-            beam7.core.MouseUp += core_MouseUp;
-            beam7.core.MouseMove += core_MouseMove;
-            beam7.startcircle.MouseDown += StartCircle_MouseDown;
-            beam7.endcircle.MouseDown += EndCircle_MouseDown;
-
             var loadpolies7 = new List<Poly>();
             loadpolies7.Add(new Poly("110-10x", 0, beam7.Length));
             var ppoly7 = new PiecewisePoly(loadpolies7);
@@ -588,12 +510,6 @@ namespace Mesnet
             beam8.Connect(Direction.Left, beam3, Direction.Left);
             beam8.SetAngleLeft(-90);
             beam8.CircularConnect(Direction.Right, beam1, Direction.Left);
-
-            beam8.core.MouseDown += core_MouseDown;
-            beam8.core.MouseUp += core_MouseUp;
-            beam8.core.MouseMove += core_MouseMove;
-            beam8.startcircle.MouseDown += StartCircle_MouseDown;
-            beam8.endcircle.MouseDown += EndCircle_MouseDown;
 
             var loadpolies8 = new List<Poly>();
             loadpolies8.Add(new Poly("30-6.66666666667x", 0, beam8.Length));
@@ -900,7 +816,7 @@ namespace Mesnet
 
             UpdateAllSupportTree();
 
-            UpdateAllBeamTree();            
+            UpdateAllBeamTree();
         }
 
         private void TestCase4()
@@ -1172,7 +1088,7 @@ namespace Mesnet
 
             _loadsshown = true;
             loads.Header = GetString("hideloads");
-               loads.IsEnabled = true;
+            loads.IsEnabled = true;
 
             UpdateAllSupportTree();
 
@@ -1545,8 +1461,8 @@ namespace Mesnet
             beam2.AddLoad(load2, Direction.Up);
 
             var concloadlist = new List<KeyValuePair<double, double>>();
-            var conc = new KeyValuePair<double, double>(0.5, 20);   
-            concloadlist.Add(conc);        
+            var conc = new KeyValuePair<double, double>(0.5, 20);
+            concloadlist.Add(conc);
             var concload2 = new ConcentratedLoad(concloadlist, beam2.Length);
             beam2.AddLoad(concload2, Direction.Up);
 
@@ -1620,7 +1536,7 @@ namespace Mesnet
 
             if (writetodebug)
             {
-                MyDebug.WriteInformation(sender, mode.ToString());
+                MyDebug.WriteInformation(mode.ToString());
             }
         }
 
@@ -1697,19 +1613,12 @@ namespace Mesnet
                     var x = origContentMouseDownPoint.X;
                     var y = origContentMouseDownPoint.Y;
 
-                    tempbeam.core.MouseDown += core_MouseDown;
-                    tempbeam.core.MouseUp += core_MouseUp;
-                    tempbeam.core.MouseMove += core_MouseMove;
-                    tempbeam.startcircle.MouseDown += StartCircle_MouseDown;
-                    tempbeam.endcircle.MouseDown += EndCircle_MouseDown;
-                    tempbeam.Background = new SolidColorBrush(Colors.Transparent);                   
                     tempbeam.AddCenter(canvas, x, y);
                     if (tempbeam.MaxInertia > MaxInertia)
                     {
                         MaxInertia = tempbeam.MaxInertia;
                     }
-                    tempbeam.SetAngleCenter(beamangle);                    
-                    tempbeam.CanBeDragged = true;
+                    tempbeam.SetAngleCenter(beamangle);
                     //tempbeam.ShowCorners(4);
 
                     UpdateBeamTree(tempbeam);
@@ -1720,7 +1629,7 @@ namespace Mesnet
                 }
 
                 zoomAndPanControl.ReleaseMouseCapture();
-                SetMouseHandlingMode("zoomAndPanControl_MouseUp", MouseHandlingMode.None);                
+                SetMouseHandlingMode("zoomAndPanControl_MouseUp", MouseHandlingMode.None);
                 e.Handled = true;
             }
 
@@ -1800,7 +1709,7 @@ namespace Mesnet
 
         private void zoomAndPanControl_Clicked()
         {
-            MyDebug.WriteInformation("zoomAndPanControl_Clicked", "Clicked!");
+            MyDebug.WriteInformation("Clicked!");
             Reset();
         }
 
@@ -2029,7 +1938,7 @@ namespace Mesnet
         /// Event raised when a mouse button is clicked
         ///  down over beam rectangle.
         /// </summary>
-        private void core_MouseDown(object sender, MouseButtonEventArgs e)
+        public void core_MouseDown(object sender, MouseButtonEventArgs e)
         {
             canvas.Focus();
             Keyboard.Focus(canvas);
@@ -2072,7 +1981,7 @@ namespace Mesnet
         /// <summary>
         /// Event raised when a mouse button is released over beam rectangle.
         /// </summary>
-        private void core_MouseUp(object sender, MouseButtonEventArgs e)
+        public void core_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var core = (Rectangle)sender;
 
@@ -2081,7 +1990,7 @@ namespace Mesnet
                 //
                 // We are not in dragging mode.
                 //
-                MyDebug.WriteInformation("core", "not dragging not assembly, returning");
+                MyDebug.WriteInformation("not dragging not assembly, returning");
                 return;
             }
 
@@ -2092,7 +2001,7 @@ namespace Mesnet
 
             beammouseuppoint = e.GetPosition(canvas);
 
-            MyDebug.WriteInformation("core_MouseUp", "mouseuppoint : " + beammouseuppoint.X + " : " + beammouseuppoint.Y);
+            MyDebug.WriteInformation("mouseuppoint : " + beammouseuppoint.X + " : " + beammouseuppoint.Y);
 
             if (beammouseuppoint.Equals(beammousedownpoint))
             {
@@ -2101,12 +2010,12 @@ namespace Mesnet
                     UnselectAll();
                     UnSelectAllBeamItem();
                 }
-                MyDebug.WriteInformation("core_MouseUp", "clicked");
+                MyDebug.WriteInformation("clicked");
                 var grid1 = core.Parent as Grid;
                 var grid2 = grid1.Parent as Grid;
                 var beam = grid2.Parent as Beam;
                 SelectBeam(beam);
-                
+
                 SelectBeamItem(beam);
             }
 
@@ -2118,7 +2027,7 @@ namespace Mesnet
         /// <summary>
         /// Event raised when the mouse cursor is moved when over an object.
         /// </summary>
-        private void core_MouseMove(object sender, MouseEventArgs e)
+        public void core_MouseMove(object sender, MouseEventArgs e)
         {
             var core = (Rectangle)sender;
             if (mouseHandlingMode != MouseHandlingMode.Dragging)
@@ -2164,7 +2073,7 @@ namespace Mesnet
             e.Handled = true;
         }
 
-        private void StartCircle_MouseDown(object sender, MouseButtonEventArgs e)
+        public void StartCircle_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var ellipse = sender as Ellipse;
             var grid = ellipse.Parent as Grid;
@@ -2195,7 +2104,7 @@ namespace Mesnet
                                             var beamdialog = new BeamPrompt(assemblybeam.LeftPoint, beam.LeftPoint);
                                             beamdialog.maxstresstbx.Text = _maxstress.ToString();
                                             beamdialog.Owner = this;
-                                            if ((bool) beamdialog.ShowDialog())
+                                            if ((bool)beamdialog.ShowDialog())
                                             {
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
@@ -2204,7 +2113,7 @@ namespace Mesnet
                                                 {
                                                     MaxInertia = newbeam.MaxInertia;
                                                 }
-                                                if ((bool) beamdialog.stresscbx.IsChecked)
+                                                if ((bool)beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
                                                     newbeam.AddE(beamdialog.eppoly);
@@ -2223,7 +2132,7 @@ namespace Mesnet
                                                 newbeam.endcircle.MouseDown += EndCircle_MouseDown;
 
                                                 canvas.UpdateLayout();
-                                                notify.Text = (string) FindResource("beamput");
+                                                notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
                                                 return;
@@ -2272,7 +2181,7 @@ namespace Mesnet
                                             var beamdialog = new BeamPrompt(assemblybeam.RightPoint, beam.LeftPoint);
                                             beamdialog.maxstresstbx.Text = _maxstress.ToString();
                                             beamdialog.Owner = this;
-                                            if ((bool) beamdialog.ShowDialog())
+                                            if ((bool)beamdialog.ShowDialog())
                                             {
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
@@ -2281,7 +2190,7 @@ namespace Mesnet
                                                 {
                                                     MaxInertia = newbeam.MaxInertia;
                                                 }
-                                                if ((bool) beamdialog.stresscbx.IsChecked)
+                                                if ((bool)beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
                                                     newbeam.AddE(beamdialog.eppoly);
@@ -2300,7 +2209,7 @@ namespace Mesnet
                                                 newbeam.endcircle.MouseDown += EndCircle_MouseDown;
 
                                                 canvas.UpdateLayout();
-                                                notify.Text = (string) FindResource("beamput");
+                                                notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
                                                 return;
@@ -2368,15 +2277,15 @@ namespace Mesnet
                     btnassemblymode();
                 }
 
-                MyDebug.WriteInformation("StartCircle_MouseDown", "Mouse point = " + e.GetPosition(canvas).X + " : " + e.GetPosition(canvas).Y);
+                MyDebug.WriteInformation("Mouse point = " + e.GetPosition(canvas).X + " : " + e.GetPosition(canvas).Y);
 
-                MyDebug.WriteInformation("StartCircle_MouseDown", "Circle location = " + circlelocation.X + " : " + circlelocation.Y);
+                MyDebug.WriteInformation("Circle location = " + circlelocation.X + " : " + circlelocation.Y);
 
                 selectedbeam = beam;
             }
         }
 
-        private void EndCircle_MouseDown(object sender, MouseButtonEventArgs e)
+        public void EndCircle_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var ellipse = sender as Ellipse;
             var grid = ellipse.Parent as Grid;
@@ -2582,11 +2491,11 @@ namespace Mesnet
                     btnassemblymode();
                 }
 
-                MyDebug.WriteInformation("EndCircle_MouseDown", "Mouse point = " + e.GetPosition(canvas).X + " : " + e.GetPosition(canvas).Y);
+                MyDebug.WriteInformation("Mouse point = " + e.GetPosition(canvas).X + " : " + e.GetPosition(canvas).Y);
 
-                MyDebug.WriteInformation("EndCircle_MouseDown", "Beam Left = " + Canvas.GetLeft(beam).ToString() + " : Beam Top = " + Canvas.GetTop(beam).ToString());
+                MyDebug.WriteInformation("Beam Left = " + Canvas.GetLeft(beam).ToString() + " : Beam Top = " + Canvas.GetTop(beam).ToString());
 
-                MyDebug.WriteInformation("EndCircle_MouseDown", "Circle location = " + circlelocation.X + " : " + circlelocation.Y);
+                MyDebug.WriteInformation("Circle location = " + circlelocation.X + " : " + circlelocation.Y);
 
                 selectedbeam = beam;
             }
@@ -2622,7 +2531,7 @@ namespace Mesnet
                                         {
                                             MaxInertia = beam.MaxInertia;
                                         }
-                                                                            
+
                                         if ((bool)beamdialog.stresscbx.IsChecked)
                                         {
                                             beam.PerformStressAnalysis = true;
@@ -2632,12 +2541,6 @@ namespace Mesnet
                                             beam.MaxAllowableStress = _maxstress;
                                         }
                                         beamangle = beamdialog.angle;
-
-                                        beam.core.MouseDown += core_MouseDown;
-                                        beam.core.MouseUp += core_MouseUp;
-                                        beam.core.MouseMove += core_MouseMove;
-                                        beam.startcircle.MouseDown += StartCircle_MouseDown;
-                                        beam.endcircle.MouseDown += EndCircle_MouseDown;
 
                                         beam.Connect(Direction.Right, selectedbeam, Direction.Left);
                                         UpdateSupportTree(selectedbeam.LeftSide);
@@ -2833,7 +2736,7 @@ namespace Mesnet
                         var leftfixedsupport = new LeftFixedSupport(canvas);
                         leftfixedsupport.AddBeam(selectedbeam);
                         notify.Text = (string)FindResource("fixedsupportput");
-                        UpdateSupportTree(leftfixedsupport);                     
+                        UpdateSupportTree(leftfixedsupport);
                         break;
 
                     case Direction.Right:
@@ -2845,7 +2748,7 @@ namespace Mesnet
 
                     default:
 
-                        MyDebug.WriteWarning("fixedsupportbtn_Click", "invalid beam circle direction!");
+                        MyDebug.WriteWarning("invalid beam circle direction!");
 
                         break;
                 }
@@ -2854,7 +2757,7 @@ namespace Mesnet
             }
             else
             {
-                MyDebug.WriteWarning("fixedsupportbtn_Click", "selected beam is null!");
+                MyDebug.WriteWarning("selected beam is null!");
             }
 
             Reset();
@@ -2882,18 +2785,18 @@ namespace Mesnet
 
                     default:
 
-                        MyDebug.WriteWarning("basicsupportbtn_Click", "invalid beam circle direction!");
+                        MyDebug.WriteWarning("invalid beam circle direction!");
 
                         break;
                 }
                 notify.Text = (string)FindResource("basicsupportput");
                 SetMouseHandlingMode("basicsupportbtn_Click", MouseHandlingMode.None);
-                UpdateSupportTree(basicsupport);               
+                UpdateSupportTree(basicsupport);
                 UpdateBeamTree(selectedbeam);
             }
             else
             {
-                MyDebug.WriteWarning("basicsupportbtn_Click", "selected beam is null!");
+                MyDebug.WriteWarning("selected beam is null!");
             }
             Reset();
         }
@@ -2920,7 +2823,7 @@ namespace Mesnet
 
                     default:
 
-                        MyDebug.WriteWarning("slidingsupportbtn_Click", "invalid beam circle direction!");
+                        MyDebug.WriteWarning("invalid beam circle direction!");
 
                         break;
                 }
@@ -2931,7 +2834,7 @@ namespace Mesnet
             }
             else
             {
-                MyDebug.WriteWarning("slidingsupportbtn_Click", "selected beam is null!");
+                MyDebug.WriteWarning("selected beam is null!");
             }
             Reset();
         }
@@ -2948,8 +2851,8 @@ namespace Mesnet
                 var rotateprompt = new RotatePrompt();
                 rotateprompt.Owner = this;
                 if (selectedbeam.LeftSide != null || selectedbeam.RightSide != null)
-                {                 
-                    if ((bool) rotateprompt.ShowDialog())
+                {
+                    if ((bool)rotateprompt.ShowDialog())
                     {
                         if (selectedbeam.LeftSide == null && selectedbeam.RightSide != null)
                         {
@@ -2971,7 +2874,7 @@ namespace Mesnet
                                     {
                                         ss.UpdatePosition(selectedbeam);
                                     }
-                                    
+
                                     break;
 
                                 case ObjectType.BasicSupport:
@@ -3035,11 +2938,11 @@ namespace Mesnet
                             {
                                 selectedbeam.SetAngleCenter(Convert.ToDouble(rotateprompt.angle.Text));
                                 selectedbeam.MoveSupports();
-                            }                          
+                            }
                         }
                     }
                 }
-                else if(selectedbeam.IsLeftSelected)
+                else if (selectedbeam.IsLeftSelected)
                 {
                     if ((bool)rotateprompt.ShowDialog())
                     {
@@ -3067,9 +2970,9 @@ namespace Mesnet
         {
             if (e.Key == Key.Escape)
             {
-                MyDebug.WriteInformation("Window_KeyDown", "Esc key down");
+                MyDebug.WriteInformation("Esc key down");
                 Reset();
-                MyDebug.WriteInformation("Window_KeyDown", "mouse handling mode has been set to None");
+                MyDebug.WriteInformation("mouse handling mode has been set to None");
             }
         }
 
@@ -3292,20 +3195,18 @@ namespace Mesnet
                 switch (beam.LeftSide.GetType().Name)
                 {
                     case "LeftFixedSupport":
-
-                        leftname = GetString("leftfixedsupport");
-
+                        var ls = beam.LeftSide as LeftFixedSupport;
+                        leftname = GetString("leftfixedsupport") + " " + ls.SupportId;
                         break;
 
                     case "SlidingSupport":
-
-                        leftname = GetString("slidingsupport");
-
+                        var ss = beam.LeftSide as SlidingSupport;
+                        leftname = GetString("slidingsupport") + " " + ss.SupportId;
                         break;
 
                     case "BasicSupport":
-
-                        leftname = GetString("basicsupport");
+                        var bs = beam.LeftSide as BasicSupport;
+                        leftname = GetString("basicsupport") + " " + bs.SupportId;
 
                         break;
                 }
@@ -3326,21 +3227,18 @@ namespace Mesnet
                 switch (beam.RightSide.GetType().Name)
                 {
                     case "RightFixedSupport":
-
-                        rightname = GetString("rightfixedsupport");
-
+                        var rs = beam.RightSide as RightFixedSupport;
+                        rightname = GetString("rightfixedsupport") + " " + rs.SupportId;
                         break;
 
                     case "SlidingSupport":
-
-                        rightname = GetString("slidingsupport");
-
+                        var ss = beam.RightSide as SlidingSupport;
+                        rightname = GetString("slidingsupport") + " " + ss.SupportId;
                         break;
 
                     case "BasicSupport":
-
-                        rightname = GetString("basicsupport");
-
+                        var bs = beam.RightSide as BasicSupport;
+                        rightname = GetString("basicsupport") + " " + bs.SupportId;
                         break;
                 }
                 rightsideitem.Header = GetString("rightside") + " : " + rightname;
@@ -3679,7 +3577,7 @@ namespace Mesnet
                 exploreritem.Header = momentexplorer;
                 infoitem.Items.Add(exploreritem);
             }
-           
+
             if (beam.PerformStressAnalysis && beam.Stress != null)
             {
                 var stressitem = new TreeViewItem();
@@ -3742,7 +3640,7 @@ namespace Mesnet
         /// </summary>
         public void UpdateAllBeamTree()
         {
-            MyDebug.WriteInformation("MainWindow", "Update All Tree Started");
+            MyDebug.WriteInformation("Update All Tree Started");
             foreach (var item in objects)
             {
                 switch (GetObjectType(item))
@@ -3755,7 +3653,7 @@ namespace Mesnet
                 }
             }
         }
-         
+
         /// <summary>
         /// Updates given support in the support tree view.
         /// </summary>
@@ -3801,7 +3699,7 @@ namespace Mesnet
                     if (slidingsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
-                        crossitem.Header = GetString("crossindex") +" : " + slidingsup.CrossIndex;
+                        crossitem.Header = GetString("crossindex") + " : " + slidingsup.CrossIndex;
                         supportitem.Items.Add(crossitem);
                     }
 
@@ -3814,7 +3712,7 @@ namespace Mesnet
                         var memberitem = new TreeViewItem();
                         var ssbeamitem = new SupportBeamItem(member.Beam.BeamId, member.Direction, member.Moment);
                         memberitem.Header = ssbeamitem;
-                   
+
                         slmembersitem.Items.Add(memberitem);
                     }
 
@@ -3984,7 +3882,7 @@ namespace Mesnet
         /// </summary>
         public void UpdateAllSupportTree()
         {
-            MyDebug.WriteInformation("MainWindow", "Update All Support Tree Started");
+            MyDebug.WriteInformation("Update All Support Tree Started");
             foreach (var item in objects)
             {
                 switch (GetObjectType(item))
@@ -4071,15 +3969,15 @@ namespace Mesnet
         /// </summary>
         private void UnSelectAllBeamItem()
         {
-            MyDebug.WriteInformation("MainWindow", "UnSelectAllBeamItem executed");
+            MyDebug.WriteInformation("UnSelectAllBeamItem executed");
             foreach (TreeViewBeamItem item in tree.Items)
             {
                 item.Selected -= BeamTreeItemSelected;
                 item.IsSelected = false;
-                item.Selected += BeamTreeItemSelected;              
+                item.Selected += BeamTreeItemSelected;
             }
         }
-        
+
         /// <summary>
         /// Executed when any support item selected in the treeview. It selects and highlights corresponding support.
         /// </summary>
@@ -4087,7 +3985,7 @@ namespace Mesnet
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void SupportTreeItemSelected(object sender, RoutedEventArgs e)
         {
-            MyDebug.WriteInformation("Main Window : SupportTreeItemSelected", "SupportTreeItemSelected");
+            MyDebug.WriteInformation("SupportTreeItemSelected");
             Reset();
             var treeitem = sender as TreeViewItem;
             switch (treeitem.Header.GetType().Name)
@@ -4351,7 +4249,7 @@ namespace Mesnet
                 beam.HideStressDiagram();
                 uc.content.Content = GetString("show");
             }
-        }       
+        }
 
         private void fixedendforceexplorer_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -4526,7 +4424,7 @@ namespace Mesnet
 
         public void WriteStatus(string keytext)
         {
-            notify.Text = (string)FindResource("beamput");
+            notify.Text = (string)FindResource(keytext);
         }
 
         /// <summary>
@@ -4569,7 +4467,7 @@ namespace Mesnet
                 stress.IsEnabled = true;
                 notify.Text = "Solved";
             }
-        }      
+        }
 
         public void CrossLoop()
         {
@@ -4583,7 +4481,7 @@ namespace Mesnet
             while (!stop)
             {
                 checklist.Clear();
-                MyDebug.WriteInformation("CrossLoop", "Step : " + step);
+                MyDebug.WriteInformation("Step : " + step);
                 Logger.WriteLine("**********************************************STEP : " + step + "*************************************************");
                 Logger.NextLine();
 
@@ -4599,7 +4497,7 @@ namespace Mesnet
 
                                 if (bs.CrossIndex % 2 == 0 && bs.CrossIndex <= step && bs.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("MainWindow : CrossLoop", "Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
+                                    MyDebug.WriteInformation("Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
                                     Logger.SplitLine();
                                     Logger.WriteLine(bs.Name + " : cross index = " + bs.CrossIndex);
                                     Logger.NextLine();
@@ -4614,7 +4512,7 @@ namespace Mesnet
 
                                 if (ss.CrossIndex % 2 == 0 && ss.CrossIndex <= step && ss.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("MainWindow : CrossLoop", "Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
+                                    MyDebug.WriteInformation("Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
                                     Logger.SplitLine();
                                     Logger.WriteLine(ss.Name + " : cross index = " + ss.CrossIndex);
                                     Logger.NextLine();
@@ -4637,7 +4535,7 @@ namespace Mesnet
 
                                 if (bs.CrossIndex % 2 == 1 && bs.CrossIndex <= step && bs.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("MainWindow : CrossLoop", "Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
+                                    MyDebug.WriteInformation("Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
                                     Logger.SplitLine();
                                     Logger.WriteLine(bs.Name + " : cross index = " + bs.CrossIndex);
                                     Logger.NextLine();
@@ -4652,7 +4550,7 @@ namespace Mesnet
 
                                 if (ss.CrossIndex % 2 == 1 && ss.CrossIndex <= step && ss.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("MainWindow : CrossLoop", "Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
+                                    MyDebug.WriteInformation("Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
                                     Logger.SplitLine();
                                     Logger.WriteLine(ss.Name + " : cross index = " + ss.CrossIndex);
                                     Logger.NextLine();
@@ -4672,7 +4570,7 @@ namespace Mesnet
 
                 if (stop)
                 {
-                    MyDebug.WriteInformation("MainWindow : CrossLoop", "stopped");
+                    MyDebug.WriteInformation("stopped");
                 }
             }
 
@@ -4686,9 +4584,9 @@ namespace Mesnet
                     case "Beam":
 
                         Beam beam = (Beam)item;
-                        MyDebug.WriteInformation(this.Name + " : CrossLoop", "beam " + beam.Name + " Left End Moment = " + beam.LeftEndMoment);
+                        MyDebug.WriteInformation("beam " + beam.Name + " Left End Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(beam.Name + " Left End Moment = " + beam.LeftEndMoment);
-                        MyDebug.WriteInformation(this.Name + " : CrossLoop", "beam " + beam.Name + " Right End Moment = " + beam.RightEndMoment);
+                        MyDebug.WriteInformation("beam " + beam.Name + " Right End Moment = " + beam.RightEndMoment);
                         Logger.WriteLine(beam.Name + " Right End Moment = " + beam.RightEndMoment);
                         break;
                 }
@@ -4709,7 +4607,7 @@ namespace Mesnet
             while (!stop)
             {
                 checklist.Clear();
-                MyDebug.WriteInformation("CrossLoop", "Step : " + step);
+                MyDebug.WriteInformation("Step : " + step);
                 Logger.WriteLine("**********************************************STEP : " + step + "*************************************************");
                 Logger.NextLine();
 
@@ -4724,7 +4622,7 @@ namespace Mesnet
 
                             if (bs.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation("MainWindow : CrossLoop", "Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
+                                MyDebug.WriteInformation("Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
                                 Logger.SplitLine();
                                 Logger.WriteLine(bs.Name + " : cross index = " + bs.CrossIndex);
                                 Logger.NextLine();
@@ -4739,7 +4637,7 @@ namespace Mesnet
 
                             if (ss.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation("MainWindow : CrossLoop", "Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
+                                MyDebug.WriteInformation("Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
                                 Logger.SplitLine();
                                 Logger.WriteLine(ss.Name + " : cross index = " + ss.CrossIndex);
                                 Logger.NextLine();
@@ -4758,7 +4656,7 @@ namespace Mesnet
 
                 if (stop)
                 {
-                    MyDebug.WriteInformation("MainWindow : CrossLoop", "stopped");
+                    MyDebug.WriteInformation("stopped");
                 }
             }
 
@@ -4772,9 +4670,9 @@ namespace Mesnet
                     case "Beam":
 
                         Beam beam = (Beam)item;
-                        MyDebug.WriteInformation(this.Name + " : CrossLoop", "beam " + beam.Name + " Left End Moment = " + beam.LeftEndMoment);
+                        MyDebug.WriteInformation("beam " + beam.Name + " Left End Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(beam.Name + " Left End Moment = " + beam.LeftEndMoment);
-                        MyDebug.WriteInformation(this.Name + " : CrossLoop", "beam " + beam.Name + " Right End Moment = " + beam.RightEndMoment);
+                        MyDebug.WriteInformation("beam " + beam.Name + " Right End Moment = " + beam.RightEndMoment);
                         Logger.WriteLine(beam.Name + " Right End Moment = " + beam.RightEndMoment);
                         break;
                 }
@@ -4804,7 +4702,7 @@ namespace Mesnet
                         _maxforcelist.Add(beam.MaxForce);
                         _maxforcelist.Add(beam.MinForce);
                         _maxstresslist.Add(beam.MaxStress);
-                        MyDebug.WriteInformation("UpdateBeams", beam.Name + " has been updated");
+                        MyDebug.WriteInformation(beam.Name + " has been updated");
                         break;
                 }
             }
@@ -4833,7 +4731,7 @@ namespace Mesnet
                         _maxforcelist.Add(beam.MaxForce);
                         _maxforcelist.Add(beam.MinForce);
                         _maxstresslist.Add(beam.MaxStress);
-                        MyDebug.WriteInformation("UpdateBeams", beam.Name + " has been updated");
+                        MyDebug.WriteInformation(beam.Name + " has been updated");
                         MaxMoment = _maxmomentlist.Max(x => Math.Abs(x));
                         MaxForce = _maxforcelist.Max(x => Math.Abs(x));
                         MaxStress = _maxstresslist.Max();
@@ -4852,9 +4750,9 @@ namespace Mesnet
                     case "Beam":
 
                         var beam = item as Beam;
-                        MyDebug.WriteInformation("WriteCarryoverFactors : " + beam.Name, "Carryover AB = " + beam.CarryOverAB);
+                        MyDebug.WriteInformation("Carryover AB = " + beam.CarryOverAB);
 
-                        MyDebug.WriteInformation("WriteCarryoverFactors : " + beam.Name, "Carryover BA = " + beam.CarryOverBA);
+                        MyDebug.WriteInformation("Carryover BA = " + beam.CarryOverBA);
 
                         break;
                 }
@@ -4890,7 +4788,7 @@ namespace Mesnet
 
                                     coeff = beam.StiffnessA / bs.TotalStiffness;
 
-                                    MyDebug.WriteInformation("MaxMomentSupport : " + bs.Name, beam.Name + " left side stiffness = " + coeff);
+                                    MyDebug.WriteInformation(beam.Name + " left side stiffness = " + coeff);
 
                                     break;
 
@@ -4898,7 +4796,7 @@ namespace Mesnet
 
                                     coeff = beam.StiffnessB / bs.TotalStiffness;
 
-                                    MyDebug.WriteInformation("MaxMomentSupport : " + bs.Name, beam.Name + " right side stiffness = " + coeff);
+                                    MyDebug.WriteInformation(beam.Name + " right side stiffness = " + coeff);
 
                                     break;
                             }
@@ -4928,7 +4826,7 @@ namespace Mesnet
 
                                     coeff = beam.StiffnessA / ss.TotalStiffness;
 
-                                    MyDebug.WriteInformation("MaxMomentSupport : " + ss.Name, beam.Name + " left side stiffness = " + coeff);
+                                    MyDebug.WriteInformation(beam.Name + " left side stiffness = " + coeff);
 
                                     break;
 
@@ -4936,7 +4834,7 @@ namespace Mesnet
 
                                     coeff = beam.StiffnessB / ss.TotalStiffness;
 
-                                    MyDebug.WriteInformation("MaxMomentSupport : " + ss.Name, beam.Name + " right side stiffness = " + coeff);
+                                    MyDebug.WriteInformation(beam.Name + " right side stiffness = " + coeff);
 
                                     break;
                             }
@@ -4968,7 +4866,7 @@ namespace Mesnet
         /// </summary>
         public void IndexAll(object support)
         {
-            MyDebug.WriteInformation(this.Name + ": IndexAll", "IndexAll started");
+            MyDebug.WriteInformation("IndexAll started");
 
             string startsupport = SupportName(support);
 
@@ -5233,7 +5131,7 @@ namespace Mesnet
 
         public void ShowMoments()
         {
-            MyDebug.WriteInformation("MainWindow", "Show Moments Started");
+            MyDebug.WriteInformation("Show Moments Started");
 
             moment.IsEnabled = true;
 
@@ -5363,7 +5261,7 @@ namespace Mesnet
                         var beam = item as Beam;
                         if (beam.PerformStressAnalysis)
                         {
-                            check = true;                           
+                            check = true;
                         }
 
                         break;
@@ -5412,7 +5310,7 @@ namespace Mesnet
                     stress.Header = GetString("showstress");
                     _stressshown = false;
                 }
-            }            
+            }
         }
 
         private void loads_Click(object sender, RoutedEventArgs e)
@@ -5433,7 +5331,7 @@ namespace Mesnet
                     }
                 }
                 loads.Header = GetString("hideloads");
-                _loadsshown = true;               
+                _loadsshown = true;
             }
             else
             {
@@ -5533,6 +5431,12 @@ namespace Mesnet
 
         private void delete_Click(object sender, RoutedEventArgs e)
         {
+            resetsystem();
+        }
+
+        private void resetsystem()
+        {
+            clearcanvas();
             objects.Clear();
             MaxMoment = Double.MinValue;
             MaxForce = Double.MinValue;
@@ -5541,8 +5445,7 @@ namespace Mesnet
             MaxDeflection = Double.MinValue;
             MaxStress = Double.MinValue;
             BeamCount = 0;
-            SupportCount = 0;
-            canvas.Children.Clear();
+            SupportCount = 0;           
             tree.Items.Clear();
             supporttree.Items.Clear();
             loadtest.IsEnabled = true;
@@ -5559,6 +5462,7 @@ namespace Mesnet
             force.IsEnabled = false;
             force.Header = "Show Force";
             stress.Header = "Show Stress";
+            _savefilepath = null;
         }
 
         private string SupportName(object support)
@@ -5626,7 +5530,7 @@ namespace Mesnet
         }
 
         public void momentmousemove(object sender, MouseEventArgs e)
-        {        
+        {
             Canvas momentcanvas = (sender as CardinalSplineShape).Parent as Canvas;
             Moment moment = momentcanvas.Parent as Moment;
             var mousepoint = e.GetPosition(momentcanvas);
@@ -5732,6 +5636,430 @@ namespace Mesnet
                         break;
                 }
             }
+        }
+
+        private void MenuNew_Click(object sender, RoutedEventArgs e)
+        {
+            menunew();
+        }
+
+        private void MenuOpen_Click(object sender, RoutedEventArgs e)
+        {
+            menuopen();
+        }
+
+        private void MenuSave_Click(object sender, RoutedEventArgs e)
+        {
+            menusave();
+        }
+
+        private void MenuSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            menusaveas();
+        }
+
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            menuexit();
+        }
+
+        private void menunew()
+        {
+            MyDebug.WriteInformation("Open menu clicked");
+            var io = new MesnetSettings();
+            if (objects.Count > 0)
+            {
+                MyDebug.WriteInformation("there are at least one pbject in the workspace");
+                var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
+                prompt.Owner = this;
+                if ((bool)prompt.ShowDialog())
+                {
+                    switch (prompt.Result)
+                    {
+                        case Classes.Global.DialogResult.Yes:
+                            {
+                                //the user has accepted to save
+                                var ioxml = new MesnetIO();
+
+                                if (_savefilepath != null)
+                                {
+                                    //the file has been saved before, so save with the previous path
+                                    MyDebug.WriteInformation("save file path exists " + _savefilepath);
+                                    ioxml.WriteXml(_savefilepath);
+                                    MyDebug.WriteInformation("xml file has been written to " + _savefilepath);
+                                    WriteStatus("filesave");
+                                }
+                                else
+                                {
+                                    //the file has not been saved before, open file save dialog
+                                    var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                                    saveFileDialog.Filter = GetString("filefilter");
+                                    if (io.IsSettingExists("savepath", "mainwindow"))
+                                    {
+                                        string directory = io.ReadSetting("savepath", "mainwindow");
+                                        saveFileDialog.InitialDirectory = directory;
+                                        MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                                    }
+                                    else
+                                    {
+                                        saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                                        MyDebug.WriteInformation("there is no path exists in save file path settings");
+                                    }
+
+                                    if ((bool)saveFileDialog.ShowDialog())
+                                    {
+                                        string path = saveFileDialog.FileName;
+                                        MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                                        ioxml.WriteXml(path);
+                                        MyDebug.WriteInformation("xml file has been written to " + path);
+                                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                                        WriteStatus("filesave");
+                                    }
+                                    else
+                                    {
+                                        MyDebug.WriteInformation("User closed the dialog, aborting saving and new operation");
+                                        return;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case Classes.Global.DialogResult.No:
+                            //The user dont want to save current file, do nothing
+                            MyDebug.WriteInformation("Dialog result No");
+                            break;
+
+                        case Classes.Global.DialogResult.Cancel:
+                            //The user cancelled the dialog, abort the operation
+                            MyDebug.WriteInformation("Dialog result Cancel");
+                            return;
+
+                        case Classes.Global.DialogResult.None:
+                            //Something we dont know happened, abort the operation
+                            MyDebug.WriteInformation("Dialog result None");
+                            return;
+                    }
+                }
+            }
+
+            resetsystem();
+        }
+
+        private void menuopen()
+        {
+            MyDebug.WriteInformation("Open menu clicked");
+            var io = new MesnetSettings();
+            if (objects.Count > 0)
+            {
+                MyDebug.WriteInformation("there are at least one pbject in the workspace");
+                var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
+                prompt.Owner = this;
+                if ((bool)prompt.ShowDialog())
+                {
+                    switch (prompt.Result)
+                    {
+                        case Classes.Global.DialogResult.Yes:
+                            {
+                                //the user has accepted to save
+                                var ioxml = new MesnetIO();
+
+                                if (_savefilepath != null)
+                                {
+                                    //the file has been saved before, so save with the previous path
+                                    MyDebug.WriteInformation("save file path exists " + _savefilepath);
+                                    ioxml.WriteXml(_savefilepath);
+                                    MyDebug.WriteInformation("xml file has been written to " + _savefilepath);
+                                    WriteStatus("filesave");
+                                }
+                                else
+                                {
+                                    //the file has not been saved before, open file save dialog
+                                    var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                                    saveFileDialog.Filter = GetString("filefilter");
+                                    if (io.IsSettingExists("savepath", "mainwindow"))
+                                    {
+                                        string directory = io.ReadSetting("savepath", "mainwindow");
+                                        saveFileDialog.InitialDirectory = directory;
+                                        MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                                    }
+                                    else
+                                    {
+                                        saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                                        MyDebug.WriteInformation("there is no path exists in save file path settings");
+                                    }
+
+                                    if ((bool)saveFileDialog.ShowDialog())
+                                    {
+                                        string path = saveFileDialog.FileName;
+                                        MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                                        ioxml.WriteXml(path);
+                                        MyDebug.WriteInformation("xml file has been written to " + path);
+                                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                                        WriteStatus("filesave");
+                                    }
+                                    else
+                                    {
+                                        MyDebug.WriteInformation("User closed the dialog, aborting saving and opening operation");
+                                        return;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case Classes.Global.DialogResult.No:
+                            //The user dont want to save current file, do nothing
+                            MyDebug.WriteInformation("Dialog result No");
+                            break;
+
+                        case Classes.Global.DialogResult.Cancel:
+                            //The user cancelled the dialog, abort the operation
+                            MyDebug.WriteInformation("Dialog result Cancel");
+                            return;
+
+                        case Classes.Global.DialogResult.None:
+                            //Something we dont know happened, abort the operation
+                            MyDebug.WriteInformation("Dialog result None");
+                            return;
+                    }
+                }
+            }
+
+            resetsystem();
+
+            var openxmlio = new MesnetIO();
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = GetString("filefilter");
+            if (io.IsSettingExists("openpath", "mainwindow"))
+            {
+                string directory = io.ReadSetting("openpath", "mainwindow");
+                openFileDialog.InitialDirectory = directory;
+                MyDebug.WriteInformation("there is a path exists in open file path settings: " + directory);
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                MyDebug.WriteInformation("there is no path exists in save file path settings");
+            }
+
+            if ((bool)openFileDialog.ShowDialog())
+            {
+                string path = openFileDialog.FileName;
+                MyDebug.WriteInformation("user selected a file from open file dialog: " + path);
+                openxmlio.ReadXml(canvas, path);
+                UpdateAllBeamTree();
+                UpdateAllSupportTree();
+                MyDebug.WriteInformation("xml file has been read from " + path);
+                io.WriteSetting("openpath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                WriteStatus("fileread");
+            }
+            else
+            {
+                MyDebug.WriteInformation("User closed the dialog, aborting opening operation");
+                return;
+            }
+        }
+
+        private void menusave()
+        {
+            if (objects.Count > 0)
+            {
+                var ioxml = new MesnetIO();
+                var io = new MesnetSettings();
+                if (_savefilepath != null)
+                {
+                    //the file has been saved before, so save with the previous path
+                    MyDebug.WriteInformation("save file path exists " + _savefilepath);
+                    ioxml.WriteXml(_savefilepath);
+                    MyDebug.WriteInformation("xml file has been written to " + _savefilepath);
+                    WriteStatus("filesave");
+                }
+                else
+                {
+                    //the file has not been saved before, open file save dialog
+                    var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                    saveFileDialog.Filter = GetString("filefilter");
+                    if (io.IsSettingExists("savepath", "mainwindow"))
+                    {
+                        string directory = io.ReadSetting("savepath", "mainwindow");
+                        saveFileDialog.InitialDirectory = directory;
+                        MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                    }
+                    else
+                    {
+                        saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                        MyDebug.WriteInformation("there is no path exists in save file path settings");
+                    }
+
+                    if ((bool)saveFileDialog.ShowDialog())
+                    {
+                        string path = saveFileDialog.FileName;
+                        MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                        ioxml.WriteXml(path);
+                        MyDebug.WriteInformation("xml file has been written to " + path);
+                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                        WriteStatus("filesave");
+                        _savefilepath = path;
+                    }
+                    else
+                    {
+                        MyDebug.WriteInformation("User closed the dialog, aborting saving operation");
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void menusaveas()
+        {
+            if (objects.Count > 0)
+            {
+                var ioxml = new MesnetIO();
+                var io = new MesnetSettings();
+
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                saveFileDialog.Filter = GetString("filefilter");
+                if (io.IsSettingExists("savepath", "mainwindow"))
+                {
+                    string directory = io.ReadSetting("savepath", "mainwindow");
+                    saveFileDialog.InitialDirectory = directory;
+                    MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                }
+                else
+                {
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    MyDebug.WriteInformation("there is no path exists in save file path settings");
+                }
+
+                if ((bool)saveFileDialog.ShowDialog())
+                {
+                    string path = saveFileDialog.FileName;
+                    MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                    ioxml.WriteXml(path);
+                    MyDebug.WriteInformation("xml file has been written to " + path);
+                    io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                    WriteStatus("filesave");
+                    _savefilepath = path;
+                }
+                else
+                {
+                    MyDebug.WriteInformation("User closed the dialog, aborting saving operation");
+                    return;
+                }
+            }
+        }
+
+        private void menuexit()
+        {
+            if(objects.Count > 0)
+            {
+                MyDebug.WriteInformation("there are at least one pbject in the workspace");
+                var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
+                prompt.Owner = this;
+                if ((bool)prompt.ShowDialog())
+                {
+                    switch (prompt.Result)
+                    {
+                        case Classes.Global.DialogResult.Yes:
+                            {
+                                //the user has accepted to save
+                                var ioxml = new MesnetIO();
+                                var io = new MesnetSettings();
+                                if (_savefilepath != null)
+                                {
+                                    //the file has been saved before, so save with the previous path
+                                    MyDebug.WriteInformation("save file path exists " + _savefilepath);
+                                    ioxml.WriteXml(_savefilepath);
+                                    MyDebug.WriteInformation("xml file has been written to " + _savefilepath);
+                                    WriteStatus("filesave");
+                                }
+                                else
+                                {
+                                    //the file has not been saved before, open file save dialog
+                                    var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                                    saveFileDialog.Filter = GetString("filefilter");
+                                    if (io.IsSettingExists("savepath", "mainwindow"))
+                                    {
+                                        string directory = io.ReadSetting("savepath", "mainwindow");
+                                        saveFileDialog.InitialDirectory = directory;
+                                        MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                                    }
+                                    else
+                                    {
+                                        saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                                        MyDebug.WriteInformation("there is no path exists in save file path settings");
+                                    }
+
+                                    if ((bool)saveFileDialog.ShowDialog())
+                                    {
+                                        string path = saveFileDialog.FileName;
+                                        MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                                        ioxml.WriteXml(path);
+                                        MyDebug.WriteInformation("xml file has been written to " + path);
+                                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                                        WriteStatus("filesave");
+                                        _savefilepath = path;
+                                    }
+                                    else
+                                    {
+                                        MyDebug.WriteInformation("User closed the dialog, aborting saving operation");
+                                        return;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case Classes.Global.DialogResult.No:
+                            //The user dont want to save current file, do nothing
+                            MyDebug.WriteInformation("Dialog result No");
+                            break;
+
+                        case Classes.Global.DialogResult.Cancel:
+                            //The user cancelled the dialog, abort the operation
+                            MyDebug.WriteInformation("Dialog result Cancel");
+                            return;
+
+                        case Classes.Global.DialogResult.None:
+                            //Something we dont know happened, abort the operation
+                            MyDebug.WriteInformation("Dialog result None");
+                            return;
+                    }
+                }
+            }
+            
+            Application.Current.Shutdown();
+        }
+
+        private void open(string path)
+        {
+            var openxmlio = new MesnetIO();
+            openxmlio.ReadXml(canvas, path);
+            UpdateAllBeamTree();
+            UpdateAllSupportTree();
+            MyDebug.WriteInformation("xml file has been read from " + path);
+            WriteStatus("fileread");
+        }
+
+        private void clearcanvas()
+        {
+            foreach(object item in objects)
+            {
+                canvas.Children.Remove(item as UIElement);
+            }
+        }
+
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            menunew();
+        }
+
+        private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            menuopen();
+        }
+
+        private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            menusave();
         }
     }
 }

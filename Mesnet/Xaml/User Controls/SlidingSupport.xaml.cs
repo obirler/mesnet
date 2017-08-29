@@ -45,11 +45,20 @@ namespace Mesnet.Xaml.User_Controls
             _id = AddObject(this);
         }
 
+        public SlidingSupport()
+        {
+            InitializeComponent();
+            _canbedragged = true;
+            Members = new List<Member>();
+        }
+
         private int _id;
 
         private int _supportid;
 
         private string _name;
+
+        private double _angle;
 
         private bool _selected;
 
@@ -60,6 +69,15 @@ namespace Mesnet.Xaml.User_Controls
         private int _crossindex;
 
         public List<Member> Members;
+
+        public void Add(Canvas canvas, double leftpos, double toppos)
+        {
+            canvas.Children.Add(this);
+
+            Canvas.SetLeft(this, leftpos);
+
+            Canvas.SetTop(this, toppos);
+        }
 
         public void AddBeam(Beam beam, Direction direction)
         {
@@ -115,7 +133,59 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("SlidingSupport : Addbeam", "the beam is already added!");
+                MyDebug.WriteWarning("the beam is already added!");
+            }
+        }
+
+        public void SetBeam(Beam beam, Direction direction)
+        {
+            var member = new Member(beam, direction);
+            if (!Members.Contains(member))
+            {
+                Members.Add(member);
+
+                if (Members.Count == 1)
+                {
+                    switch (direction)
+                    {
+                        case Direction.Left:
+
+                            beam.LeftSide = this;
+
+                            break;
+
+                        case Direction.Right:
+
+                            beam.RightSide = this;
+
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (direction)
+                    {
+                        case Direction.Left:
+
+                            beam.LeftSide = this;
+
+                            beam.IsBound = true;
+
+                            break;
+
+                        case Direction.Right:
+
+                            beam.RightSide = this;
+
+                            beam.IsBound = true;
+
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                MyDebug.WriteWarning("the beam is already added!");
             }
         }
 
@@ -219,11 +289,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteInformation("SlidingSupport", "Position has been set : " + left + " : " + right);
+                MyDebug.WriteInformation("Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("SlidingSupport", "The beam to be dragged can not be dragged");
+                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -242,17 +312,18 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteWarning("SlidingSupport", "Position has been set : " + left + " : " + right);
+                MyDebug.WriteWarning("Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("SlidingSupport", "The beam to be dragged can not be dragged");
+                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
         public void SetAngle(double angle)
         {
             rotateTransform.Angle = angle;
+            _angle = angle;
         }
 
         #region Cross
@@ -263,11 +334,11 @@ namespace Mesnet.Xaml.User_Controls
 
             bool isstop = false;
 
-            MyDebug.WriteInformation(this.Name + " : Seperate", "Started");
+            MyDebug.WriteInformation("Started");
 
             if (Members.Count == 1)
             {
-                MyDebug.WriteInformation(this.Name + " : Seperate", "This support is an end support, returning");
+                MyDebug.WriteInformation("This support is an end support, returning");
                 return true;
             }
 
@@ -288,7 +359,7 @@ namespace Mesnet.Xaml.User_Controls
                         coeff = beam.StiffnessA / _totalstiffness;
                         beammoment = coeff * momenttoadd;
                         beam.LeftEndMoment += beammoment;
-                        MyDebug.WriteInformation(this.Name + " : Seperate", "Left Moment = " + beam.LeftEndMoment);
+                        MyDebug.WriteInformation("Left Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Left, beammoment);
                         if (Math.Abs(beammoment * beam.CarryOverAB) < CrossLoopTreshold)
@@ -308,7 +379,7 @@ namespace Mesnet.Xaml.User_Controls
                         coeff = beam.StiffnessB / _totalstiffness;
                         beammoment = coeff * momenttoadd;
                         beam.RightEndMoment += beammoment;
-                        MyDebug.WriteInformation(this.Name + " : Seperate", "Right Moment = " + beam.RightEndMoment);
+                        MyDebug.WriteInformation("Right Moment = " + beam.RightEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Right, beammoment);
                         if (Math.Abs(beammoment * beam.CarryOverBA) < 0.00001)
@@ -402,17 +473,34 @@ namespace Mesnet.Xaml.User_Controls
         public int Id
         {
             get { return _id; }
+            set { _id = value; }
         }
 
         public int SupportId
         {
             get { return _supportid; }
+            set { _supportid = value; }
         }
 
         public string Name
         {
             get { return _name; }
             set { _name = value; }
+        }
+
+        public double LeftPos
+        {
+            get { return Canvas.GetLeft(this); }
+        }
+
+        public double TopPos
+        {
+            get { return Canvas.GetTop(this); }
+        }
+
+        public double Angle
+        {
+            get { return _angle; }
         }
 
         public double MomentDifference

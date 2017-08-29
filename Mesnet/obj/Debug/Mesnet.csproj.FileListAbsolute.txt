@@ -104,3 +104,115 @@ c:\users\itsok\documents\visual studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xam
 c:\users\itsok\documents\visual studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressExplorer.baml
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.baml
 C:\Users\itsok\Documents\Visual Studio 2015\Projects\Mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\Mesnet.exe.config
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\Mesnet.exe
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\Mesnet.pdb
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\MoreLinq.dll
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\MoreLinq.xml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.csprojResolveAssemblyReference.cache
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\MainWindow.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\SettingsPrompt.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Inertia.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Resources\LanguageEn.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Resources\LanguageTr.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BasicSupport.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BasicSupportItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Beam.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BeamItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ButtonItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ConcentratedLoad.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ConcentratedLoadFunction.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ConcentratedLoadItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Deflection.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\DistributedLoad.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\DistributedLoadItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\endcircle.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Force.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ForceItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\InertiaFunction.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\InertiaItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Information.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LeftFixedSupport.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LeftFixedSupportItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LengthItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LoadFunction.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LoadItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\RightFixedSupport.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\RightFixedSupportItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SlidingSupport.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SlidingSupportItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Stress.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\MainWindow.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\BeamPrompt.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\ConcentratedLoadPrompt.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\CrossSolve.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\DistributedLoadPrompt.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\RotatePrompt.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\SettingsPrompt.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Inertia.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BasicSupport.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BasicSupportItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Beam.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BeamItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ButtonItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ConcentratedLoad.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ConcentratedLoadFunction.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ConcentratedLoadItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Deflection.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\DistributedLoad.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\DistributedLoadItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ElasticityItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\endcircle.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Force.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ForceExplorer.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ForceItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\InertiaFunction.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\InertiaItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Information.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LeftFixedSupport.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LeftFixedSupportItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LengthItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LoadFunction.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\LoadItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Moment.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\MomentExplorer.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\MomentItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\RightFixedSupport.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\RightFixedSupportItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SlidingSupport.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SlidingSupportItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Stress.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressExplorer.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Text.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\App.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet_MarkupCompile.cache
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet_MarkupCompile.lref
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\BeamPrompt.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\ConcentratedLoadPrompt.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\CrossSolve.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\DistributedLoadPrompt.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\RotatePrompt.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ElasticityItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\ForceExplorer.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Moment.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\MomentExplorer.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\MomentItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressExplorer.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\StressItem.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Text.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.g.resources
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.Properties.Resources.resources
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.csproj.GenerateResource.Cache
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.exe
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.pdb
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\MessagePrompt.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\MessagePrompt.baml
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\Mesnet.exe.manifest
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\bin\Debug\Mesnet.application
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet_Content.g.cs
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.exe.manifest
+C:\Users\itsnotok\Documents\Visual Studio 2017\Projects\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.application

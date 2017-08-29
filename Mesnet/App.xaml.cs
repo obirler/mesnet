@@ -35,7 +35,18 @@ namespace Mesnet
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            string[] arguments = System.Environment.GetCommandLineArgs();
+
+            if (arguments.GetLength(0) > 1)
+            {
+                if (arguments[1].EndsWith(".mnt"))
+                {
+                    AssociationPath = arguments[1];                   
+                }
+            }
             Logger.InitializeLogger();
         }
+
+        public static string AssociationPath = null;
     }
 }

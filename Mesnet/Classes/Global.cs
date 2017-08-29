@@ -126,7 +126,7 @@ namespace Mesnet.Classes
             }
             else
             {
-                MyDebug.WriteWarning("Global : AddObject", "the object already added!");
+                MyDebug.WriteWarning("the object already added!");
                 return -1;
             }
         }
@@ -206,6 +206,14 @@ namespace Mesnet.Classes
             None
         }
 
+        public enum DialogResult
+        {
+            None,
+            Yes,
+            No,
+            Cancel
+        }
+
         public static ObjectType GetObjectType(object obj)
         {
             switch (obj.GetType().Name)
@@ -233,7 +241,7 @@ namespace Mesnet.Classes
         {
             foreach (Poly poly in ppoly)
             {
-                MyDebug.WriteInformation("WritePPolytoConsole", message + " : " + poly.ToString() +" , " + poly.StartPoint + " <= x <= " + poly.EndPoint);
+                MyDebug.WriteInformation(message + " : " + poly.ToString() + " , " + poly.StartPoint + " <= x <= " + poly.EndPoint);
             }
         }
 

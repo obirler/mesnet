@@ -1,0 +1,51 @@
+**************************Cross Solve Algorithm Started****************************
+
+Beam 1 : alfaa = 0.193147232691879
+Beam 1 : alfab = 0.0681472246918741
+Beam 1 : beta = 0.0568528468081132
+Beam 1 : ka = 18.8493466225242
+Beam 1 : kb = 31.1506767200612
+Beam 1 : StiffnessA = 0
+Beam 1 : StiffnessB = 810437.4981
+Beam 1 : Clapeyron Ma = -17.6430312330837
+Beam 1 : Clapeyron Mb = -31.3806061532898
+Beam 1 : Cross Ma = 17.6430312330837
+Beam 1 : Cross Mb = -31.3806061532898
+
+Beam 2 : alfaa = 0.284557177599332
+Beam 2 : alfab = 0.284537950286088
+Beam 2 : beta = 0.163354134288326
+Beam 2 : ka = 29.6996304362671
+Beam 2 : kb = 34.0506609640929
+Beam 2 : StiffnessA = 145603.5231
+Beam 2 : StiffnessB = 0
+Beam 2 : Clapeyron Ma = -14.8521381024248
+Beam 2 : Clapeyron Mb = -8.86974915456703
+Beam 2 : Cross Ma = 14.8521381024248
+Beam 2 : Cross Mb = -8.86974915456703
+
+Basic Support 2 : Beam 1 stiffness = 0.847701594522333
+Basic Support 2 : Beam 2 stiffness = 0.152298405477667
+Cross Solver Initialized
+
+**********************************************STEP : 0*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 2 : cross index = 0
+
+Basic Support 2 : 14.0112087217297 will be conducted to Beam 1
+Beam 1 : Right to left conduct moment = 4.12349872680506
+Beam 1 : Left Fixed Support 1 is a fixed support. So there will be no seperation in this support
+
+Basic Support 2 : 2.5172593291353 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 1.44515858085658
+Beam 2 : Right Fixed Support 3 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 1*************************************************
+
+Cross loop stopped
+
+Beam 1 Left End Moment = 21.7665299598888
+Beam 1 Right End Moment = -17.3693974315601
+Beam 2 Left End Moment = 17.3693974315601
+Beam 2 Right End Moment = -7.42459057371045

@@ -15,6 +15,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,10 +26,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -52,6 +53,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Assets\applogo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>068A3631D04CC8B7B81796468F2DA9F965F049BB</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Mesnet_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
@@ -82,6 +95,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\IO\Manifest\LeftFixedSupportManifest.cs" />
+    <Compile Include="Classes\IO\Manifest\Member.cs" />
+    <Compile Include="Classes\IO\Manifest\RightFixedSupportManifest.cs" />
+    <Compile Include="Classes\IO\Manifest\RightFixedSupportReader.cs" />
+    <Compile Include="Classes\IO\Manifest\SupportManifest.cs" />
+    <Compile Include="Classes\IO\Manifest\BeamManifest.cs" />
+    <Compile Include="Classes\IO\MesnetSettings.cs" />
+    <Compile Include="Classes\IO\Xml\BasicSupportReader.cs" />
+    <Compile Include="Classes\IO\Xml\BeamReader.cs" />
+    <Compile Include="Classes\IO\Xml\BeamWriter.cs" />
+    <Compile Include="Classes\IO\Xml\BasicSupportWriter.cs" />
+    <Compile Include="Classes\IO\Xml\LeftFixedSupportReader.cs" />
+    <Compile Include="Classes\IO\Xml\LeftFixedSupportWriter.cs" />
+    <Compile Include="Classes\IO\Xml\MesnetIO.cs" />
+    <Compile Include="Classes\IO\Xml\RightFixedSupportWriter.cs" />
+    <Compile Include="Classes\IO\Xml\SlidingSupportReader.cs" />
+    <Compile Include="Classes\IO\Xml\SlidingSupportWriter.cs" />
     <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
     <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />
     <Compile Include="Xaml\Pages\BeamPrompt.xaml.cs">
@@ -95,6 +125,9 @@
     </Compile>
     <Compile Include="Xaml\Pages\DistributedLoadPrompt.xaml.cs">
       <DependentUpon>DistributedLoadPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\MessagePrompt.xaml.cs">
+      <DependentUpon>MessagePrompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\Pages\RotatePrompt.xaml.cs">
       <DependentUpon>RotatePrompt.xaml</DependentUpon>
@@ -238,7 +271,7 @@
     <Compile Include="Classes\Math\TransformGeometry.cs" />
     <Compile Include="Classes\Math\TrapezeIntegrator.cs" />
     <Compile Include="Classes\Math\Triangle.cs" />
-    <Compile Include="Classes\Tools\Logger.cs" />
+    <Compile Include="Classes\IO\Logger.cs" />
     <Compile Include="Classes\Tools\Member.cs" />
     <Compile Include="Classes\Tools\MyDebug.cs" />
     <Compile Include="Classes\Ui\CardinalSplineShape.cs" />
@@ -262,6 +295,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Xaml\Pages\DistributedLoadPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\MessagePrompt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -448,6 +485,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Mesnet_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -493,6 +531,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\settingsicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\fileassc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".mnt">
+      <Visible>False</Visible>
+      <Description>Mesnet File</Description>
+      <Progid>Mesnet</Progid>
+      <DefaultIcon>Assets\fileassc.ico</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

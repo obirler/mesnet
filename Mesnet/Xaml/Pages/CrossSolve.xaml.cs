@@ -79,7 +79,7 @@ namespace Mesnet.Xaml.Pages
             {
                 Logger.InitializeLogger();
             }
-            MyDebug.WriteInformation("bw_DoWork", "************************************************************Cross Solve Algorithm Started****************************************");
+            MyDebug.WriteInformation("************************************************************Cross Solve Algorithm Started****************************************");
 
             Logger.WriteLine("**************************Cross Solve Algorithm Started****************************");
 
@@ -166,7 +166,7 @@ namespace Mesnet.Xaml.Pages
         private void bwbeam_DoWork(object senderbw, DoWorkEventArgs ebw)
         {
             int threadnumber = (int)ebw.Argument;
-            MyDebug.WriteInformation("BACKGROUNDWORKER " + threadnumber, " started to work");
+            MyDebug.WriteInformation(" started to work");
             SetDecimalSeperator();
             Beam cachebeam;
             while (QueueList.Count > 0)

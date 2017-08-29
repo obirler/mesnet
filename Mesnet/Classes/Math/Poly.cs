@@ -469,7 +469,7 @@ namespace Mesnet.Classes.Math
             }
             else
             {
-                MyDebug.WriteError("Poly", "Invalid Polynomial Expression : " + PolyExpression);
+                MyDebug.WriteError("Invalid Polynomial Expression : " + PolyExpression);
                 throw new Exception("Invalid Polynomial Expression");
             }
         }

@@ -103,4 +103,11 @@
     <system:String x:Key="supports">Mesnetler</system:String>
     <system:String x:Key="multithreaded">Çok İş Parçacıklı</system:String>
     <system:String x:Key="singlethreaded">Tek İş Parçacıklı</system:String>
+    <system:String x:Key="fileread">Dosya okundu</system:String>
+    <system:String x:Key="filesave">Dosya kaydedildi</system:String>
+    <system:String x:Key="yes">Evet</system:String>
+    <system:String x:Key="no">Hayır</system:String>
+    <system:String x:Key="cancel">İptal</system:String>
+    <system:String x:Key="asktosavebeforeopenning">Şu anki değişiklikleri kaydetmek istiyor musunuz?</system:String>
+    <system:String x:Key="filefilter">Mesnet Dosyası (*.mnt)|*.mnt</system:String>
 </ResourceDictionary>

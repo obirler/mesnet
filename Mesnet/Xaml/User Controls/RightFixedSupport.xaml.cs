@@ -42,11 +42,19 @@ namespace Mesnet.Xaml.User_Controls
             _name = "Right Fixed Support " + SupportCount;
         }
 
+        public RightFixedSupport()
+        {
+            InitializeComponent();
+            _canbedragged = true;
+        }
+
         private int _id;
 
         private int _supportid;
 
         private string _name;
+
+        private double _angle;
 
         public Member Member;
 
@@ -55,6 +63,15 @@ namespace Mesnet.Xaml.User_Controls
         private bool _selected;
 
         private int _crossindex;
+
+        public void Add(Canvas canvas, double leftpos, double toppos)
+        {
+            canvas.Children.Add(this);
+
+            Canvas.SetLeft(this, leftpos);
+
+            Canvas.SetTop(this, toppos);
+        }
 
         public void AddBeam(Beam beam)
         {
@@ -67,6 +84,13 @@ namespace Mesnet.Xaml.User_Controls
             beam.RightSide = this;
 
             SetAngle(beam.Angle);
+        }
+
+        public void SetBeam(Beam beam)
+        {
+            Member = new Member(beam, Direction.Right);
+
+            beam.RightSide = this;
         }
 
         /// <summary>
@@ -125,11 +149,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteInformation("RightFixedSupport", "Position has been set : " + left + " : " + right);
+                MyDebug.WriteInformation("Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("RightFixedSupport", "The beam to be dragged can not be dragged");
+                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -148,11 +172,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteWarning("RightFixedSupport", "Position has been set : " + left + " : " + right);
+                MyDebug.WriteWarning("Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("RightFixedSupport", "The beam to be dragged can not be dragged");
+                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -166,17 +190,34 @@ namespace Mesnet.Xaml.User_Controls
         public int Id
         {
             get { return _id; }
+            set { _id = value; }
         }
 
         public int SupportId
         {
             get { return _supportid; }
+            set { _supportid = value; }
         }
 
         public string Name
         {
             get { return _name; }
             set { _name = value; }
+        }
+
+        public double LeftPos
+        {
+            get { return Canvas.GetLeft(this); }
+        }
+
+        public double TopPos
+        {
+            get { return Canvas.GetTop(this); }
+        }
+
+        public double Angle
+        {
+            get { return _angle; }
         }
 
         /// <summary>

@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="Mes.Net" Height="768" Width="1366" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized">
 
+    <Window.CommandBindings>
+        <CommandBinding x:Name="NewCommand" Command="New" Executed="NewCommand_Executed" />
+        <CommandBinding x:Name="OpenCommand" Command="Open" Executed="OpenCommand_Executed" />
+        <CommandBinding x:Name="SaveCommand" Command="Save" Executed="SaveCommand_Executed" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="New"/>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -16,14 +27,15 @@
 
         <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Top" Background="#FFDADADA" BorderBrush="#FF999999" BorderThickness="0,0,0,1">
-                <!--<MenuItem Header="{DynamicResource filemenu}">
-                    <MenuItem Header="New" />
-                    <MenuItem Header="Open" />
-                    <MenuItem Header="Save" />
+                <MenuItem Header="{DynamicResource filemenu}">
+                    <MenuItem Header="New" Click="MenuNew_Click"/>
+                    <MenuItem Header="Open" Click="MenuOpen_Click"/>
+                    <MenuItem Header="Save" Click="MenuSave_Click" />
+                    <MenuItem Header="Save As" Click="MenuSaveAs_Click"/>
                     <Separator />
-                    <MenuItem Header="Exit" />
-                </MenuItem>-->
-                
+                    <MenuItem Header="Exit" Click="MenuExit_Click"/>
+                </MenuItem>
+
                 <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>
 
                 <MenuItem Header="{DynamicResource tests}">
@@ -350,7 +362,7 @@
 
         <StackPanel Margin="40,0,0,0" Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
             <TextBlock x:Name="coordinate" Text="X : 0  Y : 0" Width="200"/>
-            <TextBlock x:Name="notify" Visibility="Collapsed" Text="" Margin="30,0,0,0"/>
+            <TextBlock x:Name="notify" Visibility="Visible" Text="" Margin="30,0,0,0"/>
         </StackPanel>
 
     </Grid>

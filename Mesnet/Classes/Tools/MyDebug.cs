@@ -20,30 +20,31 @@
 */
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace Mesnet.Classes.Tools
 {
     public static class MyDebug
     {
-        public static void WriteInformation(string tag, string info)
+        public static void WriteInformation(string info)
         {
             DateTime time = DateTime.Now;
             StackFrame callStack = new StackFrame(1, true);
-            Debug.WriteLine("+++++ Info => Date: " + time.ToString("dd/MM/yyyy , hh:mm:ss:FFFF") + " => Line: " + callStack.GetFileLineNumber() + " : " + tag + ": " + info);
+            Debug.WriteLine("+ Info => " + info + " at Date: " + time.ToString("dd/MM/yyyy , hh:mm:ss:FFFF") + " => Line: " + callStack.GetFileLineNumber() + " : from " + Path.GetFileName(callStack.GetFileName()) + " " + callStack.GetMethod());
         }
 
-        public static void WriteWarning(string tag, string info)
+        public static void WriteWarning(string info)
         {
             DateTime time = DateTime.Now;
             StackFrame callStack = new StackFrame(1, true);
-            Debug.WriteLine("!!!!! Warning => Date: " + time.ToString("dd/MM/yyyy , hh:mm:ss:FFFF") + " => Line: " + callStack.GetFileLineNumber() + " : " + tag + ": " + info);
+            Debug.WriteLine("! Warning => " + info + " at Date: " + time.ToString("dd/MM/yyyy , hh:mm:ss:FFFF") + " => Line: " + callStack.GetFileLineNumber() + " : from " + Path.GetFileName(callStack.GetFileName()) + " " + callStack.GetMethod());
         }
 
-        public static void WriteError(string tag, string info)
+        public static void WriteError(string info)
         {
             DateTime time = DateTime.Now;
             StackFrame callStack = new StackFrame(1, true);
-            Debug.WriteLine("----- ERROR => Date: " + time.ToString("dd/MM/yyyy , hh:mm:ss:FFFF") + " => Line: " + callStack.GetFileLineNumber() + tag + ": " + info);
+            Debug.WriteLine("- Error => " + info + " at Date: " + time.ToString("dd/MM/yyyy , hh:mm:ss:FFFF") + " => Line: " + callStack.GetFileLineNumber() + " : from " + Path.GetFileName(callStack.GetFileName()) + " " + callStack.GetMethod());
         }
     }
 }

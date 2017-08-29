@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:zoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
         mc:Ignorable="d"
-        Title="Mes.Net" Height="768" Width="1366" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="Mes.Net" Height="768" Width="1366" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized" Closing="Window_Closing">
 
     <Window.CommandBindings>
         <CommandBinding x:Name="NewCommand" Command="New" Executed="NewCommand_Executed" />

@@ -5666,7 +5666,6 @@ namespace Mesnet
         private void menunew()
         {
             MyDebug.WriteInformation("Open menu clicked");
-            var io = new MesnetSettings();
             if (objects.Count > 0)
             {
                 MyDebug.WriteInformation("there are at least one pbject in the workspace");
@@ -5694,9 +5693,9 @@ namespace Mesnet
                                     //the file has not been saved before, open file save dialog
                                     var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
                                     saveFileDialog.Filter = GetString("filefilter");
-                                    if (io.IsSettingExists("savepath", "mainwindow"))
+                                    if (MesnetSettings.IsSettingExists("savepath", "mainwindow"))
                                     {
-                                        string directory = io.ReadSetting("savepath", "mainwindow");
+                                        string directory = MesnetSettings.ReadSetting("savepath", "mainwindow");
                                         saveFileDialog.InitialDirectory = directory;
                                         MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
                                     }
@@ -5712,7 +5711,7 @@ namespace Mesnet
                                         MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
                                         ioxml.WriteXml(path);
                                         MyDebug.WriteInformation("xml file has been written to " + path);
-                                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                                        MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
                                         WriteStatus("filesave");
                                     }
                                     else
@@ -5748,7 +5747,6 @@ namespace Mesnet
         private void menuopen()
         {
             MyDebug.WriteInformation("Open menu clicked");
-            var io = new MesnetSettings();
             if (objects.Count > 0)
             {
                 MyDebug.WriteInformation("there are at least one pbject in the workspace");
@@ -5776,9 +5774,9 @@ namespace Mesnet
                                     //the file has not been saved before, open file save dialog
                                     var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
                                     saveFileDialog.Filter = GetString("filefilter");
-                                    if (io.IsSettingExists("savepath", "mainwindow"))
+                                    if (MesnetSettings.IsSettingExists("savepath", "mainwindow"))
                                     {
-                                        string directory = io.ReadSetting("savepath", "mainwindow");
+                                        string directory = MesnetSettings.ReadSetting("savepath", "mainwindow");
                                         saveFileDialog.InitialDirectory = directory;
                                         MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
                                     }
@@ -5794,7 +5792,7 @@ namespace Mesnet
                                         MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
                                         ioxml.WriteXml(path);
                                         MyDebug.WriteInformation("xml file has been written to " + path);
-                                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                                        MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
                                         WriteStatus("filesave");
                                     }
                                     else
@@ -5829,9 +5827,9 @@ namespace Mesnet
             var openxmlio = new MesnetIO();
             var openFileDialog = new Microsoft.Win32.OpenFileDialog();
             openFileDialog.Filter = GetString("filefilter");
-            if (io.IsSettingExists("openpath", "mainwindow"))
+            if (MesnetSettings.IsSettingExists("openpath", "mainwindow"))
             {
-                string directory = io.ReadSetting("openpath", "mainwindow");
+                string directory = MesnetSettings.ReadSetting("openpath", "mainwindow");
                 openFileDialog.InitialDirectory = directory;
                 MyDebug.WriteInformation("there is a path exists in open file path settings: " + directory);
             }
@@ -5849,7 +5847,7 @@ namespace Mesnet
                 UpdateAllBeamTree();
                 UpdateAllSupportTree();
                 MyDebug.WriteInformation("xml file has been read from " + path);
-                io.WriteSetting("openpath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                MesnetSettings.WriteSetting("openpath", System.IO.Path.GetDirectoryName(path), "mainwindow");
                 WriteStatus("fileread");
             }
             else
@@ -5864,7 +5862,6 @@ namespace Mesnet
             if (objects.Count > 0)
             {
                 var ioxml = new MesnetIO();
-                var io = new MesnetSettings();
                 if (_savefilepath != null)
                 {
                     //the file has been saved before, so save with the previous path
@@ -5878,9 +5875,9 @@ namespace Mesnet
                     //the file has not been saved before, open file save dialog
                     var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
                     saveFileDialog.Filter = GetString("filefilter");
-                    if (io.IsSettingExists("savepath", "mainwindow"))
+                    if (MesnetSettings.IsSettingExists("savepath", "mainwindow"))
                     {
-                        string directory = io.ReadSetting("savepath", "mainwindow");
+                        string directory = MesnetSettings.ReadSetting("savepath", "mainwindow");
                         saveFileDialog.InitialDirectory = directory;
                         MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
                     }
@@ -5896,7 +5893,7 @@ namespace Mesnet
                         MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
                         ioxml.WriteXml(path);
                         MyDebug.WriteInformation("xml file has been written to " + path);
-                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                        MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
                         WriteStatus("filesave");
                         _savefilepath = path;
                     }
@@ -5914,13 +5911,12 @@ namespace Mesnet
             if (objects.Count > 0)
             {
                 var ioxml = new MesnetIO();
-                var io = new MesnetSettings();
 
                 var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
                 saveFileDialog.Filter = GetString("filefilter");
-                if (io.IsSettingExists("savepath", "mainwindow"))
+                if (MesnetSettings.IsSettingExists("savepath", "mainwindow"))
                 {
-                    string directory = io.ReadSetting("savepath", "mainwindow");
+                    string directory = MesnetSettings.ReadSetting("savepath", "mainwindow");
                     saveFileDialog.InitialDirectory = directory;
                     MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
                 }
@@ -5936,7 +5932,7 @@ namespace Mesnet
                     MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
                     ioxml.WriteXml(path);
                     MyDebug.WriteInformation("xml file has been written to " + path);
-                    io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                    MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
                     WriteStatus("filesave");
                     _savefilepath = path;
                 }
@@ -5952,18 +5948,20 @@ namespace Mesnet
         {
             if(objects.Count > 0)
             {
-                MyDebug.WriteInformation("there are at least one pbject in the workspace");
+                MyDebug.WriteInformation("there are at least one object in the workspace");
                 var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
                 prompt.Owner = this;
-                if ((bool)prompt.ShowDialog())
+
+                try
                 {
-                    switch (prompt.Result)
+                    if ((bool)prompt.ShowDialog())
                     {
-                        case Classes.Global.DialogResult.Yes:
+                        switch (prompt.Result)
+                        {
+                            case Classes.Global.DialogResult.Yes:
                             {
                                 //the user has accepted to save
                                 var ioxml = new MesnetIO();
-                                var io = new MesnetSettings();
                                 if (_savefilepath != null)
                                 {
                                     //the file has been saved before, so save with the previous path
@@ -5977,55 +5975,65 @@ namespace Mesnet
                                     //the file has not been saved before, open file save dialog
                                     var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
                                     saveFileDialog.Filter = GetString("filefilter");
-                                    if (io.IsSettingExists("savepath", "mainwindow"))
+                                    if (MesnetSettings.IsSettingExists("savepath", "mainwindow"))
                                     {
-                                        string directory = io.ReadSetting("savepath", "mainwindow");
+                                        string directory = MesnetSettings.ReadSetting("savepath", "mainwindow");
                                         saveFileDialog.InitialDirectory = directory;
-                                        MyDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                                        MyDebug.WriteInformation(
+                                            "there is a path exists in save file path settings: " + directory);
                                     }
                                     else
                                     {
-                                        saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                                        MyDebug.WriteInformation("there is no path exists in save file path settings");
+                                        saveFileDialog.InitialDirectory =
+                                            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                                        MyDebug.WriteInformation(
+                                            "there is no path exists in save file path settings");
                                     }
 
                                     if ((bool)saveFileDialog.ShowDialog())
                                     {
                                         string path = saveFileDialog.FileName;
-                                        MyDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                                        MyDebug.WriteInformation("user selected a file from save file dialog: " +
+                                                                 path);
                                         ioxml.WriteXml(path);
                                         MyDebug.WriteInformation("xml file has been written to " + path);
-                                        io.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                                        MesnetSettings.WriteSetting("savepath",
+                                            System.IO.Path.GetDirectoryName(path), "mainwindow");
                                         WriteStatus("filesave");
                                         _savefilepath = path;
                                     }
                                     else
                                     {
-                                        MyDebug.WriteInformation("User closed the dialog, aborting saving operation");
+                                        MyDebug.WriteInformation(
+                                            "User closed the dialog, aborting saving operation");
                                         return;
                                     }
                                 }
                             }
-                            break;
+                                break;
 
-                        case Classes.Global.DialogResult.No:
-                            //The user dont want to save current file, do nothing
-                            MyDebug.WriteInformation("Dialog result No");
-                            break;
+                            case Classes.Global.DialogResult.No:
+                                //The user dont want to save current file, do nothing
+                                MyDebug.WriteInformation("Dialog result No");
+                                break;
 
-                        case Classes.Global.DialogResult.Cancel:
-                            //The user cancelled the dialog, abort the operation
-                            MyDebug.WriteInformation("Dialog result Cancel");
-                            return;
+                            case Classes.Global.DialogResult.Cancel:
+                                //The user cancelled the dialog, abort the operation
+                                MyDebug.WriteInformation("Dialog result Cancel");
+                                return;
 
-                        case Classes.Global.DialogResult.None:
-                            //Something we dont know happened, abort the operation
-                            MyDebug.WriteInformation("Dialog result None");
-                            return;
+                            case Classes.Global.DialogResult.None:
+                                //Something we dont know happened, abort the operation
+                                MyDebug.WriteInformation("Dialog result None");
+                                return;
+                        }
                     }
                 }
-            }
-            
+                catch (Exception)
+                {
+                    return;
+                }              
+            }            
             Application.Current.Shutdown();
         }
 
@@ -6060,6 +6068,12 @@ namespace Mesnet
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             menusave();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+            menuexit();
         }
     }
 }

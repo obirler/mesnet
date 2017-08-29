@@ -1,29 +1,9 @@
 # README #
 
-Mes.Net is a structural analysis program that is used to calculate bending force, bending moment, and deflections in structures with continuous beams. Although it is designed for two dimensional ship frames, it is able to solve many bending problems in many engineering areas.
+Mes.Net is a structural analysis program that is used to calculate bending force, bending moment, and deflections in structures that consist of 2 dimensional frames. Although it is designed for two dimensional ship frames, it is able to solve many bending problems in many engineering areas.
 
-### What is this repository for? ###
+![mesnet1.png](https://bitbucket.org/repo/pbr98r/images/250409121-mesnet1.png)
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+It calculates shear force, bending moment and stress distributions on the beams and determines if the current construction is safe according to given maximum allowable stress.
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+![mesnet2.png](https://bitbucket.org/repo/pbr98r/images/2126684469-mesnet2.png)

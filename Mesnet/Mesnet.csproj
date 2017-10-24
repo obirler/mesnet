@@ -172,6 +172,9 @@
     <Compile Include="Xaml\Pages\SettingsPrompt.xaml.cs">
       <DependentUpon>SettingsPrompt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Xaml\User Controls\BeamSupportItem.xaml.cs">
+      <DependentUpon>BeamSupportItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Xaml\User Controls\Inertia.xaml.cs">
       <DependentUpon>Inertia.xaml</DependentUpon>
     </Compile>
@@ -344,6 +347,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Xaml\Pages\SettingsPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\User Controls\BeamSupportItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -567,12 +574,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-     <Content Include="x64\SQLite.Interop.dll">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="x86\SQLite.Interop.dll">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\settingsicon.ico" />

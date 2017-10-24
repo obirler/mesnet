@@ -10,6 +10,7 @@ using System.Xml;
 using Mesnet.Classes.IO.Xml;
 using Mesnet.Classes.Tools;
 using System.Diagnostics;
+using Mesnet.Classes.Math;
 
 namespace TestConsole
 {
@@ -17,16 +18,15 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
-            for(int i=0; i<10000;i++)
+            var testpoly = new Poly("x^3-6x^2+11x-6", 0, 4);
+            var dict = testpoly.CalculateMagnitudeAndLocation();
+
+            Console.WriteLine("Locations and magnitudes:");
+            foreach (var pair in dict)
             {
-                Mesnet.Classes.IO.DatabaseLogger.Write(i.ToString(), "information");
+                Console.WriteLine("Location : " + pair.Key + " Magnitude : " + pair.Value);
             }
-            //Mesnet.Classes.IO.DatabaseLogger.Close();
-            //sw.Stop();
-            //Console.WriteLine("It took " + sw.ElapsedMilliseconds.ToString()+ " ms");
-            Console.WriteLine("Log has been written");
+
             Console.ReadKey();
         }
     }

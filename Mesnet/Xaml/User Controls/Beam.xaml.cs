@@ -82,8 +82,8 @@ namespace Mesnet.Xaml.User_Controls
             RightSide = new List<int>();
             beampoint.X = Canvas.GetLeft(this);
             beampoint.Y = Canvas.GetTop(this);
-            MyDebug.WriteInformation("Beam has been created : length = " + _length + " m, Width = " + Width + " Height = " + Height);
-            MyDebug.WriteInformation("Width = " + Width + " core width = " + core.Width);
+            MyDebug.WriteInformation(_name + " has been created : length = " + _length + " m, Width = " + Width + " Height = " + Height);
+            MyDebug.WriteInformation(_name + " Width = " + Width + " core width = " + core.Width);
 
             _concentratedloads = new List<KeyValuePair<double, double>>();
 
@@ -329,7 +329,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("This beam has already been added to canvas!");
+                MyDebug.WriteWarning(_name + " : This beam has already been added to canvas!");
             }
         }
 
@@ -377,7 +377,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("This beam has already been added to canvas!");
+                MyDebug.WriteWarning(_name + " : This beam has already been added to canvas!");
             }
         }
 
@@ -408,14 +408,14 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("This beam has already been added to canvas!");
+                MyDebug.WriteWarning(_name + " This beam has already been added to canvas!");
             }
         }
 
         /// <summary>
         /// Sets the length of the Beam. It is used in xml reading purposes.
         /// </summary>
-        /// <param name="length">The length.</param>
+        /// <param name="length">The length of the beam.</param>
         public void SetLength(double length)
         {
             InitializeVariables(length);
@@ -620,8 +620,6 @@ namespace Mesnet.Xaml.User_Controls
 
                             throw new InvalidOperationException(
                                 "RightFixedSupport has been bounded to the left side of the beam");
-
-                            break;
                     }
                 }
                 else
@@ -682,8 +680,6 @@ namespace Mesnet.Xaml.User_Controls
 
                             throw new InvalidOperationException(
                                 "LeftFixedSupport has been bounded to the right side of the beam");
-
-                            break;
                     }
                 }
                 else
@@ -1769,7 +1765,7 @@ namespace Mesnet.Xaml.User_Controls
             selected = false;
             UnSelectCircle();
             _outertgeometry.HideCorners();
-            MyDebug.WriteInformation("Beam unselected : left = " + Canvas.GetLeft(this) + " top = " + Canvas.GetTop(this));
+            MyDebug.WriteInformation(_name + " Beam unselected : left = " + Canvas.GetLeft(this) + " top = " + Canvas.GetTop(this));
         }
 
         /// <summary>
@@ -1799,78 +1795,33 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="y">The y (vertical) component of desired point.</param>
         public void SetPosition(Direction direction, double x, double y)
         {
+            Vector delta = new Vector();
+
             switch (direction)
             {
                 case Direction.Left:
 
-                    Canvas.SetLeft(this, x);
+                    delta.X = x - this.LeftPoint.X;
+                    delta.Y = y - this.LeftPoint.Y;
 
-                    if (Height > 0)
-                    {
-                        Canvas.SetTop(this, y - Height / 2);
-                    }
-                    else
-                    {
-                        Canvas.SetTop(this, y - 7);
-                    }
+                    Move(delta);
 
                     break;
 
                 case Direction.Right:
 
-                    Canvas.SetLeft(this, x - Width);
+                    delta.X = x - this.RightPoint.X;
+                    delta.Y = y - this.RightPoint.Y;
 
-                    if (Height > 0)
-                    {
-                        Canvas.SetTop(this, y - Height / 2);
-                    }
-                    else
-                    {
-                        Canvas.SetTop(this, y - 7);
-                    }
+                    Move(delta);
 
                     break;
             }
-
-            SetTransformGeometry(_canvas);
         }
 
         public void SetPosition(Direction direction, Point point)
         {
-            switch (direction)
-            {
-                case Direction.Left:
-
-                    Canvas.SetLeft(this, point.X);
-
-                    if (Height > 0)
-                    {
-                        Canvas.SetTop(this, point.Y - Height / 2);
-                    }
-                    else
-                    {
-                        Canvas.SetTop(this, point.Y - 7);
-                    }
-
-                    break;
-
-                case Direction.Right:
-
-                    Canvas.SetLeft(this, point.X - Width);
-
-                    if (Height > 0)
-                    {
-                        Canvas.SetTop(this, point.Y - Height / 2);
-                    }
-                    else
-                    {
-                        Canvas.SetTop(this, point.Y - 7);
-                    }
-
-                    break;
-            }
-
-            SetTransformGeometry(_canvas);
+            SetPosition(direction, point.X, point.Y);
         }
 
         /// <summary>
@@ -1895,7 +1846,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
+                MyDebug.WriteWarning(_name + " The beam to be dragged can not be dragged");
             }
         }
 
@@ -1920,7 +1871,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
+                MyDebug.WriteWarning(_name + " : The beam to be dragged can not be dragged");
             }
         }
 
@@ -1944,8 +1895,7 @@ namespace Mesnet.Xaml.User_Controls
         /// <summary>
         /// Changes the position of the beam by the given amount.
         /// </summary>
-        /// <param name="dx">The change in x.</param>
-        /// <param name="dy">The change in y.</param>
+        /// <param name="delta">The change vector.</param>
         public void Move(Vector delta)
         {
             Canvas.SetLeft(this, Canvas.GetLeft(this) + delta.X);
@@ -2123,7 +2073,7 @@ namespace Mesnet.Xaml.User_Controls
         #region SoM
 
         /// <summary>
-        /// Finds the support forces.
+        /// Finds the left and right support forces under the distributed load conditions.
         /// </summary>
         private void finddistributedsupportforces()
         {
@@ -2138,27 +2088,34 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
+                var forcelist = new List<KeyValuePair<double, double>>();
+
                 foreach (Poly load in _distributedloads)
                 {
-                    var magnitude = load.DefiniteIntegral(load.StartPoint, load.EndPoint);
-                    var actdistance = load.LoadCenter(load.StartPoint, load.EndPoint);
-                    resultantforce += magnitude;
-                    multiply += magnitude * actdistance;
+                    var forces = load.CalculateMagnitudeAndLocation();
+                    forcelist.AddRange(forces);
                 }
 
-                resultantforcedistance = multiply / resultantforce;
+                //Moment from left support point
+                double leftmoment = 0;
+                foreach (var force in forcelist)
+                {
+                    leftmoment += force.Key * force.Value;
+                }
+                _rightsupportforcedist = leftmoment / _length;
 
-                _resultantforcedistance = resultantforcedistance;
-
-                _resultantforce = resultantforce;
-
-                _leftsupportforcedist = resultantforce * (_length - resultantforcedistance) / _length;
-                _rightsupportforcedist = resultantforce * resultantforcedistance / _length;
+                //Moment from right support point
+                double rightmoment = 0;
+                foreach (var force in forcelist)
+                {
+                    rightmoment += (_length -force.Key) * force.Value;
+                }
+                _leftsupportforcedist = rightmoment / _length;
             }
 
-            MyDebug.WriteInformation("resultantforce = " + resultantforce + " resultantforcedistance = " + resultantforcedistance);
+            MyDebug.WriteInformation(_name + " : resultantforce = " + resultantforce + " resultantforcedistance = " + resultantforcedistance);
 
-            MyDebug.WriteInformation("leftsupportforcedist = " + _leftsupportforcedist + " rightsupportforcedist = " + _leftsupportforcedist);
+            MyDebug.WriteInformation(_name + " : leftsupportforcedist = " + _leftsupportforcedist + " rightsupportforcedist = " + _rightsupportforcedist);
 
         }
 
@@ -2188,9 +2145,9 @@ namespace Mesnet.Xaml.User_Controls
                 _rightsupportforceconc = resultantforce * resultantforcedistance / _length;
             }
 
-            MyDebug.WriteInformation("resultantforcedistance = " + resultantforcedistance);
+            MyDebug.WriteInformation(_name + " : resultantforcedistance = " + resultantforcedistance);
 
-            MyDebug.WriteInformation("leftsupportforceconc = " + _leftsupportforceconc + " rightsupportforceconc = " + _rightsupportforceconc);
+            MyDebug.WriteInformation(_name + " : leftsupportforceconc = " + _leftsupportforceconc + " rightsupportforceconc = " + _rightsupportforceconc);
         }
 
         #region Zero Condition
@@ -2236,7 +2193,7 @@ namespace Mesnet.Xaml.User_Controls
 
                     _zeroforceconc.Add(poly);
                 }
-                WritePPolytoConsole("_zeroforceconc", _zeroforceconc);
+                WritePPolytoConsole(_name + " : _zeroforceconc", _zeroforceconc);
             }
         }
 
@@ -2315,7 +2272,7 @@ namespace Mesnet.Xaml.User_Controls
                     _zeroforcedist.Add(ply);
                 }
 
-                WritePPolytoConsole("_zeroforcedist", _zeroforcedist);
+                WritePPolytoConsole(_name + " : _zeroforcedist", _zeroforcedist);
             }
         }
 
@@ -2332,7 +2289,7 @@ namespace Mesnet.Xaml.User_Controls
                 var zerovalue = force.Integrate().Calculate(force.StartPoint);
                 var constant = momentsbefore - zerovalue;
 
-                MyDebug.WriteInformation("integration = " + integration.ToString() + " momentsbefore = " + momentsbefore + " zeroforcevalue = " + zerovalue + " startpoint = " + force.StartPoint + " endpoint = " + force.EndPoint);
+                MyDebug.WriteInformation(_name + " : integration = " + integration.ToString() + " momentsbefore = " + momentsbefore + " zeroforcevalue = " + zerovalue + " startpoint = " + force.StartPoint + " endpoint = " + force.EndPoint);
 
                 if (constant != 0)
                 {
@@ -2351,8 +2308,8 @@ namespace Mesnet.Xaml.User_Controls
 
             foreach (Poly pol in _zeromoment)
             {
-                MyDebug.WriteInformation("zeromomentpoly[" + _zeromoment.IndexOf(pol) + "] = " + pol.ToString() + " , startpoint = " + pol.StartPoint + " , endpoint = " + pol.EndPoint);
-                MyDebug.WriteInformation("definite force integral = " + _zeroforce.DefiniteIntegral(0, pol.EndPoint));
+                MyDebug.WriteInformation(_name + " : zeromomentpoly[" + _zeromoment.IndexOf(pol) + "] = " + pol.ToString() + " , startpoint = " + pol.StartPoint + " , endpoint = " + pol.EndPoint);
+                MyDebug.WriteInformation(_name + " : definite force integral = " + _zeroforce.DefiniteIntegral(0, pol.EndPoint));
             }
         }
 
@@ -2447,7 +2404,7 @@ namespace Mesnet.Xaml.User_Controls
 
             ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
 
-            MyDebug.WriteInformation("ma1 = " + ma1);
+            MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
 
             //////////////////////////////////////////////////////////
 
@@ -2468,7 +2425,7 @@ namespace Mesnet.Xaml.User_Controls
 
             mb1 = value1 - ma1;
 
-            MyDebug.WriteInformation("mb1 = " + mb1);
+            MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
 
             ///////////////////////////////////////////////////////////
 
@@ -2485,12 +2442,12 @@ namespace Mesnet.Xaml.User_Controls
 
             r1 = -1 / _length * simpson3.Result;
 
-            MyDebug.WriteInformation("r1 = " + r1);
+            MyDebug.WriteInformation(_name + " : r1 = " + r1);
 
-            ///////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////
             /////////////////Right Equation Solve///////////////////////
-            //////////////////////////////////////////////////////////
-
+            ////////////////////////////////////////////////////////////
+            
             var xsquareppoly = new PiecewisePoly();
             xsquareppoly.Add(xsquare);
 
@@ -2521,13 +2478,13 @@ namespace Mesnet.Xaml.User_Controls
 
             ma2 = 1 / _length * simpson5.Result - value2;
 
-            MyDebug.WriteInformation("ma2 = " + ma2);
+            MyDebug.WriteInformation(_name + " : ma2 = " + ma2);
 
             ///////////////////////////////////////////////////////////
 
             mb2 = value2;
 
-            MyDebug.WriteInformation("mb2 = " + mb2);
+            MyDebug.WriteInformation(_name + " : mb2 = " + mb2);
 
             ///////////////////////////////////////////////////////////
 
@@ -2542,7 +2499,7 @@ namespace Mesnet.Xaml.User_Controls
 
             r2 = -1 / _length * simpson6.Result;
 
-            MyDebug.WriteInformation("r2 = " + r2);
+            MyDebug.WriteInformation(_name + " : r2 = " + r2);
 
             double[,] coefficients =
             {
@@ -2567,8 +2524,8 @@ namespace Mesnet.Xaml.User_Controls
 
             _mb = -moments[1];
 
-            MyDebug.WriteInformation("ma = " + _ma);
-            MyDebug.WriteInformation("mb = " + _mb);
+            MyDebug.WriteInformation(_name + " : ma = " + _ma);
+            MyDebug.WriteInformation(_name + " : mb = " + _mb);
         }
 
         /// <summary>
@@ -2618,7 +2575,7 @@ namespace Mesnet.Xaml.User_Controls
 
             ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
 
-            MyDebug.WriteInformation("ma1 = " + ma1);
+            MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
 
             //////////////////////////////////////////////////////////
 
@@ -2635,7 +2592,7 @@ namespace Mesnet.Xaml.User_Controls
 
             r1 = -1 / _length * simpson3.Result;
 
-            MyDebug.WriteInformation("r1 = " + r1);
+            MyDebug.WriteInformation(_name + " : r1 = " + r1);
 
             ///////////////////////////////////////////////////////////
 
@@ -2686,7 +2643,7 @@ namespace Mesnet.Xaml.User_Controls
 
             mb1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
 
-            MyDebug.WriteInformation("mb1 = " + mb1);
+            MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
 
             ///////////////////////////////////////////////////////////
 
@@ -2705,7 +2662,7 @@ namespace Mesnet.Xaml.User_Controls
 
             r1 = -1 / _length * simpson3.Result;
 
-            MyDebug.WriteInformation("r1 = " + r1);
+            MyDebug.WriteInformation(_name + " : r1 = " + r1);
 
             _mb = -r1 / mb1;  //Math.Round(r1 / mb1, 4);
             _ma = 0;
@@ -2759,6 +2716,11 @@ namespace Mesnet.Xaml.User_Controls
             _fixedendmoment = new PiecewisePoly(polylist);
         }
 
+        /// <summary>
+        /// Calculates the deflection of the beam on selected point. The deflection toward beam's red arrow direction is accepted as positive.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
         public double Deflection(double x)
         {
             var simpson1 = new SimpsonIntegrator(0.0001);
@@ -2796,13 +2758,13 @@ namespace Mesnet.Xaml.User_Controls
 
         public void ClapeyronCalculate()
         {
-            MyDebug.WriteInformation("ClapeyronCalculate has started to work");
+            MyDebug.WriteInformation(_name + " : ClapeyronCalculate has started to work");
             findconcentratedsupportforces();
             finddistributedsupportforces();
             findconcentratedzeroforce();
             finddistributedzeroforce();
             _zeroforce = _zeroforceconc + _zeroforcedist;
-            WritePPolytoConsole(this.Name + " : _zeroforce", _zeroforce);
+            WritePPolytoConsole(_name + " : _zeroforce", _zeroforce);
             findzeromoment();
 
             clapeyronsupportcase();
@@ -2827,7 +2789,7 @@ namespace Mesnet.Xaml.User_Controls
                     {
                         case "RightFixedSupport":
 
-                            MyDebug.WriteInformation("ffsolver has been executed");
+                            MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                             ffsolver();
 
                             break;
@@ -2836,7 +2798,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             var basic = RightSide as BasicSupport;
 
-                            MyDebug.WriteInformation("fbsolver has been executed");
+                            MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                             fbsolver();
 
                             break;
@@ -2845,7 +2807,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             var sliding = RightSide as SlidingSupport;
 
-                            MyDebug.WriteInformation("fbsolver has been executed");
+                            MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                             fbsolver();
 
                             break;
@@ -2863,7 +2825,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("ffsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
 
                                 break;
@@ -2872,7 +2834,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var basic3 = RightSide as BasicSupport;
 
-                                MyDebug.WriteInformation("fbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                                 fbsolver();
 
                                 break;
@@ -2881,7 +2843,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var sliding1 = RightSide as SlidingSupport;
 
-                                MyDebug.WriteInformation("bbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                 fbsolver();
 
                                 break;
@@ -2893,7 +2855,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("bfsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                 bfsolver();
 
                                 break;
@@ -2902,7 +2864,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var basic3 = RightSide as BasicSupport;
 
-                                MyDebug.WriteInformation("bbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                 bbsolver();
 
                                 break;
@@ -2911,7 +2873,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var sliding1 = RightSide as SlidingSupport;
 
-                                MyDebug.WriteInformation("bbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                 bbsolver();
 
                                 break;
@@ -2930,7 +2892,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("ffsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
 
                                 break;
@@ -2939,7 +2901,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var basic3 = RightSide as BasicSupport;
 
-                                MyDebug.WriteInformation("fbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                                 fbsolver();
 
                                 break;
@@ -2948,7 +2910,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var sliding1 = RightSide as SlidingSupport;
 
-                                MyDebug.WriteInformation("bbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                 fbsolver();
 
                                 break;
@@ -2960,7 +2922,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("bfsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                 bfsolver();
 
                                 break;
@@ -2969,7 +2931,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var basic3 = RightSide as BasicSupport;
 
-                                MyDebug.WriteInformation("bbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                 bbsolver();
 
                                 break;
@@ -2978,7 +2940,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 var sliding1 = RightSide as SlidingSupport;
 
-                                MyDebug.WriteInformation("bbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                 bbsolver();
 
                                 break;
@@ -3230,7 +3192,7 @@ namespace Mesnet.Xaml.User_Controls
 
             _alfaa = _izero / Math.Pow(_length, 3) * simpson1.Result;
 
-            MyDebug.WriteInformation("alfaa = " + _alfaa);
+            MyDebug.WriteInformation(_name + " : alfaa = " + _alfaa);
 
             Logger.WriteLine(this.Name + " : alfaa = " + _alfaa);
 
@@ -3249,9 +3211,9 @@ namespace Mesnet.Xaml.User_Controls
 
             _alfab = _izero / Math.Pow(_length, 3) * simpson2.Result;
 
-            MyDebug.WriteInformation("alfab = " + _alfab);
+            MyDebug.WriteInformation(_name + " : alfab = " + _alfab);
 
-            Logger.WriteLine(this.Name + " : alfab = " + _alfab);
+            Logger.WriteLine(_name + " : alfab = " + _alfab);
 
             var simpson3 = new SimpsonIntegrator(0.0001);
 
@@ -3268,9 +3230,9 @@ namespace Mesnet.Xaml.User_Controls
 
             _beta = _izero / Math.Pow(_length, 3) * simpson3.Result;
 
-            MyDebug.WriteInformation("beta = " + _beta);
+            MyDebug.WriteInformation(_name + " : beta = " + _beta);
 
-            Logger.WriteLine(this.Name + " : beta = " + _beta);
+            Logger.WriteLine(_name + " : beta = " + _beta);
 
             var simpson4 = new SimpsonIntegrator(0.0001);
 
@@ -3283,9 +3245,9 @@ namespace Mesnet.Xaml.User_Controls
 
             _ka = 6 * _izero / Math.Pow(_length, 2) * simpson4.Result;
 
-            MyDebug.WriteInformation("ka = " + _ka);
+            MyDebug.WriteInformation(_name + " : ka = " + _ka);
 
-            Logger.WriteLine(this.Name + " : ka = " + _ka);
+            Logger.WriteLine(_name + " : ka = " + _ka);
 
             var simpson5 = new SimpsonIntegrator(0.0001);
 
@@ -3298,25 +3260,25 @@ namespace Mesnet.Xaml.User_Controls
 
             _kb = 6 * _izero / Math.Pow(_length, 2) * simpson5.Result;
 
-            Logger.WriteLine(this.Name + " : kb = " + _kb);
+            Logger.WriteLine(_name + " : kb = " + _kb);
 
-            MyDebug.WriteInformation("kb = " + _kb);
+            MyDebug.WriteInformation(_name + " : kb = " + _kb);
 
             _fia = _length * (_kb / 6 + _mb * _beta + _ma * _alfaa) / (_elasticity * _izero);
 
-            MyDebug.WriteInformation("fia = " + _fia);
+            MyDebug.WriteInformation(_name + " : fia = " + _fia);
 
             _fib = -_length * (_ka / 6 + _ma * _beta + _mb * _alfab) / (_elasticity * _izero);
 
-            MyDebug.WriteInformation("fib = " + _fib);
+            MyDebug.WriteInformation(_name + " : fib = " + _fib);
 
             _gamaba = _beta / _alfaa;
 
-            MyDebug.WriteInformation("gamaba = " + _gamaba);
+            MyDebug.WriteInformation(_name + " : gamaba = " + _gamaba);
 
             _gamaab = _beta / _alfab;
 
-            MyDebug.WriteInformation("gamaab = " + _gamaab);
+            MyDebug.WriteInformation(_name + " : gamaab = " + _gamaab);
 
             #region stiffnesses with support cases
 
@@ -3328,7 +3290,7 @@ namespace Mesnet.Xaml.User_Controls
                     {
                         case "RightFixedSupport":
 
-                            MyDebug.WriteInformation("stiffness case 1");
+                            MyDebug.WriteInformation(_name + " : stiffness case 1");
 
                             _stiffnessa = 0;
 
@@ -3342,7 +3304,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             if (basic.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation("stiffness case 2");
+                                MyDebug.WriteInformation(_name + " : stiffness case 2");
 
                                 _stiffnessa = 0;
 
@@ -3350,7 +3312,7 @@ namespace Mesnet.Xaml.User_Controls
                             }
                             else
                             {
-                                MyDebug.WriteInformation("stiffness case 3");
+                                MyDebug.WriteInformation(_name + " : stiffness case 3");
 
                                 _stiffnessa = 0;
 
@@ -3365,7 +3327,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             if (sliding.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation("stiffness case 4");
+                                MyDebug.WriteInformation(_name + " : stiffness case 4");
 
                                 _stiffnessa = 0;
 
@@ -3373,7 +3335,7 @@ namespace Mesnet.Xaml.User_Controls
                             }
                             else
                             {
-                                MyDebug.WriteInformation("stiffness case 5");
+                                MyDebug.WriteInformation(_name + " : stiffness case 5");
 
                                 _stiffnessa = 0;
 
@@ -3395,7 +3357,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("stiffness case 6");
+                                MyDebug.WriteInformation(_name + " : stiffness case 6");
 
                                 _stiffnessa = _alfab / (_alfaa * _alfab - _beta * _beta) * _elasticity * _izero / _length;
 
@@ -3409,7 +3371,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 7");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 7");
 
                                     _stiffnessa = _alfab / (_alfaa * _alfab - _beta * _beta) * _elasticity * _izero / _length;
 
@@ -3417,7 +3379,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 8");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 8");
 
                                     _stiffnessa = _elasticity * _izero / (_length * _alfaa);
 
@@ -3432,7 +3394,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 9");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 9");
 
                                     _stiffnessa = _alfab / (_alfaa * _alfab - _beta * _beta) * _elasticity * _izero / _length;
 
@@ -3454,7 +3416,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("stiffness case 10");
+                                MyDebug.WriteInformation(_name + " : stiffness case 10");
 
                                 _stiffnessa = 0;
 
@@ -3468,7 +3430,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 11");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 11");
 
                                     _stiffnessa = 0;
 
@@ -3476,7 +3438,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 12");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 12");
                                     _stiffnessa = 0;
 
                                     _stiffnessb = 0;
@@ -3490,7 +3452,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 13");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 13");
 
                                     _stiffnessa = 0;
 
@@ -3498,7 +3460,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 14");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 14");
 
                                     _stiffnessa = 0;
 
@@ -3521,7 +3483,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("stiffness case 15");
+                                MyDebug.WriteInformation(_name + " : stiffness case 15");
 
                                 _stiffnessa = _alfab / (_alfaa * _alfab - _beta * _beta) * _elasticity * _izero / _length;
 
@@ -3535,7 +3497,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 16");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 16");
 
                                     _stiffnessa = _alfab / (_alfaa * _alfab - _beta * _beta) * _elasticity * _izero / _length;
 
@@ -3543,7 +3505,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 17");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 17");
 
                                     _stiffnessa = _elasticity * _izero / (_length * _alfaa);
 
@@ -3558,7 +3520,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 18");
+                                    MyDebug.WriteInformation(_name + " : tiffness case 18");
 
                                     _stiffnessa = _alfab / (_alfaa * _alfab - _beta * _beta) * _elasticity * _izero / _length;
 
@@ -3566,7 +3528,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 19");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 19");
 
                                     _stiffnessa = _elasticity * _izero / (_length * _alfaa);
 
@@ -3582,7 +3544,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("stiffness case 20");
+                                MyDebug.WriteInformation(_name + " : stiffness case 20");
 
                                 _stiffnessa = 0;
 
@@ -3596,7 +3558,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 21");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 21");
 
                                     _stiffnessa = 0;
 
@@ -3604,7 +3566,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 22");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 22");
 
                                     _stiffnessa = 0;
 
@@ -3619,7 +3581,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("stiffness case 23");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 23");
 
                                     _stiffnessa = 0;
 
@@ -3627,7 +3589,7 @@ namespace Mesnet.Xaml.User_Controls
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("stiffness case 24");
+                                    MyDebug.WriteInformation(_name + " : stiffness case 24");
 
                                     _stiffnessa = 0;
 
@@ -3645,13 +3607,13 @@ namespace Mesnet.Xaml.User_Controls
 
             _stiffnessb = Math.Round(_stiffnessb, 4);
 
-            MyDebug.WriteInformation("StiffnessA = " + _stiffnessa);
+            MyDebug.WriteInformation(_name + " : StiffnessA = " + _stiffnessa);
 
-            Logger.WriteLine(this.Name + " : StiffnessA = " + _stiffnessa);
+            Logger.WriteLine(_name + " : StiffnessA = " + _stiffnessa);
 
-            MyDebug.WriteInformation("StiffnessB = " + _stiffnessb);
+            MyDebug.WriteInformation(_name + " : StiffnessB = " + _stiffnessb);
 
-            Logger.WriteLine(this.Name + " : StiffnessB = " + _stiffnessb);
+            Logger.WriteLine(_name + " : StiffnessB = " + _stiffnessb);
             #endregion
         }
 
@@ -3667,7 +3629,7 @@ namespace Mesnet.Xaml.User_Controls
                     {
                         case "RightFixedSupport":
 
-                            MyDebug.WriteInformation("ffsolver has been executed");
+                            MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                             ffsolver();
 
                             break;
@@ -3678,12 +3640,12 @@ namespace Mesnet.Xaml.User_Controls
 
                             if (basic.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation("ffsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
                             }
                             else
                             {
-                                MyDebug.WriteInformation("fbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                                 fbsolver();
                             }
 
@@ -3695,12 +3657,12 @@ namespace Mesnet.Xaml.User_Controls
 
                             if (sliding.Members.Count > 1)
                             {
-                                MyDebug.WriteInformation("ffsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
                             }
                             else
                             {
-                                MyDebug.WriteInformation("fbsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                                 fbsolver();
                             }
 
@@ -3719,7 +3681,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("ffsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
 
                                 break;
@@ -3730,12 +3692,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("ffsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("fbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3747,12 +3709,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("ffsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("bbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3765,7 +3727,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("bfsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                 bfsolver();
 
                                 break;
@@ -3776,12 +3738,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("bfsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("bbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3793,12 +3755,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("bfsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("bbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3818,7 +3780,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("ffsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
 
                                 break;
@@ -3829,12 +3791,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("ffsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("fbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3846,12 +3808,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("ffsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                     ffsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("bbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                     fbsolver();
                                 }
 
@@ -3864,7 +3826,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             case "RightFixedSupport":
 
-                                MyDebug.WriteInformation("bfsolver has been executed");
+                                MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                 bfsolver();
 
                                 break;
@@ -3875,12 +3837,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (basic3.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("bfsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("bbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3892,12 +3854,12 @@ namespace Mesnet.Xaml.User_Controls
 
                                 if (sliding1.Members.Count > 1)
                                 {
-                                    MyDebug.WriteInformation("bfsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                     bfsolver();
                                 }
                                 else
                                 {
-                                    MyDebug.WriteInformation("bbsolver has been executed");
+                                    MyDebug.WriteInformation(_name + " : bbsolver has been executed");
                                     bbsolver();
                                 }
 
@@ -3911,15 +3873,25 @@ namespace Mesnet.Xaml.User_Controls
             #endregion
         }
 
+        /// <summary>
+        /// Main function that starts and conducts Cross Solution for the beam.
+        /// </summary>
         public void CrossCalculate()
         {
-            MyDebug.WriteInformation("CrossCalculate has started to work");
+            MyDebug.WriteInformation(_name + " : CrossCalculate has started to work");
+
             findconcentratedsupportforces();
+
             finddistributedsupportforces();
+
             findconcentratedzeroforce();
+
             finddistributedzeroforce();
+
             _zeroforce = _zeroforceconc + _zeroforcedist;
-            WritePPolytoConsole(this.Name + " : _zeroforce", _zeroforce);
+
+            WritePPolytoConsole(_name + " : _zeroforce", _zeroforce);
+
             findzeromoment();
 
             crosssupportcases();
@@ -3930,15 +3902,16 @@ namespace Mesnet.Xaml.User_Controls
 
             _maclapeyron = _ma;
 
-            MyDebug.WriteInformation("Clapeyron Ma = " + _maclapeyron);
+            MyDebug.WriteInformation(_name + " : Clapeyron Ma = " + _maclapeyron);
 
-            Logger.WriteLine(this.Name + " : Clapeyron Ma = " + _maclapeyron);
+            Logger.WriteLine(_name + " : Clapeyron Ma = " + _maclapeyron);
 
             _mbclapeyron = _mb;
 
-            MyDebug.WriteInformation("Clapeyron Mb = " + _mbclapeyron);
+            MyDebug.WriteInformation(_name + " : Clapeyron Mb = " + _mbclapeyron);
 
-            Logger.WriteLine(this.Name + " : Clapeyron Mb = " + _mbclapeyron);
+            Logger.WriteLine(_name + " : Clapeyron Mb = " + _mbclapeyron);
+
 
             if (Deflection(0.001) < 0)
             {
@@ -3949,9 +3922,33 @@ namespace Mesnet.Xaml.User_Controls
                 _ma = Positive(_ma);
             }
 
-            MyDebug.WriteInformation("Ma = " + _ma);
+            /*if (DistributedLoads.Calculate(0) > 0)
+            {
+                if (Deflection(0.001) < 0)
+                {
+                    _ma = Negative(_ma);
+                }
+                else
+                {
+                    _ma = Positive(_ma);
+                }
+            }
+            else
+            {
+                if (Deflection(0.001) < 0)
+                {
+                    _ma = Positive(_ma);
+                }
+                else
+                {
+                    _ma = Negative(_ma);
+                }
+            }*/
+            
 
-            Logger.WriteLine(this.Name + " : Cross Ma = " + _ma);
+            MyDebug.WriteInformation(_name + " : Ma = " + _ma);
+
+            Logger.WriteLine(_name + " : Cross Ma = " + _ma);
 
             if (Deflection(_length - 0.001) < 0)
             {
@@ -3962,13 +3959,36 @@ namespace Mesnet.Xaml.User_Controls
                 _mb = Negative(_mb);
             }
 
-            Logger.WriteLine(this.Name + " : Cross Mb = " + _mb);
+            /*if (DistributedLoads.Calculate(_length) > 0)
+            {
+                if (Deflection(_length - 0.001) < 0)
+                {
+                    _mb = Positive(_mb);
+                }
+                else
+                {
+                    _mb = Negative(_mb);
+                }
+            }
+            else
+            {
+                if (Deflection(_length - 0.001) < 0)
+                {
+                    _mb = Negative(_mb);
+                }
+                else
+                {
+                    _mb = Positive(_mb);
+                }
+            }*/
+            
+            Logger.WriteLine(_name + " : Cross Mb = " + _mb);
 
             Logger.NextLine();
 
-            MyDebug.WriteInformation("Mb = " + _mb);
+            MyDebug.WriteInformation(_name + " : Mb = " + _mb);
 
-            MyDebug.WriteInformation(": CrossCalculate has finished to work");
+            MyDebug.WriteInformation(_name + " : CrossCalculate has finished to work");
         }
 
         #endregion
@@ -4013,11 +4033,11 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     if (_ma > 0)
                     {
-                        _ma = Positive(_ma);
+                        _ma = Negative(_ma);                   
                     }
                     else
                     {
-                        _ma = Negative(_ma);
+                        _ma = Positive(_ma);
                     }
                 }
                 else
@@ -4036,11 +4056,11 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     if (_mb > 0)
                     {
-                        _mb = Negative(_mb);
+                        _mb = Positive(_mb);
                     }
                     else
                     {
-                        _mb = Positive(_mb);
+                        _mb = Negative(_mb);
                     }
                 }
                 else
@@ -4075,7 +4095,6 @@ namespace Mesnet.Xaml.User_Controls
                         }
                         else
                         {
-                            MyDebug.WriteInformation(constant.ToString());
                             var poly3 = new Poly(constant.ToString());
                             poly = moment + poly1 + poly2 * poly3;
                         }
@@ -4141,6 +4160,8 @@ namespace Mesnet.Xaml.User_Controls
             }
 
             _fixedendmoment = new PiecewisePoly(polylist);
+
+            Global.WritePPolytoConsole(_name + " Fixed End Moment : ", _fixedendmoment);
 
             _maxmoment = _fixedendmoment.Max;
 
@@ -4335,6 +4356,16 @@ namespace Mesnet.Xaml.User_Controls
                 _angle = transform.Angle;
                 rotateTransform = transform;
             }
+        }
+
+        public TransformGeometry InnerGeometry
+        {
+            get { return _innertgeometry; }          
+        }
+
+        public TransformGeometry OuterGeometry
+        {
+            get { return _outertgeometry; }
         }
 
         public double IZero

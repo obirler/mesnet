@@ -245,7 +245,6 @@ C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\bin\Debug\EntityFramework.
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\bin\Debug\MoreLinq.xml
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\bin\Debug\System.Data.SQLite.xml
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\bin\Debug\System.Data.SQLite.dll.config
-C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.csprojResolveAssemblyReference.cache
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\MainWindow.baml
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\SettingsPrompt.baml
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Inertia.baml
@@ -350,3 +349,6 @@ C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.exe.manif
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.application
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.exe
 C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.pdb
+C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BeamSupportItem.g.cs
+C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\BeamSupportItem.baml
+C:\Users\super\Desktop\NewMesnet\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet.csprojResolveAssemblyReference.cache

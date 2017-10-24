@@ -89,7 +89,7 @@ namespace Mesnet.Classes.Math
         #region Override methods:
 
         /// <summary>
-        /// This will Print out the string Format of Polynomial. by Calling each Term in the collection.
+        /// This will print out the string format of polynomial by calling each term in the collection.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -122,6 +122,11 @@ namespace Mesnet.Classes.Math
             return result;
         }
 
+        /// <summary>
+        /// Creates the polynomial string which all coefficient rounded to given digit
+        /// </summary>
+        /// <param name="digit">The desired digit to be rounded.</param>
+        /// <returns></returns>
         public string GetString(int digit)
         {
             this.Terms.Sort(TermCollection.SortType.DES);
@@ -483,7 +488,6 @@ namespace Mesnet.Classes.Math
                 var coeff = t.Coefficient / (t.Power + 1);
                 terms.Add(new Term(pow, coeff));
             }
-
             return new Poly(terms);
         }
 
@@ -504,6 +508,48 @@ namespace Mesnet.Classes.Math
             return result;
         }
 
+        public double DefiniteIntegral()
+        {
+            return DefiniteIntegral(StartPoint, EndPoint);
+        }
+
+        public List<KeyValuePair<double, double>> CalculateMagnitudeAndLocation()
+        {
+            var roots = Roots();
+            var dict = new List<KeyValuePair<double, double>>();
+            double magnitude;
+            double location;
+            if (roots != null)
+            {
+                for (var i = 0; i < roots.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        magnitude = DefiniteIntegral(StartPoint, roots[i]);
+                        location = LoadCenter(StartPoint, roots[i]);
+                        dict.Add(new KeyValuePair<double, double>(location, magnitude));
+                    }
+                    else
+                    {
+                        magnitude = DefiniteIntegral(roots[i - 1], roots[i]);
+                        location = LoadCenter(roots[i - 1], roots[i]);
+                        dict.Add(new KeyValuePair<double, double>(location, magnitude));
+                    }
+                }
+                magnitude = DefiniteIntegral(roots.Last(), EndPoint);
+                location = LoadCenter(roots.Last(), EndPoint);
+                dict.Add(new KeyValuePair<double, double>(location, magnitude));
+            }
+            else
+            {
+                magnitude = DefiniteIntegral();
+                location = LoadCenter();
+                dict.Add(new KeyValuePair<double, double>(location, magnitude));
+            }
+
+            return dict;
+        }
+      
         public Poly Derivate()
         {
             var terms = new TermCollection();
@@ -534,6 +580,11 @@ namespace Mesnet.Classes.Math
             centerpoint = p2.DefiniteIntegral(start, end)/this.DefiniteIntegral(start, end);
 
             return centerpoint;
+        }
+
+        public double LoadCenter()
+        {
+            return LoadCenter(StartPoint, EndPoint);
         }
 
         /// <summary>
@@ -574,7 +625,84 @@ namespace Mesnet.Classes.Math
             conjugatepoly.StartPoint = length - EndPoint;
             conjugatepoly.EndPoint = length - StartPoint;
             return conjugatepoly;
-        }               
+        }
+
+        /// <summary>
+        /// Calculates all root locations
+        /// </summary>
+        /// <returns>List of root locations</returns>
+        public List<double> Roots()
+        {
+            //We are using this step which means we check sign change at interval of 1 centimeter along the beam
+            double step = 0.01;
+
+            Poly derivative = Derivate();
+
+            var rootlist = new List<double>();
+            double previous = 0;
+
+            for (double i = StartPoint; i <= EndPoint; i=i+step)
+            {
+                if (i > EndPoint)
+                {
+                    i = EndPoint;
+                }
+                if (i > StartPoint)
+                {
+                    if (previous > 0)
+                    {
+                        if (Calculate(i) < 0)
+                        {
+                            //there is a sign change and root so find it
+                            double root = findroot(i - step, i, derivative);
+                            rootlist.Add(root);
+                        }
+                    }
+                    else if(previous < 0)
+                    {
+                        if (Calculate(i) > 0)
+                        {
+                            //there is a sign change and root so find it
+                            double root = findroot(i - step, i, derivative);
+                            rootlist.Add(root);
+                        }
+                    }
+                }
+                previous = Calculate(i);
+            }
+
+            if (rootlist.Count > 0)
+            {
+                return rootlist;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds root specified interval using Newton's method
+        /// </summary>
+        /// <param name="min">Start point.</param>
+        /// <param name="max">End point.</param>
+        /// <param name="derivative">The derivative of the polinomial.</param>
+        /// <returns></returns>
+        private double findroot(double min, double max, Poly derivative)
+        {
+            //initialize previous value
+            double previous = (min + max) / 2;
+            double tolerance = 0.00001;
+            double root = Double.MaxValue;
+            double calculate = Double.MaxValue;
+
+            while (System.Math.Abs(previous - root) > tolerance)
+            {
+                if (root < Double.MaxValue)
+                {
+                    previous = root;
+                }             
+                root = previous - Calculate(previous) / derivative.Calculate(previous);
+            }
+            return root;
+        }
 
         #endregion
 

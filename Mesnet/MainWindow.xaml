@@ -38,18 +38,7 @@
 
                 <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>
 
-                <MenuItem Header="{DynamicResource tests}">
-                    <MenuItem x:Name="loadtest" Header="Load Test 1" Click="loadtest_Click"></MenuItem>
-                    <MenuItem x:Name="loadtest2" Header="Load Test 2" Click="loadtest2_Click" ></MenuItem>
-                    <MenuItem x:Name="loadtest3" Header="Load Test 3" Click="loadtest3_Click" ></MenuItem>
-                    <MenuItem x:Name="loadtest4" Header="Load Test 4" Click="loadtest4_Click" ></MenuItem>
-                    <MenuItem x:Name="loadtest5" Header="Load Test 5" Click="loadtest5_Click" ></MenuItem>
-                    <MenuItem x:Name="devtest" Header="Development Test 1" Click="devtest_Click"></MenuItem>
-                    <MenuItem x:Name="devtest2" Header="Development Test 2" Click="devtest2_Click" ></MenuItem>
-                    <MenuItem x:Name="stresstest" Header="Stress Test" Click="stresstest_Click"></MenuItem>
-                    <MenuItem x:Name="stresstest2" Header="Stress Test 2" Click="stresstest2_Click"></MenuItem>
-                    <MenuItem x:Name="inertiatest" Header="Stress Inertia Test"  Click="inertiatest_Click"></MenuItem>
-                </MenuItem>
+                <MenuItem x:Name="testmenu" Header="{DynamicResource tests}"/>
 
                 <MenuItem x:Name="solve" Header="{DynamicResource solve}" Click="solve_Click"></MenuItem>
                 <MenuItem x:Name="moment" Header="{DynamicResource showmoment}" IsEnabled="false" Click="moment_Click" ></MenuItem>

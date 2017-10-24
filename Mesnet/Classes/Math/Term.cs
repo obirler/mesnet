@@ -152,7 +152,7 @@ namespace Mesnet.Classes.Math
         }
 
         /// <summary>
-        /// It is the same sa ToString method but it rounds the numbers when turning them into string.
+        /// It is the same as ToString method but it rounds the numbers before turning them into string.
         /// </summary>
         /// <param name="digit">The digit.</param>
         /// <returns></returns>

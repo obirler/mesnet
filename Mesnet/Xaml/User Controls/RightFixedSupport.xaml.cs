@@ -86,13 +86,6 @@ namespace Mesnet.Xaml.User_Controls
             SetAngle(beam.Angle);
         }
 
-        public void SetBeam(Beam beam)
-        {
-            Member = new Member(beam, Direction.Right);
-
-            beam.RightSide = this;
-        }
-
         /// <summary>
         /// Updates the position of the support according to the beam that is bounded.
         /// </summary>
@@ -183,6 +176,7 @@ namespace Mesnet.Xaml.User_Controls
         public void SetAngle(double angle)
         {
             rotateTransform.Angle = angle;
+            _angle = angle;
         }
 
         #region Properties

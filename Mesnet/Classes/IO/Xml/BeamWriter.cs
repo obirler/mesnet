@@ -149,61 +149,67 @@ namespace Mesnet.Classes.IO.Xml
         {
             _writer.WriteStartElement("Connections");
 
-            _writer.WriteStartElement("LeftSide");
-
-            switch(Global.GetObjectType(_beam.LeftSide))
+            if (_beam.LeftSide != null)
             {
-                case Global.ObjectType.BasicSupport:
-                    var bs = _beam.LeftSide as Xaml.User_Controls.BasicSupport;
-                    _writer.WriteElementString("type", "BasicSupport");
-                    _writer.WriteElementString("id", bs.Id.ToString());
-                    _writer.WriteElementString("supportid", bs.SupportId.ToString());
-                    break;
+                _writer.WriteStartElement("LeftSide");
 
-                case Global.ObjectType.SlidingSupport:
-                    var ss = _beam.LeftSide as Xaml.User_Controls.SlidingSupport;
-                    _writer.WriteElementString("type", "SlidingSupport");
-                    _writer.WriteElementString("id", ss.Id.ToString());
-                    _writer.WriteElementString("supportid", ss.SupportId.ToString());
-                    break;
+                switch (Global.GetObjectType(_beam.LeftSide))
+                {
+                    case Global.ObjectType.BasicSupport:
+                        var bs = _beam.LeftSide as Xaml.User_Controls.BasicSupport;
+                        _writer.WriteElementString("type", "BasicSupport");
+                        _writer.WriteElementString("id", bs.Id.ToString());
+                        _writer.WriteElementString("supportid", bs.SupportId.ToString());
+                        break;
 
-                case Global.ObjectType.LeftFixedSupport:
-                    var ls = _beam.LeftSide as Xaml.User_Controls.LeftFixedSupport;
-                    _writer.WriteElementString("type", "LeftFixedSupport");
-                    _writer.WriteElementString("id", ls.Id.ToString());
-                    _writer.WriteElementString("supportid", ls.SupportId.ToString());
-                    break;
+                    case Global.ObjectType.SlidingSupport:
+                        var ss = _beam.LeftSide as Xaml.User_Controls.SlidingSupport;
+                        _writer.WriteElementString("type", "SlidingSupport");
+                        _writer.WriteElementString("id", ss.Id.ToString());
+                        _writer.WriteElementString("supportid", ss.SupportId.ToString());
+                        break;
+
+                    case Global.ObjectType.LeftFixedSupport:
+                        var ls = _beam.LeftSide as Xaml.User_Controls.LeftFixedSupport;
+                        _writer.WriteElementString("type", "LeftFixedSupport");
+                        _writer.WriteElementString("id", ls.Id.ToString());
+                        _writer.WriteElementString("supportid", ls.SupportId.ToString());
+                        break;
+                }
+
+                _writer.WriteEndElement();
             }
 
-            _writer.WriteEndElement();
-
-            _writer.WriteStartElement("RightSide");
-
-            switch (Global.GetObjectType(_beam.RightSide))
+            if (_beam.RightSide != null)
             {
-                case Global.ObjectType.BasicSupport:
-                    var bs = _beam.RightSide as Xaml.User_Controls.BasicSupport;
-                    _writer.WriteElementString("type", "BasicSupport");
-                    _writer.WriteElementString("id", bs.Id.ToString());
-                    _writer.WriteElementString("supportid", bs.SupportId.ToString());
-                    break;
+                _writer.WriteStartElement("RightSide");
 
-                case Global.ObjectType.SlidingSupport:
-                    var ss = _beam.RightSide as Xaml.User_Controls.SlidingSupport;
-                    _writer.WriteElementString("type", "SlidingSupport");
-                    _writer.WriteElementString("id", ss.Id.ToString());
-                    _writer.WriteElementString("supportid", ss.SupportId.ToString());
-                    break;
+                switch (Global.GetObjectType(_beam.RightSide))
+                {
+                    case Global.ObjectType.BasicSupport:
+                        var bs = _beam.RightSide as Xaml.User_Controls.BasicSupport;
+                        _writer.WriteElementString("type", "BasicSupport");
+                        _writer.WriteElementString("id", bs.Id.ToString());
+                        _writer.WriteElementString("supportid", bs.SupportId.ToString());
+                        break;
 
-                case Global.ObjectType.RightFixedSupport:
-                    var rs = _beam.RightSide as Xaml.User_Controls.RightFixedSupport;
-                    _writer.WriteElementString("type", "RightFixedSupport");
-                    _writer.WriteElementString("id", rs.Id.ToString());
-                    _writer.WriteElementString("supportid", rs.SupportId.ToString());
-                    break;
+                    case Global.ObjectType.SlidingSupport:
+                        var ss = _beam.RightSide as Xaml.User_Controls.SlidingSupport;
+                        _writer.WriteElementString("type", "SlidingSupport");
+                        _writer.WriteElementString("id", ss.Id.ToString());
+                        _writer.WriteElementString("supportid", ss.SupportId.ToString());
+                        break;
+
+                    case Global.ObjectType.RightFixedSupport:
+                        var rs = _beam.RightSide as Xaml.User_Controls.RightFixedSupport;
+                        _writer.WriteElementString("type", "RightFixedSupport");
+                        _writer.WriteElementString("id", rs.Id.ToString());
+                        _writer.WriteElementString("supportid", rs.SupportId.ToString());
+                        break;
+                }
+
+                _writer.WriteEndElement();
             }
-
-            _writer.WriteEndElement();
 
             _writer.WriteEndElement();
         }

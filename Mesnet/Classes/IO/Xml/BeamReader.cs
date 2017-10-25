@@ -267,6 +267,10 @@ namespace Mesnet.Classes.IO.Xml
 
             var connections = new Connections();
 
+            connections.LeftSide = null;
+
+            connections.RightSide = null;
+
             foreach (var sideitem in conectionelement.Elements())
             {
                 switch (sideitem.Name.ToString())

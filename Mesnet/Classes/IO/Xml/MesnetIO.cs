@@ -304,8 +304,23 @@ namespace Mesnet.Classes.IO.Xml
                         var beammanifest = manifestitem as BeamManifest;
                         if (beam.Id == beammanifest.Id)
                         {
-                            beam.LeftSide = GetObject(beammanifest.Connections.LeftSide.Id);
-                            beam.RightSide = GetObject(beammanifest.Connections.RightSide.Id);
+                            if (beammanifest.Connections.LeftSide != null)
+                            {
+                                beam.LeftSide = GetObject(beammanifest.Connections.LeftSide.Id);
+                            }
+                            else
+                            {
+                                beam.LeftSide = null;
+                            }
+
+                            if (beammanifest.Connections.RightSide != null)
+                            {
+                                beam.RightSide = GetObject(beammanifest.Connections.RightSide.Id);
+                            }
+                            else
+                            {
+                                beam.RightSide = null;
+                            }
                             return;
                         }
                         break;

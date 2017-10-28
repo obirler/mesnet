@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Xml;
@@ -86,13 +87,22 @@ namespace Mesnet.Classes.IO.Xml
             }
         }
 
-        public void ReadXml(Canvas canvas, string path)
+        public bool ReadXml(Canvas canvas, string path)
         {
             _canvas = canvas;
             manifestlist = new List<object>();
 
-            var doc = XDocument.Load(path);
-
+            XDocument doc;
+            try
+            {
+                doc = XDocument.Load(path);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("The file is not valid!");
+                return false;
+            }
+            
             foreach (XElement element in doc.Element("Objects").Elements())
             {
                 switch (element.Name.ToString())
@@ -126,7 +136,8 @@ namespace Mesnet.Classes.IO.Xml
             Global.objects.Clear();
             addtocanvas();
             connectobjects();
-            setvariables();           
+            setvariables();
+            return true;
         }
 
         private void addtocanvas()

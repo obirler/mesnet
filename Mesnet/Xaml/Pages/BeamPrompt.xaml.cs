@@ -80,6 +80,68 @@ namespace Mesnet.Xaml.Pages
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BeamPrompt"/> class.
+        /// </summary>
+        /// <param name="beam">The beam to be edited.</param>
+        /// <param name="canbeedited">if set to false the length and the angle of the beam can not be edited..</param>
+        public BeamPrompt(Beam beam, bool canbeedited)
+        {
+            InitializeComponent();
+
+            _existingbeam = beam;
+
+            beamlength = _existingbeam.Length;
+            length.Text = beamlength.ToString();
+            angletbx.Text = _existingbeam.Angle.ToString();
+
+            if (!canbeedited)
+            {
+                length.IsEnabled = false;
+                angletbx.IsEnabled = false;
+            }
+
+            elasticitymodulus.Text = _existingbeam.ElasticityModulus.ToString();
+            stresscbx.IsChecked = _existingbeam.PerformStressAnalysis;
+
+            inertiappoly = new PiecewisePoly();
+
+            foreach (Poly poly in _existingbeam.Inertias)
+            {
+                var ineritiapoly = new Poly(poly.ToString());
+                ineritiapoly.StartPoint = Convert.ToDouble(poly.StartPoint);
+                ineritiapoly.EndPoint = Convert.ToDouble(poly.EndPoint);
+                inertiappoly.Add(ineritiapoly);
+            }
+
+            if (_existingbeam.PerformStressAnalysis)
+            {
+                eppoly = new PiecewisePoly();
+
+                foreach (Poly poly in _existingbeam.E)
+                {
+                    var epoly = new Poly(poly.ToString());
+                    epoly.StartPoint = Convert.ToDouble(poly.StartPoint);
+                    epoly.EndPoint = Convert.ToDouble(poly.EndPoint);
+                    eppoly.Add(epoly);
+                }
+
+                dppoly = new PiecewisePoly();
+
+                foreach (Poly poly in _existingbeam.D)
+                {
+                    var dpoly = new Poly(poly.ToString());
+                    dpoly.StartPoint = Convert.ToDouble(poly.StartPoint);
+                    dpoly.EndPoint = Convert.ToDouble(poly.EndPoint);
+                    dppoly.Add(dpoly);
+                }
+            }
+
+            updatefncstk();
+
+            finishbtn.Visibility = Visibility.Visible;
+        }
+
         public double beamlength = 0;
 
         public double beamelasticitymodulus = 0;
@@ -97,6 +159,8 @@ namespace Mesnet.Xaml.Pages
         public FunctionType type;
 
         private bool _loaded = false;
+
+        private readonly Beam _existingbeam = null;
 
         private void length_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -667,6 +731,11 @@ namespace Mesnet.Xaml.Pages
             var fnc = stk.Parent as InertiaFunction;
             var index = fncstk.Children.IndexOf(fnc);
             inertiappoly.RemoveAt(index);
+            if ((bool) stresscbx.IsChecked)
+            {
+                dppoly.RemoveAt(index);
+                eppoly.RemoveAt(index);
+            }
             fncstk.Children.RemoveAt(index);
 
             if (fncstk.Children.Count == 0)
@@ -738,6 +807,18 @@ namespace Mesnet.Xaml.Pages
             }
 
             return true;
+        }
+
+        private void updatefncstk()
+        {
+            foreach (Poly ipoly in _existingbeam.Inertias)
+            {
+                var fnc = new InertiaFunction();
+                fnc.function.Text = "I(x) = " + ipoly.ToString();
+                fnc.limits.Text = ipoly.StartPoint + " <= x <= " + ipoly.EndPoint;
+                fnc.removebtn.Click += Remove_Click;
+                fncstk.Children.Add(fnc);
+            }
         }
     }
 }

@@ -104,6 +104,7 @@
     <system:String x:Key="multithreaded">Multi Threaded</system:String>
     <system:String x:Key="singlethreaded">Single Threaded</system:String>
     <system:String x:Key="fileread">File has been read</system:String>
+    <system:String x:Key="filereaderror">File could not be read</system:String>
     <system:String x:Key="filesave">File has been saved</system:String>
     <system:String x:Key="yes">Yes</system:String>
     <system:String x:Key="no">No</system:String>

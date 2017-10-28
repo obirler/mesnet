@@ -104,6 +104,7 @@
     <system:String x:Key="multithreaded">Çok İş Parçacıklı</system:String>
     <system:String x:Key="singlethreaded">Tek İş Parçacıklı</system:String>
     <system:String x:Key="fileread">Dosya okundu</system:String>
+    <system:String x:Key="filereaderror">Dosya okunamadı</system:String>
     <system:String x:Key="filesave">Dosya kaydedildi</system:String>
     <system:String x:Key="yes">Evet</system:String>
     <system:String x:Key="no">Hayır</system:String>

@@ -149,6 +149,7 @@
     <Compile Include="Classes\IO\Xml\RightFixedSupportWriter.cs" />
     <Compile Include="Classes\IO\Xml\SlidingSupportReader.cs" />
     <Compile Include="Classes\IO\Xml\SlidingSupportWriter.cs" />
+    <Compile Include="Classes\Math\Geometry.cs" />
     <Compile Include="Classes\Tools\TestCases.cs" />
     <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
     <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />

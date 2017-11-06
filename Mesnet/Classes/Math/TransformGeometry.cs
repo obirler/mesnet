@@ -43,6 +43,11 @@ namespace Mesnet.Classes.Math
             BottomRight = new Point(Center.X + Width / 2, Center.Y - Height / 2);
             TopLeft = new Point(Center.X - Width / 2, Center.Y + Height / 2);
             TopRight = new Point(Center.X + Width / 2, Center.Y + Height / 2);
+
+            tle = new Ellipse();
+            tre = new Ellipse();
+            bre = new Ellipse();
+            ble = new Ellipse();
         }
 
         public TransformGeometry(Point tl, Point tr, Point br, Point bl, Canvas canvas)
@@ -74,6 +79,11 @@ namespace Mesnet.Classes.Math
             BottomRight = new Point(Center.X + Width / 2, Center.Y - Height / 2);
             TopLeft = new Point(Center.X - Width / 2, Center.Y + Height / 2);
             TopRight = new Point(Center.X + Width / 2, Center.Y + Height / 2);
+
+            tle = new Ellipse();
+            tre = new Ellipse();
+            bre = new Ellipse();
+            ble = new Ellipse();
         }
 
         public double Height { get; set; }

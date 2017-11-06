@@ -669,41 +669,15 @@ namespace Mesnet
             MyDebug.WriteInformation("mouseuppoint : " + beammouseuppoint.X + " : " + beammouseuppoint.Y);
 
             if (beammouseuppoint.Equals(beammousedownpoint))
-            {               
-                MyDebug.WriteInformation("clicked");             
+            {
+                MyDebug.WriteInformation("clicked");
                 var grid1 = core.Parent as Grid;
                 var grid2 = grid1.Parent as Grid;
                 var beam = grid2.Parent as Beam;
                 if (beam.IsSelected())
                 {
                     MyDebug.WriteInformation("beam is already selected");
-
-                    var beamdialog = new BeamPrompt(beam, checkbeam(beam));
-                    beamdialog.maxstresstbx.Text = _maxstress.ToString();
-                    beamdialog.Owner = this;
-                    if ((bool)beamdialog.ShowDialog())
-                    {
-                        beam.SetLength(beamdialog.beamlength);
-                        beam.AddElasticity(beamdialog.beamelasticitymodulus);
-                        beam.AddInertia(beamdialog.inertiappoly);
-                        if (beam.MaxInertia > MaxInertia)
-                        {
-                            MaxInertia = beam.MaxInertia;
-                        }
-                        if ((bool)beamdialog.stresscbx.IsChecked)
-                        {
-                            beam.PerformStressAnalysis = true;
-                            beam.AddE(beamdialog.eppoly);
-                            beam.AddD((beamdialog.dppoly));
-                            _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
-                            beam.MaxAllowableStress = _maxstress;
-                        }
-
-                        canvas.UpdateLayout();
-                        notify.Text = (string)FindResource("beamput");
-                        UpdateAllBeamTree();
-                        UpdateAllSupportTree();
-                    }
+                    handlebeamdoubleclick(beam);
                 }
                 else
                 {
@@ -727,10 +701,10 @@ namespace Mesnet
         /// Checks the beam whether it is connected to other beams.
         /// </summary>
         /// <param name="beam">The beam.</param>
-        /// <returns>False if the beam is connected to other beam from both sides.</returns>
+        /// <returns>False if the beam is connected to the other beams from both sides.</returns>
         private bool checkbeam(Beam beam)
         {
-            if (beam.LeftSide == null && beam.RightSide == null)
+            if (beam.LeftSide == null || beam.RightSide == null)
             {
                 return true;
             }
@@ -796,6 +770,167 @@ namespace Mesnet
             }
 
             return false;
+        }
+
+        private void handlebeamdoubleclick(Beam beam)
+        {
+            var isfree = checkbeam(beam);
+            var beamdialog = new BeamPrompt(beam, isfree);
+            beamdialog.maxstresstbx.Text = _maxstress.ToString();
+            beamdialog.Owner = this;
+            if ((bool)beamdialog.ShowDialog())
+            {
+                if (isfree)
+                {
+                    //If the beam is free which means at least at one side it is not bounded to a beam, its length could be changed. 
+                    //So, the beam should be moved toward the side that is free and its support should also be moved.
+                    bool handled = false;
+                    if (beam.RightSide != null)
+                    {
+                        switch (GetObjectType(beam.RightSide))
+                        {
+                            case ObjectType.BasicSupport:
+                                {
+                                    var bs = beam.RightSide as BasicSupport;
+                                    if (bs.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        beam.SetAngleLeft(beamdialog.angle);
+                                        beam.ChangeLength(beamdialog.beamlength);
+                                        beam.MoveSupports();
+                                        handled = true;
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.SlidingSupport:
+                                {
+                                    var ss = beam.RightSide as SlidingSupport;
+                                    if (ss.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        beam.SetAngleLeft(beamdialog.angle);
+                                        beam.ChangeLength(beamdialog.beamlength);
+                                        beam.MoveSupports();
+                                        handled = true;
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.RightFixedSupport:
+                                {
+                                    //The beam is free on the right side
+                                    beam.SetAngleLeft(beamdialog.angle);
+                                    beam.ChangeLength(beamdialog.beamlength);
+                                    beam.MoveSupports();
+                                    handled = true;
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        //The beam is free on the right side
+                        beam.SetAngleLeft(beamdialog.angle);
+                        beam.ChangeLength(beamdialog.beamlength);
+                        beam.MoveSupports();
+                        handled = true;
+                    }
+
+                    if (!handled)
+                    {
+                        if (beam.LeftSide != null)
+                        {
+                            switch (GetObjectType(beam.LeftSide))
+                            {
+                                case ObjectType.BasicSupport:
+                                    {
+                                        var bs = beam.LeftSide as BasicSupport;
+                                        if (bs.Members.Count == 1)
+                                        {
+                                            //The beam is free on the left side
+                                            beam.SetAngleRight(beamdialog.angle);
+                                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                                            beam.ChangeLength(beamdialog.beamlength);
+                                            Vector delta = new Vector();
+                                            delta.X = oldpoint.X - beam.RightPoint.X;
+                                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                                            beam.Move(delta);
+                                            beam.MoveSupports();
+                                        }
+                                    }
+                                    break;
+
+                                case ObjectType.SlidingSupport:
+                                    {
+                                        var ss = beam.LeftSide as SlidingSupport;
+                                        if (ss.Members.Count == 1)
+                                        {
+                                            //The beam is free on the left side
+                                            beam.SetAngleRight(beamdialog.angle);
+                                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                                            beam.ChangeLength(beamdialog.beamlength);
+                                            Vector delta = new Vector();
+                                            delta.X = oldpoint.X - beam.RightPoint.X;
+                                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                                            beam.Move(delta);
+                                            beam.MoveSupports();
+                                        }
+                                    }
+                                    break;
+
+                                case ObjectType.LeftFixedSupport:
+                                    {
+                                        //The beam is free on the left side
+                                        beam.SetAngleRight(beamdialog.angle);
+                                        Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                                        beam.ChangeLength(beamdialog.beamlength);
+                                        Vector delta = new Vector();
+                                        delta.X = oldpoint.X - beam.RightPoint.X;
+                                        delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                                        beam.Move(delta);
+                                        beam.MoveSupports();
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            //The beam is free on the left side
+                            beam.SetAngleRight(beamdialog.angle);
+                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                            beam.ChangeLength(beamdialog.beamlength);
+                            Vector delta = new Vector();
+                            delta.X = oldpoint.X - beam.RightPoint.X;
+                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                            beam.Move(delta);
+                            beam.MoveSupports();
+                        }
+                    }
+                }
+
+                beam.ShowCorners(3, 5);
+
+                beam.AddElasticity(beamdialog.beamelasticitymodulus);
+                beam.AddInertia(beamdialog.inertiappoly);
+                if (beam.MaxInertia > MaxInertia)
+                {
+                    MaxInertia = beam.MaxInertia;
+                }
+                if ((bool)beamdialog.stresscbx.IsChecked)
+                {
+                    beam.PerformStressAnalysis = true;
+                    beam.AddE(beamdialog.eppoly);
+                    beam.AddD((beamdialog.dppoly));
+                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
+                    beam.MaxAllowableStress = _maxstress;
+                }
+
+                canvas.UpdateLayout();
+                notify.Text = (string)FindResource("beamput");
+                UpdateAllBeamTree();
+                UpdateAllSupportTree();
+            }
         }
 
         /// <summary>

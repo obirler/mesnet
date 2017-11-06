@@ -32,6 +32,7 @@ using Mesnet.Classes.Tools;
 using MoreLinq;
 using static Mesnet.Classes.Global;
 using static Mesnet.Classes.Math.Algebra;
+using Geometry = Mesnet.Classes.Math.Geometry;
 
 namespace Mesnet.Xaml.User_Controls
 {
@@ -419,6 +420,28 @@ namespace Mesnet.Xaml.User_Controls
         public void SetLength(double length)
         {
             InitializeVariables(length);
+        }
+
+        /// <summary>
+        /// Changes the length of the existing Beam.
+        /// </summary>
+        /// <param name="length">The desired length of the beam.</param>
+        public void ChangeLength(double length)
+        {
+            double oldlength = _length;
+            _length = length;
+            contentgrid.Width = _length * 100;
+            Width = contentgrid.Width;
+
+            _innertgeometry.TopRight = Geometry.PointOnLine(_innertgeometry.TopLeft, _innertgeometry.TopRight, Width);
+            _innertgeometry.BottomRight = Geometry.PointOnLine(_innertgeometry.BottomLeft, _innertgeometry.BottomRight, Width);
+
+            Point tl = Geometry.PointOnLine(_innertgeometry.TopRight, _innertgeometry.TopLeft, Width + 7);
+            Point tr = Geometry.PointOnLine(_innertgeometry.TopLeft, _innertgeometry.TopRight, Width + 7);
+            Point bl = Geometry.PointOnLine(_innertgeometry.BottomRight, _innertgeometry.BottomLeft, Width + 7);
+            Point br = Geometry.PointOnLine(_innertgeometry.BottomLeft, _innertgeometry.BottomRight, Width + 7);
+
+            _outertgeometry = new TransformGeometry(tl, tr, br, bl, _canvas);
         }
 
         public void Remove()
@@ -1978,19 +2001,21 @@ namespace Mesnet.Xaml.User_Controls
             trans.BeginAnimation(TranslateTransform.YProperty, anim2);
         }
 
+
         /// <summary>
         /// Rotates the beam about its center point.
         /// </summary>
         /// <param name="angle">The desired angle.</param>
         public void SetAngleCenter(double angle)
         {
+            double oldangle = rotateTransform.Angle;
             rotateTransform.CenterX = Width / 2;
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
 
-            _innertgeometry.RotateAboutCenter(angle);
-            _outertgeometry.RotateAboutCenter(angle);
+            _innertgeometry.RotateAboutCenter(angle - oldangle);
+            _outertgeometry.RotateAboutCenter(angle - oldangle);
         }
 
         /// <summary>
@@ -1999,12 +2024,13 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="angle">The angle.</param>
         public void SetAngleLeft(double angle)
         {
+            double oldangle = rotateTransform.Angle;
             rotateTransform.CenterX = 0;
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
-            _innertgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle);
-            _outertgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle);
+            _innertgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
+            _outertgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
         }
 
         /// <summary>
@@ -2013,22 +2039,45 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="angle">The angle.</param>
         public void SetAngleRight(double angle)
         {
+            double oldangle = rotateTransform.Angle;
             rotateTransform.CenterX = Width;
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
-            _innertgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle);
-            _outertgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle);
+            _innertgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
+            _outertgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
         }
 
+        /// <summary>
+        /// Determines whether the specified point is inside of the rectangle geometry.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified point is inside; otherwise, <c>false</c>.
+        /// </returns>
         public bool IsInside(Point point)
         {
             return _outertgeometry.IsInside(point);
         }
 
+        /// <summary>
+        /// Shows the corners of the outer rectangle in canvas. It is used in debug purposes.
+        /// </summary>
+        /// <param name="radius">The radius of the corner circle.</param>
         public void ShowCorners(double radius)
         {
             _outertgeometry.ShowCorners(radius);
+        }
+
+        /// <summary>
+        /// Shows the corners rectangle in canvas. It is used in debug purposes.
+        /// </summary>
+        /// <param name="radiusinner">The inner transform geometry circle radius.</param>
+        /// <param name="radiusouter">The outer transform geometry circle radius.</param>
+        public void ShowCorners(double radiusinner, double radiusouter)
+        {
+            _innertgeometry.ShowCorners(radiusinner);
+            _outertgeometry.ShowCorners(radiusouter);
         }
 
         public void HideCorners()

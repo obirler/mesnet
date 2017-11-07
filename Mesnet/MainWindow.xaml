@@ -292,7 +292,7 @@
                             Width="20000" 
                             Background="#B2A0C8FF" 
                             Cursor="Cross"
-                            Grid.RowSpan="2" MouseEnter="canvas_MouseEnter" MouseLeave="canvas_MouseLeave" MouseMove="canvas_MouseMove">
+                            Grid.RowSpan="2">
                             <Viewbox x:Name="viewbox" Canvas.Left="0" Canvas.Top="0" Stretch="Uniform" Height="20">
                                 <TextBlock x:Name="tooltip" Text="" Background="White" Visibility="Collapsed"></TextBlock>
                             </Viewbox>

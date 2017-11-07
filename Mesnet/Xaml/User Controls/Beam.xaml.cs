@@ -2001,7 +2001,6 @@ namespace Mesnet.Xaml.User_Controls
             trans.BeginAnimation(TranslateTransform.YProperty, anim2);
         }
 
-
         /// <summary>
         /// Rotates the beam about its center point.
         /// </summary>
@@ -3923,7 +3922,7 @@ namespace Mesnet.Xaml.User_Controls
         }
 
         /// <summary>
-        /// Main function that starts and conducts Cross Solution for the beam.
+        /// Main function that prepares parameters and conducts Cross Solution for the beam.
         /// </summary>
         public void CrossCalculate()
         {
@@ -4044,6 +4043,9 @@ namespace Mesnet.Xaml.User_Controls
 
         #region post-cross
 
+        /// <summary>
+        /// Creates final moment, force and stress distributions after Cross loop according to the results
+        /// </summary>
         public void PostCrossUpdate()
         {
             updatemoments();
@@ -4074,15 +4076,18 @@ namespace Mesnet.Xaml.User_Controls
         {
             var polylist = new List<Poly>();
 
+            string name = this.Name;
+
             double constant = 0;
 
             if (_zeromoment.Length > 0)
             {
+                //Cross to normal convetion sign conversion
                 if (Deflection(0.001) < 0)
                 {
                     if (_ma > 0)
                     {
-                        _ma = Negative(_ma);                   
+                        _ma = Negative(_ma);
                     }
                     else
                     {
@@ -4162,20 +4167,20 @@ namespace Mesnet.Xaml.User_Controls
                 //There is no load on this beam
                 if (_ma > 0)
                 {
-                    _ma = Positive(_ma);
+                    _ma = Negative(_ma);
                 }
                 else
                 {
-                    _ma = Negative(_ma);
+                    _ma = Positive(_ma);
                 }
 
                 if (_mb > 0)
                 {
-                    _mb = Negative(_mb);
+                    _mb = Positive(_mb);
                 }
                 else
                 {
-                    _mb = Positive(_mb);
+                    _mb = Negative(_mb);
                 }
 
                 constant = (_mb - _ma) / _length;

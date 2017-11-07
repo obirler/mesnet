@@ -599,7 +599,19 @@ namespace Mesnet
             prevZoomRectSet = false;
         }
 
+        private void zoomAndPanControl_ContentOffsetXChanged(object sender, EventArgs e)
+        {
+            mousemoved = true;
+        }
+
+        private void zoomAndPanControl_ContentOffsetYChanged(object sender, EventArgs e)
+        {
+            mousemoved = true;
+        }
+
         #endregion
+
+        #region Beam Component Events
 
         /// <summary>
         /// Event raised when a mouse button is clicked
@@ -695,242 +707,6 @@ namespace Mesnet
             core.ReleaseMouseCapture();
 
             e.Handled = true;
-        }
-
-        /// <summary>
-        /// Checks the beam whether it is connected to other beams.
-        /// </summary>
-        /// <param name="beam">The beam.</param>
-        /// <returns>False if the beam is connected to the other beams from both sides.</returns>
-        private bool checkbeam(Beam beam)
-        {
-            if (beam.LeftSide == null || beam.RightSide == null)
-            {
-                return true;
-            }
-
-            if (beam.LeftSide != null)
-            {
-                switch (GetObjectType(beam.LeftSide))
-                {
-                    case ObjectType.BasicSupport:
-
-                        var bs = beam.LeftSide as BasicSupport;
-                        if (bs.Members.Count == 1)
-                        {
-                            return true;
-                        }
-
-                        break;
-
-                    case ObjectType.SlidingSupport:
-
-                        var ss = beam.LeftSide as SlidingSupport;
-                        if (ss.Members.Count == 1)
-                        {
-                            return true;
-                        }
-
-                        break;
-
-                    case ObjectType.LeftFixedSupport:
-
-                        return true;
-                }
-            }
-
-            if (beam.RightSide != null)
-            {
-                switch (GetObjectType(beam.RightSide))
-                {
-                    case ObjectType.BasicSupport:
-
-                        var bs = beam.RightSide as BasicSupport;
-                        if (bs.Members.Count == 1)
-                        {
-                            return true;
-                        }
-
-                        break;
-
-                    case ObjectType.SlidingSupport:
-
-                        var ss = beam.RightSide as SlidingSupport;
-                        if (ss.Members.Count == 1)
-                        {
-                            return true;
-                        }
-
-                        break;
-
-                    case ObjectType.RightFixedSupport:
-
-                        return true;
-                }
-            }
-
-            return false;
-        }
-
-        private void handlebeamdoubleclick(Beam beam)
-        {
-            var isfree = checkbeam(beam);
-            var beamdialog = new BeamPrompt(beam, isfree);
-            beamdialog.maxstresstbx.Text = _maxstress.ToString();
-            beamdialog.Owner = this;
-            if ((bool)beamdialog.ShowDialog())
-            {
-                if (isfree)
-                {
-                    //If the beam is free which means at least at one side it is not bounded to a beam, its length could be changed. 
-                    //So, the beam should be moved toward the side that is free and its support should also be moved.
-                    bool handled = false;
-                    if (beam.RightSide != null)
-                    {
-                        switch (GetObjectType(beam.RightSide))
-                        {
-                            case ObjectType.BasicSupport:
-                                {
-                                    var bs = beam.RightSide as BasicSupport;
-                                    if (bs.Members.Count == 1)
-                                    {
-                                        //The beam is free on the right side
-                                        beam.SetAngleLeft(beamdialog.angle);
-                                        beam.ChangeLength(beamdialog.beamlength);
-                                        beam.MoveSupports();
-                                        handled = true;
-                                    }
-                                }
-                                break;
-
-                            case ObjectType.SlidingSupport:
-                                {
-                                    var ss = beam.RightSide as SlidingSupport;
-                                    if (ss.Members.Count == 1)
-                                    {
-                                        //The beam is free on the right side
-                                        beam.SetAngleLeft(beamdialog.angle);
-                                        beam.ChangeLength(beamdialog.beamlength);
-                                        beam.MoveSupports();
-                                        handled = true;
-                                    }
-                                }
-                                break;
-
-                            case ObjectType.RightFixedSupport:
-                                {
-                                    //The beam is free on the right side
-                                    beam.SetAngleLeft(beamdialog.angle);
-                                    beam.ChangeLength(beamdialog.beamlength);
-                                    beam.MoveSupports();
-                                    handled = true;
-                                }
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        //The beam is free on the right side
-                        beam.SetAngleLeft(beamdialog.angle);
-                        beam.ChangeLength(beamdialog.beamlength);
-                        beam.MoveSupports();
-                        handled = true;
-                    }
-
-                    if (!handled)
-                    {
-                        if (beam.LeftSide != null)
-                        {
-                            switch (GetObjectType(beam.LeftSide))
-                            {
-                                case ObjectType.BasicSupport:
-                                    {
-                                        var bs = beam.LeftSide as BasicSupport;
-                                        if (bs.Members.Count == 1)
-                                        {
-                                            //The beam is free on the left side
-                                            beam.SetAngleRight(beamdialog.angle);
-                                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
-                                            beam.ChangeLength(beamdialog.beamlength);
-                                            Vector delta = new Vector();
-                                            delta.X = oldpoint.X - beam.RightPoint.X;
-                                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
-                                            beam.Move(delta);
-                                            beam.MoveSupports();
-                                        }
-                                    }
-                                    break;
-
-                                case ObjectType.SlidingSupport:
-                                    {
-                                        var ss = beam.LeftSide as SlidingSupport;
-                                        if (ss.Members.Count == 1)
-                                        {
-                                            //The beam is free on the left side
-                                            beam.SetAngleRight(beamdialog.angle);
-                                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
-                                            beam.ChangeLength(beamdialog.beamlength);
-                                            Vector delta = new Vector();
-                                            delta.X = oldpoint.X - beam.RightPoint.X;
-                                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
-                                            beam.Move(delta);
-                                            beam.MoveSupports();
-                                        }
-                                    }
-                                    break;
-
-                                case ObjectType.LeftFixedSupport:
-                                    {
-                                        //The beam is free on the left side
-                                        beam.SetAngleRight(beamdialog.angle);
-                                        Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
-                                        beam.ChangeLength(beamdialog.beamlength);
-                                        Vector delta = new Vector();
-                                        delta.X = oldpoint.X - beam.RightPoint.X;
-                                        delta.Y = oldpoint.Y - beam.RightPoint.Y;
-                                        beam.Move(delta);
-                                        beam.MoveSupports();
-                                    }
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            //The beam is free on the left side
-                            beam.SetAngleRight(beamdialog.angle);
-                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
-                            beam.ChangeLength(beamdialog.beamlength);
-                            Vector delta = new Vector();
-                            delta.X = oldpoint.X - beam.RightPoint.X;
-                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
-                            beam.Move(delta);
-                            beam.MoveSupports();
-                        }
-                    }
-                }
-
-                beam.ShowCorners(3, 5);
-
-                beam.AddElasticity(beamdialog.beamelasticitymodulus);
-                beam.AddInertia(beamdialog.inertiappoly);
-                if (beam.MaxInertia > MaxInertia)
-                {
-                    MaxInertia = beam.MaxInertia;
-                }
-                if ((bool)beamdialog.stresscbx.IsChecked)
-                {
-                    beam.PerformStressAnalysis = true;
-                    beam.AddE(beamdialog.eppoly);
-                    beam.AddD((beamdialog.dppoly));
-                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
-                    beam.MaxAllowableStress = _maxstress;
-                }
-
-                canvas.UpdateLayout();
-                notify.Text = (string)FindResource("beamput");
-                UpdateAllBeamTree();
-                UpdateAllSupportTree();
-            }
         }
 
         /// <summary>
@@ -1414,6 +1190,10 @@ namespace Mesnet
             }
         }
 
+        #endregion
+
+        #region Left Toolbar Button Events
+
         private void beambtn_Click(object sender, RoutedEventArgs e)
         {
             //Check if there are any beam in the canvas
@@ -1889,6 +1669,306 @@ namespace Mesnet
             }
         }
 
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var value = Math.Round(Convert.ToDouble(e.NewValue), 3);
+            zoomAndPanControl.ZoomAboutPoint(value, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
+            Scale = value;
+            scaletext.Text = value.ToString();
+        }
+
+        private void scaletext_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var value = Math.Round(Convert.ToDouble(scaletext.Text), 3);
+                scaletext.Text = value.ToString();
+
+
+                var timer = new DispatcherTimer();
+
+                timer.Interval = TimeSpan.FromSeconds(zoomAndPanControl.AnimationDuration);
+
+                if (value > 10)
+                {
+                    zoomAndPanControl.AnimatedZoomAboutPoint(10, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
+
+                    timer.Tick += delegate
+                    {
+                        timer.Stop();
+
+                        Scale = 10;
+                        scaleslider.Value = Scale;
+                    };
+                }
+                else if (value < 0)
+                {
+                    zoomAndPanControl.AnimatedZoomAboutPoint(0, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
+
+                    timer.Tick += delegate
+                    {
+                        timer.Stop();
+
+                        Scale = 0;
+                        scaleslider.Value = Scale;
+                    };
+                }
+                else
+                {
+                    zoomAndPanControl.AnimatedZoomAboutPoint(value, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
+                    timer.Tick += delegate
+                    {
+                        timer.Stop();
+
+                        Scale = value;
+                        scaleslider.Value = Scale;
+                    };
+                }
+
+                //timer.Start();
+            }
+            catch (Exception)
+            { }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Checks the beam whether it is connected to other beams.
+        /// </summary>
+        /// <param name="beam">The beam.</param>
+        /// <returns>False if the beam is connected to the other beams from both sides.</returns>
+        private bool checkbeam(Beam beam)
+        {
+            if (beam.LeftSide == null || beam.RightSide == null)
+            {
+                return true;
+            }
+
+            if (beam.LeftSide != null)
+            {
+                switch (GetObjectType(beam.LeftSide))
+                {
+                    case ObjectType.BasicSupport:
+
+                        var bs = beam.LeftSide as BasicSupport;
+                        if (bs.Members.Count == 1)
+                        {
+                            return true;
+                        }
+
+                        break;
+
+                    case ObjectType.SlidingSupport:
+
+                        var ss = beam.LeftSide as SlidingSupport;
+                        if (ss.Members.Count == 1)
+                        {
+                            return true;
+                        }
+
+                        break;
+
+                    case ObjectType.LeftFixedSupport:
+
+                        return true;
+                }
+            }
+
+            if (beam.RightSide != null)
+            {
+                switch (GetObjectType(beam.RightSide))
+                {
+                    case ObjectType.BasicSupport:
+
+                        var bs = beam.RightSide as BasicSupport;
+                        if (bs.Members.Count == 1)
+                        {
+                            return true;
+                        }
+
+                        break;
+
+                    case ObjectType.SlidingSupport:
+
+                        var ss = beam.RightSide as SlidingSupport;
+                        if (ss.Members.Count == 1)
+                        {
+                            return true;
+                        }
+
+                        break;
+
+                    case ObjectType.RightFixedSupport:
+
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void handlebeamdoubleclick(Beam beam)
+        {
+            var isfree = checkbeam(beam);
+            var beamdialog = new BeamPrompt(beam, isfree);
+            beamdialog.maxstresstbx.Text = _maxstress.ToString();
+            beamdialog.Owner = this;
+            if ((bool)beamdialog.ShowDialog())
+            {
+                if (isfree)
+                {
+                    //If the beam is free which means at least at one side it is not bounded to a beam, its length could be changed. 
+                    //So, the beam should be moved toward the side that is free and its support should also be moved.
+                    bool handled = false;
+                    if (beam.RightSide != null)
+                    {
+                        switch (GetObjectType(beam.RightSide))
+                        {
+                            case ObjectType.BasicSupport:
+                                {
+                                    var bs = beam.RightSide as BasicSupport;
+                                    if (bs.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        beam.SetAngleLeft(beamdialog.angle);
+                                        beam.ChangeLength(beamdialog.beamlength);
+                                        beam.MoveSupports();
+                                        handled = true;
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.SlidingSupport:
+                                {
+                                    var ss = beam.RightSide as SlidingSupport;
+                                    if (ss.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        beam.SetAngleLeft(beamdialog.angle);
+                                        beam.ChangeLength(beamdialog.beamlength);
+                                        beam.MoveSupports();
+                                        handled = true;
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.RightFixedSupport:
+                                {
+                                    //The beam is free on the right side
+                                    beam.SetAngleLeft(beamdialog.angle);
+                                    beam.ChangeLength(beamdialog.beamlength);
+                                    beam.MoveSupports();
+                                    handled = true;
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        //The beam is free on the right side
+                        beam.SetAngleLeft(beamdialog.angle);
+                        beam.ChangeLength(beamdialog.beamlength);
+                        beam.MoveSupports();
+                        handled = true;
+                    }
+
+                    if (!handled)
+                    {
+                        if (beam.LeftSide != null)
+                        {
+                            switch (GetObjectType(beam.LeftSide))
+                            {
+                                case ObjectType.BasicSupport:
+                                    {
+                                        var bs = beam.LeftSide as BasicSupport;
+                                        if (bs.Members.Count == 1)
+                                        {
+                                            //The beam is free on the left side
+                                            beam.SetAngleRight(beamdialog.angle);
+                                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                                            beam.ChangeLength(beamdialog.beamlength);
+                                            Vector delta = new Vector();
+                                            delta.X = oldpoint.X - beam.RightPoint.X;
+                                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                                            beam.Move(delta);
+                                            beam.MoveSupports();
+                                        }
+                                    }
+                                    break;
+
+                                case ObjectType.SlidingSupport:
+                                    {
+                                        var ss = beam.LeftSide as SlidingSupport;
+                                        if (ss.Members.Count == 1)
+                                        {
+                                            //The beam is free on the left side
+                                            beam.SetAngleRight(beamdialog.angle);
+                                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                                            beam.ChangeLength(beamdialog.beamlength);
+                                            Vector delta = new Vector();
+                                            delta.X = oldpoint.X - beam.RightPoint.X;
+                                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                                            beam.Move(delta);
+                                            beam.MoveSupports();
+                                        }
+                                    }
+                                    break;
+
+                                case ObjectType.LeftFixedSupport:
+                                    {
+                                        //The beam is free on the left side
+                                        beam.SetAngleRight(beamdialog.angle);
+                                        Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                                        beam.ChangeLength(beamdialog.beamlength);
+                                        Vector delta = new Vector();
+                                        delta.X = oldpoint.X - beam.RightPoint.X;
+                                        delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                                        beam.Move(delta);
+                                        beam.MoveSupports();
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            //The beam is free on the left side
+                            beam.SetAngleRight(beamdialog.angle);
+                            Point oldpoint = new Point(beam.RightPoint.X, beam.RightPoint.Y);
+                            beam.ChangeLength(beamdialog.beamlength);
+                            Vector delta = new Vector();
+                            delta.X = oldpoint.X - beam.RightPoint.X;
+                            delta.Y = oldpoint.Y - beam.RightPoint.Y;
+                            beam.Move(delta);
+                            beam.MoveSupports();
+                        }
+                    }
+                }
+
+                beam.ShowCorners(3, 5);
+
+                beam.AddElasticity(beamdialog.beamelasticitymodulus);
+                beam.AddInertia(beamdialog.inertiappoly);
+                if (beam.MaxInertia > MaxInertia)
+                {
+                    MaxInertia = beam.MaxInertia;
+                }
+                if ((bool)beamdialog.stresscbx.IsChecked)
+                {
+                    beam.PerformStressAnalysis = true;
+                    beam.AddE(beamdialog.eppoly);
+                    beam.AddD((beamdialog.dppoly));
+                    _maxstress = Convert.ToDouble(beamdialog.maxstresstbx.Text);
+                    beam.MaxAllowableStress = _maxstress;
+                }
+
+                canvas.UpdateLayout();
+                notify.Text = (string)FindResource("beamput");
+                UpdateAllBeamTree();
+                UpdateAllSupportTree();
+            }
+        }
+
         /// <summary>
         /// Only beam button is enabled.
         /// </summary>
@@ -2034,6 +2114,8 @@ namespace Mesnet
             {
             }
         }
+
+        #region Beam and Suppport Tree Events and Functions
 
         /// <summary>
         /// Updates given beam in the beam tree view.
@@ -3006,6 +3088,31 @@ namespace Mesnet
             }
         }
 
+        /// <summary>
+        /// Shows or hides the direction arrow on the beam
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        private void arrow_Click(object sender, RoutedEventArgs e)
+        {
+            var uc = (sender as Button).Parent as ButtonItem;
+            var showbuttonitem = uc.Parent as TreeViewItem;
+            var beamitem = showbuttonitem.Parent as TreeViewBeamItem;
+            var beam = beamitem.Beam;
+            if (!beam.DirectionShown)
+            {
+                beam.ShowDirectionArrow();
+                uc.content.Content = GetString("hidedirection");
+            }
+            else
+            {
+                beam.HideDirectionArrow();
+                uc.content.Content = GetString("showdirection");
+            }
+        }
+
+        #endregion
+
         private void selectsupport(object support)
         {
             
@@ -3026,6 +3133,8 @@ namespace Mesnet
         {
 
         }
+
+        #region Menubar SOM Graphics and Functions
 
         /// <summary>
         /// Shows or hides the distributed loads on the beam.
@@ -3072,29 +3181,6 @@ namespace Mesnet
             {
                 beam.HideConcLoad();
                 uc.content.Content = GetString("show");
-            }
-        }
-
-        /// <summary>
-        /// Shows or hides the direction arrow on the beam
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void arrow_Click(object sender, RoutedEventArgs e)
-        {
-            var uc = (sender as Button).Parent as ButtonItem;
-            var showbuttonitem = uc.Parent as TreeViewItem;
-            var beamitem = showbuttonitem.Parent as TreeViewBeamItem;
-            var beam = beamitem.Beam;
-            if (!beam.DirectionShown)
-            {
-                beam.ShowDirectionArrow();
-                uc.content.Content = GetString("hidedirection");
-            }
-            else
-            {
-                beam.HideDirectionArrow();
-                uc.content.Content = GetString("showdirection");
             }
         }
 
@@ -3240,96 +3326,357 @@ namespace Mesnet
             { }
         }
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        /// <summary>
+        /// Button E-event that starts cross solution.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        private void solve_Click(object sender, RoutedEventArgs e)
         {
-            var value = Math.Round(Convert.ToDouble(e.NewValue), 3);
-            zoomAndPanControl.ZoomAboutPoint(value, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
-            Scale = value;
-            scaletext.Text = value.ToString();
+            if (objects.Count > 0)
+            {
+                hidediagrams();
+                PreCalculate();
+            }
         }
 
-        private void scaletext_TextChanged(object sender, TextChangedEventArgs e)
+        private void moment_Click(object sender, RoutedEventArgs e)
         {
-            try
+            ShowMoments();
+            /*
+            if (moment.Header == GetString("showmoment"))
             {
-                var value = Math.Round(Convert.ToDouble(scaletext.Text), 3);
-                scaletext.Text = value.ToString();
-
-
-                var timer = new DispatcherTimer();
-
-                timer.Interval = TimeSpan.FromSeconds(zoomAndPanControl.AnimationDuration);
-
-                if (value > 10)
+                foreach (var item in objects)
                 {
-                    zoomAndPanControl.AnimatedZoomAboutPoint(10, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
-
-                    timer.Tick += delegate
+                    switch (item.GetType().Name)
                     {
-                        timer.Stop();
+                        case "Beam":
 
-                        Scale = 10;
-                        scaleslider.Value = Scale;
-                    };
+                            Beam beam = item as Beam;
+                            beam.AddFixedEndMomentDiagram();
+
+                            break;
+                    }
                 }
-                else if (value < 0)
+
+                moment.Header = Application.Current.FindResource("hidemoment");
+            }
+            else
+            {
+                foreach (var item in objects)
                 {
-                    zoomAndPanControl.AnimatedZoomAboutPoint(0, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
-
-                    timer.Tick += delegate
+                    switch (item.GetType().Name)
                     {
-                        timer.Stop();
+                        case "Beam":
 
-                        Scale = 0;
-                        scaleslider.Value = Scale;
-                    };
+                            Beam beam = item as Beam;
+                            beam.HideFixedEndMomentDiagram();
+
+                            break;
+                    }
+                }
+                moment.Header = "Show Moment";
+            }
+            */
+        }
+
+        public void ShowMoments()
+        {
+            MyDebug.WriteInformation("Show Moments Started");
+
+            moment.IsEnabled = true;
+
+            if (!_momentshown)
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.AddFixedEndMomentDiagram();
+
+                            break;
+                    }
+                }
+                moment.Header = GetString("hidemoment");
+                _momentshown = true;
+            }
+            else
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.HideFixedEndMomentDiagram();
+
+                            break;
+                    }
+                }
+                moment.Header = GetString("showmoment");
+                _momentshown = false;
+            }
+        }
+
+        private void force_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_forceshown)
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.AddFixedEndForceDiagram();
+
+                            break;
+                    }
+
+                    force.Header = GetString("hideforce");
+                    _forceshown = true;
+                }
+            }
+            else
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.HideFixedEndForceDiagram();
+
+                            break;
+                    }
+                }
+                force.Header = GetString("showforce");
+                _forceshown = false;
+            }
+        }
+
+        private void deflection_Click(object sender, RoutedEventArgs e)
+        {
+            /*
+            if (deflection.Header == "Show Deflection")
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.AddDeflectionDiagram();
+
+                            break;
+                    }
+                }
+                deflection.Header = "Hide Deflection";
+            }
+            else
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.HideDeflectionDiagram();
+
+                            break;
+                    }
+                }
+                deflection.Header = "Show Deflection";
+            }
+            */
+        }
+
+        private void stress_Click(object sender, RoutedEventArgs e)
+        {
+            bool check = false;
+
+            foreach (var item in objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.PerformStressAnalysis)
+                        {
+                            check = true;
+                        }
+
+                        break;
+                }
+            }
+
+            if (check)
+            {
+                if (!_stressshown)
+                {
+                    foreach (var item in objects)
+                    {
+                        switch (item.GetType().Name)
+                        {
+                            case "Beam":
+
+                                Beam beam = item as Beam;
+                                if (beam.PerformStressAnalysis)
+                                {
+                                    beam.AddStressDiagram();
+                                }
+
+                                break;
+                        }
+                    }
+                    stress.Header = GetString("hidestress");
+                    _stressshown = true;
                 }
                 else
                 {
-                    zoomAndPanControl.AnimatedZoomAboutPoint(value, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
-                    timer.Tick += delegate
+                    foreach (var item in objects)
                     {
-                        timer.Stop();
+                        switch (item.GetType().Name)
+                        {
+                            case "Beam":
 
-                        Scale = value;
-                        scaleslider.Value = Scale;
-                    };
+                                Beam beam = item as Beam;
+                                if (beam.PerformStressAnalysis)
+                                {
+                                    beam.HideStressDiagram();
+                                }
+
+                                break;
+                        }
+                    }
+                    stress.Header = GetString("showstress");
+                    _stressshown = false;
                 }
-
-                //timer.Start();
             }
-            catch (Exception)
-            { }
         }
 
-        private void canvas_MouseEnter(object sender, MouseEventArgs e)
+        private void loads_Click(object sender, RoutedEventArgs e)
         {
-            //tooltip.Visibility = Visibility.Visible;
+            if (!LoadsShown)
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.ShowDistLoad();
+                            beam.ShowConcLoad();
+
+                            break;
+                    }
+                }
+                loads.Header = GetString("hideloads");
+                LoadsShown = true;
+            }
+            else
+            {
+                foreach (var item in objects)
+                {
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+
+                            Beam beam = item as Beam;
+                            beam.HideDistLoad();
+                            beam.HideConcLoad();
+
+                            break;
+                    }
+                }
+                loads.Header = GetString("showloads");
+                LoadsShown = false;
+            }
+
+            UpdateAllBeamTree();
         }
 
-        private void canvas_MouseLeave(object sender, MouseEventArgs e)
+        public void distloadmousemove(object sender, MouseEventArgs e)
         {
-            //tooltip.Visibility = Visibility.Collapsed;
+            Canvas loadcanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            DistributedLoad load = loadcanvas.Parent as DistributedLoad;
+            var mousepoint = e.GetPosition(loadcanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(load.LoadPpoly.Calculate(mousepoint.X / 100), 4) + " kN/m";
+            viewbox.Height = 20 / Scale;
         }
 
-        private void canvas_MouseMove(object sender, MouseEventArgs e)
+        public void inertiamousemove(object sender, MouseEventArgs e)
         {
-            /*var mousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, mousepoint.Y + 12 / Global.Scale);
-            Canvas.SetLeft(viewbox, mousepoint.X + 12 / Global.Scale);
-            tooltip.Text = Canvas.GetLeft(viewbox).ToString() + " : " + Canvas.GetTop(viewbox).ToString();
-            viewbox.Height = 20 / Global.Scale;*/
+            Canvas inertiacanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            Inertia inertia = inertiacanvas.Parent as Inertia;
+            var mousepoint = e.GetPosition(inertiacanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(inertia.InertiaPpoly.Calculate(mousepoint.X / 100), 4) + " cm^4";
+            viewbox.Height = 20 / Scale;
         }
 
-        private void zoomAndPanControl_ContentOffsetXChanged(object sender, EventArgs e)
+        public void momentmousemove(object sender, MouseEventArgs e)
         {
-            mousemoved = true;
+            Canvas momentcanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            Moment moment = momentcanvas.Parent as Moment;
+            var mousepoint = e.GetPosition(momentcanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(moment.MomentPpoly.Calculate(mousepoint.X / 100), 4) + " kNm";
+            viewbox.Height = 20 / Scale;
         }
 
-        private void zoomAndPanControl_ContentOffsetYChanged(object sender, EventArgs e)
+        public void forcemousemove(object sender, MouseEventArgs e)
         {
-            mousemoved = true;
+            Canvas forcecanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            Force force = forcecanvas.Parent as Force;
+            var mousepoint = e.GetPosition(forcecanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(force.ForcePpoly.Calculate(mousepoint.X / 100), 4) + " kN";
+            viewbox.Height = 20 / Scale;
         }
+
+        public void stressmousemove(object sender, MouseEventArgs e)
+        {
+            Canvas stresscanvas = (sender as CardinalSplineShape).Parent as Canvas;
+            Stress stress = stresscanvas.Parent as Stress;
+            var mousepoint = e.GetPosition(stresscanvas);
+            var globalmousepoint = e.GetPosition(canvas);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(stress.Calculate(mousepoint.X / 100), 4) + " MPa";
+            viewbox.Height = 20 / Scale;
+        }
+
+        public void mouseenter(object sender, MouseEventArgs e)
+        {
+            tooltip.Visibility = Visibility.Visible;
+        }
+
+        public void mouseleave(object sender, MouseEventArgs e)
+        {
+            tooltip.Visibility = Visibility.Collapsed;
+        }
+
+        #endregion
 
         /// <summary>
         /// Resets the system.
@@ -3998,286 +4345,6 @@ namespace Mesnet
             }
         }
         #endregion
-
-        /// <summary>
-        /// Button E-event that starts cross solution.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void solve_Click(object sender, RoutedEventArgs e)
-        {
-            if (objects.Count > 0)
-            {
-                hidediagrams();
-                PreCalculate();
-            }
-        }
-
-        private void moment_Click(object sender, RoutedEventArgs e)
-        {
-            ShowMoments();
-            /*
-            if (moment.Header == GetString("showmoment"))
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.AddFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-
-                moment.Header = Application.Current.FindResource("hidemoment");
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-                moment.Header = "Show Moment";
-            }
-            */
-        }
-
-        public void ShowMoments()
-        {
-            MyDebug.WriteInformation("Show Moments Started");
-
-            moment.IsEnabled = true;
-
-            if (!_momentshown)
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.AddFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-                moment.Header = GetString("hidemoment");
-                _momentshown = true;
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-                moment.Header = GetString("showmoment");
-                _momentshown = false;
-            }
-        }
-
-        private void force_Click(object sender, RoutedEventArgs e)
-        {
-            if (!_forceshown)
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.AddFixedEndForceDiagram();
-
-                            break;
-                    }
-
-                    force.Header = GetString("hideforce");
-                    _forceshown = true;
-                }
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideFixedEndForceDiagram();
-
-                            break;
-                    }
-                }
-                force.Header = GetString("showforce");
-                _forceshown = false;
-            }
-        }
-
-        private void deflection_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            if (deflection.Header == "Show Deflection")
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.AddDeflectionDiagram();
-
-                            break;
-                    }
-                }
-                deflection.Header = "Hide Deflection";
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideDeflectionDiagram();
-
-                            break;
-                    }
-                }
-                deflection.Header = "Show Deflection";
-            }
-            */
-        }
-
-        private void stress_Click(object sender, RoutedEventArgs e)
-        {
-            bool check = false;
-
-            foreach (var item in objects)
-            {
-                switch (GetObjectType(item))
-                {
-                    case ObjectType.Beam:
-
-                        var beam = item as Beam;
-                        if (beam.PerformStressAnalysis)
-                        {
-                            check = true;
-                        }
-
-                        break;
-                }
-            }
-
-            if (check)
-            {
-                if (!_stressshown)
-                {
-                    foreach (var item in objects)
-                    {
-                        switch (item.GetType().Name)
-                        {
-                            case "Beam":
-
-                                Beam beam = item as Beam;
-                                if (beam.PerformStressAnalysis)
-                                {
-                                    beam.AddStressDiagram();
-                                }
-
-                                break;
-                        }
-                    }
-                    stress.Header = GetString("hidestress");
-                    _stressshown = true;
-                }
-                else
-                {
-                    foreach (var item in objects)
-                    {
-                        switch (item.GetType().Name)
-                        {
-                            case "Beam":
-
-                                Beam beam = item as Beam;
-                                if (beam.PerformStressAnalysis)
-                                {
-                                    beam.HideStressDiagram();
-                                }
-
-                                break;
-                        }
-                    }
-                    stress.Header = GetString("showstress");
-                    _stressshown = false;
-                }
-            }
-        }
-
-        private void loads_Click(object sender, RoutedEventArgs e)
-        {
-            if (!LoadsShown)
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.ShowDistLoad();
-                            beam.ShowConcLoad();
-
-                            break;
-                    }
-                }
-                loads.Header = GetString("hideloads");
-                LoadsShown = true;
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideDistLoad();
-                            beam.HideConcLoad();
-
-                            break;
-                    }
-                }
-                loads.Header = GetString("showloads");
-                LoadsShown = false;
-            }
-
-            UpdateAllBeamTree();
-        }    
             
         public void DisableTestMenus()
         {
@@ -4364,76 +4431,6 @@ namespace Mesnet
             return name;
         }
 
-        public void distloadmousemove(object sender, MouseEventArgs e)
-        {
-            Canvas loadcanvas = (sender as CardinalSplineShape).Parent as Canvas;
-            DistributedLoad load = loadcanvas.Parent as DistributedLoad;
-            var mousepoint = e.GetPosition(loadcanvas);
-            var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(load.LoadPpoly.Calculate(mousepoint.X / 100), 4) + " kN/m";
-            viewbox.Height = 20 / Scale;
-        }
-
-        public void inertiamousemove(object sender, MouseEventArgs e)
-        {
-            Canvas inertiacanvas = (sender as CardinalSplineShape).Parent as Canvas;
-            Inertia inertia = inertiacanvas.Parent as Inertia;
-            var mousepoint = e.GetPosition(inertiacanvas);
-            var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(inertia.InertiaPpoly.Calculate(mousepoint.X / 100), 4) + " cm^4";
-            viewbox.Height = 20 / Scale;
-        }
-
-        public void momentmousemove(object sender, MouseEventArgs e)
-        {
-            Canvas momentcanvas = (sender as CardinalSplineShape).Parent as Canvas;
-            Moment moment = momentcanvas.Parent as Moment;
-            var mousepoint = e.GetPosition(momentcanvas);
-            var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(moment.MomentPpoly.Calculate(mousepoint.X / 100), 4) + " kNm";
-            viewbox.Height = 20 / Scale;
-        }
-
-        public void forcemousemove(object sender, MouseEventArgs e)
-        {
-            Canvas forcecanvas = (sender as CardinalSplineShape).Parent as Canvas;
-            Force force = forcecanvas.Parent as Force;
-            var mousepoint = e.GetPosition(forcecanvas);
-            var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(force.ForcePpoly.Calculate(mousepoint.X / 100), 4) + " kN";
-            viewbox.Height = 20 / Scale;
-        }
-
-        public void stressmousemove(object sender, MouseEventArgs e)
-        {
-            Canvas stresscanvas = (sender as CardinalSplineShape).Parent as Canvas;
-            Stress stress = stresscanvas.Parent as Stress;
-            var mousepoint = e.GetPosition(stresscanvas);
-            var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
-            tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(stress.Calculate(mousepoint.X / 100), 4) + " MPa";
-            viewbox.Height = 20 / Scale;
-        }
-
-        public void mouseenter(object sender, MouseEventArgs e)
-        {
-            tooltip.Visibility = Visibility.Visible;
-        }
-
-        public void mouseleave(object sender, MouseEventArgs e)
-        {
-            tooltip.Visibility = Visibility.Collapsed;
-        }
-
         public void UpdateLanguages()
         {
             if (_momentshown)
@@ -4496,6 +4493,8 @@ namespace Mesnet
                 }
             }
         }
+
+        #region File Menubar Events and Functions
 
         private void MenuNew_Click(object sender, RoutedEventArgs e)
         {
@@ -4912,6 +4911,8 @@ namespace Mesnet
             MyDebug.WriteInformation("xml file has been read from " + path);
             WriteStatus("fileread");
         }
+
+    #endregion
 
         private void clearcanvas()
         {

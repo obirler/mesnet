@@ -1,0 +1,316 @@
+**************************Cross Solve Algorithm Started****************************
+
+Beam 1 : alfaa = 0.333333333333259
+Beam 1 : alfab = 0.333300001250379
+Beam 1 : beta = 0.166666666041516
+Beam 1 : ka = 19.9999998499791
+Beam 1 : kb = 19.9999999999846
+Beam 1 : StiffnessA = 0
+Beam 1 : StiffnessB = 300.03
+Beam 1 : Clapeyron Ma = 0
+Beam 1 : Clapeyron Mb = -10.0009999874732
+Beam 1 : Cross Ma = 0
+Beam 1 : Cross Mb = -10.0009999874732
+
+Beam 2 : alfaa = 0.333333333333259
+Beam 2 : alfab = 0.333300001250379
+Beam 2 : beta = 0.166666666041516
+Beam 2 : ka = 19.9999998499791
+Beam 2 : kb = 19.9999999999846
+Beam 2 : StiffnessA = 800.0267
+Beam 2 : StiffnessB = 800.1067
+Beam 2 : Clapeyron Ma = -6.66711108239494
+Beam 2 : Clapeyron Mb = -6.66711108239495
+Beam 2 : Cross Ma = 6.66711108239494
+Beam 2 : Cross Mb = -6.66711108239495
+
+Beam 3 : alfaa = 0.333333333333259
+Beam 3 : alfab = 0.333300001250379
+Beam 3 : beta = 0.166666666041516
+Beam 3 : ka = 39.9999996999582
+Beam 3 : kb = 39.9999999999692
+Beam 3 : StiffnessA = 200.0067
+Beam 3 : StiffnessB = 200.0267
+Beam 3 : Clapeyron Ma = -13.3342221647899
+Beam 3 : Clapeyron Mb = -13.3342221647899
+Beam 3 : Cross Ma = 13.3342221647899
+Beam 3 : Cross Mb = -13.3342221647899
+
+Beam 4 : alfaa = 0.333333333333211
+Beam 4 : alfab = 0.333306667467063
+Beam 4 : beta = 0.16666666626653
+Beam 4 : ka = 0
+Beam 4 : kb = 0
+Beam 4 : StiffnessA = 320.0085
+Beam 4 : StiffnessB = 0
+Beam 4 : Clapeyron Ma = 0
+Beam 4 : Clapeyron Mb = 0
+Beam 4 : Cross Ma = 0
+Beam 4 : Cross Mb = 0
+
+Basic Support 1 : Beam 1 stiffness = 0.272740486922174
+Basic Support 1 : Beam 2 stiffness = 0.727259513077826
+Basic Support 3 : Beam 2 stiffness = 0.800015978188073
+Basic Support 3 : Beam 3 stiffness = 0.199984021811927
+Basic Support 4 : Beam 3 stiffness = 0.384640693553052
+Basic Support 4 : Beam 4 stiffness = 0.615359306446948
+
+Cross Solver Initialized
+
+**********************************************STEP : 0*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 5.12888446145526 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 2.56444223072763
+
+Basic Support 4 : 8.20533770333463 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 4.10266885166732
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 1*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -7.3853901539931 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -3.69269507699655
+
+Basic Support 3 : -1.84616315912947 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -0.923266195880646
+
+**********************************************STEP : 2*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 1.91643393667063 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 5.11015004540416 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 2.55558603770662
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 0.355125749917619 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 0.17756287495881
+
+Basic Support 4 : 0.568140445963026 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 0.284070222981513
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 3*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -2.1865628008997 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -1.09328140044985
+
+Basic Support 3 : -0.546586111765727 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -0.27334771449404
+
+**********************************************STEP : 4*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 0.298182101501649 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 0.795099298948203 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.397629159403996
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 0.105140654484129 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 0.0525703272420646
+
+Basic Support 4 : 0.168207060009911 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 0.0841035300049555
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 5*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -0.360166782688916 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.180083391344458
+
+Basic Support 3 : -0.0900327039571438 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -0.0450253552489676
+
+**********************************************STEP : 6*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 0.0491160318418841 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 0.130967359502575 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.0654967764872376
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 0.0173185838704352 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 0.0086592919352176
+
+Basic Support 4 : 0.0277067713785318 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 0.0138533856892659
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 7*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -0.0593260396175711 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.0296630198087855
+
+Basic Support 3 : -0.0148300288048827 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -0.00741649740532185
+
+**********************************************STEP : 8*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 0.00809030646623037 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 0.0215727133425556 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.010788513942612
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 0.00285268670571726 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 0.00142634335285863
+
+Basic Support 4 : 0.00456381069960421 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 0.0022819053498021
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 9*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -0.00977208100766485 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.00488604050383242
+
+Basic Support 3 : -0.00244277628780727 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -0.00122163242153241
+
+**********************************************STEP : 10*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 0.00133262106613667 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 0.00355341943769557 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.00177706506079155
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 0.00046988954188537 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 0.000234944770942685
+
+Basic Support 4 : 0.000751742879647689 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 0.000375871439823844
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 11*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -0.00160964001365887 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.000804820006829436
+
+Basic Support 3 : -0.000402369818075347 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -0.000201225146019481
+
+**********************************************STEP : 12*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 0.000219507000547285 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 0.000585313006281847 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 0.000292715034441552
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 7.73993797253405E-05 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 3.86996898626703E-05
+
+Basic Support 4 : 0.000123825766294383 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 6.19128831471914E-05
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 13*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -0.000265137074851312 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -0.000132568537425656
+
+Basic Support 3 : -6.62776494543338E-05 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -3.31454524921123E-05
+
+**********************************************STEP : 14*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 1 : cross index = 2
+
+Basic Support 1 : 3.61568074480801E-05 will be conducted to Beam 1
+Beam 1 : Moment not conducted because left side of this beam is bounded to a free basic support(Basic Support 2)
+
+Basic Support 1 : 9.64117299777455E-05 will be conducted to Beam 2
+Beam 2 : Left to right conduct moment = 4.82155061618705E-05
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 4 : cross index = 0
+
+Basic Support 4 : 1.27490898349944E-05 will be conducted to Beam 3
+Beam 3 : Right to left conduct moment = 6.37454491749722E-06
+
+Basic Support 4 : 2.03963626578943E-05 will be conducted to Beam 4
+Beam 4 : Left to right conduct moment = 1.01981813289471E-05
+Beam 4 : Right Fixed Support 5 is a fixed support. So there will be no seperation in this support
+
+**********************************************STEP : 15*************************************************
+
+-------------------------------------------------------------------------------------------------------
+Basic Support 3 : cross index = 1
+
+Basic Support 3 : -4.36729131130329E-05 will be conducted to Beam 2
+Beam 2 : Right to left conduct moment = -2.18364565565165E-05
+
+Basic Support 3 : -1.09171379656294E-05 will be conducted to Beam 3
+Beam 3 : Left to right conduct moment = -5.45966069661126E-06
+
+Cross loop stopped
+
+Beam 1 Left End Moment = 0
+Beam 1 Right End Moment = -7.72758932611866
+Beam 2 Left End Moment = 7.7275674896621
+Beam 2 Right End Moment = -13.6386289074617
+Beam 3 Left End Moment = 13.6386289074617
+Beam 3 Right End Moment = -8.974857216055
+Beam 4 Left End Moment = 8.9748517563943
+Beam 4 Right End Moment = 4.48742587819715

@@ -3,6 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <system:String x:Key="addbeam">Kiriş Ekle</system:String>
+    <system:String x:Key="editbeam">Kirişi Düzenle</system:String>
     <system:String x:Key="addfixedsupport">Ankastre Mesnet Ekle</system:String>
     <system:String x:Key="addbasicsupport">Basit Mesnet Ekle</system:String>
     <system:String x:Key="addslidingsupport">Kayıcı Mesnet Ekle</system:String>

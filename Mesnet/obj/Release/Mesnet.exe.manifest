@@ -67,14 +67,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mesnet.exe" size="1129936">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mesnet.exe" size="1148368">
       <assemblyIdentity name="Mesnet" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ppTPY5MW5tfA9Pie+UFdSxwV7F4=</dsig:DigestValue>
+        <dsig:DigestValue>8SZrSpwdZEv2+hs4un4CbssG6Cc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

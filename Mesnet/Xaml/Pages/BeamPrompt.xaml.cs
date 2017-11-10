@@ -89,6 +89,8 @@ namespace Mesnet.Xaml.Pages
         {
             InitializeComponent();
 
+            Title = GetString("editbeam");
+
             _existingbeam = beam;
 
             beamlength = _existingbeam.Length;

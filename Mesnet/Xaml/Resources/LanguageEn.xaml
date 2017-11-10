@@ -3,6 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <system:String x:Key="addbeam">Add a Beam</system:String>
+    <system:String x:Key="editbeam">Edit the Beam</system:String>
     <system:String x:Key="addfixedsupport">Add a Fixed Support</system:String>
     <system:String x:Key="addbasicsupport">Add a Basic Support</system:String>
     <system:String x:Key="addslidingsupport">Add a Sliding Support</system:String>

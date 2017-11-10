@@ -2041,12 +2041,12 @@ namespace Mesnet.Classes.Tools
                 beam1.AddTopLeft(_mw.canvas, 10200, 9700);
                 beam1.SetAngleCenter(-90);
 
+                var leftfixedsupport = new LeftFixedSupport(_mw.canvas);
+                leftfixedsupport.AddBeam(beam1);
+
                 var basicsupport1 = new BasicSupport(_mw.canvas);
                 basicsupport1.AddBeam(beam1, Global.Direction.Right);
-
-                var basicsupport2 = new BasicSupport(_mw.canvas);
-                basicsupport2.AddBeam(beam1, Global.Direction.Left);
-
+               
                 var loadpolies1 = new List<Poly>();
                 loadpolies1.Add(new Poly("5", 0, beam1.Length));
                 var ppoly1 = new PiecewisePoly(loadpolies1);

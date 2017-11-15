@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
 
@@ -13,7 +14,7 @@ namespace Mesnet.Classes.IO.Xml
     public class BeamReader
     {
         public BeamReader(System.Xml.Linq.XElement beamelement)
-        {
+        {           
             _beamelement = beamelement;
             _beam = new BeamManifest();
         }
@@ -64,10 +65,20 @@ namespace Mesnet.Classes.IO.Xml
                     case "elasticity":
                         _beam.Elasticity = Convert.ToDouble(item.Value);
                         break;
-                    case "RotateTronsform":
+                    case "RotateTransform":
                         _beam.CenterX = Convert.ToDouble(item.Element("centerx").Value);
                         _beam.CenterY= Convert.ToDouble(item.Element("centery").Value);
                         _beam.Angle = Convert.ToDouble(item.Element("angle").Value);
+                        break;
+                    case "TransformGeometry":
+                        var tl = item.Element("topleft").Value.Split(';');
+                        _beam.TopLeft = new Point(Convert.ToDouble(tl[0]), Convert.ToDouble(tl[1]));
+                        var tr = item.Element("topright").Value.Split(';');
+                        _beam.TopRight = new Point(Convert.ToDouble(tr[0]), Convert.ToDouble(tl[1]));
+                        var bl = item.Element("bottomleft").Value.Split(';');
+                        _beam.BottomLeft = new Point(Convert.ToDouble(bl[0]), Convert.ToDouble(bl[1]));
+                        var br = item.Element("bottomright").Value.Split(';');
+                        _beam.BottomRight = new Point(Convert.ToDouble(br[0]), Convert.ToDouble(br[1]));
                         break;
                     case "leftposition":
                         _beam.LeftPosition = Convert.ToDouble(item.Value);

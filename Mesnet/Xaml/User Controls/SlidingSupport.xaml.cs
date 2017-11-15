@@ -137,6 +137,20 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        public void RemoveBeam(Beam beam)
+        {
+            var remove = new Member();
+            foreach (var member in Members)
+            {
+                if (member.Beam.Equals(beam))
+                {
+                    remove = member;
+                    break;
+                }
+            }
+            Members.Remove(remove);
+        }
+
         public void SetBeam(Beam beam, Direction direction)
         {
             var member = new Member(beam, direction);

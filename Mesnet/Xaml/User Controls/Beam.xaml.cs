@@ -292,9 +292,7 @@ namespace Mesnet.Xaml.User_Controls
 
         private double _maxstress;
 
-        private TransformGeometry _outertgeometry;
-
-        private TransformGeometry _innertgeometry;
+        private TransformGeometry _tgeometry;
 
         private bool _leftcircleseleted;
 
@@ -346,8 +344,7 @@ namespace Mesnet.Xaml.User_Controls
             Canvas.SetZIndex(this, 1);
             Canvas.SetLeft(this, _leftpos);
             Canvas.SetTop(this, _toppos);
-            SetTransformGeometry(canvas);
-            SetAngleCenter(0);
+            
         }
 
         public void AddTopLeft(Canvas canvas, double x, double y)
@@ -433,15 +430,7 @@ namespace Mesnet.Xaml.User_Controls
             contentgrid.Width = _length * 100;
             Width = contentgrid.Width;
 
-            _innertgeometry.TopRight = Geometry.PointOnLine(_innertgeometry.TopLeft, _innertgeometry.TopRight, Width);
-            _innertgeometry.BottomRight = Geometry.PointOnLine(_innertgeometry.BottomLeft, _innertgeometry.BottomRight, Width);
-
-            Point tl = Geometry.PointOnLine(_innertgeometry.TopRight, _innertgeometry.TopLeft, Width + 7);
-            Point tr = Geometry.PointOnLine(_innertgeometry.TopLeft, _innertgeometry.TopRight, Width + 7);
-            Point bl = Geometry.PointOnLine(_innertgeometry.BottomRight, _innertgeometry.BottomLeft, Width + 7);
-            Point br = Geometry.PointOnLine(_innertgeometry.BottomLeft, _innertgeometry.BottomRight, Width + 7);
-
-            _outertgeometry = new TransformGeometry(tl, tr, br, bl, _canvas);
+            _tgeometry.ChangeWidth(Width);
         }
 
         public void Remove()
@@ -662,7 +651,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.RightSide != null)
             {
-                if (oldbeam.RightSide.GetType().Name != "RightFixedSupport")
+                if (GetObjectType(oldbeam.RightSide) != ObjectType.RightFixedSupport)
                 {
                     if (oldbeam.IsBound)
                     {
@@ -672,6 +661,7 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     else if (this._isbound)
                     {
+                        MyDebug.WriteInformation(_name + " : isbound : " + _isbound.ToString());
                         //We will move the old beam
                         oldbeam.SetPosition(Direction.Right, LeftPoint);
                         oldbeam.MoveSupports();
@@ -1787,7 +1777,7 @@ namespace Mesnet.Xaml.User_Controls
             circledirection = Direction.None;
             selected = false;
             UnSelectCircle();
-            _outertgeometry.HideCorners();
+            _tgeometry.HideCorners();
             MyDebug.WriteInformation(_name + " Beam unselected : left = " + Canvas.GetLeft(this) + " top = " + Canvas.GetTop(this));
         }
 
@@ -1907,12 +1897,12 @@ namespace Mesnet.Xaml.User_Controls
 
         public void SetTransformGeometry(Canvas canvas)
         {
-            _innertgeometry = new TransformGeometry(this, canvas);
-            Point tl = new Point(_innertgeometry.TopLeft.X - 7, _innertgeometry.TopLeft.Y);
-            Point tr = new Point(_innertgeometry.TopRight.X + 7, _innertgeometry.TopRight.Y);
-            Point br = new Point(_innertgeometry.BottomRight.X + 7, _innertgeometry.BottomRight.Y);
-            Point bl = new Point(_innertgeometry.BottomLeft.X - 7, _innertgeometry.BottomLeft.Y);
-            _outertgeometry = new TransformGeometry(tl, tr, br, bl, canvas);
+            _tgeometry = new TransformGeometry(this, canvas);
+        }
+
+        public void SetTransformGeometry(Point tl, Point tr, Point br, Point bl, Canvas canvas)
+        {
+            _tgeometry = new TransformGeometry(tl, tr, br, bl, _canvas);
         }
 
         /// <summary>
@@ -1923,8 +1913,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             Canvas.SetLeft(this, Canvas.GetLeft(this) + delta.X);
             Canvas.SetTop(this, Canvas.GetTop(this) + delta.Y);
-            _innertgeometry.Move(delta);
-            _outertgeometry.Move(delta);
+            _tgeometry.Move(delta);
         }
 
         /// <summary>
@@ -2013,8 +2002,7 @@ namespace Mesnet.Xaml.User_Controls
             rotateTransform.Angle = angle;
             _angle = angle;
 
-            _innertgeometry.RotateAboutCenter(angle - oldangle);
-            _outertgeometry.RotateAboutCenter(angle - oldangle);
+            _tgeometry.RotateAboutCenter(angle - oldangle);
         }
 
         /// <summary>
@@ -2028,8 +2016,7 @@ namespace Mesnet.Xaml.User_Controls
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
-            _innertgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
-            _outertgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
+            _tgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
         }
 
         /// <summary>
@@ -2043,8 +2030,7 @@ namespace Mesnet.Xaml.User_Controls
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
-            _innertgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
-            _outertgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
+            _tgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
         }
 
         /// <summary>
@@ -2056,7 +2042,7 @@ namespace Mesnet.Xaml.User_Controls
         /// </returns>
         public bool IsInside(Point point)
         {
-            return _outertgeometry.IsInside(point);
+            return _tgeometry.IsInsideOuter(point);
         }
 
         /// <summary>
@@ -2065,7 +2051,7 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="radius">The radius of the corner circle.</param>
         public void ShowCorners(double radius)
         {
-            _outertgeometry.ShowCorners(radius);
+            _tgeometry.ShowCorners(radius);
         }
 
         /// <summary>
@@ -2075,13 +2061,12 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="radiusouter">The outer transform geometry circle radius.</param>
         public void ShowCorners(double radiusinner, double radiusouter)
         {
-            _innertgeometry.ShowCorners(radiusinner);
-            _outertgeometry.ShowCorners(radiusouter);
+            _tgeometry.ShowCorners(radiusinner, radiusouter);
         }
 
         public void HideCorners()
         {
-            _outertgeometry.HideCorners();
+            _tgeometry.HideCorners();
         }
 
         private void BringToFront(Canvas pParent, UserControl pToMove)
@@ -4412,14 +4397,9 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
-        public TransformGeometry InnerGeometry
+        public TransformGeometry TGeometry
         {
-            get { return _innertgeometry; }          
-        }
-
-        public TransformGeometry OuterGeometry
-        {
-            get { return _outertgeometry; }
+            get { return _tgeometry; }          
         }
 
         public double IZero
@@ -4499,12 +4479,12 @@ namespace Mesnet.Xaml.User_Controls
 
         public Point LeftPoint
         {
-            get { return _innertgeometry.LeftPoint; }
+            get { return _tgeometry.LeftPoint; }
         }
 
         public Point RightPoint
         {
-            get { return _innertgeometry.RightPoint; }
+            get { return _tgeometry.RightPoint; }
         }
 
         public double LeftEndMoment

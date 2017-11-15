@@ -18,6 +18,8 @@
     along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
 ========================================================================
 */
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
@@ -33,39 +35,31 @@ namespace Mesnet.Classes.Math
 {
     public class TransformGeometry
     {        
-        public TransformGeometry(Point origin, double height, double width)
-        {
-            Height = height;
-            Width = width;
-            Center = origin;
-
-            BottomLeft = new Point(Center.X - Width / 2, Center.Y - Height / 2);
-            BottomRight = new Point(Center.X + Width / 2, Center.Y - Height / 2);
-            TopLeft = new Point(Center.X - Width / 2, Center.Y + Height / 2);
-            TopRight = new Point(Center.X + Width / 2, Center.Y + Height / 2);
-
-            tle = new Ellipse();
-            tre = new Ellipse();
-            bre = new Ellipse();
-            ble = new Ellipse();
-        }
-
         public TransformGeometry(Point tl, Point tr, Point br, Point bl, Canvas canvas)
         {
-            Height = tr.X-tl.X;
-            Width = bl.Y-tl.Y;
+            Height = System.Math.Sqrt(System.Math.Pow(tl.X - bl.X, 2)+ System.Math.Pow(tl.Y - bl.Y, 2));
+            Width = System.Math.Sqrt(System.Math.Pow(tl.X - tr.X, 2) + System.Math.Pow(tl.Y - tr.Y, 2));
             _canvas = canvas;
             Center = new Point((tl.X+tr.X+br.X+bl.X)/4, (tl.Y + tr.Y + br.Y + bl.Y) / 4);
 
-            BottomLeft = bl;
-            BottomRight = br;
-            TopLeft = tl;
-            TopRight = tr;
+            InnerBottomLeft = bl;
+            InnerBottomRight = br;
+            InnerTopLeft = tl;
+            InnerTopRight = tr;
 
-            tle = new Ellipse();
-            tre = new Ellipse();
-            bre = new Ellipse();
-            ble = new Ellipse();
+            OuterTopLeft = Geometry.PointOnLine(InnerTopRight, InnerTopLeft, Width + 7);
+            OuterTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, Width + 7);
+            OuterBottomLeft = Geometry.PointOnLine(InnerBottomRight, InnerBottomLeft, Width + 7);
+            OuterBottomRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, Width + 7);
+
+            itle = new Ellipse();
+            itre = new Ellipse();
+            ibre = new Ellipse();
+            ible = new Ellipse();
+            otle = new Ellipse();
+            otre = new Ellipse();
+            obre = new Ellipse();
+            oble = new Ellipse();
         }
 
         public TransformGeometry(Beam beam, Canvas canvas)
@@ -75,15 +69,24 @@ namespace Mesnet.Classes.Math
             _canvas = canvas;
             Center = new Point(Canvas.GetLeft(beam) + Width/2, Canvas.GetTop(beam) + Height / 2);
 
-            BottomLeft = new Point(Center.X - Width / 2, Center.Y - Height / 2);
-            BottomRight = new Point(Center.X + Width / 2, Center.Y - Height / 2);
-            TopLeft = new Point(Center.X - Width / 2, Center.Y + Height / 2);
-            TopRight = new Point(Center.X + Width / 2, Center.Y + Height / 2);
+            InnerBottomLeft = new Point(Center.X - Width / 2, Center.Y - Height / 2);
+            InnerBottomRight = new Point(Center.X + Width / 2, Center.Y - Height / 2);
+            InnerTopLeft = new Point(Center.X - Width / 2, Center.Y + Height / 2);
+            InnerTopRight = new Point(Center.X + Width / 2, Center.Y + Height / 2);
 
-            tle = new Ellipse();
-            tre = new Ellipse();
-            bre = new Ellipse();
-            ble = new Ellipse();
+            OuterTopLeft = new Point(InnerTopLeft.X - 7, InnerTopLeft.Y);
+            OuterTopRight = new Point(InnerTopRight.X + 7, InnerTopRight.Y);
+            OuterBottomRight = new Point(InnerBottomRight.X + 7, InnerBottomRight.Y);
+            OuterBottomLeft = new Point(InnerBottomLeft.X - 7, InnerBottomLeft.Y);
+
+            itle = new Ellipse();
+            itre = new Ellipse();
+            ibre = new Ellipse();
+            ible = new Ellipse();
+            otle = new Ellipse();
+            otre = new Ellipse();
+            obre = new Ellipse();
+            oble = new Ellipse();
         }
 
         public double Height { get; set; }
@@ -94,39 +97,43 @@ namespace Mesnet.Classes.Math
 
         public Point Center;
 
-        public Point TopLeft;
+        public Point InnerTopLeft;
 
-        public Point TopRight;
+        public Point InnerTopRight;
 
-        public Point BottomLeft;
+        public Point InnerBottomLeft;
 
-        public Point BottomRight;
+        public Point InnerBottomRight;
 
-        private Ellipse tle;
+        public Point OuterTopLeft;
 
-        private Ellipse tre;
+        public Point OuterTopRight;
 
-        private Ellipse bre;
+        public Point OuterBottomLeft;
 
-        private Ellipse ble;
+        public Point OuterBottomRight;
+
+        private Ellipse itle;
+
+        private Ellipse itre;
+
+        private Ellipse ibre;
+
+        private Ellipse ible;
+
+        private Ellipse otle;
+
+        private Ellipse otre;
+
+        private Ellipse obre;
+
+        private Ellipse oble;
 
         private Canvas _canvas;
 
         private List<Point> poly;
 
         private bool _ellipsevisible = false;
-
-        public void Update(Beam beam)
-        {
-            Height = beam.Height;
-            Width = beam.Width;
-            Center = new Point(Canvas.GetLeft(beam) + Width / 2, Canvas.GetTop(beam) + Height / 2);
-
-            BottomLeft = new Point(Center.X - Width / 2, Center.Y - Height / 2);
-            BottomRight = new Point(Center.X + Width / 2, Center.Y - Height / 2);
-            TopLeft = new Point(Center.X - Width / 2, Center.Y + Height / 2);
-            TopRight = new Point(Center.X + Width / 2, Center.Y + Height / 2);
-        }
 
         private void Move(Point from, Point to)
         {
@@ -140,17 +147,25 @@ namespace Mesnet.Classes.Math
             Center.X = Center.X + delta.X;
             Center.Y = Center.Y + delta.Y;
 
-            BottomLeft.X = BottomLeft.X + delta.X;
-            BottomLeft.Y = BottomLeft.Y + delta.Y;
+            InnerBottomLeft.X = InnerBottomLeft.X + delta.X;
+            InnerBottomLeft.Y = InnerBottomLeft.Y + delta.Y;
+            InnerBottomRight.X = InnerBottomRight.X + delta.X;
+            InnerBottomRight.Y = InnerBottomRight.Y + delta.Y;
 
-            BottomRight.X = BottomRight.X + delta.X;
-            BottomRight.Y = BottomRight.Y + delta.Y;
+            OuterBottomLeft.X = OuterBottomLeft.X + delta.X;
+            OuterBottomLeft.Y = OuterBottomLeft.Y + delta.Y;
+            OuterBottomRight.X = OuterBottomRight.X + delta.X;
+            OuterBottomRight.Y = OuterBottomRight.Y + delta.Y;
 
-            TopLeft.X = TopLeft.X + delta.X;
-            TopLeft.Y = TopLeft.Y + delta.Y;
+            InnerTopLeft.X = InnerTopLeft.X + delta.X;
+            InnerTopLeft.Y = InnerTopLeft.Y + delta.Y;
+            InnerTopRight.X = InnerTopRight.X + delta.X;
+            InnerTopRight.Y = InnerTopRight.Y + delta.Y;
 
-            TopRight.X = TopRight.X + delta.X;
-            TopRight.Y = TopRight.Y + delta.Y;
+            OuterTopLeft.X = OuterTopLeft.X + delta.X;
+            OuterTopLeft.Y = OuterTopLeft.Y + delta.Y;
+            OuterTopRight.X = OuterTopRight.X + delta.X;
+            OuterTopRight.Y = OuterTopRight.Y + delta.Y;
         }
 
         private void MoveFromCenter(Point c)
@@ -160,19 +175,27 @@ namespace Mesnet.Classes.Math
             Center.Y = Center.Y + (c.Y - Center.Y);
         }
 
-        private void InitCorners(Point c)
+        private void InitCorners(Point delta)
         {
-            BottomRight.X = (BottomRight.X + c.X);
-            BottomRight.Y = (BottomRight.Y + c.Y);
+            InnerBottomLeft.X = InnerBottomLeft.X + delta.X;
+            InnerBottomLeft.Y = InnerBottomLeft.Y + delta.Y;
+            InnerBottomRight.X = InnerBottomRight.X + delta.X;
+            InnerBottomRight.Y = InnerBottomRight.Y + delta.Y;
 
-            BottomLeft.X = (BottomLeft.X + c.X);
-            BottomLeft.Y = (BottomLeft.Y + c.Y);
+            OuterBottomLeft.X = OuterBottomLeft.X + delta.X;
+            OuterBottomLeft.Y = OuterBottomLeft.Y + delta.Y;
+            OuterBottomRight.X = OuterBottomRight.X + delta.X;
+            OuterBottomRight.Y = OuterBottomRight.Y + delta.Y;
 
-            TopRight.X = (TopRight.X + c.X);
-            TopRight.Y = (TopRight.Y + c.Y);
+            InnerTopLeft.X = InnerTopLeft.X + delta.X;
+            InnerTopLeft.Y = InnerTopLeft.Y + delta.Y;
+            InnerTopRight.X = InnerTopRight.X + delta.X;
+            InnerTopRight.Y = InnerTopRight.Y + delta.Y;
 
-            TopLeft.X = (TopLeft.X + c.X);
-            TopLeft.Y = (TopLeft.Y + c.Y);
+            OuterTopLeft.X = OuterTopLeft.X + delta.X;
+            OuterTopLeft.Y = OuterTopLeft.Y + delta.Y;
+            OuterTopRight.X = OuterTopRight.X + delta.X;
+            OuterTopRight.Y = OuterTopRight.Y + delta.Y;
         }
 
         public void Rotate(Point rotationcenter, double degree)
@@ -182,10 +205,15 @@ namespace Mesnet.Classes.Math
             Point temp_orig = new Point(rotationcenter.X, rotationcenter.Y);
             Move(new Point(rotationcenter.X, rotationcenter.Y), new Point(0, 0));
 
-            BottomRight = RotatePoint(BottomRight, qtyRadians);
-            TopRight = RotatePoint(TopRight, qtyRadians);
-            BottomLeft = RotatePoint(BottomLeft, qtyRadians);
-            TopLeft = RotatePoint(TopLeft, qtyRadians);
+            InnerBottomRight = RotatePoint(InnerBottomRight, qtyRadians);
+            InnerTopRight = RotatePoint(InnerTopRight, qtyRadians);
+            InnerBottomLeft = RotatePoint(InnerBottomLeft, qtyRadians);
+            InnerTopLeft = RotatePoint(InnerTopLeft, qtyRadians);
+
+            OuterBottomRight = RotatePoint(OuterBottomRight, qtyRadians);
+            OuterTopRight = RotatePoint(OuterTopRight, qtyRadians);
+            OuterBottomLeft = RotatePoint(OuterBottomLeft, qtyRadians);
+            OuterTopLeft = RotatePoint(OuterTopLeft, qtyRadians);
 
             //Move center back
             Move(new Point(0, 0), temp_orig);
@@ -198,11 +226,16 @@ namespace Mesnet.Classes.Math
             Point temp_orig = new Point(Center.X, Center.Y);
             MoveFromCenter(new Point(0, 0));
 
-            BottomRight = RotatePoint(BottomRight, qtyRadians);
-            TopRight = RotatePoint(TopRight, qtyRadians);
-            BottomLeft = RotatePoint(BottomLeft, qtyRadians);
-            TopLeft = RotatePoint(TopLeft, qtyRadians);
-           
+            InnerBottomRight = RotatePoint(InnerBottomRight, qtyRadians);
+            InnerTopRight = RotatePoint(InnerTopRight, qtyRadians);
+            InnerBottomLeft = RotatePoint(InnerBottomLeft, qtyRadians);
+            InnerTopLeft = RotatePoint(InnerTopLeft, qtyRadians);
+
+            OuterBottomRight = RotatePoint(OuterBottomRight, qtyRadians);
+            OuterTopRight = RotatePoint(OuterTopRight, qtyRadians);
+            OuterBottomLeft = RotatePoint(OuterBottomLeft, qtyRadians);
+            OuterTopLeft = RotatePoint(OuterTopLeft, qtyRadians);
+
             //Move center back
             MoveFromCenter(temp_orig);
             //drawrectcorners(5);
@@ -219,59 +252,115 @@ namespace Mesnet.Classes.Math
 
         public void ShowCorners(double radius)
         {
-            if (_canvas.Children.Contains(tle))
+            ShowCorners(radius, radius);
+        }
+
+        public void ShowCorners(double innerradius, double outerradius)
+        {
+            if (_canvas.Children.Contains(itle))
             {
-                _canvas.Children.Remove(tle);
+                _canvas.Children.Remove(itle);
             }
 
-            if (_canvas.Children.Contains(tre))
+            if (_canvas.Children.Contains(itre))
             {
-                _canvas.Children.Remove(tre);
+                _canvas.Children.Remove(itre);
             }
 
-            if (_canvas.Children.Contains(bre))
+            if (_canvas.Children.Contains(ibre))
             {
-                _canvas.Children.Remove(bre);
+                _canvas.Children.Remove(ibre);
             }
 
-            if (_canvas.Children.Contains(ble))
+            if (_canvas.Children.Contains(ible))
             {
-                _canvas.Children.Remove(ble);
+                _canvas.Children.Remove(ible);
             }
 
-            tle.Width = radius;
-            tle.Height = radius;
-            tle.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            if (_canvas.Children.Contains(otle))
+            {
+                _canvas.Children.Remove(otle);
+            }
 
-            _canvas.Children.Add(tle);
-            Canvas.SetLeft(tle, this.TopLeft.X - radius / 2);
-            Canvas.SetTop(tle, this.TopLeft.Y - radius / 2);
+            if (_canvas.Children.Contains(otre))
+            {
+                _canvas.Children.Remove(otre);
+            }
 
-            
-            tre.Width = radius;
-            tre.Height = radius;
-            tre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            if (_canvas.Children.Contains(obre))
+            {
+                _canvas.Children.Remove(obre);
+            }
 
-            _canvas.Children.Add(tre);
-            Canvas.SetLeft(tre, this.TopRight.X - radius / 2);
-            Canvas.SetTop(tre, this.TopRight.Y - radius / 2);
+            if (_canvas.Children.Contains(oble))
+            {
+                _canvas.Children.Remove(oble);
+            }
 
-            
-            bre.Width = radius;
-            bre.Height = radius;
-            bre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            itle.Width = innerradius;
+            itle.Height = innerradius;
+            itle.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
 
-            _canvas.Children.Add(bre);
-            Canvas.SetLeft(bre, this.BottomRight.X - radius / 2);
-            Canvas.SetTop(bre, this.BottomRight.Y - radius / 2);
+            _canvas.Children.Add(itle);
+            Canvas.SetLeft(itle, InnerTopLeft.X - innerradius / 2);
+            Canvas.SetTop(itle, InnerTopLeft.Y - innerradius / 2);
 
-            ble.Width = radius;
-            ble.Height = radius;
-            ble.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            itre.Width = innerradius;
+            itre.Height = innerradius;
+            itre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
 
-            _canvas.Children.Add(ble);
-            Canvas.SetLeft(ble, this.BottomLeft.X - radius / 2);
-            Canvas.SetTop(ble, this.BottomLeft.Y - radius / 2);
+            _canvas.Children.Add(itre);
+            Canvas.SetLeft(itre, InnerTopRight.X - innerradius / 2);
+            Canvas.SetTop(itre, InnerTopRight.Y - innerradius / 2);
+
+            ibre.Width = innerradius;
+            ibre.Height = innerradius;
+            ibre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+
+            _canvas.Children.Add(ibre);
+            Canvas.SetLeft(ibre, InnerBottomRight.X - innerradius / 2);
+            Canvas.SetTop(ibre, InnerBottomRight.Y - innerradius / 2);
+
+            ible.Width = innerradius;
+            ible.Height = innerradius;
+            ible.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+
+            _canvas.Children.Add(ible);
+            Canvas.SetLeft(ible, InnerBottomLeft.X - innerradius / 2);
+            Canvas.SetTop(ible, InnerBottomLeft.Y - innerradius / 2);
+
+            otle.Width = outerradius;
+            otle.Height = outerradius;
+            otle.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+
+            _canvas.Children.Add(otle);
+            Canvas.SetLeft(otle, OuterTopLeft.X - outerradius / 2);
+            Canvas.SetTop(otle, OuterTopLeft.Y - outerradius / 2);
+
+            otre.Width = outerradius;
+            otre.Height = outerradius;
+            otre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+
+            _canvas.Children.Add(otre);
+            Canvas.SetLeft(otre, OuterTopRight.X - outerradius / 2);
+            Canvas.SetTop(otre, OuterTopRight.Y - outerradius / 2);
+
+
+            obre.Width = outerradius;
+            obre.Height = outerradius;
+            obre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+
+            _canvas.Children.Add(obre);
+            Canvas.SetLeft(obre, OuterBottomRight.X - outerradius / 2);
+            Canvas.SetTop(obre, OuterBottomRight.Y - outerradius / 2);
+
+            oble.Width = outerradius;
+            oble.Height = outerradius;
+            oble.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+
+            _canvas.Children.Add(oble);
+            Canvas.SetLeft(oble, OuterBottomLeft.X - outerradius / 2);
+            Canvas.SetTop(oble, OuterBottomLeft.Y - outerradius / 2);
 
             _ellipsevisible = true;
         }
@@ -280,93 +369,56 @@ namespace Mesnet.Classes.Math
         {
             if (_ellipsevisible)
             {
-                if (_canvas.Children.Contains(tle))
+                if (_canvas.Children.Contains(itle))
                 {
-                    _canvas.Children.Remove(tle);
+                    _canvas.Children.Remove(itle);
                 }
 
-                if (_canvas.Children.Contains(tre))
+                if (_canvas.Children.Contains(itre))
                 {
-                    _canvas.Children.Remove(tre);
+                    _canvas.Children.Remove(itre);
                 }
 
-                if (_canvas.Children.Contains(bre))
+                if (_canvas.Children.Contains(ibre))
                 {
-                    _canvas.Children.Remove(bre);
+                    _canvas.Children.Remove(ibre);
                 }
 
-                if (_canvas.Children.Contains(ble))
+                if (_canvas.Children.Contains(ible))
                 {
-                    _canvas.Children.Remove(ble);
+                    _canvas.Children.Remove(ible);
+                }
+
+                if (_canvas.Children.Contains(otle))
+                {
+                    _canvas.Children.Remove(otle);
+                }
+
+                if (_canvas.Children.Contains(otre))
+                {
+                    _canvas.Children.Remove(otre);
+                }
+
+                if (_canvas.Children.Contains(obre))
+                {
+                    _canvas.Children.Remove(obre);
+                }
+
+                if (_canvas.Children.Contains(oble))
+                {
+                    _canvas.Children.Remove(oble);
                 }
                 _ellipsevisible = false;
             }
         }
 
-        public void drawrectcorners(double radius)
-        {
-            var ellipse1 = new Ellipse();
-            ellipse1.Width = radius;
-            ellipse1.Height = radius;
-            ellipse1.Fill = new SolidColorBrush(Color.FromArgb(100,255,255,0));
-
-            _canvas.Children.Add(ellipse1);
-            Canvas.SetLeft(ellipse1, this.TopLeft.X - radius/2);
-            Canvas.SetTop(ellipse1, this.TopLeft.Y - radius/2);
-
-            var ellipse2 = new Ellipse();
-            ellipse2.Width = radius;
-            ellipse2.Height = radius;
-            ellipse2.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
-
-            _canvas.Children.Add(ellipse2);
-            Canvas.SetLeft(ellipse2, this.TopRight.X - radius/2);
-            Canvas.SetTop(ellipse2, this.TopRight.Y - radius/2);
-
-            var ellipse3 = new Ellipse();
-            ellipse3.Width = radius;
-            ellipse3.Height = radius;
-            ellipse3.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
-
-            _canvas.Children.Add(ellipse3);
-            Canvas.SetLeft(ellipse3, this.BottomRight.X - radius/2);
-            Canvas.SetTop(ellipse3, this.BottomRight.Y - radius/2);
-
-            var ellipse4 = new Ellipse();
-            ellipse4.Width = radius;
-            ellipse4.Height = radius;
-            ellipse4.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
-
-            _canvas.Children.Add(ellipse4);
-            Canvas.SetLeft(ellipse4, this.BottomLeft.X - radius/2);
-            Canvas.SetTop(ellipse4, this.BottomLeft.Y - radius/2);
-
-            var ellipse5 = new Ellipse();
-            ellipse5.Width = radius;
-            ellipse5.Height = radius;
-            ellipse5.Fill = new SolidColorBrush(Color.FromArgb(100, 0, 0, 255));
-
-            _canvas.Children.Add(ellipse5);
-            Canvas.SetLeft(ellipse5, this.LeftPoint.X - radius / 2);
-            Canvas.SetTop(ellipse5, this.LeftPoint.Y - radius / 2);
-
-            var ellipse6 = new Ellipse();
-            ellipse6.Width = radius;
-            ellipse6.Height = radius;
-            ellipse6.Fill = new SolidColorBrush(Color.FromArgb(100, 0, 0, 255));
-
-            _canvas.Children.Add(ellipse6);
-            Canvas.SetLeft(ellipse6, this.RightPoint.X - radius / 2);
-            Canvas.SetTop(ellipse6, this.RightPoint.Y - radius / 2);
-        }
-
-        public bool IsInside(Point point)
+        public bool IsInsideInner(Point point)
         {
             var list = new List<PointF>();
-            list.Add(new PointF((float)TopLeft.X, (float)TopLeft.Y));
-            list.Add(new PointF((float)TopRight.X, (float)TopRight.Y));
-            list.Add(new PointF((float)BottomRight.X, (float)BottomRight.Y));
-            list.Add(new PointF((float)BottomLeft.X, (float)BottomLeft.Y));
+            list.Add(new PointF((float)InnerTopLeft.X, (float)InnerTopLeft.Y));
+            list.Add(new PointF((float)InnerTopRight.X, (float)InnerTopRight.Y));
+            list.Add(new PointF((float)InnerBottomRight.X, (float)InnerBottomRight.Y));
+            list.Add(new PointF((float)InnerBottomLeft.X, (float)InnerBottomLeft.Y));
 
             var polygon = new TPolygon(list.ToArray());
 
@@ -384,12 +436,47 @@ namespace Mesnet.Classes.Math
             return check;
         }
 
+        public bool IsInsideOuter(Point point)
+        {
+            var list = new List<PointF>();
+            list.Add(new PointF((float)OuterTopLeft.X, (float)OuterTopLeft.Y));
+            list.Add(new PointF((float)OuterTopRight.X, (float)OuterTopRight.Y));
+            list.Add(new PointF((float)OuterBottomRight.X, (float)OuterBottomRight.Y));
+            list.Add(new PointF((float)OuterBottomLeft.X, (float)OuterBottomLeft.Y));
+
+            var polygon = new TPolygon(list.ToArray());
+
+            var check = polygon.PointInPolygon((float) point.X, (float) point.Y);
+
+            if (check)
+            {
+                MyDebug.WriteInformation("the point is inside of the rectangle");
+            }
+            else
+            {
+                MyDebug.WriteInformation("the point is outside of the rectangle");
+            }
+
+            return check;
+        }
+
+        public void ChangeWidth(double width)
+        {
+            InnerTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, Width);
+            InnerTopRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, Width);
+
+            OuterTopLeft = Geometry.PointOnLine(InnerTopRight, InnerTopLeft, Width + 7);
+            OuterTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, Width + 7);
+            OuterBottomLeft = Geometry.PointOnLine(InnerBottomRight, InnerBottomLeft, Width + 7);
+            OuterBottomRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, Width + 7);
+        }
+
         public Point LeftPoint
         {
             get
             {
-                var x = (TopLeft.X + BottomLeft.X)/2;
-                var y = (TopLeft.Y + BottomLeft.Y) / 2;
+                var x = (InnerTopLeft.X + InnerBottomLeft.X)/2;
+                var y = (InnerTopLeft.Y + InnerBottomLeft.Y) / 2;
                 return new Point(x, y);
             }
         }
@@ -398,8 +485,8 @@ namespace Mesnet.Classes.Math
         {
             get
             {
-                var x = (TopRight.X + BottomRight.X) / 2;
-                var y = (TopRight.Y + BottomRight.Y) / 2;
+                var x = (InnerTopRight.X + InnerBottomRight.X) / 2;
+                var y = (InnerTopRight.Y + InnerBottomRight.Y) / 2;
                 return new Point(x, y);
             }
         }

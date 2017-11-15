@@ -33,6 +33,14 @@ namespace Mesnet.Classes.IO.Manifest
 
         public double Angle { get; set; }
 
+        public System.Windows.Point TopLeft { get; set; }
+
+        public System.Windows.Point TopRight { get; set; }
+
+        public System.Windows.Point BottomLeft { get; set; }
+
+        public System.Windows.Point BottomRight { get; set; }
+
         public Math.PiecewisePoly Inertias { get; set; }
 
         public Math.PiecewisePoly DistributedLoads { get; set; }

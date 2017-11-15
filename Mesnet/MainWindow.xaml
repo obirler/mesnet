@@ -47,6 +47,7 @@
                 <MenuItem x:Name="stress" Header="{DynamicResource showstress}" IsEnabled="false" Click="stress_Click" ></MenuItem>
                 <MenuItem x:Name="loads" Header="{DynamicResource showloads}" IsEnabled="false" Click="loads_Click"></MenuItem>
                 <MenuItem x:Name="delete" Header="{DynamicResource clearall}" IsEnabled="true" Click="delete_Click" ></MenuItem>
+                <MenuItem x:Name="corner" Header="Show Corners" IsEnabled="true" Click="corner_Click"></MenuItem>
             </Menu>
         </DockPanel>
 

@@ -178,11 +178,12 @@ namespace Mesnet.Classes.IO.Xml
             beam.Id = beammanifest.Id;
             beam.Name = beammanifest.Name;
             beam.BeamId = beammanifest.BeamId;
+            beam.SetTopLeft(beammanifest.TopPosition, beammanifest.LeftPosition);           
             beam.RotateTransform.CenterX = beammanifest.CenterX;
             beam.RotateTransform.CenterY = beammanifest.CenterY;
             beam.RotateTransform.Angle = beammanifest.Angle;
             beam.Angle = beam.RotateTransform.Angle;
-            beam.SetTopLeft(beammanifest.TopPosition, beammanifest.LeftPosition);
+            beam.SetTransformGeometry(beammanifest.TopLeft, beammanifest.TopRight, beammanifest.BottomRight, beammanifest.BottomLeft, _canvas);
             beam.IZero = beammanifest.IZero;
             beam.AddElasticity(beammanifest.Elasticity);
             beam.PerformStressAnalysis = beammanifest.PerformStressAnalysis;
@@ -357,6 +358,14 @@ namespace Mesnet.Classes.IO.Xml
                                 member.Direction = item.Direction;
                                 support.Members.Add(member);
                             }
+                            
+                            if (support.Members.Count > 1)
+                            {
+                                foreach (var member in support.Members)
+                                {
+                                   member.Beam.IsBound = true;
+                                }
+                            }
                             return;
                         }
                         break;
@@ -381,6 +390,13 @@ namespace Mesnet.Classes.IO.Xml
                                 member.Beam = GetObject(item.Id) as Beam;
                                 member.Direction = item.Direction;
                                 support.Members.Add(member);
+                            }
+                            if (support.Members.Count > 1)
+                            {
+                                foreach (var member in support.Members)
+                                {
+                                    member.Beam.IsBound = true;
+                                }
                             }
                             return;
                         }

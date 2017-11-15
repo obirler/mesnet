@@ -65,7 +65,7 @@ namespace Mesnet.Xaml.Pages
             InitializeComponent();
 
             inertiappoly = new PiecewisePoly();
-            beamlength = Math.Sqrt(Math.Pow(start.X - end.X, 2) + Math.Pow(start.Y - end.Y, 2)) / 100;
+            beamlength = Math.Round(Math.Sqrt(Math.Pow(start.X - end.X, 2) + Math.Pow(start.Y - end.Y, 2)) / 100, 4);
             length.Text = beamlength.ToString();
             length.IsEnabled = false;
             angletbx.Text = getAngle(start, end).ToString();

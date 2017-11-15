@@ -142,6 +142,8 @@ namespace Mesnet
      
         private string _savefilepath = null;
 
+        private bool beamTreeItemSelectedEventEnabled = true;
+
         #region zoomandpancontrol
 
         /// <summary>
@@ -322,7 +324,12 @@ namespace Mesnet
         private void zoomAndPanControl_MouseMove(object sender, MouseEventArgs e)
         {
             Point coord = e.GetPosition(canvas);
+#if DEBUG
+            coordinate.Text = "X : " + Math.Round(coord.X, 4) + " Y : " + Math.Round(coord.Y, 4);
+#else
             coordinate.Text = "X : " + Math.Round(coord.X - 10000, 4) + " Y : " + Math.Round(10000 - coord.Y, 4);
+#endif
+
             if (mouseHandlingMode == MouseHandlingMode.Panning)
             {
                 //MyDebug.WriteInformation("zoomAndPanControl_MouseMove", "panning");
@@ -608,7 +615,6 @@ namespace Mesnet
         {
             mousemoved = true;
         }
-
         #endregion
 
         #region Beam Component Events
@@ -970,6 +976,7 @@ namespace Mesnet
 
                 selectedbeam = beam;
             }
+            //e.Handled = true;
         }
 
         public void EndCircle_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1115,24 +1122,28 @@ namespace Mesnet
                                                 notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
+                                                e.Handled = true;
                                                 return;
                                             }
                                         }
                                         else
                                         {
                                             Reset();
+                                            e.Handled = true;
                                             return;
                                         }
                                     }
                                     else
                                     {
                                         Reset();
+                                        e.Handled = true;
                                         return;
                                     }
                                 }
                                 else if (assemblybeam.RightSide != null && beam.RightSide != null)
                                 {
                                     Reset();
+                                    e.Handled = true;
                                     return;
                                 }
 
@@ -1188,6 +1199,8 @@ namespace Mesnet
 
                 selectedbeam = beam;
             }
+
+            e.Handled = true;
         }
 
         #endregion
@@ -1667,6 +1680,11 @@ namespace Mesnet
                 Reset();
                 MyDebug.WriteInformation("mouse handling mode has been set to None");
             }
+            else if (e.Key == Key.Delete)
+            {
+                MyDebug.WriteInformation("Delete key down");
+                handleDeleteBeam();
+            }
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -1967,6 +1985,720 @@ namespace Mesnet
                 UpdateAllBeamTree();
                 UpdateAllSupportTree();
             }
+        }
+
+        private void handleDeleteBeam()
+        {
+            if (selectedbeam != null)
+            {
+                if (checkbeam(selectedbeam))
+                {
+                    if (selectedbeam.RightSide != null)
+                    {
+                        switch (GetObjectType(selectedbeam.RightSide))
+                        {
+                            case ObjectType.BasicSupport:
+                                {
+                                    var bsr = selectedbeam.RightSide as BasicSupport;
+                                    if (bsr.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        if (selectedbeam.LeftSide != null)
+                                        {
+                                            switch (GetObjectType(selectedbeam.LeftSide))
+                                            {
+                                                case ObjectType.BasicSupport:
+                                                
+                                                    var bsl = selectedbeam.LeftSide as BasicSupport;
+                                                    if (bsl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(bsr);
+                                                        deleteSupport(bsl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(bsr);
+                                                        bsl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.SlidingSupport:
+
+                                                    var ssl = selectedbeam.LeftSide as SlidingSupport;
+                                                    if (ssl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(bsr);
+                                                        deleteSupport(ssl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(bsr);
+                                                        ssl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.LeftFixedSupport:
+
+                                                    var ls = selectedbeam.LeftSide as LeftFixedSupport;
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(bsr);
+                                                    deleteSupport(ls);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                    return;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //The beam is not bounded on both sides it just has one support which will be deleted.
+                                            deleteSupport(bsr);
+                                            deleteBeam(selectedbeam);
+                                            UnselectAll();
+                                            UpdateAllBeamTree();
+                                            UpdateAllSupportTree();
+                                            return;
+                                        }                                       
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.SlidingSupport:
+                                {
+                                    var ssr = selectedbeam.RightSide as SlidingSupport;
+                                    if (ssr.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        if (selectedbeam.LeftSide != null)
+                                        {
+                                            switch (GetObjectType(selectedbeam.LeftSide))
+                                            {
+                                                case ObjectType.BasicSupport:
+
+                                                    var bsl = selectedbeam.LeftSide as BasicSupport;
+                                                    if (bsl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(ssr);
+                                                        deleteSupport(bsl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(ssr);
+                                                        bsl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.SlidingSupport:
+
+                                                    var ssl = selectedbeam.LeftSide as SlidingSupport;
+                                                    if (ssl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(ssr);
+                                                        deleteSupport(ssl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(ssr);
+                                                        ssl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.LeftFixedSupport:
+
+                                                    var ls = selectedbeam.LeftSide as LeftFixedSupport;
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(ssr);
+                                                    deleteSupport(ls);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                    return;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //The beam is not bounded on both sides it just has one support which will be deleted.
+                                            deleteSupport(ssr);
+                                            deleteBeam(selectedbeam);
+                                            UnselectAll();
+                                            UpdateAllBeamTree();
+                                            UpdateAllSupportTree();
+                                            return;
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.RightFixedSupport:
+                                {
+                                    var rs = selectedbeam.RightSide as RightFixedSupport;
+                                    //The beam is free on the right side
+                                    if (selectedbeam.LeftSide != null)
+                                    {
+                                        switch (GetObjectType(selectedbeam.LeftSide))
+                                        {
+                                            case ObjectType.BasicSupport:
+
+                                                var bsl = selectedbeam.LeftSide as BasicSupport;
+                                                if (bsl.Members.Count == 1)
+                                                {
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(rs);
+                                                    deleteSupport(bsl);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                else
+                                                {
+                                                    //The beam is bounded on left side
+                                                    deleteSupport(rs);
+                                                    bsl.RemoveBeam(selectedbeam);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                return;
+
+                                            case ObjectType.SlidingSupport:
+
+                                                var ssl = selectedbeam.LeftSide as SlidingSupport;
+                                                if (ssl.Members.Count == 1)
+                                                {
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(rs);
+                                                    deleteSupport(ssl);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                else
+                                                {
+                                                    //The beam is bounded on left side
+                                                    deleteSupport(rs);
+                                                    ssl.RemoveBeam(selectedbeam);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                return;
+
+                                            case ObjectType.LeftFixedSupport:
+
+                                                var ls = selectedbeam.LeftSide as LeftFixedSupport;
+                                                //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                deleteSupport(rs);
+                                                deleteSupport(ls);
+                                                deleteBeam(selectedbeam);
+                                                UnselectAll();
+                                                UpdateAllBeamTree();
+                                                UpdateAllSupportTree();
+                                                return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //The beam is not bounded on both sides it just has one support which will be deleted.
+                                        deleteSupport(rs);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        //The beam has no support on the right side
+                        if (selectedbeam.LeftSide != null)
+                        {
+                            switch (GetObjectType(selectedbeam.LeftSide))
+                            {
+                                case ObjectType.BasicSupport:
+
+                                    var bsl = selectedbeam.LeftSide as BasicSupport;
+                                    if (bsl.Members.Count == 1)
+                                    {
+                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                        deleteSupport(bsl);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    else
+                                    {
+                                        //The beam is bounded on left side
+                                        bsl.RemoveBeam(selectedbeam);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    return;
+
+                                case ObjectType.SlidingSupport:
+
+                                    var ssl = selectedbeam.LeftSide as SlidingSupport;
+                                    if (ssl.Members.Count == 1)
+                                    {
+                                        deleteSupport(ssl);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    else
+                                    {
+                                        //The beam is bounded on left side
+                                        ssl.RemoveBeam(selectedbeam);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    return;
+
+                                case ObjectType.LeftFixedSupport:
+
+                                    var ls = selectedbeam.LeftSide as LeftFixedSupport;
+                                    //The beam is not bounded on both sides it just has one support which will be deleted.
+                                    deleteSupport(ls);
+                                    deleteBeam(selectedbeam);
+                                    UnselectAll();
+                                    UpdateAllBeamTree();
+                                    UpdateAllSupportTree();
+                                    return;
+                            }
+                        }
+                        else
+                        {
+                            //The beam is not bounded on both sides it and has no supports.
+                            deleteBeam(selectedbeam);
+                            UnselectAll();
+                            UpdateAllBeamTree();
+                            return;
+                        }
+                    }
+
+                    if (selectedbeam.LeftSide != null)
+                    {
+                        switch (GetObjectType(selectedbeam.LeftSide))
+                        {
+                            case ObjectType.BasicSupport:
+                                {
+                                    var bsr = selectedbeam.LeftSide as BasicSupport;
+                                    if (bsr.Members.Count == 1)
+                                    {
+                                        //The beam is free on the left side
+                                        if (selectedbeam.RightSide != null)
+                                        {
+                                            switch (GetObjectType(selectedbeam.RightSide))
+                                            {
+                                                case ObjectType.BasicSupport:
+
+                                                    var bsl = selectedbeam.RightSide as BasicSupport;
+                                                    if (bsl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(bsr);
+                                                        deleteSupport(bsl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(bsr);
+                                                        bsl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.SlidingSupport:
+
+                                                    var ssl = selectedbeam.RightSide as SlidingSupport;
+                                                    if (ssl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(bsr);
+                                                        deleteSupport(ssl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(bsr);
+                                                        ssl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.RightFixedSupport:
+
+                                                    var ls = selectedbeam.RightSide as RightFixedSupport;
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(bsr);
+                                                    deleteSupport(ls);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                    return;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //The beam is not bounded on both sides it just has one support which will be deleted.
+                                            deleteSupport(bsr);
+                                            deleteBeam(selectedbeam);
+                                            UnselectAll();
+                                            UpdateAllBeamTree();
+                                            UpdateAllSupportTree();
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.SlidingSupport:
+                                {
+                                    var ssr = selectedbeam.LeftSide as SlidingSupport;
+                                    if (ssr.Members.Count == 1)
+                                    {
+                                        //The beam is free on the right side
+                                        if (selectedbeam.RightSide != null)
+                                        {
+                                            switch (GetObjectType(selectedbeam.RightSide))
+                                            {
+                                                case ObjectType.BasicSupport:
+
+                                                    var bsl = selectedbeam.RightSide as BasicSupport;
+                                                    if (bsl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(ssr);
+                                                        deleteSupport(bsl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(ssr);
+                                                        bsl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.SlidingSupport:
+
+                                                    var ssl = selectedbeam.RightSide as SlidingSupport;
+                                                    if (ssl.Members.Count == 1)
+                                                    {
+                                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                        deleteSupport(ssr);
+                                                        deleteSupport(ssl);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    else
+                                                    {
+                                                        //The beam is bounded on left side
+                                                        deleteSupport(ssr);
+                                                        ssl.RemoveBeam(selectedbeam);
+                                                        deleteBeam(selectedbeam);
+                                                        UnselectAll();
+                                                        UpdateAllBeamTree();
+                                                        UpdateAllSupportTree();
+                                                    }
+                                                    return;
+
+                                                case ObjectType.RightFixedSupport:
+
+                                                    var ls = selectedbeam.RightSide as RightFixedSupport;
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(ssr);
+                                                    deleteSupport(ls);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                    return;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //The beam is not bounded on both sides it just has one support which will be deleted.
+                                            deleteSupport(ssr);
+                                            deleteBeam(selectedbeam);
+                                            UnselectAll();
+                                            UpdateAllBeamTree();
+                                            UpdateAllSupportTree();
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case ObjectType.LeftFixedSupport:
+                                {
+                                    var rs = selectedbeam.LeftSide as LeftFixedSupport;
+                                    //The beam is free on the left side
+                                    if (selectedbeam.RightSide != null)
+                                    {
+                                        switch (GetObjectType(selectedbeam.RightSide))
+                                        {
+                                            case ObjectType.BasicSupport:
+
+                                                var bsl = selectedbeam.RightSide as BasicSupport;
+                                                if (bsl.Members.Count == 1)
+                                                {
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(rs);
+                                                    deleteSupport(bsl);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                else
+                                                {
+                                                    //The beam is bounded on left side
+                                                    deleteSupport(rs);
+                                                    bsl.RemoveBeam(selectedbeam);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                return;
+
+                                            case ObjectType.SlidingSupport:
+
+                                                var ssl = selectedbeam.RightSide as SlidingSupport;
+                                                if (ssl.Members.Count == 1)
+                                                {
+                                                    //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                    deleteSupport(rs);
+                                                    deleteSupport(ssl);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                else
+                                                {
+                                                    //The beam is bounded on left side
+                                                    deleteSupport(rs);
+                                                    ssl.RemoveBeam(selectedbeam);
+                                                    deleteBeam(selectedbeam);
+                                                    UnselectAll();
+                                                    UpdateAllBeamTree();
+                                                    UpdateAllSupportTree();
+                                                }
+                                                return;
+
+                                            case ObjectType.RightFixedSupport:
+
+                                                var ls = selectedbeam.RightSide as RightFixedSupport;
+                                                //The beam is not bounded on both sides it just has two support which will be deleted.
+                                                deleteSupport(rs);
+                                                deleteSupport(ls);
+                                                deleteBeam(selectedbeam);
+                                                UnselectAll();
+                                                UpdateAllBeamTree();
+                                                UpdateAllSupportTree();
+                                                return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //The beam is not bounded on both sides it just has one support which will be deleted.
+                                        deleteSupport(rs);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        //The beam has no support on the left side
+                        if (selectedbeam.RightSide != null)
+                        {
+                            switch (GetObjectType(selectedbeam.RightSide))
+                            {
+                                case ObjectType.BasicSupport:
+
+                                    var bsl = selectedbeam.RightSide as BasicSupport;
+                                    if (bsl.Members.Count == 1)
+                                    {
+                                        //The beam is not bounded on both sides it just has two support which will be deleted.
+                                        deleteSupport(bsl);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    else
+                                    {
+                                        //The beam is bounded on left side
+                                        bsl.RemoveBeam(selectedbeam);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    return;
+
+                                case ObjectType.SlidingSupport:
+
+                                    var ssl = selectedbeam.RightSide as SlidingSupport;
+                                    if (ssl.Members.Count == 1)
+                                    {
+                                        deleteSupport(ssl);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    else
+                                    {
+                                        //The beam is bounded on left side
+                                        ssl.RemoveBeam(selectedbeam);
+                                        deleteBeam(selectedbeam);
+                                        UnselectAll();
+                                        UpdateAllBeamTree();
+                                        UpdateAllSupportTree();
+                                    }
+                                    return;
+
+                                case ObjectType.RightFixedSupport:
+
+                                    var ls = selectedbeam.RightSide as RightFixedSupport;
+                                    //The beam is not bounded on both sides it just has one support which will be deleted.
+                                    deleteSupport(ls);
+                                    deleteBeam(selectedbeam);
+                                    UnselectAll();
+                                    UpdateAllBeamTree();
+                                    UpdateAllSupportTree();
+                                    return;
+                            }
+                        }
+                        else
+                        {
+                            //The beam is not bounded on both sides it and has no supports.
+                            deleteBeam(selectedbeam);
+                            UnselectAll();
+                            UpdateAllBeamTree();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void deleteBeam(Beam beam)
+        {
+            RemoveBeamTree(beam);
+            canvas.Children.Remove(beam);
+            objects.Remove(beam);
+        }
+
+        private void deleteSupport(object support)
+        {
+            RemoveSupportTree(support);
+            switch (GetObjectType(support))
+            {
+                case ObjectType.BasicSupport:
+                    var bs = support as BasicSupport;
+                    canvas.Children.Remove(bs);
+                    break;
+
+                case ObjectType.SlidingSupport:
+                    var ss = support as SlidingSupport;
+                    canvas.Children.Remove(ss);
+                    break;
+
+                case ObjectType.LeftFixedSupport:
+                    var ls = support as LeftFixedSupport;
+                    canvas.Children.Remove(ls);
+                    break;
+
+                case ObjectType.RightFixedSupport:
+                    var rs = support as RightFixedSupport;
+                    canvas.Children.Remove(rs);
+                    break;
+            }          
+            objects.Remove(support);
         }
 
         /// <summary>
@@ -2636,17 +3368,33 @@ namespace Mesnet
         }
 
         /// <summary>
+        /// Removes TreeViewBeamItem from beam tree
+        /// </summary>
+        /// <param name="beam">The beam of the TreeViewBeamItem.</param>
+        private void RemoveBeamTree(Beam beam)
+        {
+            foreach (TreeViewBeamItem item in tree.Items)
+            {
+                if (item.Beam.Equals(beam))
+                {
+                    tree.Items.Remove(item);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates all the tree view items.
         /// </summary>
         public void UpdateAllBeamTree()
         {
             MyDebug.WriteInformation("Update All Tree Started");
+            
             foreach (var item in objects)
             {
                 switch (GetObjectType(item))
                 {
                     case ObjectType.Beam:
-
                         Beam beam = (Beam)item;
                         UpdateBeamTree(beam);
                         break;
@@ -2878,6 +3626,22 @@ namespace Mesnet
         }
 
         /// <summary>
+        /// Removes TreeViewSupportItem from support tree.
+        /// </summary>
+        /// <param name="support">The support of the TreeViewSupportItem.</param>
+        private void RemoveSupportTree(object support)
+        {
+            foreach (TreeViewSupportItem item in supporttree.Items)
+            {
+                if (item.Support.Equals(support))
+                {
+                    supporttree.Items.Remove(item);
+                    break;
+                }
+            }          
+        }
+
+        /// <summary>
         /// Updates all the support tree view items.
         /// </summary>
         public void UpdateAllSupportTree()
@@ -2920,30 +3684,33 @@ namespace Mesnet
 
         private void BeamTreeItemSelected(object sender, RoutedEventArgs e)
         {
-            Reset();
-
-            var treeitem = sender as TreeViewItem;
-            var beam = (treeitem.Header as BeamItem).Beam;
-
-            SelectBeamItem(beam);
-
-            foreach (var item in objects)
+            if (beamTreeItemSelectedEventEnabled)
             {
-                switch (GetObjectType(item))
+                Reset();
+
+                var treeitem = sender as TreeViewItem;
+                var beam = (treeitem.Header as BeamItem).Beam;
+
+                SelectBeamItem(beam);
+
+                foreach (var item in objects)
                 {
-                    case ObjectType.Beam:
+                    switch (GetObjectType(item))
+                    {
+                        case ObjectType.Beam:
 
-                        var beam1 = item as Beam;
+                            var beam1 = item as Beam;
 
-                        if (Equals(beam1, beam))
-                        {
-                            SelectBeam(beam1);
-                            return;
-                        }
+                            if (Equals(beam1, beam))
+                            {
+                                SelectBeam(beam1);
+                                return;
+                            }
 
-                        break;
+                            break;
+                    }
                 }
-            }
+            }          
         }
 
         /// <summary>
@@ -2956,9 +3723,9 @@ namespace Mesnet
             {
                 if (Equals(beam, item.Beam))
                 {
-                    item.Selected -= BeamTreeItemSelected;
+                    beamTreeItemSelectedEventEnabled = false;
                     item.IsSelected = true;
-                    item.Selected += BeamTreeItemSelected;
+                    beamTreeItemSelectedEventEnabled = true;
                     break;
                 }
             }
@@ -4701,19 +5468,42 @@ namespace Mesnet
             {
                 string path = openFileDialog.FileName;
                 MyDebug.WriteInformation("user selected a file from open file dialog: " + path);
-                if (openxmlio.ReadXml(canvas, path))
+                try
                 {
+                    if (openxmlio.ReadXml(canvas, path))
+                    {
+                        foreach (var item in objects)
+                        {
+                            if (GetObjectType(item) == ObjectType.Beam)
+                            {
+                                var beam = item as Beam;
+                                beam.ShowCorners(5, 5);
+                            }
+                        }
+                        UpdateAllBeamTree();
+                        UpdateAllSupportTree();
+                        MyDebug.WriteInformation("xml file has been read from " + path);
+                        MesnetSettings.WriteSetting("openpath", System.IO.Path.GetDirectoryName(path), "mainwindow");
+                        WriteStatus("fileread");
+                    }
+                    else
+                    {
+                        MyDebug.WriteWarning("xml file could not be read!");
+                        WriteStatus("filereaderror");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MyDebug.WriteError(e.Message);
+                    MessageBox.Show("File could not be read!");
+                    WriteStatus("filereaderror");
+                    objects.Clear();
+                    canvas.Children.Clear();
                     UpdateAllBeamTree();
                     UpdateAllSupportTree();
-                    MyDebug.WriteInformation("xml file has been read from " + path);
-                    MesnetSettings.WriteSetting("openpath", System.IO.Path.GetDirectoryName(path), "mainwindow");
-                    WriteStatus("fileread");
-                }
-                else
-                {
-                    MyDebug.WriteWarning("xml file could not be read!");
-                    WriteStatus("filereaderror");
-                }               
+                    resetsystem();
+                    return;
+                }                          
             }
             else
             {
@@ -4941,6 +5731,18 @@ namespace Mesnet
         {
             e.Cancel = true;
             menuexit();
+        }
+
+        private void corner_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in objects)
+            {
+                if (GetObjectType(item) == ObjectType.Beam)
+                {
+                    var beam = item as Beam;
+                    beam.ShowCorners(5, 5);
+                }
+            }
         }
     }
 }

@@ -19,19 +19,19 @@
                 <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
 
                     <TextBlock Text="{DynamicResource beamlength}" VerticalAlignment="Center"/>
-                    <TextBox x:Name="length" Text="1" Width="40" Height="21" TextAlignment="Center" Margin="5,0,5,2" LostFocus="length_LostFocus" Background="White" TabIndex="0" GotFocus="length_GotFocus"/>
+                    <TextBox x:Name="length" Text="1" Width="60" Height="21" TextAlignment="Center" Margin="5,0,5,2" LostFocus="length_LostFocus" Background="White" TabIndex="0" GotFocus="length_GotFocus"/>
                     <TextBlock Text="m" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="{DynamicResource elasticitymodulus}" VerticalAlignment="Center"/>
-                    <TextBox x:Name="elasticitymodulus" Text="200" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="elasticitymodulus_LostFocus" TabIndex="1" GotFocus="elasticitymodulus_GotFocus"/>
+                    <TextBox x:Name="elasticitymodulus" Text="200" Width="60" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="elasticitymodulus_LostFocus" TabIndex="1" GotFocus="elasticitymodulus_GotFocus"/>
                     <TextBlock Text="GPa" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Height="23" Margin="10,10,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="{DynamicResource angle}" VerticalAlignment="Center"/>
-                    <TextBox x:Name="angletbx" Text="0" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
+                    <TextBox x:Name="angletbx" Text="0" Width="60" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
                     <TextBlock Text="{DynamicResource degree}" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
                 </StackPanel>
 
@@ -39,7 +39,7 @@
 
                 <StackPanel x:Name="maxstressstk" Visibility="Collapsed" Orientation="Horizontal" Height="23" Margin="10,5,0,0" HorizontalAlignment="Left">
                     <TextBlock Text="{DynamicResource maxstress}" VerticalAlignment="Center"/>
-                    <TextBox x:Name="maxstresstbx" Text="0" Width="40" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
+                    <TextBox x:Name="maxstresstbx" Text="0" Width="60" TextAlignment="Center" Height="21" Margin="5,0,5,2" LostFocus="angletbx_LostFocus" TabIndex="2" GotFocus="angletbx_GotFocus"/>
                     <TextBlock Text="MPa" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -83,7 +83,7 @@
                                         <TextBlock Text="0" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="ui" Text="1" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="ui" Text="1" IsEnabled="True" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -93,7 +93,7 @@
                                         <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="uix1" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="uix1" Text="0" IsEnabled="True" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -103,7 +103,7 @@
                                         <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="uix2" Text="0" IsEnabled="True" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="uix2" Text="0" IsEnabled="True" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -219,7 +219,7 @@
                                         <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="li1" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="li1" IsEnabled="False" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -229,7 +229,7 @@
                                         <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="li2" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="li2" IsEnabled="False" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -239,7 +239,7 @@
                                         <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="lix1" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="lix1" IsEnabled="False" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -356,7 +356,7 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="32" Margin="5,0,0,0">
                                         <TextBlock Text="I(x)=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="vi" IsEnabled="False" Width="50" Height="21" Margin="2,2,0,0"></TextBox>
+                                    <TextBox x:Name="vi" IsEnabled="False" Width="60" Height="21" Margin="2,2,0,0"></TextBox>
                                     <TextBlock Text="cm^4" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -366,7 +366,7 @@
                                         <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="vix1" IsEnabled="False" Width="50" Height="21" Margin="3,2,0,0"></TextBox>
+                                    <TextBox x:Name="vix1" IsEnabled="False" Width="60" Height="21" Margin="3,2,0,0"></TextBox>
                                     <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 
@@ -376,7 +376,7 @@
                                         <TextBlock Text="2" FontSize="12" VerticalAlignment="Center" Margin="0,20,0,0"/>
                                         <TextBlock Text="=" FontSize="20" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBox x:Name="vix2" IsEnabled="False" Width="50" Height="21" Margin="3,2,0,0"></TextBox>
+                                    <TextBox x:Name="vix2" IsEnabled="False" Width="60" Height="21" Margin="3,2,0,0"></TextBox>
                                     <TextBlock Text="m" FontSize="18" Margin="5,5,0,0"></TextBlock>
                                 </StackPanel>
 

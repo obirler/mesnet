@@ -281,7 +281,7 @@ namespace Mesnet.Classes.Tools
                 beam8.AddLoad(load8, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -520,7 +520,7 @@ namespace Mesnet.Classes.Tools
                 beam8.MaxAllowableStress = 150;
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -812,7 +812,7 @@ namespace Mesnet.Classes.Tools
                 beam12.endcircle.MouseDown += _mw.EndCircle_MouseDown;
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -953,7 +953,7 @@ namespace Mesnet.Classes.Tools
                 beam5.AddLoad(load5, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -1104,7 +1104,7 @@ namespace Mesnet.Classes.Tools
                 beam5.AddLoad(load5, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -1253,7 +1253,7 @@ namespace Mesnet.Classes.Tools
                 beam5.AddLoad(load5, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -1319,7 +1319,7 @@ namespace Mesnet.Classes.Tools
                 beam1.AddLoad(load1, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -1413,7 +1413,7 @@ namespace Mesnet.Classes.Tools
                 beam2.AddLoad(load2, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -1515,7 +1515,7 @@ namespace Mesnet.Classes.Tools
                 beam2.AddLoad(concload2, Global.Direction.Up);
 
                 _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hide_mw.loads");
+                _mw.loads.Header = GetString("hideloads");
                 _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
@@ -1572,7 +1572,6 @@ namespace Mesnet.Classes.Tools
                 beam2.AddInertia(new PiecewisePoly(polies2));
                 beam2.AddTopLeft(_mw.canvas, 10100, 9800);
                 beam2.SetAngleCenter(90);
-                beam2.InnerGeometry.drawrectcorners(5);
 
                 var basicsupport3 = new BasicSupport(_mw.canvas);
                 basicsupport3.AddBeam(beam2, Global.Direction.Right);
@@ -1591,11 +1590,9 @@ namespace Mesnet.Classes.Tools
                 var load2 = new DistributedLoad(ppoly2, beam2.Length);
                 beam2.AddLoad(load2, Global.Direction.Up);
 
-                beam2.InnerGeometry.drawrectcorners(5);
-
-                beam1.InnerGeometry.drawrectcorners(5);
-
-                beam1.OuterGeometry.drawrectcorners(3);
+                _mw.LoadsShown = true;
+                _mw.loads.Header = GetString("hideloads");
+                _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
 
@@ -1687,6 +1684,10 @@ namespace Mesnet.Classes.Tools
                 var ppoly3 = new PiecewisePoly(loadpolies3);
                 var load3 = new DistributedLoad(ppoly3, beam3.Length);
                 beam3.AddLoad(load3, Global.Direction.Up);
+
+                _mw.LoadsShown = true;
+                _mw.loads.Header = GetString("hideloads");
+                _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
 
@@ -2011,6 +2012,10 @@ namespace Mesnet.Classes.Tools
 
                 /////////////////////////////////////////////////////////////
 
+                _mw.LoadsShown = true;
+                _mw.loads.Header = GetString("hideloads");
+                _mw.loads.IsEnabled = true;
+
                 _mw.DisableTestMenus();
 
                 _mw.UpdateAllSupportTree();
@@ -2121,7 +2126,11 @@ namespace Mesnet.Classes.Tools
                 beam4.endcircle.MouseDown += _mw.EndCircle_MouseDown;
 
                 var rightfixedsupport = new RightFixedSupport(_mw.canvas);
-                rightfixedsupport.AddBeam(beam4);             
+                rightfixedsupport.AddBeam(beam4);
+
+                _mw.LoadsShown = true;
+                _mw.loads.Header = GetString("hideloads");
+                _mw.loads.IsEnabled = true;
 
                 _mw.DisableTestMenus();
 

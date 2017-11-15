@@ -40,13 +40,25 @@ namespace Mesnet.Classes.IO.Xml
                 _writer.WriteElementString("maxallowablestress", _beam.MaxAllowableStress.ToString());
             }
 
-            _writer.WriteStartElement("RotateTronsform");
+            _writer.WriteStartElement("RotateTransform");
 
             _writer.WriteElementString("centerx", _beam.rotateTransform.CenterX.ToString());
 
             _writer.WriteElementString("centery", _beam.rotateTransform.CenterY.ToString());
 
             _writer.WriteElementString("angle", _beam.rotateTransform.Angle.ToString());
+
+            _writer.WriteEndElement();
+
+            _writer.WriteStartElement("TransformGeometry");
+
+            _writer.WriteElementString("topleft", _beam.TGeometry.InnerTopLeft.X + ";" + _beam.TGeometry.InnerTopLeft.Y);
+
+            _writer.WriteElementString("topright", _beam.TGeometry.InnerTopRight.X + ";" + _beam.TGeometry.InnerTopRight.Y);
+
+            _writer.WriteElementString("bottomleft", _beam.TGeometry.InnerBottomLeft.X + ";" + _beam.TGeometry.InnerBottomLeft.Y);
+
+            _writer.WriteElementString("bottomright", _beam.TGeometry.InnerBottomRight.X + ";" + _beam.TGeometry.InnerBottomRight.Y);
 
             _writer.WriteEndElement();
 

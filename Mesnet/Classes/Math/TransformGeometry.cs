@@ -257,6 +257,7 @@ namespace Mesnet.Classes.Math
 
         public void ShowCorners(double innerradius, double outerradius)
         {
+#if DEBUG
             if (_canvas.Children.Contains(itle))
             {
                 _canvas.Children.Remove(itle);
@@ -363,6 +364,7 @@ namespace Mesnet.Classes.Math
             Canvas.SetTop(oble, OuterBottomLeft.Y - outerradius / 2);
 
             _ellipsevisible = true;
+#endif
         }
 
         public void HideCorners()
@@ -462,13 +464,14 @@ namespace Mesnet.Classes.Math
 
         public void ChangeWidth(double width)
         {
-            InnerTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, Width);
-            InnerTopRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, Width);
+            Width = width;
+            InnerTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, width);
+            InnerBottomRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, width);
 
-            OuterTopLeft = Geometry.PointOnLine(InnerTopRight, InnerTopLeft, Width + 7);
-            OuterTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, Width + 7);
-            OuterBottomLeft = Geometry.PointOnLine(InnerBottomRight, InnerBottomLeft, Width + 7);
-            OuterBottomRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, Width + 7);
+            OuterTopLeft = Geometry.PointOnLine(InnerTopRight, InnerTopLeft, width + 7);
+            OuterTopRight = Geometry.PointOnLine(InnerTopLeft, InnerTopRight, width + 7);
+            OuterBottomLeft = Geometry.PointOnLine(InnerBottomRight, InnerBottomLeft, width + 7);
+            OuterBottomRight = Geometry.PointOnLine(InnerBottomLeft, InnerBottomRight, width + 7);
         }
 
         public Point LeftPoint

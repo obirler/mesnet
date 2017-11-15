@@ -64,13 +64,11 @@ namespace Mesnet
 
             InitializeComponent();
 
-            //moment.Header = "Show Moment";
-
-            //force.Header = "Show Force";
-
-            //deflection.Header = "Show Deflection";
-
-            //stress.Header = "Show Stress";
+#if DEBUG
+            corner.Visibility = Visibility.Visible;
+#else
+            corner.Visibility=Visibility.Collapsed;
+#endif
 
             scaleslider.Value = zoomAndPanControl.ContentScale;
 
@@ -218,17 +216,18 @@ namespace Mesnet
             canvas.Focus();
             Keyboard.Focus(canvas);
 
+            if (mouseHandlingMode == MouseHandlingMode.CircularBeamConnection)
+            {
+                mouseHandlingMode = MouseHandlingMode.None;
+                e.Handled = true;              
+                return;
+            }
+
             mouseButtonDown = e.ChangedButton;
             origZoomAndPanControlMouseDownPoint = e.GetPosition(zoomAndPanControl);
             origContentMouseDownPoint = e.GetPosition(canvas);
             //MyDebug.WriteInformation("zoomAndPanControl_MouseDown origContentMouseDownPoint :", origContentMouseDownPoint.X + " : " + origContentMouseDownPoint.Y);
-
-            if (mouseHandlingMode == MouseHandlingMode.CircularBeamConnection)
-            {
-                Reset();
-                e.Handled = true;
-                return;
-            }
+        
             if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0 && (e.ChangedButton == MouseButton.Left || e.ChangedButton == MouseButton.Right))
             {
                 // Shift + left- or right-down initiates zooming mode.
@@ -828,6 +827,7 @@ namespace Mesnet
                                                 notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
+                                                Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
                                         }
@@ -905,6 +905,7 @@ namespace Mesnet
                                                 notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
+                                                Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
                                         }
@@ -950,17 +951,17 @@ namespace Mesnet
                 {
                     //check if there is a fixed support bonded to beam's selected side. If there is, the user should not put any support or beam to selected side, 
                     //so disable the fixed support button
-                    switch (beam.LeftSide.GetType().Name)
+                    switch (GetObjectType(beam.LeftSide))
                     {
-                        case "LeftFixedSupport":
+                        case ObjectType.LeftFixedSupport:
                             btnonlybeammode();
                             break;
 
-                        case "BasicSupport":
+                        case ObjectType.BasicSupport:
                             btnonlybeammode();
                             break;
 
-                        case "SlidingSupport":
+                        case ObjectType.SlidingSupport:
                             btnonlybeammode();
                             break;
                     }
@@ -1044,6 +1045,7 @@ namespace Mesnet
                                                 notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
+                                                Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
                                         }
@@ -1116,13 +1118,12 @@ namespace Mesnet
                                                 newbeam.startcircle.MouseDown += StartCircle_MouseDown;
                                                 newbeam.endcircle.MouseDown += EndCircle_MouseDown;
 
-                                                UpdateSupportTree(assemblybeam.RightSide);
-                                                newbeam.SetAngleRight(beamangle);
+                                                //newbeam.SetAngleRight(beamangle);
                                                 canvas.UpdateLayout();
                                                 notify.Text = (string)FindResource("beamput");
                                                 UpdateAllBeamTree();
                                                 UpdateAllSupportTree();
-                                                e.Handled = true;
+                                                Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
                                         }
@@ -1171,17 +1172,17 @@ namespace Mesnet
                 {
                     //check if there is a fixed support bonded to beam's selected side. If there is the user should not put any support selected side, 
                     //so disable the fixed support button
-                    switch (beam.RightSide.GetType().Name)
+                    switch (GetObjectType(beam.RightSide))
                     {
-                        case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
                             btnonlybeammode();
                             break;
 
-                        case "BasicSupport":
+                        case ObjectType.BasicSupport:
                             btnonlybeammode();
                             break;
 
-                        case "SlidingSupport":
+                        case ObjectType.SlidingSupport:
                             btnonlybeammode();
                             break;
                     }
@@ -1215,7 +1216,7 @@ namespace Mesnet
                 var beamdialog = new BeamPrompt();
                 beamdialog.maxstresstbx.Text = _maxstress.ToString();
                 beamdialog.Owner = this;
-                if ((bool)beamdialog.ShowDialog())
+                if ((bool) beamdialog.ShowDialog())
                 {
                     if (assembly)
                     {
@@ -1238,7 +1239,7 @@ namespace Mesnet
                                             MaxInertia = beam.MaxInertia;
                                         }
 
-                                        if ((bool)beamdialog.stresscbx.IsChecked)
+                                        if ((bool) beamdialog.stresscbx.IsChecked)
                                         {
                                             beam.PerformStressAnalysis = true;
                                             beam.AddE(beamdialog.eppoly);
@@ -1248,11 +1249,11 @@ namespace Mesnet
                                         }
                                         beamangle = beamdialog.angle;
 
-                                        beam.Connect(Direction.Right, selectedbeam, Direction.Left);
+                                        beam.Connect(Direction.Left, selectedbeam, Direction.Left);
                                         UpdateSupportTree(selectedbeam.LeftSide);
-                                        beam.SetAngleRight(beamangle);
+                                        beam.SetAngleLeft(beamangle);
                                         canvas.UpdateLayout();
-                                        notify.Text = (string)FindResource("beamput");
+                                        notify.Text = (string) FindResource("beamput");
                                     }
                                 }
                                 else
@@ -1276,7 +1277,7 @@ namespace Mesnet
                                         {
                                             MaxInertia = beam.MaxInertia;
                                         }
-                                        if ((bool)beamdialog.stresscbx.IsChecked)
+                                        if ((bool) beamdialog.stresscbx.IsChecked)
                                         {
                                             beam.PerformStressAnalysis = true;
                                             beam.AddE(beamdialog.eppoly);
@@ -1296,7 +1297,7 @@ namespace Mesnet
                                         UpdateSupportTree(selectedbeam.RightSide);
                                         beam.SetAngleLeft(beamangle);
                                         canvas.UpdateLayout();
-                                        notify.Text = (string)FindResource("beamput");
+                                        notify.Text = (string) FindResource("beamput");
                                     }
                                 }
                                 else
@@ -1318,7 +1319,7 @@ namespace Mesnet
                         var beam = new Beam(beamdialog.beamlength);
                         beam.AddElasticity(beamdialog.beamelasticitymodulus);
                         beam.AddInertia(beamdialog.inertiappoly);
-                        if ((bool)beamdialog.stresscbx.IsChecked)
+                        if ((bool) beamdialog.stresscbx.IsChecked)
                         {
                             beam.PerformStressAnalysis = true;
                             beam.AddE(beamdialog.eppoly);
@@ -1332,6 +1333,10 @@ namespace Mesnet
                         SetMouseHandlingMode("beambtn_Click", MouseHandlingMode.BeamPlacing);
                         notify.Text = "Please select the point for beam";
                     }
+                }
+                else
+                {
+                    Reset();
                 }
             }
             else
@@ -1702,7 +1707,6 @@ namespace Mesnet
                 var value = Math.Round(Convert.ToDouble(scaletext.Text), 3);
                 scaletext.Text = value.ToString();
 
-
                 var timer = new DispatcherTimer();
 
                 timer.Interval = TimeSpan.FromSeconds(zoomAndPanControl.AnimationDuration);
@@ -1882,14 +1886,6 @@ namespace Mesnet
                                 break;
                         }
                     }
-                    else
-                    {
-                        //The beam is free on the right side
-                        beam.SetAngleLeft(beamdialog.angle);
-                        beam.ChangeLength(beamdialog.beamlength);
-                        beam.MoveSupports();
-                        handled = true;
-                    }
 
                     if (!handled)
                     {
@@ -1948,7 +1944,35 @@ namespace Mesnet
                                     break;
                             }
                         }
-                        else
+                    }
+
+                    if (!handled)
+                    {
+                        if (beam.LeftSide == null && beam.RightSide == null)
+                        {
+                            //The beam is free on both sides
+                            beam.SetAngleCenter(beamdialog.angle);
+                            beam.ChangeLength(beamdialog.beamlength);
+                            beam.MoveSupports();
+                            handled = true;
+                        }
+                    }
+
+                    if (!handled)
+                    {
+                        if (beam.RightSide == null)
+                        {
+                            //The beam is free on the right side
+                            beam.SetAngleLeft(beamdialog.angle);
+                            beam.ChangeLength(beamdialog.beamlength);
+                            beam.MoveSupports();
+                            handled = true;
+                        }
+                    }
+
+                    if (!handled)
+                    {
+                        if (beam.LeftSide == null)
                         {
                             //The beam is free on the left side
                             beam.SetAngleRight(beamdialog.angle);
@@ -1962,7 +1986,6 @@ namespace Mesnet
                         }
                     }
                 }
-
                 beam.ShowCorners(3, 5);
 
                 beam.AddElasticity(beamdialog.beamelasticitymodulus);
@@ -1984,6 +2007,7 @@ namespace Mesnet
                 notify.Text = (string)FindResource("beamput");
                 UpdateAllBeamTree();
                 UpdateAllSupportTree();
+                Reset();
             }
         }
 
@@ -4459,6 +4483,19 @@ namespace Mesnet
             SetMouseHandlingMode("Reset", MouseHandlingMode.None);
         }
 
+        /// <summary>
+        /// Resets the system and sets specified mouse mode.
+        /// </summary>
+        private void Reset(MouseHandlingMode mousemode)
+        {
+            tempbeam = null;
+            assemblybeam = null;
+            assembly = false;
+            UnselectAll();
+            btndisableall();
+            SetMouseHandlingMode("Reset", mousemode);
+        }
+
         public void WriteStatus(string keytext)
         {
             notify.Text = (string)FindResource(keytext);
@@ -5609,7 +5646,7 @@ namespace Mesnet
 
                 try
                 {
-                    if ((bool)prompt.ShowDialog())
+                    if ((bool) prompt.ShowDialog())
                     {
                         switch (prompt.Result)
                         {
@@ -5645,7 +5682,7 @@ namespace Mesnet
                                             "there is no path exists in save file path settings");
                                     }
 
-                                    if ((bool)saveFileDialog.ShowDialog())
+                                    if ((bool) saveFileDialog.ShowDialog())
                                     {
                                         string path = saveFileDialog.FileName;
                                         MyDebug.WriteInformation("user selected a file from save file dialog: " +
@@ -5682,6 +5719,10 @@ namespace Mesnet
                                 MyDebug.WriteInformation("Dialog result None");
                                 return;
                         }
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
                 catch (Exception)

@@ -2016,7 +2016,7 @@ namespace Mesnet.Xaml.User_Controls
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
-            _tgeometry.Rotate(new Point(Canvas.GetLeft(this), Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
+            _tgeometry.Rotate(LeftPoint, angle - oldangle);
         }
 
         /// <summary>
@@ -2030,7 +2030,7 @@ namespace Mesnet.Xaml.User_Controls
             rotateTransform.CenterY = Height / 2;
             rotateTransform.Angle = angle;
             _angle = angle;
-            _tgeometry.Rotate(new Point(Canvas.GetLeft(this) + this.Width, Canvas.GetTop(this) + this.Height / 2), angle - oldangle);
+            _tgeometry.Rotate(RightPoint, angle - oldangle);
         }
 
         /// <summary>
@@ -2165,17 +2165,21 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                foreach (var item in _concentratedloads)
+                //Moment from left support point
+                double leftmoment = 0;
+                foreach (var force in _concentratedloads)
                 {
-                    resultantforce += item.Value;
-                    multiply += item.Key * item.Value;
+                    leftmoment += force.Key * force.Value;
                 }
+                _rightsupportforceconc = leftmoment / _length;
 
-                resultantforcedistance = multiply / resultantforce;
-
-                _leftsupportforceconc = resultantforce * (_length - resultantforcedistance) / _length;
-
-                _rightsupportforceconc = resultantforce * resultantforcedistance / _length;
+                //Moment from right support point
+                double rightmoment = 0;
+                foreach (var force in _concentratedloads)
+                {
+                    rightmoment += (_length - force.Key) * force.Value;
+                }
+                _leftsupportforceconc = rightmoment / _length;
             }
 
             MyDebug.WriteInformation(_name + " : resultantforcedistance = " + resultantforcedistance);
@@ -2214,14 +2218,7 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     else
                     {
-                        if (i + 1 < _length)
-                        {
-                            poly.EndPoint = _length;
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        poly.EndPoint = _length;
                     }
 
                     _zeroforceconc.Add(poly);

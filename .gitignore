@@ -21,6 +21,10 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+Mesnet/bin/
+Mesnet/x64/
+Mesnet/x86/
+Mesnet/obj/
 
 # Visual Studio 2015 cache/options directory
 .vs/

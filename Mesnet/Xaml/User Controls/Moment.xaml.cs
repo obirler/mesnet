@@ -188,7 +188,6 @@ namespace Mesnet.Xaml.User_Controls
             starttext.Foreground = new SolidColorBrush(Colors.Red);
             MinSize(starttext);
             starttext.TextAlignment = TextAlignment.Center;
-            //starttext.UpdateLayout();
             RotateAround(starttext);
             Canvas.SetLeft(starttext, -starttext.Width / 2);
             calculated = coeff * _momentppoly.Calculate(0);

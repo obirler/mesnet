@@ -74,7 +74,7 @@ namespace Mesnet.Classes.IO.Xml
                         var tl = item.Element("topleft").Value.Split(';');
                         _beam.TopLeft = new Point(Convert.ToDouble(tl[0]), Convert.ToDouble(tl[1]));
                         var tr = item.Element("topright").Value.Split(';');
-                        _beam.TopRight = new Point(Convert.ToDouble(tr[0]), Convert.ToDouble(tl[1]));
+                        _beam.TopRight = new Point(Convert.ToDouble(tr[0]), Convert.ToDouble(tr[1]));
                         var bl = item.Element("bottomleft").Value.Split(';');
                         _beam.BottomLeft = new Point(Convert.ToDouble(bl[0]), Convert.ToDouble(bl[1]));
                         var br = item.Element("bottomright").Value.Split(';');

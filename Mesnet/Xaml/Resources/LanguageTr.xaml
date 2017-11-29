@@ -29,7 +29,7 @@
     <system:String x:Key="uniformvaryingdistload">Doğrusal Yayılı Yük</system:String>
     <system:String x:Key="varyingdistload">Değişken Yayılı Yük</system:String>
     <system:String x:Key="uniforminertia">Sabit Atalet Momenti</system:String>
-    <system:String x:Key="uniformvaryinginertia">Dorusal Atalet Momenti</system:String>
+    <system:String x:Key="uniformvaryinginertia">Doğrusal Atalet Momenti</system:String>
     <system:String x:Key="varyinginertia">Değişken Atalet Momenti</system:String>
     <system:String x:Key="zoomin">Yakınlaştır</system:String>
     <system:String x:Key="zoomout">Uzaklaştır</system:String>
@@ -50,6 +50,7 @@
     <system:String x:Key="finish">Bitir</system:String>
     <system:String x:Key="rotate">Kirişi Döndür</system:String>
     <system:String x:Key="angle">Açı :</system:String>
+    <system:String x:Key="invalidangle">Geçersiz kiriş açısı</system:String>
     <system:String x:Key="performstressanalalysis">Gerilme Analizi Yap</system:String>
     <system:String x:Key="maxstress">İzin verilen en yüksek gerilme </system:String>
     <system:String x:Key="calculationtype">Hesaplama Tipi</system:String>

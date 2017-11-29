@@ -204,7 +204,7 @@ namespace Mesnet.Classes.IO.Xml
             {
                 if (beammanifest.ConcentratedLoads.Count > 0)
                 {
-                    var concload = new ConcentratedLoad(beammanifest.ConcentratedLoads, beammanifest.Length);
+                    var concload = new ConcentratedLoad(beammanifest.ConcentratedLoads, beam);
                     beam.AddLoad(concload, Direction.Up);
                 }                
             }

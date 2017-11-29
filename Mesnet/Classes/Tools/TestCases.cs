@@ -1511,7 +1511,7 @@ namespace Mesnet.Classes.Tools
                 var concloadlist = new List<KeyValuePair<double, double>>();
                 var conc = new KeyValuePair<double, double>(0.5, 20);
                 concloadlist.Add(conc);
-                var concload2 = new ConcentratedLoad(concloadlist, beam2.Length);
+                var concload2 = new ConcentratedLoad(concloadlist, beam2);
                 beam2.AddLoad(concload2, Global.Direction.Up);
 
                 _mw.LoadsShown = true;

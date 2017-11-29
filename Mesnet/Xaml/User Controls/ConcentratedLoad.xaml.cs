@@ -33,49 +33,53 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class ConcentratedLoad : UserControl
     {
-        public ConcentratedLoad(List<KeyValuePair<double, double>> loads, double length)
+        public ConcentratedLoad(List<KeyValuePair<double, double>> loads, Beam beam)
         {
             InitializeComponent();
 
+            _beam = beam;
+
             _loads = loads;
 
-            _length = length;
+            _length = _beam.Length;
 
             _max = _loads.MaxBy(x => x.Value).Value;
 
             if (_max > 200)
             {
                 coeff = 200 / _max;
-                Height = 200;
             }
             if (_max < -200)
             {
                 coeff = -200 / _max;
-                Height = 200;
             }
             else
             {
                 if (_max > 0)
                 {
                     coeff = 1;
-                    Height = _max;
                 }
                 else
                 {
                     coeff = 1;
-                    Height = -_max;
                 }
             }
 
             Width = 100 * _length;
 
+            _labellist = new List<TextBlock>();
+
             draw();
         }
+
+        private Beam _beam;
 
         /// <summary>
         /// The load list. List<KeyValuePair<xpos, loadmagnitude>>
         /// </summary>
         private List<KeyValuePair<double, double>> _loads;
+
+        private List<TextBlock> _labellist;
 
         private double _max;
 
@@ -123,110 +127,141 @@ namespace Mesnet.Xaml.User_Controls
             {
                 if (y >= 15)
                 {
-                    points.Add(new Point(x - 2, coeff * _max - y));
-                    points.Add(new Point(x - 2, coeff * _max - 10));
-                    points.Add(new Point(x - 5, coeff * _max - 10));
-                    points.Add(new Point(x, coeff * _max));
-                    points.Add(new Point(x + 5, coeff * _max - 10));
-                    points.Add(new Point(x + 2, coeff * _max - 10));
-                    points.Add(new Point(x + 2, coeff * _max - y));
+                    points.Add(new Point(x - 2, y));
+                    points.Add(new Point(x - 2, 10));
+                    points.Add(new Point(x - 5, 10));
+                    points.Add(new Point(x, 0));
+                    points.Add(new Point(x + 5, 10));
+                    points.Add(new Point(x + 2, 10));
+                    points.Add(new Point(x + 2, y));
 
                     tbl.Text = y + " kN";
-                    UpdateTextBlock(tbl);
-                    loadcanvas.Children.Add(tbl);
+                    _beam.upcanvas.Children.Add(tbl);
+                    MinSize(tbl);
+                    tbl.TextAlignment = TextAlignment.Center;
+                    RotateAround(tbl);
 
                     Canvas.SetLeft(tbl, x - tbl.Width / 2);
-                    Canvas.SetTop(tbl, coeff * _max - y - tbl.Height - 5);
+                    Canvas.SetTop(tbl, -y - tbl.Height);
                 }
                 else
                 {
-                    points.Add(new Point(x - 2, coeff * _max - 15));
-                    points.Add(new Point(x - 2, coeff * _max - 10));
-                    points.Add(new Point(x - 5, coeff * _max - 10));
-                    points.Add(new Point(x, coeff * _max));
-                    points.Add(new Point(x + 5, coeff * _max - 10));
-                    points.Add(new Point(x + 2, coeff * _max - 10));
-                    points.Add(new Point(x + 2, coeff * _max - 15));
+                    points.Add(new Point(x - 2, 15));
+                    points.Add(new Point(x - 2, 10));
+                    points.Add(new Point(x - 5,  10));
+                    points.Add(new Point(x, 0));
+                    points.Add(new Point(x + 5, 10));
+                    points.Add(new Point(x + 2, 10));
+                    points.Add(new Point(x + 2, 15));
 
                     tbl.Text = y + " kN";
-                    UpdateTextBlock(tbl);
-                    loadcanvas.Children.Add(tbl);
+                    _beam.upcanvas.Children.Add(tbl);
+                    MinSize(tbl);
+                    tbl.TextAlignment = TextAlignment.Center;
+                    RotateAround(tbl);
 
                     Canvas.SetLeft(tbl, x - tbl.Width / 2);
-                    Canvas.SetTop(tbl, coeff * _max - 15 - tbl.Height - 5);
-                }
+                    Canvas.SetTop(tbl, -15 - tbl.Height);
+                }            
 
+                _labellist.Add(tbl);
+
+                loadcanvas.Children.Add(polygon);
                 polygon.Points = points;
                 polygon.Fill = new SolidColorBrush(Colors.Black);
-                loadcanvas.Children.Add(polygon);
+                
+                Canvas.SetLeft(polygon, 0);
+                Canvas.SetTop(polygon, 0);
             }
             else
             {
                 if (y <= -15)
                 {
-                    points.Add(new Point(x - 2, -coeff * _max - y));
-                    points.Add(new Point(x - 2, -coeff * _max + 10));
-                    points.Add(new Point(x - 5, -coeff * _max + 10));
-                    points.Add(new Point(x, -coeff * _max));
-                    points.Add(new Point(x + 5, -coeff * _max + 10));
-                    points.Add(new Point(x + 2, -coeff * _max + 10));
-                    points.Add(new Point(x + 2, -coeff * _max - y));
+                    points.Add(new Point(x - 2, y));
+                    points.Add(new Point(x - 2, - 10));
+                    points.Add(new Point(x - 5, - 10));
+                    points.Add(new Point(x, 0));
+                    points.Add(new Point(x + 5, - 10));
+                    points.Add(new Point(x + 2, - 10));
+                    points.Add(new Point(x + 2, y));
 
                     tbl.Text = y + " kN";
-                    UpdateTextBlock(tbl);
-                    loadcanvas.Children.Add(tbl);
+                    _beam.upcanvas.Children.Add(tbl);
+                    MinSize(tbl);
+                    tbl.TextAlignment = TextAlignment.Center;
+                    RotateAround(tbl);
 
                     Canvas.SetLeft(tbl, x - tbl.Width / 2);
-                    Canvas.SetTop(tbl, -coeff * _max - y + 5);
+                    Canvas.SetTop(tbl, -y + tbl.Height / 4);
                 }
                 else
                 {
-                    points.Add(new Point(x - 2, -coeff * _max + 15));
-                    points.Add(new Point(x - 2, -coeff * _max + 10));
-                    points.Add(new Point(x - 5, -coeff * _max + 10));
-                    points.Add(new Point(x, -coeff * _max));
-                    points.Add(new Point(x + 5, -coeff * _max + 10));
-                    points.Add(new Point(x + 2, -coeff * _max + 10));
-                    points.Add(new Point(x + 2, -coeff * _max + 15));
+                    points.Add(new Point(x - 2, - 15));
+                    points.Add(new Point(x - 2, - 10));
+                    points.Add(new Point(x - 5, - 10));
+                    points.Add(new Point(x, 0));
+                    points.Add(new Point(x + 5, - 10));
+                    points.Add(new Point(x + 2, - 10));
+                    points.Add(new Point(x + 2, - 15));
 
                     tbl.Text = y + " kN";
-                    UpdateTextBlock(tbl);
-                    loadcanvas.Children.Add(tbl);
+                    _beam.upcanvas.Children.Add(tbl);
+                    MinSize(tbl);
+                    tbl.TextAlignment = TextAlignment.Center;
+                    RotateAround(tbl);
 
                     Canvas.SetLeft(tbl, x - tbl.Width / 2);
-                    Canvas.SetTop(tbl, -coeff * _max + 20);
+                    Canvas.SetTop(tbl, 15 + tbl.Height / 4);
                 }
+
+                _labellist.Add(tbl);
 
                 polygon.Points = points;
                 polygon.Fill = new SolidColorBrush(Colors.Black);
                 loadcanvas.Children.Add(polygon);
             }
-
         }
 
-        private void UpdateTextBlock(TextBlock textBlock)
+        private void MinSize(TextBlock textBlock)
         {
-            string candidate = textBlock.Text;
             var formattedText = new FormattedText(
-                candidate,
+                textBlock.Text,
                 CultureInfo.CurrentUICulture,
                 FlowDirection.LeftToRight,
                 new Typeface(textBlock.FontFamily, textBlock.FontStyle, textBlock.FontWeight, textBlock.FontStretch),
                 textBlock.FontSize,
                 Brushes.Black);
-
             textBlock.Width = formattedText.Width;
             textBlock.Height = formattedText.Height;
+        }
+
+        private void RotateAround(TextBlock textBlock)
+        {
+            var rotate = new RotateTransform();
+            rotate.CenterX = textBlock.Width / 2;
+            rotate.CenterY = textBlock.Height / 2;
+            rotate.Angle = -_beam.Angle;
+            textBlock.RenderTransform = rotate;
         }
 
         public void Show()
         {
             Visibility = Visibility.Visible;
+
+            foreach (TextBlock label in _labellist)
+            {
+                label.Visibility = Visibility.Visible;
+            }
         }
 
         public void Hide()
         {
             Visibility = Visibility.Collapsed;
+
+            foreach (TextBlock label in _labellist)
+            {
+                label.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

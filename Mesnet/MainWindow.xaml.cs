@@ -87,15 +87,14 @@ namespace Mesnet
             timer.Tick += timer_Tick;
 
             Canvas.SetZIndex(viewbox, 1);
+            var tests = new TestCases(this);
+            tests.RegisterTests();
 
-            if(App.AssociationPath != null)
+            if (App.AssociationPath != null)
             {
                 open(App.AssociationPath);
                 _savefilepath = App.AssociationPath;
             }
-
-            var tests = new TestCases(this);
-            tests.RegisterTests();
         }
 
         private object selectedobj;
@@ -1386,12 +1385,14 @@ namespace Mesnet
                 if ((bool)concentratedloadprompt.ShowDialog())
                 {
                     var load = concentratedloadprompt.Loads;
-                    var concentratedload = new ConcentratedLoad(load, selectedbeam.Length);
+                    var concentratedload = new ConcentratedLoad(load, selectedbeam);
                     selectedbeam.AddLoad(concentratedload, Direction.Up);
                     LoadsShown = true;
                     loads.Header = GetString("hideloads");
                     loads.IsEnabled = true;
                 }
+
+                UpdateBeamTree(selectedbeam);
 
                 assemblybeam = null;
                 assembly = false;
@@ -1419,11 +1420,14 @@ namespace Mesnet
                     loads.IsEnabled = true;
                 }
 
+                UpdateBeamTree(selectedbeam);
+
                 assemblybeam = null;
                 assembly = false;
                 UnselectAll();
                 btndisableall();
                 SetMouseHandlingMode("distributedloadbtn_Click", MouseHandlingMode.None);
+                
             }
         }
 

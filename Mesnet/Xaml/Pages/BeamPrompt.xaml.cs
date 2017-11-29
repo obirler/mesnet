@@ -570,9 +570,61 @@ namespace Mesnet.Xaml.Pages
         {
             if (validateinertia())
             {
-                beamlength = Convert.ToDouble(length.Text);
-                beamelasticitymodulus = Convert.ToDouble(elasticitymodulus.Text);
-                angle = Convert.ToDouble(angletbx.Text);
+                try
+                {
+                    if (length.Text != "")
+                    {
+                        beamlength = Convert.ToDouble(length.Text);
+                    }
+                    else
+                    {
+                        MessageBox.Show(GetString("invalidbeamlength"));
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(GetString("invalidbeamlength"));
+                    return;
+                }
+
+                try
+                {
+                    if (elasticitymodulus.Text != "")
+                    {
+                        beamelasticitymodulus = Convert.ToDouble(elasticitymodulus.Text);
+                        elasticitymodulus.Background = new SolidColorBrush(Color.FromArgb(200, 48, 247, 66));
+                    }
+                    else
+                    {
+                        MessageBox.Show(GetString("invalidelasticity"));
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(GetString("invalidelasticity"));
+                    return;
+                }
+
+                try
+                {
+                    if (angletbx.Text != "")
+                    {
+                        angle = Convert.ToDouble(angletbx.Text);
+                    }
+                    else
+                    {
+                        MessageBox.Show(GetString("invalidangle"));
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(GetString("invalidangle"));
+                    return;
+                }
+
                 DialogResult = true;
             }
         }

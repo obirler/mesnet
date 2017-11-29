@@ -1406,15 +1406,20 @@ namespace Mesnet.Xaml.User_Controls
             { }
         }
 
+        /// <summary>
+        /// Adds the concentrated load to beam with specified direction.
+        /// </summary>
+        /// <param name="load">The desired concentrated load.</param>
+        /// <param name="direction">The direction of load. It can be Up or Down</param>
         public void AddLoad(ConcentratedLoad load, Direction direction)
         {
             if (direction == Direction.Up)
             {
                 //upcanvas.Height = load.Height;
-                load.Length = _length;
+                //load.Length = _length;
                 upcanvas.Children.Add(load);
-                load.VerticalAlignment = VerticalAlignment.Center;
-                Canvas.SetTop(load, upcanvas.Height / 2 - load.Height);
+                load.HorizontalAlignment = HorizontalAlignment.Left;
+                Canvas.SetLeft(load, 0);
 
                 _concentratedloads = load.Loads;
 

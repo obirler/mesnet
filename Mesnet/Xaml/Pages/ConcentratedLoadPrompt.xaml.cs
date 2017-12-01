@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Mesnet.Classes.Math;
 using Mesnet.Xaml.User_Controls;
 using static Mesnet.Classes.Global;
 
@@ -33,13 +34,27 @@ namespace Mesnet.Xaml.Pages
     /// </summary>
     public partial class ConcentratedLoadPrompt : Window
     {
-        public ConcentratedLoadPrompt(double length)
+        public ConcentratedLoadPrompt(Beam beam)
         {
             InitializeComponent();
 
-            _length = length;
+            _length = beam.Length;
 
             _loads = new List<KeyValuePair<double, double>>();
+
+            if (beam.ConcentratedLoads.Count > 0)
+            {
+                foreach (var pair in beam.ConcentratedLoads)
+                {                   
+                    var fnc = new ConcentratedLoadFunction();
+                    fnc.function.Text = "P = " + pair.Value + " kN";
+                    fnc.limits.Text = "x = " + pair.Key + " m";
+                    fnc.removebtn.Click += Remove_Click;
+                    fncstk.Children.Add(fnc);
+                    _loads.Add(new KeyValuePair<double, double>(pair.Key, pair.Value));
+                }
+                finishbtn.Visibility = Visibility.Visible;
+            }
 
             loadx.Text = (_length/2).ToString();
         }
@@ -119,7 +134,7 @@ namespace Mesnet.Xaml.Pages
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
             var stk = (sender as Button).Parent as StackPanel;
-            var fnc = stk.Parent as LoadFunction;
+            var fnc = stk.Parent as ConcentratedLoadFunction;
             var index = fncstk.Children.IndexOf(fnc);
             _loads.RemoveAt(index);
             fncstk.Children.RemoveAt(index);

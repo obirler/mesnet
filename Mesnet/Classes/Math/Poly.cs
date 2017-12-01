@@ -588,7 +588,7 @@ namespace Mesnet.Classes.Math
         }
 
         /// <summary>
-        /// Conjugates polynomial with the specified l. Conjageting is basically converting x in polynomial into (l-x).
+        /// Conjugates polynomial with the specified length. Conjugating is basically converting x in polynomial into (length-x).
         /// </summary>
         /// <param name="x">The desired conjugation length</param>
         /// <returns>Conjugated polynomial</returns>
@@ -625,6 +625,44 @@ namespace Mesnet.Classes.Math
             conjugatepoly.StartPoint = length - EndPoint;
             conjugatepoly.EndPoint = length - StartPoint;
             return conjugatepoly;
+        }
+
+        /// <summary>
+        /// Propagates polynomial with the specified length. Propagating is basically the same as conjugating but all the term 
+        /// in the polynomial are expanded and created a polynomial with more terms naturally. To propagate a polynamial, it shouldn't
+        /// have any non-integer-powered terms
+        /// </summary>
+        /// <param name="x">The desired propagation length</param>
+        /// <returns>Propagated polynomial</returns>
+        public Poly Propagate(double length)
+        {
+            //Basically expand a(L-x)^n terms
+            var terms = new TermCollection();
+            foreach (Term t in this.Terms)
+            {
+                if (t.Power > 0)
+                {
+                    int n = (int)t.Power;
+
+                    for (int i = 0; i <= n; i++)
+                    {
+                        var newterm = new Term();
+                        newterm.Coefficient = t.Coefficient*Mesnet.Classes.Math.Algebra.Combination(n, i) * System.Math.Pow(-1, i) *
+                                           System.Math.Pow(length, n - i);
+                        newterm.Power = i;
+                        terms.Add(newterm);
+                    }
+                }
+                else if (t.Power == 0)
+                {
+                    var newterm = new Term(t.Power, t.Coefficient);
+                    terms.Add(newterm);
+                }
+            }
+            var newpoly = new Poly(terms);
+            newpoly.StartPoint = length - EndPoint;
+            newpoly.EndPoint = length - StartPoint;
+            return newpoly;
         }
 
         /// <summary>
@@ -676,6 +714,23 @@ namespace Mesnet.Classes.Math
                 return rootlist;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Calculates degree of the polynomial. Degree is the highest power of all terms
+        /// </summary>
+        /// <returns>Degree of the polynomial</returns>
+        public double Degree()
+        {
+            double value = Double.MinValue;
+            foreach (Term term in _Terms)
+            {
+                if (term.Power > value)
+                {
+                    value = term.Power;
+                }
+            }
+            return value;
         }
 
         /// <summary>

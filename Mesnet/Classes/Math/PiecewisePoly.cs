@@ -215,6 +215,17 @@ namespace Mesnet.Classes.Math
             return new PiecewiseConjugatePoly(conjugatelist);
         }
 
+        public PiecewisePoly Propagate(double length)
+        {
+            List<Poly> propagatelist = new List<Poly>();
+            foreach (Poly poly in List)
+            {
+                var propagatepoly = poly.Propagate(length);
+                propagatelist.Add(propagatepoly);
+            }
+            return new PiecewisePoly(propagatelist);
+        }
+
         public List<Poly> PolyList()
         {
             var polylist = new List<Poly>();
@@ -223,7 +234,22 @@ namespace Mesnet.Classes.Math
                 polylist.Add(poly);
             }
             return polylist;
-        } 
+        }
+
+        public double Degree()
+        {
+            double result = Double.MinValue;
+
+            foreach (Poly poly in List)
+            {
+                var degree = poly.Degree();
+                if (degree > result)
+                {
+                    result = degree;
+                }
+            }
+            return result;
+        }
 
         public double Max
         {

@@ -105,5 +105,16 @@ namespace Mesnet.Classes.Math
                 return number;
             }
         }
+
+        public static double Combination(int n, int k)
+        {
+            double sum = 0;
+            for (long i = 0; i < k; i++)
+            {
+                sum += System.Math.Log10(n - i);
+                sum -= System.Math.Log10(i + 1);
+            }
+            return System.Math.Pow(10, sum);
+        }
     }
 }

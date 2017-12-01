@@ -263,5 +263,13 @@ namespace Mesnet.Xaml.User_Controls
                 label.Visibility = Visibility.Collapsed;
             }
         }
+
+        public void RemoveLabels()
+        {
+            foreach (TextBlock label in _labellist)
+            {
+                _beam.upcanvas.Children.Remove(label);
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
@@ -51,7 +52,47 @@
             </Menu>
         </DockPanel>
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+            <Button x:Name="solvebtn" Height="40" Width="60" Margin="5,5,5,5" Click="beambtn_Click" BorderBrush="#FFBBBBBB">
+
+                <Button.ToolTip>
+                    <ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource solve}"/>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+
+                <Grid Height="30" Width="20">
+                    <Polygon Points="0,0 0,30 20,15" Fill="#FF018D01"></Polygon>
+                    <Polygon Points="2,4 2,26 16.5,15 " Fill="#FF05CD17"></Polygon>
+                </Grid>
+            </Button>
+
+            <ToggleButton Height="40" Width="110">
+
+                <StackPanel Orientation="Horizontal" >
+
+                    <Grid Height="26" Width="26">
+                        <Polygon Points="2,20 24,20 24,22 2,22" Fill="Black"/>
+                        <Polygon Points="2,4 24,4 24,6 2,6" Fill="Black"/>
+                        <Polygon Points="5,20 2,15 3.75,15 3.75,6 6.25,6 6.25,15 8,15 5,20" Fill="Black"/>
+                        <Polygon Points="13,20 10,15 11.75,15 11.75,6 14.25,6 14.25,15 16,15 13,20" Fill="Black"/>
+                        <Polygon Points="21,20 18,15 19.75,15 19.75,6 22.25,6 22.25,15 24,15 21,20" Fill="Black"/>
+                    </Grid>
+
+                    <Slider Orientation="Horizontal" VerticalAlignment="Center" Width="70" Margin="5,0,0,0"></Slider>
+
+                </StackPanel>
+
+            </ToggleButton>
+
+            
+            
+        </StackPanel>
+        
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
@@ -319,7 +360,7 @@
 
             </ScrollViewer>
 
-            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1" />
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1"/>
 
             <Grid Grid.Column="3">
 
@@ -331,7 +372,7 @@
 
                 <ScrollViewer Grid.Row="0" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="{DynamicResource beams}" FontSize="13" Margin="0,0,0,-1" TextAlignment="Center"></TextBlock>
+                        <TextBlock Text="{DynamicResource beams}" FontSize="13" Margin="0,0,0,-1" Height="20" TextAlignment="Center" Background="#FFB8B8B8"></TextBlock>
                         <TreeView x:Name="tree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
                     </StackPanel>
                     
@@ -341,7 +382,7 @@
 
                 <ScrollViewer Grid.Row="2" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="{DynamicResource supports}" FontSize="13" Margin="0,0,0,-1" TextAlignment="Center"></TextBlock>
+                        <TextBlock Text="{DynamicResource supports}" FontSize="13" Height="20" Margin="0,0,0,-1" TextAlignment="Center" Background="#FFB8B8B8"></TextBlock>
                         <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
                     </StackPanel>
                 </ScrollViewer>
@@ -350,7 +391,7 @@
 
         </Grid>
 
-        <StackPanel Margin="40,0,0,0" Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
+        <StackPanel Margin="40,0,0,0" Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2">
             <TextBlock x:Name="coordinate" Text="X : 0  Y : 0" Width="200"/>
             <TextBlock x:Name="notify" Visibility="Visible" Text="" Margin="30,0,0,0"/>
         </StackPanel>

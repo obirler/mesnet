@@ -1379,11 +1379,12 @@ namespace Mesnet
         {
             if (selectedbeam != null)
             {
-                var concentratedloadprompt = new ConcentratedLoadPrompt(selectedbeam.Length);
+                var concentratedloadprompt = new ConcentratedLoadPrompt(selectedbeam);
                 concentratedloadprompt.Owner = this;
 
                 if ((bool)concentratedloadprompt.ShowDialog())
                 {
+                    selectedbeam.RemoveConcentratedLoad();
                     var load = concentratedloadprompt.Loads;
                     var concentratedload = new ConcentratedLoad(load, selectedbeam);
                     selectedbeam.AddLoad(concentratedload, Direction.Up);
@@ -1426,8 +1427,7 @@ namespace Mesnet
                 assembly = false;
                 UnselectAll();
                 btndisableall();
-                SetMouseHandlingMode("distributedloadbtn_Click", MouseHandlingMode.None);
-                
+                SetMouseHandlingMode("distributedloadbtn_Click", MouseHandlingMode.None);            
             }
         }
 

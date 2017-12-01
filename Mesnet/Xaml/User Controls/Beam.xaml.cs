@@ -21,6 +21,7 @@
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -309,6 +310,8 @@ namespace Mesnet.Xaml.User_Controls
         private Func _maxdeflection;
 
         private double _maxallowablestress;
+
+        private bool _analyticalsolution = false;
 
         #endregion
 
@@ -1472,6 +1475,7 @@ namespace Mesnet.Xaml.User_Controls
 
             if (concload != null)
             {
+                concload.RemoveLabels();
                 upcanvas.Children.Remove(concload);
                 _concentratedloads.Clear();
                 _concload = null;
@@ -2399,165 +2403,191 @@ namespace Mesnet.Xaml.User_Controls
         /// </summary>
         private void ffsolver()
         {
-            double ma1 = 0;
-            double ma2 = 0;
-            double mb1 = 0;
-            double mb2 = 0;
-            double r1 = 0;
-            double r2 = 0;
-
-            var polylist = new List<Poly>();
-
-            foreach (Poly pol in _zeromoment)
+            if (_zeromoment.Count > 0)
             {
-                var ply = -1 * pol;
-                ply.StartPoint = pol.StartPoint;
-                ply.EndPoint = pol.EndPoint;
-                polylist.Add(ply);
+                double ma1 = 0;
+                double ma2 = 0;
+                double mb1 = 0;
+                double mb2 = 0;
+                double r1 = 0;
+                double r2 = 0;
+
+                ///////////////////////////////////////////////////////////
+                /////////////////Left Equation Solve///////////////////////
+                //////////////////////////////////////////////////////////
+
+                var xsquare = new Poly("x^2");
+                xsquare.StartPoint = 0;
+                xsquare.EndPoint = _length;
+
+                var x = new Poly("x");
+                x.StartPoint = 0;
+                x.EndPoint = _length;
+
+                var xppoly = new PiecewisePoly();
+                xppoly.Add(x);
+
+                if (_analyticalsolution)
+                {
+                    //When the inertia distribution is constant dont waste time and cpu with simpson numerical integration, integrate it analytically.
+                    //Since izero equals inertia the expression can be simplified
+                    MyDebug.WriteInformation(_name + " : Analytical solution started");
+
+                    ma1 = _length / 3;
+                    MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
+
+                    mb1 = _length / 2 - ma1;
+                    MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
+
+                    var moxp = _zeromoment.Propagate(_length) * xppoly;
+                    r1 = -1 / _length * moxp.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    ma2 = _length / 6;
+                    MyDebug.WriteInformation(_name + " : ma2 = " + ma2);
+
+                    mb2 = _length / 3;
+                    MyDebug.WriteInformation(_name + " : mb2 = " + mb2);
+
+                    var mox = _zeromoment * xppoly;
+                    r2 = -1 / _length * mox.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : r2 = " + r2);
+                }
+                else
+                {
+                    //When the inertia distribution is not constant, there is no choice but to use numerical integration 
+                    //since the integration can not be solved analytically using polinomials in this program.
+                    MyDebug.WriteInformation(_name + " : Numerical solution started");
+
+                    var conjugateinertia = _inertiappoly.Conjugate(_length);
+
+                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
+                    }
+
+                    simpson1.Calculate();
+
+                    ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
+
+                    MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
+
+                    //////////////////////////////////////////////////////////            
+
+                    var simpson2 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson2.AddData(_izero / conjugateinertia.Calculate(i) * x.Calculate(i));
+                    }
+
+                    simpson2.Calculate();
+
+                    var value1 = 1 / _length * simpson2.Result;
+
+                    mb1 = value1 - ma1;
+
+                    MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
+
+                    ///////////////////////////////////////////////////////////
+
+                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+
+                    var conjugatemoment = _zeromoment.Conjugate(_length);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) *
+                                         x.Calculate(i));
+                    }
+
+                    simpson3.Calculate();
+
+                    r1 = -1 / _length * simpson3.Result;
+
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    ////////////////////////////////////////////////////////////
+                    /////////////////Right Equation Solve///////////////////////
+                    ////////////////////////////////////////////////////////////
+
+                    var simpson4 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson4.AddData(_izero / _inertiappoly.Calculate(i) * xsquare.Calculate(i));
+                    }
+
+                    simpson4.Calculate();
+
+                    var value2 = 1 / Math.Pow(_length, 2) * simpson4.Result;
+
+                    var simpson5 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson5.AddData((_izero / _inertiappoly.Calculate(i)) * xppoly.Calculate(i));
+                    }
+
+                    simpson5.Calculate();
+
+                    ma2 = 1 / _length * simpson5.Result - value2;
+
+                    MyDebug.WriteInformation(_name + " : ma2 = " + ma2);
+
+                    ///////////////////////////////////////////////////////////
+
+                    mb2 = value2;
+
+                    MyDebug.WriteInformation(_name + " : mb2 = " + mb2);
+
+                    ///////////////////////////////////////////////////////////
+
+                    var simpson6 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson6.AddData(_zeromoment.Calculate(i) * (_izero / _inertiappoly.Calculate(i)) *
+                                         xppoly.Calculate(i));
+                    }
+
+                    simpson6.Calculate();
+
+                    r2 = -1 / _length * simpson6.Result;
+
+                    MyDebug.WriteInformation(_name + " : r2 = " + r2);
+                }
+
+                double[,] coefficients =
+                {
+                    {ma1, mb1},
+                    {ma2, mb2},
+                };
+
+                double[] results =
+                {
+                    r1, r2
+                };
+
+                //////////////////////////////////////////////////////////
+
+                var moments = LinearEquationSolver(coefficients, results);
+
+                //_ma = Math.Round(moments[0], 4);
+
+                //_mb = Math.Round(moments[1], 4);
+
+                _ma = -moments[0];
+
+                _mb = -moments[1];
             }
-
-            var zeromoment = new PiecewisePoly(polylist);
-
-            ///////////////////////////////////////////////////////////
-            /////////////////Left Equation Solve///////////////////////
-            //////////////////////////////////////////////////////////
-
-            var xsquare = new Poly("x^2");
-            xsquare.StartPoint = 0;
-            xsquare.EndPoint = _length;
-
-            var conjugateinertia = _inertiappoly.Conjugate(_length);
-
-            var simpson1 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
+            else
             {
-                simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
-            }
-
-            simpson1.Calculate();
-
-            ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
-
-            MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
-
-            //////////////////////////////////////////////////////////
-
-            var x = new Poly("x");
-            x.StartPoint = 0;
-            x.EndPoint = _length;
-
-            var simpson2 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                simpson2.AddData(_izero / conjugateinertia.Calculate(i) * x.Calculate(i));
-            }
-
-            simpson2.Calculate();
-
-            var value1 = 1 / _length * simpson2.Result;
-
-            mb1 = value1 - ma1;
-
-            MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
-
-            ///////////////////////////////////////////////////////////
-
-            var simpson3 = new SimpsonIntegrator(SimpsonStep);
-
-            var conjugatemoment = zeromoment.Conjugate(_length);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) * x.Calculate(i));
-            }
-
-            simpson3.Calculate();
-
-            r1 = -1 / _length * simpson3.Result;
-
-            MyDebug.WriteInformation(_name + " : r1 = " + r1);
-
-            ////////////////////////////////////////////////////////////
-            /////////////////Right Equation Solve///////////////////////
-            ////////////////////////////////////////////////////////////
-            
-            var xsquareppoly = new PiecewisePoly();
-            xsquareppoly.Add(xsquare);
-
-            var simpson4 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                var iner = _izero / _inertiappoly.Calculate(i);
-                var xsq = xsquareppoly.Calculate(i);
-                simpson4.AddData(iner * xsq);
-            }
-
-            simpson4.Calculate();
-
-            var value2 = 1 / Math.Pow(_length, 2) * simpson4.Result;
-
-            var xppoly = new PiecewisePoly();
-            xppoly.Add(x);
-
-            var simpson5 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                simpson5.AddData((_izero / _inertiappoly.Calculate(i)) * xppoly.Calculate(i));
-            }
-
-            simpson5.Calculate();
-
-            ma2 = 1 / _length * simpson5.Result - value2;
-
-            MyDebug.WriteInformation(_name + " : ma2 = " + ma2);
-
-            ///////////////////////////////////////////////////////////
-
-            mb2 = value2;
-
-            MyDebug.WriteInformation(_name + " : mb2 = " + mb2);
-
-            ///////////////////////////////////////////////////////////
-
-            var simpson6 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                simpson6.AddData(zeromoment.Calculate(i) * (_izero / _inertiappoly.Calculate(i)) * xppoly.Calculate(i));
-            }
-
-            simpson6.Calculate();
-
-            r2 = -1 / _length * simpson6.Result;
-
-            MyDebug.WriteInformation(_name + " : r2 = " + r2);
-
-            double[,] coefficients =
-            {
-                {ma1, mb1},
-                {ma2, mb2},
-            };
-
-            double[] results =
-            {
-                r1, r2
-            };
-
-            //////////////////////////////////////////////////////////
-
-            var moments = LinearEquationSolver(coefficients, results);
-
-            //_ma = Math.Round(moments[0], 4);
-
-            //_mb = Math.Round(moments[1], 4);
-
-            _ma = -moments[0];
-
-            _mb = -moments[1];
+                _ma = 0;
+                _mb = 0;
+            }         
 
             MyDebug.WriteInformation(_name + " : ma = " + _ma);
             MyDebug.WriteInformation(_name + " : mb = " + _mb);
@@ -2568,71 +2598,82 @@ namespace Mesnet.Xaml.User_Controls
         /// </summary>
         private void fbsolver()
         {
-            double ma1 = 0;
-            double ma2 = 0;
-            double mb1 = 0;
-            double mb2 = 0;
-            double r1 = 0;
-            double r2 = 0;
-
-            var polylist = new List<Poly>();
-
-            foreach (Poly pol in _zeromoment)
+            if (_zeromoment.Count > 0)
             {
-                var ply = -1 * pol;
-                ply.StartPoint = pol.StartPoint;
-                ply.EndPoint = pol.EndPoint;
-                polylist.Add(ply);
+                double ma1;
+                double r1;
+
+                var xsquare = new Poly("x^2");
+                xsquare.StartPoint = 0;
+                xsquare.EndPoint = _length;
+
+                var x = new Poly("x");
+                x.StartPoint = 0;
+                x.EndPoint = _length;
+
+                var xppoly = new PiecewisePoly();
+                xppoly.Add(x);
+
+                if (_analyticalsolution)
+                {
+                    MyDebug.WriteInformation(_name + " : Analytical solution started");
+
+                    ma1 = _length / 3;
+                    MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
+
+                    var moxp = _zeromoment.Propagate(_length) * xppoly;
+                    r1 = -1 / _length * moxp.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    _ma = r1 / ma1;
+                    _mb = 0;
+                }
+                else
+                {
+                    MyDebug.WriteInformation(_name + " : Analytical solution started");
+
+                    var conjugateinertia = _inertiappoly.Conjugate(_length);
+
+                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
+                    }
+
+                    simpson1.Calculate();
+
+                    ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
+
+                    MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
+
+                    //////////////////////////////////////////////////////////
+
+                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+
+                    var conjugatemoment = _zeromoment.Conjugate(_length);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) * x.Calculate(i));
+                    }
+
+                    simpson3.Calculate();
+
+                    r1 = -1 / _length * simpson3.Result;
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    _ma = r1 / ma1;
+                    _mb = 0;
+                }
             }
-
-            var zeromoment = new PiecewisePoly(polylist);
-
-            //////////////////////////////////////////////////////////
-
-            var xsquare = new Poly("x^2");
-            xsquare.StartPoint = 0;
-            xsquare.EndPoint = _length;
-
-            var x = new Poly("x");
-            x.StartPoint = 0;
-            x.EndPoint = _length;
-
-            var conjugateinertia = _inertiappoly.Conjugate(_length);
-
-            var simpson1 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
+            else
             {
-                simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
+                _ma = 0;
+                _mb = 0;
             }
-
-            simpson1.Calculate();
-
-            ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
-
-            MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
-
-            //////////////////////////////////////////////////////////
-
-            var simpson3 = new SimpsonIntegrator(SimpsonStep);
-
-            var conjugatemoment = zeromoment.Conjugate(_length);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) * x.Calculate(i));
-            }
-
-            simpson3.Calculate();
-
-            r1 = -1 / _length * simpson3.Result;
-
-            MyDebug.WriteInformation(_name + " : r1 = " + r1);
-
-            ///////////////////////////////////////////////////////////
-
-            _ma = -Math.Round(r1 / ma1, 4);
-            _mb = 0;
+            MyDebug.WriteInformation(_name + " : ma = " + _ma);
+            MyDebug.WriteInformation(_name + " : mb = " + _mb);
         }
 
         /// <summary>
@@ -2640,67 +2681,78 @@ namespace Mesnet.Xaml.User_Controls
         /// </summary>
         private void bfsolver()
         {
-            double ma1 = 0;
-            double ma2 = 0;
-            double mb1 = 0;
-            double mb2 = 0;
-            double r1 = 0;
-            double r2 = 0;
-
-            var polylist = new List<Poly>();
-
-            foreach (Poly pol in _zeromoment)
+            if (_zeromoment.Count > 0)
             {
-                var ply = -1 * pol;
-                ply.StartPoint = pol.StartPoint;
-                ply.EndPoint = pol.EndPoint;
-                polylist.Add(ply);
+                var xsquare = new Poly("x^2");
+                xsquare.StartPoint = 0;
+                xsquare.EndPoint = _length;
+
+                var x = new Poly("x");
+                x.StartPoint = 0;
+                x.EndPoint = _length;
+
+                var xppoly = new PiecewisePoly();
+                xppoly.Add(x);
+
+                double mb1;
+                double r1;
+
+                if (_analyticalsolution)
+                {
+                    MyDebug.WriteInformation(_name + " : Analytical solution started");
+                    mb1 = _length / 3;
+                    MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
+
+                    var mox = _zeromoment * xppoly;
+                    r1 = -1 / _length * mox.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    _mb = r1 / mb1;
+                    _ma = 0;
+                }
+                else
+                {
+                    MyDebug.WriteInformation(_name + " : Numerical solution started");
+                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson1.AddData(_izero / _inertiappoly.Calculate(i) * xsquare.Calculate(i));
+                    }
+
+                    simpson1.Calculate();
+
+                    mb1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
+
+                    MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
+
+                    ///////////////////////////////////////////////////////////
+
+                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson3.AddData(_izero / _inertiappoly.Calculate(i) * _zeromoment.Calculate(i) * x.Calculate(i));
+                    }
+
+                    simpson3.Calculate();
+
+                    r1 = -1 / _length * simpson3.Result;
+
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    _mb = r1 / mb1;
+                    _ma = 0;
+                }
             }
-
-            var zeromoment = new PiecewisePoly(polylist);
-
-            //////////////////////////////////////////////////////////
-
-            var xsquare = new Poly("x^2");
-            xsquare.StartPoint = 0;
-            xsquare.EndPoint = _length;
-
-            var conjugateinertia = _inertiappoly.Conjugate(_length);
-
-            var simpson1 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
+            else
             {
-                simpson1.AddData(xsquare.Calculate(i) / _inertiappoly.Calculate(i));
+                _ma = 0;
+                _mb = 0;
             }
-
-            simpson1.Calculate();
-
-            mb1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
-
-            MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
-
-            ///////////////////////////////////////////////////////////
-
-            var x = new Poly("x");
-            x.StartPoint = 0;
-            x.EndPoint = _length;
-
-            var simpson3 = new SimpsonIntegrator(SimpsonStep);
-
-            for (double i = 0; i <= _length; i = i + SimpsonStep)
-            {
-                simpson3.AddData(zeromoment.Calculate(i) * x.Calculate(i) / _inertiappoly.Calculate(i));
-            }
-
-            simpson3.Calculate();
-
-            r1 = -1 / _length * simpson3.Result;
-
-            MyDebug.WriteInformation(_name + " : r1 = " + r1);
-
-            _mb = -r1 / mb1;  //Math.Round(r1 / mb1, 4);
-            _ma = 0;
+            
+            MyDebug.WriteInformation(_name + " : ma = " + _ma);
+            MyDebug.WriteInformation(_name + " : mb = " + _mb);
         }
 
         /// <summary>
@@ -2710,10 +2762,13 @@ namespace Mesnet.Xaml.User_Controls
         {
             _mb = 0;
             _ma = 0;
+
+            MyDebug.WriteInformation(_name + " : ma = " + _ma);
+            MyDebug.WriteInformation(_name + " : mb = " + _mb);
         }
 
         /// <summary>
-        /// Finds end moments according to support types on the ends.
+        /// Finds end moments according to end moments that are found by solvers.
         /// </summary>
         private void findfixedendmoment()
         {
@@ -2801,11 +2856,9 @@ namespace Mesnet.Xaml.User_Controls
             _zeroforce = _zeroforceconc + _zeroforcedist;
             WritePPolytoConsole(_name + " : _zeroforce", _zeroforce);
             findzeromoment();
-
+            canbesolvedanalytically();
             clapeyronsupportcase();
-
             findfixedendmoment();
-
             updateclapeyronmoments();
         }
 
@@ -3068,6 +3121,37 @@ namespace Mesnet.Xaml.User_Controls
             _minmoment = _fixedendmoment.Min;
 
             _fixedendforce = _fixedendmoment.Derivate();
+        }
+
+        private void canbesolvedanalytically()
+        {
+            //Check inertia ppoly has only one poly
+            if (_inertiappoly.Count > 1)
+            {
+                _analyticalsolution = false;
+            }
+
+            //Check if inertia ppoly is constant or not dependant on x
+            if (_inertiappoly.Degree() > 0)
+            {
+                _analyticalsolution = false;
+            }
+          
+            //Check if zero moment ppoly has any term with non-integer power
+            if (_zeromoment.Count > 0)
+            {
+                foreach (Poly poly in _zeromoment)
+                {
+                    foreach (Term term in poly.Terms)
+                    {
+                        if (term.Power % 1 != 0)
+                        {
+                            _analyticalsolution = false;
+                        }
+                    }
+                }
+            }          
+            _analyticalsolution = true;
         }
 
         #endregion
@@ -3652,24 +3736,27 @@ namespace Mesnet.Xaml.User_Controls
             #endregion
         }
 
+        /// <summary>
+        /// Chooses the solver to be executed according to supports in the way of Cross Method.
+        /// </summary>
         private void crosssupportcases()
         {
             #region cross support cases
 
-            switch (LeftSide.GetType().Name)
+            switch (GetObjectType(LeftSide))
             {
-                case "LeftFixedSupport":
+                case ObjectType.LeftFixedSupport:
 
-                    switch (RightSide.GetType().Name)
+                    switch (GetObjectType(RightSide))
                     {
-                        case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
 
                             MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                             ffsolver();
 
                             break;
 
-                        case "BasicSupport":
+                        case ObjectType.BasicSupport:
 
                             var basic = RightSide as BasicSupport;
 
@@ -3686,7 +3773,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "SlidingSupport":
+                        case ObjectType.SlidingSupport:
 
                             var sliding = RightSide as SlidingSupport;
 
@@ -3706,22 +3793,22 @@ namespace Mesnet.Xaml.User_Controls
 
                     break;
 
-                case "BasicSupport":
+                case ObjectType.BasicSupport:
 
                     var basic1 = LeftSide as BasicSupport;
 
                     if (basic1.Members.Count > 1)
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3738,7 +3825,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3758,16 +3845,16 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     else
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                 bfsolver();
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3784,7 +3871,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3805,22 +3892,22 @@ namespace Mesnet.Xaml.User_Controls
 
                     break;
 
-                case "SlidingSupport":
+                case ObjectType.SlidingSupport:
 
                     var sliding2 = LeftSide as SlidingSupport;
 
                     if (sliding2.Members.Count > 1)
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : ffsolver has been executed");
                                 ffsolver();
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3837,7 +3924,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3857,16 +3944,16 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     else
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : bfsolver has been executed");
                                 bfsolver();
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3883,7 +3970,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3914,7 +4001,7 @@ namespace Mesnet.Xaml.User_Controls
         public void CrossCalculate()
         {
             MyDebug.WriteInformation(_name + " : CrossCalculate has started to work");
-
+          
             findconcentratedsupportforces();
 
             finddistributedsupportforces();
@@ -3928,6 +4015,8 @@ namespace Mesnet.Xaml.User_Controls
             WritePPolytoConsole(_name + " : _zeroforce", _zeroforce);
 
             findzeromoment();
+
+            canbesolvedanalytically();
 
             crosssupportcases();
 
@@ -3956,31 +4045,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _ma = Positive(_ma);
             }
-
-            /*if (DistributedLoads.Calculate(0) > 0)
-            {
-                if (Deflection(0.001) < 0)
-                {
-                    _ma = Negative(_ma);
-                }
-                else
-                {
-                    _ma = Positive(_ma);
-                }
-            }
-            else
-            {
-                if (Deflection(0.001) < 0)
-                {
-                    _ma = Positive(_ma);
-                }
-                else
-                {
-                    _ma = Negative(_ma);
-                }
-            }*/
             
-
             MyDebug.WriteInformation(_name + " : Ma = " + _ma);
 
             Logger.WriteLine(_name + " : Cross Ma = " + _ma);
@@ -3993,29 +4058,6 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _mb = Negative(_mb);
             }
-
-            /*if (DistributedLoads.Calculate(_length) > 0)
-            {
-                if (Deflection(_length - 0.001) < 0)
-                {
-                    _mb = Positive(_mb);
-                }
-                else
-                {
-                    _mb = Negative(_mb);
-                }
-            }
-            else
-            {
-                if (Deflection(_length - 0.001) < 0)
-                {
-                    _mb = Negative(_mb);
-                }
-                else
-                {
-                    _mb = Positive(_mb);
-                }
-            }*/
             
             Logger.WriteLine(_name + " : Cross Mb = " + _mb);
 

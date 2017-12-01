@@ -113,11 +113,11 @@ namespace Mesnet.Classes.Math
                     Result += (this.Coefficient < 0 ? this.Coefficient * -1 : this.Coefficient).ToString();
                 else if (this.Power == 1)
                 {
-                    if (Coefficient == 1)
+                    if (System.Math.Round(Coefficient, 10) == 1)
                     {
                         Result += "x";
                     }
-                    else if (Coefficient == -1)
+                    else if (System.Math.Round(Coefficient, 10) == -1)
                     {
                         Result += "x";
                     }
@@ -129,11 +129,11 @@ namespace Mesnet.Classes.Math
                 }
                 else
                 {
-                    if (Coefficient == 1)
+                    if (System.Math.Round(Coefficient, 10) == 1)
                     {
                         Result += "x^" + this.Power.ToString();
                     }
-                    else if (Coefficient == -1)
+                    else if (System.Math.Round(Coefficient, 10) == -1)
                     {
                         Result += "x^" + this.Power.ToString();
                     }

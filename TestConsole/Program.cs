@@ -18,14 +18,9 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            var testpoly = new Poly("x^3-6x^2+11x-6", 0, 4);
-            var dict = testpoly.CalculateMagnitudeAndLocation();
-
-            Console.WriteLine("Locations and magnitudes:");
-            foreach (var pair in dict)
-            {
-                Console.WriteLine("Location : " + pair.Key + " Magnitude : " + pair.Value);
-            }
+            var poly = new Poly("x^4");
+            var newpoly = poly.Propagate(1);
+            Console.WriteLine(newpoly.ToString());
 
             Console.ReadKey();
         }

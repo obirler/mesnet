@@ -1385,6 +1385,126 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        private void leftreconnect()
+        {
+            Beam leftbeam = null;
+            var direction = Direction.None;
+
+            switch (GetObjectType(LeftSide))
+            {
+                case ObjectType.BasicSupport:
+
+                    var bs = LeftSide as BasicSupport;
+                    if (bs.Members.Count > 1)
+                    {
+                        foreach (Member member in bs.Members)
+                        {
+                            if (!member.Beam.Equals(this))
+                            {
+                                leftbeam = member.Beam;
+                                direction = member.Direction;
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
+
+                case ObjectType.SlidingSupport:
+
+                    var ss = LeftSide as SlidingSupport;
+                    if (ss.Members.Count > 1)
+                    {
+                        foreach (Member member in ss.Members)
+                        {
+                            if (!member.Beam.Equals(this))
+                            {
+                                leftbeam = member.Beam;
+                                direction = member.Direction;
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            if (leftbeam != null)
+            {
+                switch (direction)
+                {
+                    case Direction.Left:
+                        SetPosition(Direction.Left, leftbeam.LeftPoint);
+                        break;
+
+                    case Direction.Right:
+                        SetPosition(Direction.Left, leftbeam.RightPoint);
+                        break;
+                }           
+                MoveSupports();
+            }           
+        }
+
+        private void rightreconnect()
+        {
+            Beam rightbeam = null;
+            var direction = Direction.None;
+
+            switch (GetObjectType(RightSide))
+            {
+                case ObjectType.BasicSupport:
+
+                    var bs = RightSide as BasicSupport;
+                    if (bs.Members.Count > 1)
+                    {
+                        foreach (Member member in bs.Members)
+                        {
+                            if (!member.Beam.Equals(this))
+                            {
+                                rightbeam = member.Beam;
+                                direction = member.Direction;
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
+
+                case ObjectType.SlidingSupport:
+
+                    var ss = RightSide as SlidingSupport;
+                    if (ss.Members.Count > 1)
+                    {
+                        foreach (Member member in ss.Members)
+                        {
+                            if (!member.Beam.Equals(this))
+                            {
+                                rightbeam = member.Beam;
+                                direction = member.Direction;
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            if (rightbeam != null)
+            {
+                switch (direction)
+                {
+                    case Direction.Left:
+                        SetPosition(Direction.Right, rightbeam.LeftPoint);
+                        break;
+
+                    case Direction.Right:
+                        SetPosition(Direction.Right, rightbeam.RightPoint);
+                        break;
+                }
+                MoveSupports();
+            }
+        }
+
         /// <summary>
         /// Adds the distributed load to beam with specified direction.
         /// </summary>
@@ -2020,12 +2140,8 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="angle">The angle.</param>
         public void SetAngleLeft(double angle)
         {
-            double oldangle = rotateTransform.Angle;
-            rotateTransform.CenterX = 0;
-            rotateTransform.CenterY = Height / 2;
-            rotateTransform.Angle = angle;
-            _angle = angle;
-            _tgeometry.Rotate(LeftPoint, angle - oldangle);
+            SetAngleCenter(angle);
+            leftreconnect();
         }
 
         /// <summary>
@@ -2034,12 +2150,8 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="angle">The angle.</param>
         public void SetAngleRight(double angle)
         {
-            double oldangle = rotateTransform.Angle;
-            rotateTransform.CenterX = Width;
-            rotateTransform.CenterY = Height / 2;
-            rotateTransform.Angle = angle;
-            _angle = angle;
-            _tgeometry.Rotate(RightPoint, angle - oldangle);
+            SetAngleCenter(angle);
+            rightreconnect();
         }
 
         /// <summary>
@@ -2064,6 +2176,15 @@ namespace Mesnet.Xaml.User_Controls
         }
 
         /// <summary>
+        /// Shows the corners of the outer rectangle in canvas with predefined values of 5 and 7. 
+        /// It is used in debug purposes.
+        /// </summary>
+        public void ShowCorners()
+        {
+            ShowCorners(5,7);
+        }
+
+        /// <summary>
         /// Shows the corners rectangle in canvas. It is used in debug purposes.
         /// </summary>
         /// <param name="radiusinner">The inner transform geometry circle radius.</param>
@@ -2078,6 +2199,11 @@ namespace Mesnet.Xaml.User_Controls
             _tgeometry.HideCorners();
         }
 
+        /// <summary>
+        /// Brings to ui element to front by increasing z index in canvas.
+        /// </summary>
+        /// <param name="pParent">Parent canvas.</param>
+        /// <param name="pToMove">Ui Element to bring front.</param>
         private void BringToFront(Canvas pParent, UserControl pToMove)
         {
             try
@@ -2298,9 +2424,9 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     poly.StartPoint = load.StartPoint;
                     poly.EndPoint = load.EndPoint;
-                    _zeroforcedist.Add(poly);
-                    _zeroforcedist.Sort();
+                    _zeroforcedist.Add(poly);                
                 }
+                _zeroforcedist.Sort();
 
                 if (_distributedloads.Last().EndPoint != _length)
                 {
@@ -2315,6 +2441,9 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        /// <summary>
+        /// Calculates the zero moment, the monet when the beam is bounded with basic supports on both sides.
+        /// </summary>
         private void findzeromoment()
         {
             _zeromoment = new PiecewisePoly();
@@ -3041,6 +3170,9 @@ namespace Mesnet.Xaml.User_Controls
             #endregion
         }
 
+        /// <summary>
+        /// Updates moments to obtain fixed end moments of a beam system when there is only one beam presented.
+        /// </summary>
         private void updateclapeyronmoments()
         {
             var polylist = new List<Poly>();
@@ -3049,6 +3181,53 @@ namespace Mesnet.Xaml.User_Controls
 
             if (_zeromoment.Length > 0)
             {
+                //Cross to normal convention sign conversion
+                if (Deflection(0.001) < 0)
+                {
+                    if (_ma > 0)
+                    {
+                        _ma = Negative(_ma);
+                    }
+                    else
+                    {
+                        _ma = Positive(_ma);
+                    }
+                }
+                else
+                {
+                    if (_ma > 0)
+                    {
+                        _ma = Negative(_ma);
+                    }
+                    else
+                    {
+                        _ma = Positive(_ma);
+                    }
+                }
+
+                if (Deflection(_length - 0.001) < 0)
+                {
+                    if (_mb > 0)
+                    {
+                        _mb = Positive(_mb);
+                    }
+                    else
+                    {
+                        _mb = Negative(_mb);
+                    }
+                }
+                else
+                {
+                    if (_mb > 0)
+                    {
+                        _mb = Positive(_mb);
+                    }
+                    else
+                    {
+                        _mb = Negative(_mb);
+                    }
+                }
+
                 constant = (_mb - _ma) / _length;
 
                 foreach (Poly moment in _zeromoment)
@@ -3084,6 +3263,25 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
+                //There is no load on this beam
+                if (_ma > 0)
+                {
+                    _ma = Negative(_ma);
+                }
+                else
+                {
+                    _ma = Positive(_ma);
+                }
+
+                if (_mb > 0)
+                {
+                    _mb = Positive(_mb);
+                }
+                else
+                {
+                    _mb = Negative(_mb);
+                }
+
                 constant = (_mb - _ma) / _length;
 
                 if (Math.Abs(constant) < 0.000001)
@@ -3108,7 +3306,7 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     poly = poly1;
                 }
-
+                
                 poly.StartPoint = 0;
                 poly.EndPoint = _length;
                 polylist.Add(poly);
@@ -3123,6 +3321,12 @@ namespace Mesnet.Xaml.User_Controls
             _fixedendforce = _fixedendmoment.Derivate();
         }
 
+        /// <summary>
+        /// Checks if the beam can be calculated analytically, without numerical integration.
+        /// If the beam has constant and only one inertia polynomial, and if the beam has 
+        /// integer-powered zero moment poly, the analytical solution can be done which is a way
+        /// faster than numerical solution 
+        /// </summary>
         private void canbesolvedanalytically()
         {
             //Check inertia ppoly has only one poly
@@ -3294,120 +3498,169 @@ namespace Mesnet.Xaml.User_Controls
             #endregion
         }
 
+        /// <summary>
+        /// Calculates alfa, beta, gama, k and fi coefficients.
+        /// </summary>
         private void findcrosscoefficients()
         {
-            var simpson1 = new SimpsonIntegrator(0.0001);
+            var x = new Poly("x");
+            x.StartPoint = 0;
+            x.EndPoint = _length;
 
             var lxpoly = new Poly(_length.ToString() + "-x");
             lxpoly.StartPoint = 0;
             lxpoly.EndPoint = _length;
 
-            for (double i = 0; i <= _length; i = i + 0.0001)
+            var xppoly = new PiecewisePoly();
+            xppoly.Add(x);
+
+            if (_analyticalsolution)
             {
-                simpson1.AddData(Math.Pow(lxpoly.Calculate(i), 2) / _inertiappoly.Calculate(i));
+                MyDebug.WriteInformation(_name + " : Analytical solution started");
+                _alfaa = 1.0 / 3;
+                MyDebug.WriteInformation(_name + " : alfaa = " + _alfaa);
+                Logger.WriteLine(this.Name + " : alfaa = " + _alfaa);
+
+                _alfab = 1.0 / 3;
+                MyDebug.WriteInformation(_name + " : alfab = " + _alfab);
+                Logger.WriteLine(this.Name + " : alfab = " + _alfab);
+
+                _beta = 1.0 / 6;
+                MyDebug.WriteInformation(_name + " : beta = " + _beta);
+                Logger.WriteLine(_name + " : beta = " + _beta);              
+            }
+            else
+            {
+                MyDebug.WriteInformation(_name + " : Numerical solution started");
+                var simpson1 = new SimpsonIntegrator(SimpsonStep);
+
+                for (double i = 0; i <= _length; i = i + SimpsonStep)
+                {
+                    simpson1.AddData(Math.Pow(lxpoly.Calculate(i), 2) / _inertiappoly.Calculate(i));
+                }
+
+                simpson1.Calculate();
+
+                _alfaa = _izero / Math.Pow(_length, 3) * simpson1.Result;
+
+                MyDebug.WriteInformation(_name + " : alfaa = " + _alfaa);
+
+                Logger.WriteLine(this.Name + " : alfaa = " + _alfaa);
+
+                var simpson2 = new SimpsonIntegrator(SimpsonStep);
+
+                var xsquare = new Poly("x^2");
+                xsquare.StartPoint = 0;
+                xsquare.EndPoint = _length;
+
+                for (double i = 0; i <= _length; i = i + SimpsonStep)
+                {
+                    simpson2.AddData(xsquare.Calculate(i) / _inertiappoly.Calculate(i));
+                }
+
+                simpson2.Calculate();
+
+                _alfab = _izero / Math.Pow(_length, 3) * simpson2.Result;
+
+                MyDebug.WriteInformation(_name + " : alfab = " + _alfab);
+
+                Logger.WriteLine(_name + " : alfab = " + _alfab);
+
+                var simpson3 = new SimpsonIntegrator(SimpsonStep);
+
+                for (double i = 0; i <= _length; i = i + SimpsonStep)
+                {
+                    simpson3.AddData((lxpoly.Calculate(i) * x.Calculate(i)) / _inertiappoly.Calculate(i));
+                }
+
+                simpson3.Calculate();
+
+                _beta = _izero / Math.Pow(_length, 3) * simpson3.Result;
+
+                MyDebug.WriteInformation(_name + " : beta = " + _beta);
+
+                Logger.WriteLine(_name + " : beta = " + _beta);            
             }
 
-            simpson1.Calculate();
-
-            _alfaa = _izero / Math.Pow(_length, 3) * simpson1.Result;
-
-            MyDebug.WriteInformation(_name + " : alfaa = " + _alfaa);
-
-            Logger.WriteLine(this.Name + " : alfaa = " + _alfaa);
-
-            var simpson2 = new SimpsonIntegrator(0.0001);
-
-            var xsquare = new Poly("x^2");
-            xsquare.StartPoint = 0;
-            xsquare.EndPoint = _length;
-
-            for (double i = 0; i <= _length; i = i + 0.0001)
+            if (_zeromoment.Count > 0)
             {
-                simpson2.AddData(xsquare.Calculate(i) / _inertiappoly.Calculate(i));
+                var mox = _zeromoment * xppoly;
+
+                if(_analyticalsolution)
+                {
+                    _ka = 6.0 * _izero / Math.Pow(_length, 2) * mox.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : ka = " + _ka);
+                    Logger.WriteLine(_name + " : ka = " + _ka);
+
+                    var lxppoly = new PiecewisePoly();
+                    lxppoly.Add(lxpoly);
+
+                    var mlx = _zeromoment * lxppoly;
+
+                    _kb = 6.0 * _izero / Math.Pow(_length, 2) * mlx.DefiniteIntegral(0, _length);
+                    Logger.WriteLine(_name + " : kb = " + _kb);
+                    MyDebug.WriteInformation(_name + " : kb = " + _kb);
+                }
+                else
+                {
+                    var simpson4 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson4.AddData(mox.Calculate(i) / _inertiappoly.Calculate(i));
+                    }
+
+                    simpson4.Calculate();
+
+                    _ka = 6 * _izero / Math.Pow(_length, 2) * simpson4.Result;
+
+                    MyDebug.WriteInformation(_name + " : ka = " + _ka);
+
+                    Logger.WriteLine(_name + " : ka = " + _ka);
+
+                    var simpson5 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson5.AddData((_zeromoment.Calculate(i) * lxpoly.Calculate(i)) / _inertiappoly.Calculate(i));
+                    }
+
+                    simpson5.Calculate();
+
+                    _kb = 6 * _izero / Math.Pow(_length, 2) * simpson5.Result;
+
+                    Logger.WriteLine(_name + " : kb = " + _kb);
+
+                    MyDebug.WriteInformation(_name + " : kb = " + _kb);
+                }
             }
-
-            simpson2.Calculate();
-
-            _alfab = _izero / Math.Pow(_length, 3) * simpson2.Result;
-
-            MyDebug.WriteInformation(_name + " : alfab = " + _alfab);
-
-            Logger.WriteLine(_name + " : alfab = " + _alfab);
-
-            var simpson3 = new SimpsonIntegrator(0.0001);
-
-            var x = new Poly("x");
-            x.StartPoint = 0;
-            x.EndPoint = _length;
-
-            for (double i = 0; i <= _length; i = i + 0.0001)
+            else
             {
-                simpson3.AddData((lxpoly.Calculate(i) * x.Calculate(i)) / _inertiappoly.Calculate(i));
-            }
-
-            simpson3.Calculate();
-
-            _beta = _izero / Math.Pow(_length, 3) * simpson3.Result;
-
-            MyDebug.WriteInformation(_name + " : beta = " + _beta);
-
-            Logger.WriteLine(_name + " : beta = " + _beta);
-
-            var simpson4 = new SimpsonIntegrator(0.0001);
-
-            for (double i = 0; i <= _length; i = i + 0.0001)
-            {
-                simpson4.AddData((_zeromoment.Calculate(i) * x.Calculate(i)) / _inertiappoly.Calculate(i));
-            }
-
-            simpson4.Calculate();
-
-            _ka = 6 * _izero / Math.Pow(_length, 2) * simpson4.Result;
-
-            MyDebug.WriteInformation(_name + " : ka = " + _ka);
-
-            Logger.WriteLine(_name + " : ka = " + _ka);
-
-            var simpson5 = new SimpsonIntegrator(0.0001);
-
-            for (double i = 0; i <= _length; i = i + 0.0001)
-            {
-                simpson5.AddData((_zeromoment.Calculate(i) * lxpoly.Calculate(i)) / _inertiappoly.Calculate(i));
-            }
-
-            simpson5.Calculate();
-
-            _kb = 6 * _izero / Math.Pow(_length, 2) * simpson5.Result;
-
-            Logger.WriteLine(_name + " : kb = " + _kb);
-
-            MyDebug.WriteInformation(_name + " : kb = " + _kb);
+                _ka = 0;
+                _kb = 0;
+            }    
 
             _fia = _length * (_kb / 6 + _mb * _beta + _ma * _alfaa) / (_elasticity * _izero);
-
             MyDebug.WriteInformation(_name + " : fia = " + _fia);
 
             _fib = -_length * (_ka / 6 + _ma * _beta + _mb * _alfab) / (_elasticity * _izero);
-
             MyDebug.WriteInformation(_name + " : fib = " + _fib);
 
             _gamaba = _beta / _alfaa;
-
             MyDebug.WriteInformation(_name + " : gamaba = " + _gamaba);
 
             _gamaab = _beta / _alfab;
-
             MyDebug.WriteInformation(_name + " : gamaab = " + _gamaab);
 
             #region stiffnesses with support cases
 
-            switch (LeftSide.GetType().Name)
+            switch (GetObjectType(LeftSide))
             {
-                case "LeftFixedSupport":
+                case ObjectType.LeftFixedSupport:
 
-                    switch (RightSide.GetType().Name)
+                    switch (GetObjectType(RightSide))
                     {
-                        case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
 
                             MyDebug.WriteInformation(_name + " : stiffness case 1");
 
@@ -3417,7 +3670,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "BasicSupport":
+                        case ObjectType.BasicSupport:
                        
                             var basic = RightSide as BasicSupport;
 
@@ -3440,7 +3693,7 @@ namespace Mesnet.Xaml.User_Controls
 
                             break;
 
-                        case "SlidingSupport":
+                        case ObjectType.SlidingSupport:
 
                             var sliding = RightSide as SlidingSupport;
 
@@ -3466,15 +3719,15 @@ namespace Mesnet.Xaml.User_Controls
 
                     break;
 
-                case "BasicSupport":
+                case ObjectType.BasicSupport:
 
                     var basic1 = LeftSide as BasicSupport;
 
                     if (basic1.Members.Count > 1)
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : stiffness case 6");
 
@@ -3484,7 +3737,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3507,7 +3760,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3531,9 +3784,9 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     else
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : stiffness case 10");
 
@@ -3543,7 +3796,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3565,7 +3818,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3592,15 +3845,15 @@ namespace Mesnet.Xaml.User_Controls
 
                     break;
 
-                case "SlidingSupport":
+                case ObjectType.SlidingSupport:
 
                     var sliding2 = LeftSide as SlidingSupport;
 
                     if (sliding2.Members.Count > 1)
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : stiffness case 15");
 
@@ -3610,7 +3863,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3633,7 +3886,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3659,9 +3912,9 @@ namespace Mesnet.Xaml.User_Controls
                     }
                     else
                     {
-                        switch (RightSide.GetType().Name)
+                        switch (GetObjectType(RightSide))
                         {
-                            case "RightFixedSupport":
+                            case ObjectType.RightFixedSupport:
 
                                 MyDebug.WriteInformation(_name + " : stiffness case 20");
 
@@ -3671,7 +3924,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "BasicSupport":
+                            case ObjectType.BasicSupport:
 
                                 var basic3 = RightSide as BasicSupport;
 
@@ -3694,7 +3947,7 @@ namespace Mesnet.Xaml.User_Controls
 
                                 break;
 
-                            case "SlidingSupport":
+                            case ObjectType.SlidingSupport:
 
                                 var sliding1 = RightSide as SlidingSupport;
 
@@ -3722,9 +3975,9 @@ namespace Mesnet.Xaml.User_Controls
                     break;
             }
 
-            _stiffnessa = Math.Round(_stiffnessa, 4);
+            _stiffnessa = Math.Round(_stiffnessa, 5);
 
-            _stiffnessb = Math.Round(_stiffnessb, 4);
+            _stiffnessb = Math.Round(_stiffnessb, 5);
 
             MyDebug.WriteInformation(_name + " : StiffnessA = " + _stiffnessa);
 
@@ -4036,6 +4289,7 @@ namespace Mesnet.Xaml.User_Controls
 
             Logger.WriteLine(_name + " : Clapeyron Mb = " + _mbclapeyron);
 
+            //Normal to Cross sign conversion
 
             if (Deflection(0.001) < 0)
             {
@@ -4049,6 +4303,8 @@ namespace Mesnet.Xaml.User_Controls
             MyDebug.WriteInformation(_name + " : Ma = " + _ma);
 
             Logger.WriteLine(_name + " : Cross Ma = " + _ma);
+
+            //Normal to Cross sign conversion
 
             if (Deflection(_length - 0.001) < 0)
             {
@@ -4073,7 +4329,7 @@ namespace Mesnet.Xaml.User_Controls
         #region post-cross
 
         /// <summary>
-        /// Creates final moment, force and stress distributions after Cross loop according to the results
+        /// Calculates final moment, force and stress distributions after Cross loop according to the results
         /// </summary>
         public void PostCrossUpdate()
         {
@@ -4111,7 +4367,7 @@ namespace Mesnet.Xaml.User_Controls
 
             if (_zeromoment.Length > 0)
             {
-                //Cross to normal convetion sign conversion
+                //Cross to normal convention sign conversion
                 if (Deflection(0.001) < 0)
                 {
                     if (_ma > 0)
@@ -4251,6 +4507,9 @@ namespace Mesnet.Xaml.User_Controls
             _minmoment = _fixedendmoment.Min;          
         }
 
+        /// <summary>
+        /// Calculates final force distribution after cross loop.
+        /// </summary>
         private void updateforces()
         {
             _fixedendforce = _fixedendmoment.Derivate();
@@ -4260,6 +4519,9 @@ namespace Mesnet.Xaml.User_Controls
             _minforce = _fixedendforce.Min;
         }
 
+        /// <summary>
+        /// Calculates stress distribution after cross loop.
+        /// </summary>
         private void updatestresses()
         {
             double precision = 0.001;

@@ -48,7 +48,7 @@ namespace Mesnet.Xaml.Pages
 
             bw.DoWork += bw_DoWork;
             bw.WorkerReportsProgress = true;
-            bw3.DoWork += bw3LastProcess;
+            bw3.DoWork += bw3_DoWork;
 
             timer.Start();
         }
@@ -72,8 +72,6 @@ namespace Mesnet.Xaml.Pages
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             SetDecimalSeperator();
-
-            SimpsonStep = 0.0001;
 
             if (Logger.IsClosed())
             {
@@ -122,7 +120,7 @@ namespace Mesnet.Xaml.Pages
                             }
                         }
 
-                        Thread.Sleep(700);
+                        Thread.Sleep(300);
 
                         for (int i = 0; i < Environment.ProcessorCount; i++)
                         {
@@ -220,7 +218,7 @@ namespace Mesnet.Xaml.Pages
             bw.RunWorkerAsync();
         }
 
-        private void bw3LastProcess(object sender, DoWorkEventArgs e)
+        private void bw3_DoWork(object sender, DoWorkEventArgs e)
         {
             if (BeamCount > 1)
             {
@@ -231,10 +229,6 @@ namespace Mesnet.Xaml.Pages
                     var obj = _mw.MaxMomentSupport();
                     _mw.IndexAll(obj);
                     _mw.CrossLoop();
-                    _mw.UpdateBeams();
-                    _mw.UpdateAllBeamTree();
-                    _mw.UpdateAllSupportTree();
-                    _mw.ShowMoments();
                     DialogResult = true;
                 }));
             }
@@ -243,10 +237,6 @@ namespace Mesnet.Xaml.Pages
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     SetDecimalSeperator();
-                    _mw.UpdateBeam();
-                    _mw.ShowMoments();
-                    _mw.UpdateAllBeamTree();
-                    _mw.UpdateAllSupportTree();
                     DialogResult = true;
                 }));
             }

@@ -4131,7 +4131,7 @@ namespace Mesnet
             if (objects.Count > 0)
             {
                 hidediagrams();
-                PreCalculate();
+                Calculate();
             }
         }
 
@@ -4177,8 +4177,7 @@ namespace Mesnet
 
         public void ShowMoments()
         {
-            MyDebug.WriteInformation("Show Moments Started");
-
+            MyDebug.WriteInformation("Show Moments Started");           
             moment.IsEnabled = true;
 
             if (!_momentshown)
@@ -4532,7 +4531,7 @@ namespace Mesnet
         /// <summary>
         /// Initializes the cross solution
         /// </summary>
-        private void PreCalculate()
+        private void Calculate()
         {
             //CrossSolve concurently executes CrossCalculate in every beam.
             var crossdialog = new CrossSolve(this);
@@ -4544,6 +4543,9 @@ namespace Mesnet
                 //deflection.IsEnabled = true;
                 stress.IsEnabled = true;
                 notify.Text = "Solved";
+                UpdateBeams();
+                UpdateAllBeamTree();
+                UpdateAllSupportTree();
             }
         }
 
@@ -4762,32 +4764,57 @@ namespace Mesnet
 
         public void UpdateBeams()
         {
+            var cursor = this.Cursor;
+
+            this.Cursor = Cursors.Wait;
+
             List<double> _maxmomentlist = new List<double>();
 
             List<double> _maxforcelist = new List<double>();
 
             List<double> _maxstresslist = new List<double>();
 
-            foreach (var item in objects)
-            {
-                switch (item.GetType().Name)
+            System.Threading.Tasks.Parallel.ForEach(objects, (item) =>
                 {
-                    case "Beam":
+                    SetDecimalSeperator();
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
 
-                        Beam beam = item as Beam;
-                        beam.PostCrossUpdate();
-                        _maxmomentlist.Add(beam.MaxMoment);
-                        _maxmomentlist.Add(beam.MinMoment);
-                        _maxforcelist.Add(beam.MaxForce);
-                        _maxforcelist.Add(beam.MinForce);
-                        _maxstresslist.Add(beam.MaxStress);
-                        MyDebug.WriteInformation(beam.Name + " has been updated");
-                        break;
-                }
-            }
+                            Beam beam = item as Beam;
+                            beam.PostCrossUpdate();
+                            _maxmomentlist.Add(beam.MaxMoment);
+                            _maxmomentlist.Add(beam.MinMoment);
+                            _maxforcelist.Add(beam.MaxForce);
+                            _maxforcelist.Add(beam.MinForce);
+                            _maxstresslist.Add(beam.MaxStress);
+                            MyDebug.WriteInformation(beam.Name + " has been updated");
+                            break;
+                    }
+                });
+
             MaxMoment = _maxmomentlist.Max(x => Math.Abs(x));
             MaxForce = _maxforcelist.Max(x => Math.Abs(x));
             MaxStress = _maxstresslist.Max();
+
+            System.Threading.Tasks.Parallel.ForEach(objects, (item) =>
+            {
+                SetDecimalSeperator();
+                Dispatcher.BeginInvoke(new Action(() =>
+                {            
+                    switch (item.GetType().Name)
+                    {
+                        case "Beam":
+                            Beam beam = item as Beam;
+                            beam.AddFixedEndMomentDiagram();
+                            break;
+                    }
+                }));
+            });
+            moment.Header = GetString("hidemoment");
+            _momentshown = true;
+
+            this.Cursor = cursor;
         }
 
         public void UpdateBeam()

@@ -244,7 +244,7 @@ namespace Mesnet.Classes.Ui
 				if( elem != null && base.Children.Contains( elem ) )
 					break;
 
-				// VisualTreeHelper works with objects of type Visual or Visual3D.
+				// VisualTreeHelper works with Objects of type Visual or Visual3D.
 				// If the current object is not derived from Visual or Visual3D,
 				// then use the LogicalTreeHelper to find the parent element.
 				if( depObj is Visual || depObj is Visual3D )

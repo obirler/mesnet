@@ -18,12 +18,15 @@
     along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
 ========================================================================
 */
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Mesnet.Classes;
 using MoreLinq;
 
 namespace Mesnet.Xaml.User_Controls
@@ -33,10 +36,8 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class ConcentratedLoad : UserControl
     {
-        public ConcentratedLoad(List<KeyValuePair<double, double>> loads, Beam beam)
-        {
-            InitializeComponent();
-
+        public ConcentratedLoad(List<KeyValuePair<double, double>> loads, Beam beam, int c = 200)
+        {           
             _beam = beam;
 
             _loads = loads;
@@ -45,31 +46,32 @@ namespace Mesnet.Xaml.User_Controls
 
             _max = _loads.MaxBy(x => x.Value).Value;
 
-            if (_max > 200)
+            if (_max < 0)
             {
-                coeff = 200 / _max;
-            }
-            if (_max < -200)
-            {
-                coeff = -200 / _max;
-            }
-            else
-            {
-                if (_max > 0)
+                if (Math.Abs(_max) < 0.00001)
                 {
+                    _max = 0;
                     coeff = 1;
                 }
                 else
                 {
-                    coeff = 1;
+                    coeff = 200 / Global.MaxConcLoad;
                 }
             }
+            else if (_max == 0)
+            {
+                coeff = 1;
+            }
+            else
+            {
+                coeff = 200 / Global.MaxConcLoad;
+            }
 
-            Width = 100 * _length;
+            InitializeComponent();
 
             _labellist = new List<TextBlock>();
 
-            draw();
+            Draw(c);
         }
 
         private Beam _beam;
@@ -102,11 +104,14 @@ namespace Mesnet.Xaml.User_Controls
             get { return _loads; }
         }
 
-        private void draw()
+        public void Draw(int c)
         {
+            coeff = c / Global.MaxConcLoad;
+            loadcanvas.Children.Clear();
+            RemoveLabels();
             foreach (KeyValuePair<double, double> load in _loads)
             {
-                DrawArrow(load.Key * 100, load.Value);
+                DrawArrow(load.Key * 100, load.Value, coeff);
             }
         }
 
@@ -115,25 +120,23 @@ namespace Mesnet.Xaml.User_Controls
         /// </summary>
         /// <param name="x">The upper x point of the arrow.</param>
         /// <param name="y">The upper y point of the arrow.</param>
-        private void DrawArrow(double x, double y)
-        {
+        private void DrawArrow(double x, double y, double c)
+        {                  
             var points = new PointCollection();
-
             var tbl = new TextBlock();
-
             var polygon = new Polygon();
 
             if (y > 0)
             {
-                if (y >= 15)
+                if (c*y >= 15)
                 {
-                    points.Add(new Point(x - 2, y));
+                    points.Add(new Point(x - 2, c*y));
                     points.Add(new Point(x - 2, 10));
                     points.Add(new Point(x - 5, 10));
                     points.Add(new Point(x, 0));
                     points.Add(new Point(x + 5, 10));
                     points.Add(new Point(x + 2, 10));
-                    points.Add(new Point(x + 2, y));
+                    points.Add(new Point(x + 2, c*y));
 
                     tbl.Text = y + " kN";
                     _beam.upcanvas.Children.Add(tbl);
@@ -142,7 +145,7 @@ namespace Mesnet.Xaml.User_Controls
                     RotateAround(tbl);
 
                     Canvas.SetLeft(tbl, x - tbl.Width / 2);
-                    Canvas.SetTop(tbl, -y - tbl.Height);
+                    Canvas.SetTop(tbl, -c*y - tbl.Height);
                 }
                 else
                 {
@@ -165,25 +168,24 @@ namespace Mesnet.Xaml.User_Controls
                 }            
 
                 _labellist.Add(tbl);
-
-                loadcanvas.Children.Add(polygon);
+          
                 polygon.Points = points;
                 polygon.Fill = new SolidColorBrush(Colors.Black);
-                
+                loadcanvas.Children.Add(polygon);
                 Canvas.SetLeft(polygon, 0);
                 Canvas.SetTop(polygon, 0);
             }
             else
             {
-                if (y <= -15)
+                if (c*y <= -15)
                 {
-                    points.Add(new Point(x - 2, y));
+                    points.Add(new Point(x - 2, c*y));
                     points.Add(new Point(x - 2, - 10));
                     points.Add(new Point(x - 5, - 10));
                     points.Add(new Point(x, 0));
                     points.Add(new Point(x + 5, - 10));
                     points.Add(new Point(x + 2, - 10));
-                    points.Add(new Point(x + 2, y));
+                    points.Add(new Point(x + 2, c*y));
 
                     tbl.Text = y + " kN";
                     _beam.upcanvas.Children.Add(tbl);
@@ -192,7 +194,7 @@ namespace Mesnet.Xaml.User_Controls
                     RotateAround(tbl);
 
                     Canvas.SetLeft(tbl, x - tbl.Width / 2);
-                    Canvas.SetTop(tbl, -y + tbl.Height / 4);
+                    Canvas.SetTop(tbl, -c*y + tbl.Height / 4);
                 }
                 else
                 {
@@ -270,6 +272,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _beam.upcanvas.Children.Remove(label);
             }
+            _labellist.Clear();
         }
     }
 }

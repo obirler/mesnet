@@ -69,7 +69,6 @@ namespace Mesnet.Classes.Math
         public Poly()
         {           
         }
-
         #endregion
 
         #region Destructor:

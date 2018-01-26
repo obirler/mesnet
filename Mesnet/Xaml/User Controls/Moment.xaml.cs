@@ -35,13 +35,11 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class Moment : UserControl
     {
-        public Moment(PiecewisePoly momentppoly, Beam beam)
+        public Moment(PiecewisePoly momentppoly, Beam beam, int c = 200)
         {
             _beam = beam;
             _momentppoly = momentppoly;
-
             _length = beam.Length;
-
             _max = _momentppoly.Max;
 
             if (_max < 0)
@@ -50,38 +48,24 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     _max = 0;
                     coeff = 1;
-                    //Height = 200;
                 }
                 else
                 {
                     coeff = 200 / Global.MaxMoment;
-                    //Height = 200 * _max / Global.MaxMoment;
                 }
-
             }
             else if (_max == 0)
             {
                 coeff = 1;
-                //Height = 200;
             }
             else
             {
                 coeff = 200 / Global.MaxMoment;
-                //Height = 200 * _max / Global.MaxMoment;
             }
-
-            //Height = 0;
-
-            //coeff = 1;
 
             InitializeComponent();
 
-            draw();
-        }
-
-        public Moment()
-        {
-
+            Draw(c);
         }
 
         private Beam _beam;
@@ -108,6 +92,8 @@ namespace Mesnet.Xaml.User_Controls
 
         private TextBlock endtext;
 
+        private CardinalSplineShape _spline;
+
         private double coeff;
 
         public double Length
@@ -120,10 +106,28 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
-        private void draw()
+        public void Draw(int c)
         {
-            double calculated = 0;
+            if (starttext != null)
+            {
+                _beam.upcanvas.Children.Remove(starttext);
+            }
+            if (endtext != null)
+            {
+                _beam.upcanvas.Children.Remove(endtext);
+            }
+            if (mintext != null)
+            {
+                _beam.upcanvas.Children.Remove(mintext);
+            }
+            if (maxtext != null)
+            {
+                _beam.upcanvas.Children.Remove(maxtext);
+            }
+            momentcanvas.Children.Clear();         
 
+            coeff = c / Global.MaxMoment;
+            double calculated = 0;
             double value = 0;
 
             var leftpoints = new PointCollection();
@@ -139,7 +143,6 @@ namespace Mesnet.Xaml.User_Controls
             foreach (Poly poly in _momentppoly)
             {
                 var points = new PointCollection();
-
                 points.Clear();
 
                 for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
@@ -158,13 +161,13 @@ namespace Mesnet.Xaml.User_Controls
                 }
 
                 lastpoint = points.Last();
-                var spline = new CardinalSplineShape(points);
-                spline.Stroke = new SolidColorBrush(Colors.Red);
-                spline.StrokeThickness = 1;
-                spline.MouseMove += _mw.momentmousemove;
-                spline.MouseEnter += _mw.mouseenter;
-                spline.MouseLeave += _mw.mouseleave;
-                momentcanvas.Children.Add(spline);
+                _spline = new CardinalSplineShape(points);
+                _spline.Stroke = new SolidColorBrush(Colors.Red);
+                _spline.StrokeThickness = 1;
+                _spline.MouseMove += _mw.momentmousemove;
+                _spline.MouseEnter += _mw.mouseenter;
+                _spline.MouseLeave += _mw.mouseleave;
+                momentcanvas.Children.Add(_spline);
             }
 
             var rightpoints = new PointCollection();
@@ -191,8 +194,15 @@ namespace Mesnet.Xaml.User_Controls
             RotateAround(starttext);
             Canvas.SetLeft(starttext, -starttext.Width / 2);
             calculated = coeff * _momentppoly.Calculate(0);
-            value = calculated;
-            Canvas.SetTop(starttext, value - starttext.Height);
+            if (calculated > 0)
+            {
+                Canvas.SetTop(starttext, calculated);
+            }
+            else
+            {
+                Canvas.SetTop(starttext, calculated - starttext.Height);
+            }
+
 
             if (minlocation != 0 && minlocation != _length)
             {
@@ -208,9 +218,14 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(mintext, minlocation * 100 - mintext.Width / 2);
 
                 calculated = coeff * min;
-                value = calculated;
-
-                Canvas.SetTop(mintext, value);
+                if (calculated > 0)
+                {
+                    Canvas.SetTop(mintext, calculated);
+                }
+                else
+                {
+                    Canvas.SetTop(mintext, calculated - mintext.Height);
+                }
 
                 var minpoints = new PointCollection();
                 minpoints.Add(new Point(minlocation * 100, 0));
@@ -223,7 +238,6 @@ namespace Mesnet.Xaml.User_Controls
             if (maxlocation != 0 && maxlocation != _length)
             {
                 maxtext = new TextBlock();
-
                 maxtext.Text = Math.Round(max, 1) + " kNm";
                 maxtext.Foreground = new SolidColorBrush(Colors.Red);
                 MinSize(maxtext);
@@ -235,9 +249,15 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(maxtext, maxlocation * 100 - maxtext.Width / 2);
 
                 calculated = coeff * max;
-                value = calculated;
 
-                Canvas.SetTop(maxtext, value);
+                if (calculated > 0)
+                {
+                    Canvas.SetTop(maxtext, calculated);
+                }
+                else
+                {
+                    Canvas.SetTop(maxtext, calculated - maxtext.Height);
+                }
 
                 var maxpoints = new PointCollection();
                 maxpoints.Add(new Point(maxlocation * 100, 0));
@@ -256,8 +276,14 @@ namespace Mesnet.Xaml.User_Controls
             RotateAround(endtext);
             Canvas.SetLeft(endtext, _beam.Length * 100 - endtext.Width / 2);
             calculated = coeff * _momentppoly.Calculate(_beam.Length);
-            value = calculated;
-            Canvas.SetTop(endtext, value - endtext.Height);
+            if (calculated > 0)
+            {
+                Canvas.SetTop(endtext, calculated);
+            }
+            else
+            {
+                Canvas.SetTop(endtext, calculated - endtext.Height);
+            }
         }
 
         private void MinSize(TextBlock textBlock)
@@ -318,6 +344,20 @@ namespace Mesnet.Xaml.User_Controls
             }
 
             endtext.Visibility = Visibility.Collapsed;
+        }
+
+        public void RemoveLabels()
+        {
+            _beam.upcanvas.Children.Remove(starttext);
+            _beam.upcanvas.Children.Remove(endtext);
+            if (maxtext != null)
+            {
+                _beam.upcanvas.Children.Remove(maxtext);
+            }
+            if (mintext != null)
+            {
+                _beam.upcanvas.Children.Remove(mintext);
+            }
         }
     }
 }

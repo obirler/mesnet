@@ -89,7 +89,7 @@ namespace Mesnet.Xaml.Pages
                 {
                     case CalculationType.SingleThreaded:
 
-                        foreach (var item in objects)
+                        foreach (var item in Objects)
                         {
                             if (GetObjectType(item) == ObjectType.Beam)
                             {
@@ -111,7 +111,7 @@ namespace Mesnet.Xaml.Pages
 
                     case CalculationType.MultiThreaded:
 
-                        foreach (var item in objects)
+                        foreach (var item in Objects)
                         {
                             if (GetObjectType(item) == ObjectType.Beam)
                             {
@@ -138,7 +138,7 @@ namespace Mesnet.Xaml.Pages
             }
             else
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (GetObjectType(item))
                     {

@@ -70,6 +70,8 @@ namespace Mesnet
             corner.Visibility=Visibility.Collapsed;
 #endif
 
+            _uptoolbar = new UpToolBar(this);
+
             scaleslider.Value = zoomAndPanControl.ContentScale;
 
             zoomAndPanControl.MaxContentScale = 12;
@@ -140,6 +142,9 @@ namespace Mesnet
         private string _savefilepath = null;
 
         private bool beamTreeItemSelectedEventEnabled = true;
+
+        private UpToolBar _uptoolbar;
+      
 
         #region zoomandpancontrol
 
@@ -286,6 +291,8 @@ namespace Mesnet
                         MaxInertia = tempbeam.MaxInertia;
                     }
                     tempbeam.SetAngleCenter(beamangle);
+
+                    _uptoolbar.ActivateInertia();
                     //tempbeam.ShowCorners(4);
 
                     UpdateBeamTree(tempbeam);
@@ -574,9 +581,9 @@ namespace Mesnet
             //FadeOutDragZoomRect();
         }
 
-        //
-        // Fade out the drag zoom rectangle.
-        //
+        /// <summary>
+        /// Fade out the drag zoom rectangle.    
+        /// </summary>      
         private void FadeOutDragZoomRect()
         {
             AnimationHelper.StartAnimation(dragZoomBorder, OpacityProperty, 0.0, 0.1,
@@ -586,9 +593,9 @@ namespace Mesnet
                 });
         }
 
-        //
-        // Record the previous zoom level, so that we can jump back to it when the backspace key is pressed.
-        //
+        /// <summary>
+        /// Record the previous zoom level, so that we can jump back to it when the backspace key is pressed.    
+        /// </summary>  
         private void SavePrevZoomRect()
         {
             prevZoomRect = new Rect(zoomAndPanControl.ContentOffsetX, zoomAndPanControl.ContentOffsetY, zoomAndPanControl.ContentViewportWidth, zoomAndPanControl.ContentViewportHeight);
@@ -737,7 +744,7 @@ namespace Mesnet
 
             origContentMouseDownPoint = curContentPoint;
 
-            foreach (object item in objects)
+            foreach (object item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -1210,7 +1217,7 @@ namespace Mesnet
         private void beambtn_Click(object sender, RoutedEventArgs e)
         {
             //Check if there are any beam in the canvas
-            if (objects.Any(x => GetObjectType(x) == ObjectType.Beam))
+            if (Objects.Any(x => GetObjectType(x) == ObjectType.Beam))
             {
                 var beamdialog = new BeamPrompt();
                 beamdialog.maxstresstbx.Text = _maxstress.ToString();
@@ -1253,6 +1260,7 @@ namespace Mesnet
                                         beam.SetAngleLeft(beamangle);
                                         canvas.UpdateLayout();
                                         notify.Text = (string) FindResource("beamput");
+                                        _uptoolbar.ActivateInertia();
                                     }
                                 }
                                 else
@@ -1297,6 +1305,7 @@ namespace Mesnet
                                         beam.SetAngleLeft(beamangle);
                                         canvas.UpdateLayout();
                                         notify.Text = (string) FindResource("beamput");
+                                        _uptoolbar.ActivateInertia();
                                     }
                                 }
                                 else
@@ -1386,12 +1395,55 @@ namespace Mesnet
                 {
                     selectedbeam.RemoveConcentratedLoad();
                     var load = concentratedloadprompt.Loads;
-                    var concentratedload = new ConcentratedLoad(load, selectedbeam);
-                    selectedbeam.AddLoad(concentratedload, Direction.Up);
+                    foreach (var item in concentratedloadprompt.Loads)
+                    {
+                        if (item.Value > MaxConcLoad)
+                        {
+                            MaxConcLoad = item.Value;
+                        }
+                    }
+                    selectedbeam.AddLoad(load);
+                    selectedbeam.ShowConcLoadDiagram((int)concloadslider.Value);
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                if (!beam.Equals(selectedbeam))
+                                {
+                                    beam.ReDrawConcLoad((int)concloadslider.Value);
+                                }
+                                break;
+                        }
+                    }
                     LoadsShown = true;
                     loads.Header = GetString("hideloads");
                     loads.IsEnabled = true;
                 }
+
+                foreach (var item in Objects)
+                {
+                    switch (GetObjectType(item))
+                    {
+                        case ObjectType.Beam:
+
+                            var beam = item as Beam;
+                            if (beam.ConcentratedLoads != null)
+                            {
+                                if (beam.ConcentratedLoads.Count > 0)
+                                {
+                                    _uptoolbar.ActivateConcLoad();
+                                    _uptoolbar.ShowConcLoad();
+                                    return;
+                                }
+                            }
+
+                            break;
+                    }
+                }
+                _uptoolbar.DeActivateConcLoad();
 
                 UpdateBeamTree(selectedbeam);
 
@@ -1414,12 +1466,53 @@ namespace Mesnet
                 {
                     selectedbeam.RemoveDistributedLoad();
                     var ppoly = new PiecewisePoly(distloadprompt.Loadpolies);
-                    var load = new DistributedLoad(ppoly, selectedbeam.Length);
-                    selectedbeam.AddLoad(load, Direction.Up);
+                    var maxload = ppoly.Max;
+                    if (maxload > MaxDistLoad)
+                    {
+                        MaxDistLoad = maxload;
+                    }
+                    selectedbeam.AddLoad(ppoly);
+                    selectedbeam.ShowDistLoadDiagram((int)distloadslider.Value);
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                if (!beam.Equals(selectedbeam))
+                                {
+                                    beam.ReDrawDistLoad((int)distloadslider.Value);
+                                }
+                                break;
+                        }
+                    }
                     LoadsShown = true;
                     loads.Header = GetString("hideloads");
                     loads.IsEnabled = true;
                 }
+
+                foreach (var item in Objects)
+                {
+                    switch (GetObjectType(item))
+                    {
+                        case ObjectType.Beam:
+
+                            var beam = item as Beam;
+                            if (beam.DistributedLoads != null)
+                            {
+                                if (beam.DistributedLoads.Count > 0)
+                                {
+                                    _uptoolbar.ActivateDistLoad();
+                                    _uptoolbar.ShowDistLoad();
+                                    return;
+                                }
+                            }
+
+                            break;
+                    }
+                }
+                _uptoolbar.DeActivateDistLoad();
 
                 UpdateBeamTree(selectedbeam);
 
@@ -1427,7 +1520,7 @@ namespace Mesnet
                 assembly = false;
                 UnselectAll();
                 btndisableall();
-                SetMouseHandlingMode("distributedloadbtn_Click", MouseHandlingMode.None);            
+                SetMouseHandlingMode("distributedloadbtn_Click", MouseHandlingMode.None);
             }
         }
 
@@ -1476,7 +1569,7 @@ namespace Mesnet
             }
 
             Reset();
-        }
+        } 
 
         private void basicsupportbtn_Click(object sender, RoutedEventArgs e)
         {
@@ -2015,6 +2108,9 @@ namespace Mesnet
             }
         }
 
+        /// <summary>
+        /// Deletes selected beam.
+        /// </summary>
         private void handleDeleteBeam()
         {
             if (selectedbeam != null)
@@ -2698,7 +2794,7 @@ namespace Mesnet
         {
             RemoveBeamTree(beam);
             canvas.Children.Remove(beam);
-            objects.Remove(beam);
+            Objects.Remove(beam);
         }
 
         private void deleteSupport(object support)
@@ -2726,7 +2822,7 @@ namespace Mesnet
                     canvas.Children.Remove(rs);
                     break;
             }          
-            objects.Remove(support);
+            Objects.Remove(support);
         }
 
         /// <summary>
@@ -2798,11 +2894,11 @@ namespace Mesnet
         }
 
         /// <summary>
-        /// Unselects all the objects in the canvas.
+        /// Unselects all the Objects in the canvas.
         /// </summary>
         private void UnselectAll()
         {
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -2947,21 +3043,21 @@ namespace Mesnet
             if (beam.LeftSide != null)
             {
                 string leftname = GetString("null");
-                switch (beam.LeftSide.GetType().Name)
+                switch (GetObjectType(beam.LeftSide))
                 {
-                    case "LeftFixedSupport":
+                    case ObjectType.LeftFixedSupport:
                         var ls = beam.LeftSide as LeftFixedSupport;
                         leftname = GetString("leftfixedsupport") + " " + ls.SupportId;
                         leftsideitem.Support = ls;
                         break;
 
-                    case "SlidingSupport":
+                    case ObjectType.SlidingSupport:
                         var ss = beam.LeftSide as SlidingSupport;
                         leftname = GetString("slidingsupport") + " " + ss.SupportId;
                         leftsideitem.Support = ss;
                         break;
 
-                    case "BasicSupport":
+                    case ObjectType.BasicSupport:
                         var bs = beam.LeftSide as BasicSupport;
                         leftname = GetString("basicsupport") + " " + bs.SupportId;
                         leftsideitem.Support = bs;
@@ -2981,21 +3077,21 @@ namespace Mesnet
             if (beam.RightSide != null)
             {
                 string rightname = GetString("null");
-                switch (beam.RightSide.GetType().Name)
+                switch (GetObjectType(beam.RightSide))
                 {
-                    case "RightFixedSupport":
+                    case ObjectType.RightFixedSupport:
                         var rs = beam.RightSide as RightFixedSupport;
                         rightname = GetString("rightfixedsupport") + " " + rs.SupportId;
                         rightsideitem.Support = rs;
                         break;
 
-                    case "SlidingSupport":
+                    case ObjectType.SlidingSupport:
                         var ss = beam.RightSide as SlidingSupport;
                         rightname = GetString("slidingsupport") + " " + ss.SupportId;
                         rightsideitem.Support = ss;
                         break;
 
-                    case "BasicSupport":
+                    case ObjectType.BasicSupport:
                         var bs = beam.RightSide as BasicSupport;
                         rightname = GetString("basicsupport") + " " + bs.SupportId;
                         rightsideitem.Support = bs;
@@ -3097,120 +3193,6 @@ namespace Mesnet
                     distloaditem.Items.Add(distloadchilditem);
                 }
             }
-
-            #region zerofield
-            /*
-            if (beam.ZeroForce != null)
-            {
-                var forceitem = new TreeViewItem();
-                forceitem.Header = new ForceItem("Zero Force Function");
-                beamitem.Items.Add(forceitem);
-
-                var forcebutton = new ButtonItem("Show");
-                forcebutton.content.Click += showforce_Click;
-                var forcebuttonitem = new TreeViewItem();
-                forcebuttonitem.Header = forcebutton;
-                forceitem.Items.Add(forcebuttonitem);
-
-                foreach (Poly forcepoly in beam.ZeroForce)
-                {
-                    var forcechilditem = new TreeViewItem();
-                    forcechilditem.Header = forcepoly.GetString(4) + " ,  " + forcepoly.StartPoint + " <= x <= " + forcepoly.EndPoint;
-                    forceitem.Items.Add(forcechilditem);
-                }
-
-                var infoitem = new TreeViewItem();
-                var info = new Information("Information");
-                infoitem.Header = info;
-                forceitem.Items.Add(infoitem);
-
-                var leftside = new TreeViewItem();
-                leftside.Header = "Left Side : " + Math.Round(beam.ZeroForce.Calculate(0), 4) + " kN";
-                infoitem.Items.Add(leftside);
-
-                var rightside = new TreeViewItem();
-                rightside.Header = "Right Side : " + Math.Round(beam.ZeroForce.Calculate(beam.Length), 4) + " kN";
-                infoitem.Items.Add(rightside);
-
-                var maxvalue = new TreeViewItem();
-                maxvalue.Header = "Max Value : " + Math.Round(beam.ZeroForce.Max, 4) + " kN";
-                infoitem.Items.Add(maxvalue);
-                var maxloc = new TreeViewItem();
-                maxloc.Header = "Max Location : " + Math.Round(beam.ZeroForce.MaxLocation, 4) + " m";
-                infoitem.Items.Add(maxloc);
-
-                var minvalue = new TreeViewItem();
-                minvalue.Header = "Min Value : " + Math.Round(beam.ZeroForce.Min, 4) + " kN";
-                infoitem.Items.Add(minvalue);
-                var minloc = new TreeViewItem();
-                minloc.Header = "Min Location : " + Math.Round(beam.ZeroForce.MinLocation, 4) + " m";
-                infoitem.Items.Add(minloc);
-
-                var exploreritem = new TreeViewItem();
-                var forceexplorer = new ForceExplorer();
-                forceexplorer.xvalue.Text = "0";
-                forceexplorer.funcvalue.Text = Math.Round(beam.ZeroForce.Calculate(0), 4).ToString();
-                forceexplorer.xvalue.TextChanged += forceexplorer_TextChanged;               
-                exploreritem.Header = forceexplorer;
-                infoitem.Items.Add(exploreritem);
-            }
-
-            if (beam.ZeroMoment != null)
-            {
-                var momentitem = new TreeViewItem();
-                momentitem.Header = new MomentItem("Zero Moment Function");
-                beamitem.Items.Add(momentitem);
-
-                var momentbutton = new ButtonItem("Show");
-                momentbutton.content.Click += showzeromoment_Click;
-                var momentbuttonitem = new TreeViewItem();
-                momentbuttonitem.Header = momentbutton;
-                momentitem.Items.Add(momentbuttonitem);
-
-                foreach (Poly momentpoly in beam.ZeroMoment)
-                {
-                    var momentchilditem = new TreeViewItem();
-                    momentchilditem.Header = momentpoly.GetString(4) + " ,  " + momentpoly.StartPoint + " <= x <= " + momentpoly.EndPoint;
-                    momentitem.Items.Add(momentchilditem);
-                }
-
-                var infoitem = new TreeViewItem();
-                var info = new Information("Information");
-                infoitem.Header = info;
-                momentitem.Items.Add(infoitem);
-
-                var leftside = new TreeViewItem();
-                leftside.Header = "Left Side : " + Math.Round(beam.ZeroMoment.Calculate(0), 4) + " kNm";
-                infoitem.Items.Add(leftside);
-
-                var rightside = new TreeViewItem();
-                rightside.Header = "Right Side : " + Math.Round(beam.ZeroMoment.Calculate(beam.Length), 4) + " kNm";
-                infoitem.Items.Add(rightside);
-
-                var maxvalue = new TreeViewItem();
-                maxvalue.Header = "Max Value : " + Math.Round(beam.ZeroMoment.Max, 4) + " kNm";
-                infoitem.Items.Add(maxvalue);
-                var maxloc = new TreeViewItem();
-                maxloc.Header = "Max Location : " + Math.Round(beam.ZeroMoment.MaxLocation, 4) + " m";
-                infoitem.Items.Add(maxloc);
-
-                var minvalue = new TreeViewItem();
-                minvalue.Header = "Min Value : " + Math.Round(beam.ZeroMoment.Min, 4) + " kNm";
-                infoitem.Items.Add(minvalue);
-                var minloc = new TreeViewItem();
-                minloc.Header = "Min Location : " + Math.Round(beam.ZeroMoment.MinLocation, 4) + " m";
-                infoitem.Items.Add(minloc);
-
-                var exploreritem = new TreeViewItem();
-                var momentexplorer = new MomentExplorer();
-                momentexplorer.xvalue.Text = "0";
-                momentexplorer.funcvalue.Text = Math.Round(beam.ZeroMoment.Calculate(0), 4).ToString();
-                momentexplorer.xvalue.TextChanged += zeromomentexplorer_TextChanged;
-                exploreritem.Header = momentexplorer;
-                infoitem.Items.Add(exploreritem);
-            }
-            */
-            #endregion
 
             if (beam.FixedEndForce != null)
             {
@@ -3418,7 +3400,7 @@ namespace Mesnet
         {
             MyDebug.WriteInformation("Update All Tree Started");
             
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (GetObjectType(item))
                 {
@@ -3675,7 +3657,7 @@ namespace Mesnet
         public void UpdateAllSupportTree()
         {
             MyDebug.WriteInformation("Update All Support Tree Started");
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (GetObjectType(item))
                 {
@@ -3721,7 +3703,7 @@ namespace Mesnet
 
                 SelectBeamItem(beam);
 
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (GetObjectType(item))
                     {
@@ -3789,7 +3771,7 @@ namespace Mesnet
 
                     var ss = (treeitem.Header as SlidingSupportItem).Support;
 
-                    foreach (var item in objects)
+                    foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
                         {
@@ -3813,7 +3795,7 @@ namespace Mesnet
 
                     var bs = (treeitem.Header as BasicSupportItem).Support;
 
-                    foreach (var item in objects)
+                    foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
                         {
@@ -3837,7 +3819,7 @@ namespace Mesnet
 
                     var ls = (treeitem.Header as LeftFixedSupportItem).Support;
 
-                    foreach (var item in objects)
+                    foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
                         {
@@ -3861,7 +3843,7 @@ namespace Mesnet
 
                     var rs = (treeitem.Header as RightFixedSupportItem).Support;
 
-                    foreach (var item in objects)
+                    foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
                         {
@@ -3938,6 +3920,7 @@ namespace Mesnet
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void showdistload_Click(object sender, RoutedEventArgs e)
         {
+            /*
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var zeroforceitem = showbuttonitem.Parent as TreeViewItem;
@@ -3952,7 +3935,7 @@ namespace Mesnet
             {
                 beam.HideDistLoad();
                 uc.content.Content = GetString("show");
-            }
+            }*/
         }
 
         /// <summary>
@@ -3962,6 +3945,7 @@ namespace Mesnet
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void showconcload_Click(object sender, RoutedEventArgs e)
         {
+            /*
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
             var zeroforceitem = showbuttonitem.Parent as TreeViewItem;
@@ -3976,7 +3960,7 @@ namespace Mesnet
             {
                 beam.HideConcLoad();
                 uc.content.Content = GetString("show");
-            }
+            }*/
         }
 
         private void showfixedendforce_Click(object sender, RoutedEventArgs e)
@@ -3988,7 +3972,7 @@ namespace Mesnet
             var beam = beamitem.Beam;
             if (!beam.ForceShown)
             {
-                beam.AddFixedEndForceDiagram();
+                beam.ShowFixedEndForceDiagram((int)forceslider.Value);
                 uc.content.Content = GetString("hide");
             }
             else
@@ -4007,7 +3991,7 @@ namespace Mesnet
             var beam = beamitem.Beam;
             if (!beam.MomentShown)
             {
-                beam.AddFixedEndMomentDiagram();
+                beam.ShowFixedEndMomentDiagram((int)momentslider.Value);
                 uc.content.Content = GetString("hide");
             }
             else
@@ -4026,7 +4010,7 @@ namespace Mesnet
             var beam = beamitem.Beam;
             if (!beam.InertiaShown)
             {
-                beam.AddInertiaDiagram();
+                beam.ShowInertiaDiagram((int)inertiaslider.Value);
                 uc.content.Content = GetString("hide");
             }
             else
@@ -4045,7 +4029,7 @@ namespace Mesnet
             var beam = beamitem.Beam;
             if (!beam.StressShown)
             {
-                beam.AddStressDiagram();
+                beam.ShowStressDiagram((int)stressslider.Value);
                 uc.content.Content = GetString("hide");
             }
             else
@@ -4128,78 +4112,39 @@ namespace Mesnet
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void solve_Click(object sender, RoutedEventArgs e)
         {
-            if (objects.Count > 0)
-            {
-                hidediagrams();
-                Calculate();
-            }
+            InitializeSolution();
         }
 
         private void moment_Click(object sender, RoutedEventArgs e)
         {
-            ShowMoments();
-            /*
-            if (moment.Header == GetString("showmoment"))
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.AddFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-
-                moment.Header = Application.Current.FindResource("hidemoment");
-            }
-            else
-            {
-                foreach (var item in objects)
-                {
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-
-                            Beam beam = item as Beam;
-                            beam.HideFixedEndMomentDiagram();
-
-                            break;
-                    }
-                }
-                moment.Header = "Show Moment";
-            }
-            */
+            ShowOrHideMoments();
         }
 
-        public void ShowMoments()
+        public void ShowOrHideMoments()
         {
             MyDebug.WriteInformation("Show Moments Started");           
             moment.IsEnabled = true;
 
             if (!_momentshown)
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
                         case "Beam":
 
                             Beam beam = item as Beam;
-                            beam.AddFixedEndMomentDiagram();
+                            beam.ShowFixedEndMomentDiagram((int)momentslider.Value);
 
                             break;
                     }
                 }
                 moment.Header = GetString("hidemoment");
-                _momentshown = true;
+                _momentshown = true;              
             }
             else
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
@@ -4216,18 +4161,18 @@ namespace Mesnet
             }
         }
 
-        private void force_Click(object sender, RoutedEventArgs e)
+        public void ShowOrHideForces()
         {
             if (!_forceshown)
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
                         case "Beam":
 
                             Beam beam = item as Beam;
-                            beam.AddFixedEndForceDiagram();
+                            beam.ShowFixedEndForceDiagram((int)forceslider.Value);
 
                             break;
                     }
@@ -4238,7 +4183,7 @@ namespace Mesnet
             }
             else
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
@@ -4255,19 +4200,24 @@ namespace Mesnet
             }
         }
 
+        private void force_Click(object sender, RoutedEventArgs e)
+        {
+            ShowOrHideForces();
+        }
+
         private void deflection_Click(object sender, RoutedEventArgs e)
         {
             /*
             if (deflection.Header == "Show Deflection")
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
                         case "Beam":
 
                             Beam beam = item as Beam;
-                            beam.AddDeflectionDiagram();
+                            beam.ShowDeflectionDiagram();
 
                             break;
                     }
@@ -4276,7 +4226,7 @@ namespace Mesnet
             }
             else
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
@@ -4297,7 +4247,7 @@ namespace Mesnet
         {
             bool check = false;
 
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (GetObjectType(item))
                 {
@@ -4317,7 +4267,7 @@ namespace Mesnet
             {
                 if (!_stressshown)
                 {
-                    foreach (var item in objects)
+                    foreach (var item in Objects)
                     {
                         switch (item.GetType().Name)
                         {
@@ -4326,7 +4276,7 @@ namespace Mesnet
                                 Beam beam = item as Beam;
                                 if (beam.PerformStressAnalysis)
                                 {
-                                    beam.AddStressDiagram();
+                                    beam.ShowStressDiagram((int)stressslider.Value);
                                 }
 
                                 break;
@@ -4337,7 +4287,7 @@ namespace Mesnet
                 }
                 else
                 {
-                    foreach (var item in objects)
+                    foreach (var item in Objects)
                     {
                         switch (item.GetType().Name)
                         {
@@ -4360,13 +4310,13 @@ namespace Mesnet
 
         private void loads_Click(object sender, RoutedEventArgs e)
         {
-            if (!LoadsShown)
+            /*if (!LoadsShown)
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
-                    switch (item.GetType().Name)
+                    switch (GetObjectType(item))
                     {
-                        case "Beam":
+                        case ObjectType.Beam:
 
                             Beam beam = item as Beam;
                             beam.ShowDistLoad();
@@ -4380,11 +4330,11 @@ namespace Mesnet
             }
             else
             {
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
-                    switch (item.GetType().Name)
+                    switch (GetObjectType(item))
                     {
-                        case "Beam":
+                        case ObjectType.Beam:
 
                             Beam beam = item as Beam;
                             beam.HideDistLoad();
@@ -4397,7 +4347,7 @@ namespace Mesnet
                 LoadsShown = false;
             }
 
-            UpdateAllBeamTree();
+            UpdateAllBeamTree();*/
         }
 
         public void distloadmousemove(object sender, MouseEventArgs e)
@@ -4543,7 +4493,15 @@ namespace Mesnet
                 //deflection.IsEnabled = true;
                 stress.IsEnabled = true;
                 notify.Text = "Solved";
-                UpdateBeams();
+                if (BeamCount > 1)
+                {
+                    UpdateBeams();
+                }
+                else
+                {
+                    UpdateBeam();
+                }
+                
                 UpdateAllBeamTree();
                 UpdateAllSupportTree();
             }
@@ -4568,7 +4526,7 @@ namespace Mesnet
 
                 if (step % 2 == 0)
                 {
-                    foreach (var support in objects)
+                    foreach (var support in Objects)
                     {
                         switch (GetObjectType(support))
                         {
@@ -4606,7 +4564,7 @@ namespace Mesnet
                 }
                 else
                 {
-                    foreach (var support in objects)
+                    foreach (var support in Objects)
                     {
                         switch (GetObjectType(support))
                         {
@@ -4658,7 +4616,7 @@ namespace Mesnet
             Logger.WriteLine("Cross loop stopped");
             Logger.NextLine();
 
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -4692,7 +4650,7 @@ namespace Mesnet
                 Logger.WriteLine("**********************************************STEP : " + step + "*************************************************");
                 Logger.NextLine();
 
-                foreach (var support in objects)
+                foreach (var support in Objects)
                 {
                     string name = support.GetType().Name;
                     switch (name)
@@ -4744,7 +4702,7 @@ namespace Mesnet
             Logger.WriteLine("Cross loop stopped");
             Logger.NextLine();
 
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -4768,18 +4726,20 @@ namespace Mesnet
 
             this.Cursor = Cursors.Wait;
 
-            List<double> _maxmomentlist = new List<double>();
+            var _maxmomentlist = new List<double>();
 
-            List<double> _maxforcelist = new List<double>();
+            var _maxforcelist = new List<double>();
 
-            List<double> _maxstresslist = new List<double>();
+            var _maxstresslist = new List<double>();
 
-            System.Threading.Tasks.Parallel.ForEach(objects, (item) =>
+            bool stressananalysis = false;
+
+            System.Threading.Tasks.Parallel.ForEach(Objects, (item) =>
                 {
                     SetDecimalSeperator();
-                    switch (item.GetType().Name)
+                    switch (GetObjectType(item))
                     {
-                        case "Beam":
+                        case ObjectType.Beam:
 
                             Beam beam = item as Beam;
                             beam.PostCrossUpdate();
@@ -4789,6 +4749,10 @@ namespace Mesnet
                             _maxforcelist.Add(beam.MinForce);
                             _maxstresslist.Add(beam.MaxStress);
                             MyDebug.WriteInformation(beam.Name + " has been updated");
+                            if (beam.PerformStressAnalysis)
+                            {
+                                stressananalysis = true;
+                            }
                             break;
                     }
                 });
@@ -4797,20 +4761,14 @@ namespace Mesnet
             MaxForce = _maxforcelist.Max(x => Math.Abs(x));
             MaxStress = _maxstresslist.Max();
 
-            System.Threading.Tasks.Parallel.ForEach(objects, (item) =>
+            _uptoolbar.ActivateMoment();
+            _uptoolbar.ShowMoments();
+            _uptoolbar.ActivateForce();
+            if (stressananalysis)
             {
-                SetDecimalSeperator();
-                Dispatcher.BeginInvoke(new Action(() =>
-                {            
-                    switch (item.GetType().Name)
-                    {
-                        case "Beam":
-                            Beam beam = item as Beam;
-                            beam.AddFixedEndMomentDiagram();
-                            break;
-                    }
-                }));
-            });
+                _uptoolbar.ActivateStress();
+            }
+
             moment.Header = GetString("hidemoment");
             _momentshown = true;
 
@@ -4819,17 +4777,16 @@ namespace Mesnet
 
         public void UpdateBeam()
         {
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
-                switch (item.GetType().Name)
+                switch (GetObjectType(item))
                 {
-                    case "Beam":
+                    case ObjectType.Beam:
 
                         List<double> _maxmomentlist = new List<double>();
-
                         List<double> _maxforcelist = new List<double>();
-
                         List<double> _maxstresslist = new List<double>();
+
                         Beam beam = item as Beam;
                         beam.PostClapeyronUpdate();
                         _maxmomentlist.Add(beam.MaxMoment);
@@ -4841,6 +4798,15 @@ namespace Mesnet
                         MaxMoment = _maxmomentlist.Max(x => Math.Abs(x));
                         MaxForce = _maxforcelist.Max(x => Math.Abs(x));
                         MaxStress = _maxstresslist.Max();
+                        _uptoolbar.ActivateMoment();
+                        _uptoolbar.ShowMoments();
+                        _uptoolbar.ActivateForce();
+                        if (beam.PerformStressAnalysis)
+                        {
+                            _uptoolbar.ActivateStress();
+                        }
+                        moment.Header = GetString("hidemoment");
+                        _momentshown = true;
 
                         break;
                 }
@@ -4849,7 +4815,7 @@ namespace Mesnet
 
         public void WriteCarryoverFactors()
         {
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -4872,11 +4838,11 @@ namespace Mesnet
         public object MaxMomentSupport()
         {
             var list = new Dictionary<int, double>();
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
-                switch (item.GetType().Name)
+                switch (GetObjectType(item))
                 {
-                    case "BasicSupport":
+                    case ObjectType.BasicSupport:
 
                         var bs = item as BasicSupport;
 
@@ -4912,7 +4878,7 @@ namespace Mesnet
 
                         break;
 
-                    case "SlidingSupport":
+                    case ObjectType.SlidingSupport:
 
                         var ss = item as SlidingSupport;
 
@@ -4948,13 +4914,13 @@ namespace Mesnet
 
                         break;
 
-                    case "LeftFixedSupport":
+                    case ObjectType.LeftFixedSupport:
 
                         //We search max moment in sliding or basic supports. If the max moment is at one fixed support the algorithm does not run correctly and immediately finishes 
 
                         break;
 
-                    case "RightFixedSupport":
+                    case ObjectType.RightFixedSupport:
 
                         //We search max moment in sliding or basic supports. If the max moment is at one fixed support the algorithm does not run correctly and immediately finishes
 
@@ -4979,7 +4945,7 @@ namespace Mesnet
             Graph graph = new Graph();
 
             #region create graph
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -5128,7 +5094,7 @@ namespace Mesnet
             {
                 int index = graph.ShortestPath(startsupport, supportname).Count;
 
-                foreach (var item in objects)
+                foreach (var item in Objects)
                 {
                     switch (item.GetType().Name)
                     {
@@ -5205,7 +5171,7 @@ namespace Mesnet
         private void resetsystem()
         {
             clearcanvas();
-            objects.Clear();
+            Objects.Clear();
             MaxMoment = Double.MinValue;
             MaxForce = Double.MinValue;
             MaxInertia = Double.MinValue;
@@ -5311,22 +5277,10 @@ namespace Mesnet
 
         private void hidediagrams()
         {
-            foreach (var item in objects)
-            {
-                switch (GetObjectType(item))
-                {
-                    case ObjectType.Beam:
-
-                        var beam = item as Beam;
-                        beam.HideFixedEndForceDiagram();
-                        beam.HideFixedEndMomentDiagram();
-                        beam.HideInertiaDiagram();
-                        beam.HideDirectionArrow();
-                        beam.HideStressDiagram();
-
-                        break;
-                }
-            }
+            _uptoolbar.CollapseInertia();
+            _uptoolbar.CollapseForce();
+            _uptoolbar.CollapseMoment();
+            _uptoolbar.CollapseStress();
         }
 
         #region File Menubar Events and Functions
@@ -5359,7 +5313,7 @@ namespace Mesnet
         private void menunew()
         {
             MyDebug.WriteInformation("Open menu clicked");
-            if (objects.Count > 0)
+            if (Objects.Count > 0)
             {
                 MyDebug.WriteInformation("there are at least one pbject in the workspace");
                 var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
@@ -5440,7 +5394,7 @@ namespace Mesnet
         private void menuopen()
         {
             MyDebug.WriteInformation("Open menu clicked");
-            if (objects.Count > 0)
+            if (Objects.Count > 0)
             {
                 MyDebug.WriteInformation("there are at least one pbject in the workspace");
                 var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
@@ -5540,7 +5494,7 @@ namespace Mesnet
                 {
                     if (openxmlio.ReadXml(canvas, path))
                     {
-                        foreach (var item in objects)
+                        foreach (var item in Objects)
                         {
                             if (GetObjectType(item) == ObjectType.Beam)
                             {
@@ -5565,7 +5519,7 @@ namespace Mesnet
                     MyDebug.WriteError(e.Message);
                     MessageBox.Show("File could not be read!");
                     WriteStatus("filereaderror");
-                    objects.Clear();
+                    Objects.Clear();
                     canvas.Children.Clear();
                     UpdateAllBeamTree();
                     UpdateAllSupportTree();
@@ -5582,7 +5536,7 @@ namespace Mesnet
 
         private void menusave()
         {
-            if (objects.Count > 0)
+            if (Objects.Count > 0)
             {
                 var ioxml = new MesnetIO();
                 if (_savefilepath != null)
@@ -5631,7 +5585,7 @@ namespace Mesnet
 
         private void menusaveas()
         {
-            if (objects.Count > 0)
+            if (Objects.Count > 0)
             {
                 var ioxml = new MesnetIO();
 
@@ -5669,7 +5623,7 @@ namespace Mesnet
 
         private void menuexit()
         {
-            if(objects.Count > 0)
+            if(Objects.Count > 0)
             {
                 MyDebug.WriteInformation("there are at least one object in the workspace");
                 var prompt = new MessagePrompt(GetString("asktosavebeforeopenning"));
@@ -5774,11 +5728,11 @@ namespace Mesnet
             WriteStatus("fileread");
         }
 
-    #endregion
+        #endregion
 
         private void clearcanvas()
         {
-            foreach(object item in objects)
+            foreach(object item in Objects)
             {
                 canvas.Children.Remove(item as UIElement);
             }
@@ -5807,12 +5761,119 @@ namespace Mesnet
 
         private void corner_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 if (GetObjectType(item) == ObjectType.Beam)
                 {
                     var beam = item as Beam;
                     beam.ShowCorners(5, 5);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the beam system can be solvable
+        /// </summary>
+        /// <returns></returns>
+        private bool systemsolvable()
+        {
+            //check if there are any Objects
+            if (Objects.Count == 0)
+            {
+                notify.Text = GetString("systemnotsolvable");
+                return false;
+            }
+
+            //check if there are any beam whose one of end is not bounded
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.LeftSide == null)
+                        {
+                            notify.Text = GetString("systemnotsolvable");
+                            return false;
+                        }
+                        if (beam.RightSide == null)
+                        {
+                            notify.Text = GetString("systemnotsolvable");
+                            return false;
+                        }
+
+                        break;
+                }
+            }
+
+            //check if there are any loads on any beam
+            var loaded = false;
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.ConcentratedLoads != null)
+                        {
+                            if (beam.ConcentratedLoads.Count > 0)
+                            {
+                                loaded = true;
+                            }
+                        }
+                        if (beam.DistributedLoads != null)
+                        {
+                            if (beam.DistributedLoads.Count > 0)
+                            {
+                                loaded = true;
+                            }
+                        }
+
+                        break;
+                }
+            }
+            if (!loaded)
+            {
+                notify.Text = GetString("notloadedsystem");
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Initializes the solution.
+        /// </summary>
+        public void InitializeSolution()
+        {
+            if (systemsolvable())
+            {
+                hidediagrams();
+                removediagrams();
+                Calculate();
+            }
+        }
+
+        /// <summary>
+        /// Removes moment, force and stress diagrams if available.
+        /// </summary>
+        private void removediagrams()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        beam.DestroyFixedEndMomentDiagram();
+                        beam.DestroyFixedEndForceDiagram();
+                        beam.DestroyStressDiagram();                  
+
+                        break;
                 }
             }
         }

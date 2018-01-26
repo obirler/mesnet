@@ -32,7 +32,7 @@ namespace Mesnet.Classes
 {
     public static class Global
     {
-        public static List<object> objects = new List<object>();
+        public static List<object> Objects = new List<object>();
 
         public static double MaxMoment = Double.MinValue;
 
@@ -45,7 +45,11 @@ namespace Mesnet.Classes
         public static double MaxStress = Double.MinValue;
 
         public static double MaxInertia = Double.MinValue;
-            
+
+        public static double MaxDistLoad = Double.MinValue;
+
+        public static double MaxConcLoad = Double.MinValue;
+
         /// <summary>
         /// Sets the language of the application using system language.
         /// </summary>
@@ -119,10 +123,10 @@ namespace Mesnet.Classes
 
         public static int AddObject(object obj)
         {
-            if (!objects.Contains(obj))
+            if (!Objects.Contains(obj))
             {
-                objects.Add(obj);
-                return objects.IndexOf(obj);
+                Objects.Add(obj);
+                return Objects.IndexOf(obj);
             }
             else
             {
@@ -133,7 +137,7 @@ namespace Mesnet.Classes
 
         public static Beam GetBeam(string Name)
         {
-            foreach (var item in objects)
+            foreach (var item in Objects)
             {
                 switch (item.GetType().Name)
                 {
@@ -154,7 +158,7 @@ namespace Mesnet.Classes
 
         public static object GetObject(int id)
         {
-            return objects[id];
+            return Objects[id];
         }
 
         public static void SetDecimalSeperator()

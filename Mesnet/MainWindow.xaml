@@ -54,23 +54,28 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
 
-            <Button x:Name="solvebtn" Height="40" Width="60" Margin="5,5,5,5" Click="beambtn_Click" BorderBrush="#FFBBBBBB">
+            <Border x:Name="border" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Button x:Name="solvebtn" Height="45" VerticalAlignment="Center" Width="60" Background="{x:Null}" BorderBrush="{x:Null}">
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource solve}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
+                    
+                    
 
-                <Button.ToolTip>
-                    <ToolTip>
-                        <StackPanel>
-                            <TextBlock Text="{DynamicResource solve}"/>
-                        </StackPanel>
-                    </ToolTip>
-                </Button.ToolTip>
+                    <Grid Height="30" Width="20">
+                        <Polygon Points="0,0 0,30 20,15" Fill="#FF018D01"></Polygon>
+                        <Polygon Points="2,4 2,26 16.5,15 " Fill="#FF05CD17"></Polygon>
+                    </Grid>
+                </Button>
+                
+            </Border>
+            
 
-                <Grid Height="30" Width="20">
-                    <Polygon Points="0,0 0,30 20,15" Fill="#FF018D01"></Polygon>
-                    <Polygon Points="2,4 2,26 16.5,15 " Fill="#FF05CD17"></Polygon>
-                </Grid>
-            </Button>
-
-            <ToggleButton Height="40" Width="110">
+            <!--<ToggleButton Height="40" Width="110" IsChecked="True">
 
                 <StackPanel Orientation="Horizontal" >
 
@@ -86,12 +91,45 @@
 
                 </StackPanel>
 
-            </ToggleButton>
+            </ToggleButton>-->
 
+            <Border x:Name="inertiaborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Expander x:Name="inertiaexpander" Header="Inertia" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Slider x:Name="inertiaslider" Width="80" Minimum="0" Maximum="300" Value="200" Margin="5,0,0,0" VerticalAlignment="Center"></Slider>
+                </Expander>
+            </Border>
+
+            <Border x:Name="distloadborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Expander x:Name="distloadexpander" Header="Dist. Load" HorizontalAlignment="Center" ExpandDirection="Right" VerticalAlignment="Center">
+                    <Slider x:Name="distloadslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
+                </Expander>
+            </Border>
+
+            <Border x:Name="concloadborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Expander x:Name="concloadexpander" Header="Conc. Load" HorizontalAlignment="Center" ExpandDirection="Right" VerticalAlignment="Center">
+                    <Slider x:Name="concloadslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
+                </Expander>
+            </Border>
             
-            
+            <Border x:Name="momentborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Expander x:Name="momentexpander" Header="Moment" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Slider x:Name="momentslider" Width="80" Minimum="0" Maximum="300" Value="200" Margin="5,0,0,0" VerticalAlignment="Center"></Slider>
+                </Expander>
+            </Border>
+
+            <Border x:Name="forceborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Expander x:Name="forceexpander" Header="Force" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Slider x:Name="forceslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
+                </Expander>
+            </Border>
+
+            <Border x:Name="stressborder" Margin="5,0,0,0" Background="WhiteSmoke" MinWidth="55" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
+                <Expander x:Name="stressexpander" Header="Stress" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Slider x:Name="stressslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
+                </Expander>
+            </Border>
         </StackPanel>
-        
+
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
 
             <Grid.ColumnDefinitions>
@@ -102,13 +140,13 @@
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="btnstack" Grid.Column="0" Grid.Row="0">
-                
+
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="335"></RowDefinition>
+                    <RowDefinition Height="300"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="35"></RowDefinition>
                 </Grid.RowDefinitions>
-                
+
                 <StackPanel Grid.Row="0">
 
                     <Button x:Name="beambtn" Height="30" Width="30" Margin="5,5,5,5" Click="beambtn_Click">
@@ -231,7 +269,7 @@
 
                     <Border Height="1" BorderThickness="0,1,0,0" BorderBrush="#FFC3C2C2" Background="#FFE1E1E1" Margin="0,5,0,5"/>
 
-                    <Button x:Name="rotatebtn" Height="30" Width="30"  Margin="5,3,5,5" Click="rotatebtn_Click" >
+                    <Button x:Name="rotatebtn" Height="30" Width="30"  Margin="5,3,5,5" Click="rotatebtn_Click" Visibility="Collapsed">
 
                         <Button.ToolTip>
                             <ToolTip>
@@ -298,7 +336,7 @@
                     </Button>
 
                 </StackPanel>
-                                          
+
 
                 <Slider Grid.Row="1" x:Name="scaleslider" Orientation="Vertical" Maximum="10" Minimum="0" HorizontalAlignment="Center" VerticalAlignment="Stretch" MinHeight="40" Margin="5,1,5,1" ValueChanged="Slider_ValueChanged" LargeChange="12" 
                     TickFrequency="10" 
@@ -375,7 +413,7 @@
                         <TextBlock Text="{DynamicResource beams}" FontSize="13" Margin="0,0,0,-1" Height="20" TextAlignment="Center" Background="#FFB8B8B8"></TextBlock>
                         <TreeView x:Name="tree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
                     </StackPanel>
-                    
+
                 </ScrollViewer>
 
                 <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#FFD3D1D1"/>
@@ -386,7 +424,7 @@
                         <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
                     </StackPanel>
                 </ScrollViewer>
-                                       
+
             </Grid>
 
         </Grid>
@@ -397,6 +435,6 @@
         </StackPanel>
 
     </Grid>
-
+    
 </Window>
 

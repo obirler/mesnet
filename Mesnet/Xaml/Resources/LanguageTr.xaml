@@ -113,4 +113,6 @@
     <system:String x:Key="cancel">İptal</system:String>
     <system:String x:Key="asktosavebeforeopenning">Şu anki değişiklikleri kaydetmek istiyor musunuz?</system:String>
     <system:String x:Key="filefilter">Mesnet Dosyası (*.mnt)|*.mnt</system:String>
+    <system:String x:Key="systemnotsolvable">Kiriş sistemi çözülemez</system:String>
+    <system:String x:Key="notloadedsystem">Hiçbir kirişte yük yok, sistem çözülmeyecek</system:String>
 </ResourceDictionary>

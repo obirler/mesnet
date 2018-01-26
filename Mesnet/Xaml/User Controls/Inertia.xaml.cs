@@ -36,14 +36,11 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class Inertia : UserControl
     {
-        public Inertia(PiecewisePoly inertiappoly, Beam beam)
+        public Inertia(PiecewisePoly inertiappoly, Beam beam, int c = 200)
         {
             _beam = beam;
-
             _inertiappoly = inertiappoly;
-
             _length = _beam.Length;
-
             _max = _inertiappoly.Max;
 
             if (_max < 0)
@@ -52,18 +49,15 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     _max = 0;
                     coeff = 1;
-                    //Height = 200;
                 }
                 else
                 {
-                    coeff = -1 * 200 / Global.MaxInertia;
+                    coeff = 200 / Global.MaxInertia;
                 }
-
             }
             else if (_max == 0)
             {
                 coeff = 1;
-                //Height = 200;
             }
             else
             {
@@ -72,7 +66,7 @@ namespace Mesnet.Xaml.User_Controls
 
             InitializeComponent();
 
-            draw();
+            Draw(c);
         }
 
         private double _max;
@@ -93,10 +87,30 @@ namespace Mesnet.Xaml.User_Controls
 
         private TextBlock endtext;
 
-        private void draw()
-        {
-            double calculated = 0;
+        private CardinalSplineShape _spline;
 
+        public void Draw(int c)
+        {
+            if (starttext != null)
+            {
+                _beam.upcanvas.Children.Remove(starttext);
+            }
+            if (endtext != null)
+            {
+                _beam.upcanvas.Children.Remove(endtext);
+            }
+            if (mintext != null)
+            {
+                _beam.upcanvas.Children.Remove(mintext);
+            }
+            if (maxtext != null)
+            {
+                _beam.upcanvas.Children.Remove(maxtext);
+            }
+
+            coeff = c / Global.MaxInertia;
+            inertiacanvas.Children.Clear();
+            double calculated = 0;
             double value = 0;
 
             var leftpoints = new PointCollection();
@@ -112,7 +126,7 @@ namespace Mesnet.Xaml.User_Controls
             foreach (Poly poly in _inertiappoly)
             {
                 var points = new PointCollection();
-                //points.Clear();
+                points.Clear();
 
                 for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
                 {
@@ -130,13 +144,13 @@ namespace Mesnet.Xaml.User_Controls
                 }
 
                 lastpoint = points.Last();
-                var spline = new CardinalSplineShape(points);
-                spline.Stroke = color;
-                spline.StrokeThickness = 1;
-                spline.MouseMove += _mw.inertiamousemove;
-                spline.MouseEnter += _mw.mouseenter;
-                spline.MouseLeave += _mw.mouseleave;
-                inertiacanvas.Children.Add(spline);
+                _spline = new CardinalSplineShape(points);
+                _spline.Stroke = color;
+                _spline.StrokeThickness = 1;
+                _spline.MouseMove += _mw.inertiamousemove;
+                _spline.MouseEnter += _mw.mouseenter;
+                _spline.MouseLeave += _mw.mouseleave;
+                inertiacanvas.Children.Add(_spline);
             }
 
             var rightpoints = new PointCollection();
@@ -164,7 +178,7 @@ namespace Mesnet.Xaml.User_Controls
             Canvas.SetLeft(starttext, -starttext.Width / 2);
             calculated = coeff * _inertiappoly.Calculate(0);
             value = calculated;
-            Canvas.SetTop(starttext, value - starttext.Height);
+            Canvas.SetTop(starttext, value);
 
             if (minlocation != 0 && minlocation != _length)
             {
@@ -182,7 +196,7 @@ namespace Mesnet.Xaml.User_Controls
                 calculated = coeff * min;
                 value = calculated;
 
-                Canvas.SetTop(mintext, value);
+                Canvas.SetTop(mintext, value-mintext.Height);
 
                 var minpoints = new PointCollection();
                 minpoints.Add(new Point(minlocation * 100, 0));
@@ -229,7 +243,7 @@ namespace Mesnet.Xaml.User_Controls
             Canvas.SetLeft(endtext, _beam.Length * 100 - endtext.Width / 2);
             calculated = coeff * _inertiappoly.Calculate(_beam.Length);
             value = calculated;
-            Canvas.SetTop(endtext, value - endtext.Height);
+            Canvas.SetTop(endtext, value);
         }
 
         public PiecewisePoly InertiaPpoly

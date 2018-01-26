@@ -19,6 +19,7 @@
 ========================================================================
 */
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,21 +35,43 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class Stress : UserControl
     {
-        public Stress(DotCollection stresslist, Beam beam)
+        public Stress(DotCollection stresslist, Beam beam, int c = 200)
         {
             InitializeComponent();
             _beam = beam;
             _stress = stresslist;
-            coeff = 200 / Global.MaxStress;
+            _max = _stress.YMax;
+            _labellist = new List<TextBlock>();
 
-            draw();
+            if (_max < 0)
+            {
+                if (Math.Abs(_max) < 0.00001)
+                {
+                    _max = 0;
+                    coeff = 1;
+                }
+                else
+                {
+                    coeff = 200 / Global.MaxMoment;
+                }
+            }
+            else if (_max == 0)
+            {
+                coeff = 1;
+            }
+            else
+            {
+                coeff = 200 / Global.MaxMoment;
+            }
+
+            Draw(c);
         }
 
         private DotCollection _stress;
 
         private Beam _beam;
 
-        private MainWindow _mw = (MainWindow)Application.Current.MainWindow;
+        private MainWindow _mw = (MainWindow) Application.Current.MainWindow;
 
         private double coeff;
 
@@ -56,12 +79,21 @@ namespace Mesnet.Xaml.User_Controls
 
         private SolidColorBrush exceedcolor = new SolidColorBrush(Colors.Red);
 
-        private void draw()
+        private double _max;
+
+        private List<TextBlock> _labellist;
+
+        public void Draw(int c)
         {
+            clearlabellist();
+
+            stresscanvas.Children.Clear();
+
+            coeff = c / Global.MaxStress;
             bool red = false;
             var points = new PointCollection();
             for (int i = 0; i < _stress.Count; i++)
-            {               
+            {
                 var point = new Point(_stress[i].Key * 100, _stress[i].Value * coeff);
                 points.Add(point);
                 if (i == 0)
@@ -122,7 +154,8 @@ namespace Mesnet.Xaml.User_Controls
                 stresscanvas.Children.Add(leftspline);
 
                 var lefttext = new TextBlock();
-                stresscanvas.Children.Add(lefttext);
+                _labellist.Add(lefttext);
+                _beam.upcanvas.Children.Add(lefttext);
                 lefttext.Text = Math.Round(_stress[0].Value, 1) + " MPa";
                 if (Math.Abs(_stress[0].Value) >= _beam.MaxAllowableStress)
                 {
@@ -143,15 +176,15 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     Canvas.SetTop(lefttext, _stress[0].Value * coeff - lefttext.Height);
                 }
-                
-                Canvas.SetLeft(lefttext, -lefttext.Width/2);
+
+                Canvas.SetLeft(lefttext, -lefttext.Width / 2);
             }
 
-            if (_stress[_stress.Count-1].Value != 0)
+            if (_stress[_stress.Count - 1].Value != 0)
             {
                 var rightline = new PointCollection();
                 rightline.Add(new Point(_beam.Length * 100, 0));
-                rightline.Add(new Point(_beam.Length * 100, _stress[_stress.Count-1].Value * coeff));
+                rightline.Add(new Point(_beam.Length * 100, _stress[_stress.Count - 1].Value * coeff));
 
                 var rightspline = new CardinalSplineShape(rightline);
                 if (Math.Abs(_stress[_stress.Count - 1].Value) >= _beam.MaxAllowableStress)
@@ -166,8 +199,9 @@ namespace Mesnet.Xaml.User_Controls
                 stresscanvas.Children.Add(rightspline);
 
                 var righttext = new TextBlock();
-                stresscanvas.Children.Add(righttext);
-                righttext.Text = Math.Round(_stress[_stress.Count-1].Value, 1) + " MPa";
+                _labellist.Add(righttext);
+                _beam.upcanvas.Children.Add(righttext);
+                righttext.Text = Math.Round(_stress[_stress.Count - 1].Value, 1) + " MPa";
                 if (Math.Abs(_stress[_stress.Count - 1].Value) >= _beam.MaxAllowableStress)
                 {
                     righttext.Foreground = exceedcolor;
@@ -188,13 +222,14 @@ namespace Mesnet.Xaml.User_Controls
                     Canvas.SetTop(righttext, _stress[_stress.Count - 1].Value * coeff - righttext.Height);
                 }
 
-                Canvas.SetLeft(righttext, _beam.Length * 100 -righttext.Width/2);
+                Canvas.SetLeft(righttext, _beam.Length * 100 - righttext.Width / 2);
             }
 
             if (_stress.YMaxPosition != 0 && _stress.YMaxPosition != _beam.Length)
             {
                 var maxtext = new TextBlock();
-                stresscanvas.Children.Add(maxtext);
+                _labellist.Add(maxtext);
+                _beam.upcanvas.Children.Add(maxtext);
                 maxtext.Text = Math.Round(_stress.YMax, 1) + " MPa";
                 if (Math.Abs(_stress.YMax) >= _beam.MaxAllowableStress)
                 {
@@ -230,7 +265,8 @@ namespace Mesnet.Xaml.User_Controls
             if (_stress.YMinPosition != 0 && _stress.YMinPosition != _beam.Length)
             {
                 var mintext = new TextBlock();
-                stresscanvas.Children.Add(mintext);
+                _labellist.Add(mintext);
+                _beam.upcanvas.Children.Add(mintext);
                 mintext.Text = Math.Round(_stress.YMin, 1) + " MPa";
                 mintext.Foreground = exceedcolor;
                 if (Math.Abs(_stress.YMin) >= _beam.MaxAllowableStress)
@@ -276,7 +312,8 @@ namespace Mesnet.Xaml.User_Controls
                 stresscanvas.Children.Add(spline);
 
                 var starttext = new TextBlock();
-                stresscanvas.Children.Add(starttext);
+                _labellist.Add(starttext);
+                _beam.upcanvas.Children.Add(starttext);
                 starttext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
                 starttext.Foreground = exceedcolor;
                 MinSize(starttext);
@@ -284,17 +321,18 @@ namespace Mesnet.Xaml.User_Controls
                 RotateAround(starttext);
 
                 Canvas.SetTop(starttext, _beam.MaxAllowableStress * coeff - starttext.Height);
-                Canvas.SetLeft(starttext, -starttext.Width/2);
+                Canvas.SetLeft(starttext, -starttext.Width / 2);
 
                 var endtext = new TextBlock();
-                stresscanvas.Children.Add(endtext);
+                _labellist.Add(endtext);
+                _beam.upcanvas.Children.Add(endtext);
                 endtext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
                 endtext.Foreground = exceedcolor;
                 MinSize(endtext);
                 endtext.TextAlignment = TextAlignment.Center;
                 RotateAround(endtext);
 
-                Canvas.SetLeft(endtext, _beam.Length * 100 - endtext.Width/2);
+                Canvas.SetLeft(endtext, _beam.Length * 100 - endtext.Width / 2);
                 Canvas.SetTop(endtext, _beam.MaxAllowableStress * coeff - endtext.Height);
             }
 
@@ -310,7 +348,8 @@ namespace Mesnet.Xaml.User_Controls
                 stresscanvas.Children.Add(spline);
 
                 var starttext = new TextBlock();
-                stresscanvas.Children.Add(starttext);
+                _labellist.Add(starttext);
+                _beam.upcanvas.Children.Add(starttext);
                 starttext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
                 starttext.Foreground = exceedcolor;
                 MinSize(starttext);
@@ -321,7 +360,8 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(starttext, -starttext.Width / 2);
 
                 var endtext = new TextBlock();
-                stresscanvas.Children.Add(endtext);
+                _labellist.Add(endtext);
+                _beam.upcanvas.Children.Add(endtext);
                 endtext.Text = Math.Round(_beam.MaxAllowableStress, 1) + " MPa";
                 endtext.Foreground = exceedcolor;
                 MinSize(endtext);
@@ -330,7 +370,7 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetLeft(endtext, _beam.Length * 100 - endtext.Width / 2);
                 Canvas.SetTop(endtext, -_beam.MaxAllowableStress * coeff);
-            }                     
+            }
         }
 
         public double Calculate(double x)
@@ -341,11 +381,13 @@ namespace Mesnet.Xaml.User_Controls
         public void Show()
         {
             Visibility = Visibility.Visible;
+            showlabellist();
         }
 
         public void Hide()
         {
             Visibility = Visibility.Collapsed;
+            hidelabellist();
         }
 
         private void addspline(PointCollection points, bool isred)
@@ -358,7 +400,7 @@ namespace Mesnet.Xaml.User_Controls
             else
             {
                 spline.Stroke = color;
-            }           
+            }
             spline.StrokeThickness = 1;
             spline.MouseMove += _mw.stressmousemove;
             spline.MouseEnter += _mw.mouseenter;
@@ -387,5 +429,39 @@ namespace Mesnet.Xaml.User_Controls
             rotate.Angle = -_beam.Angle;
             textBlock.RenderTransform = rotate;
         }
+
+        private void clearlabellist()
+        {
+            foreach (var label in _labellist)
+            {
+                _beam.upcanvas.Children.Remove(label);
+            }
+            _labellist.Clear();
+        }
+
+        private void showlabellist()
+        {
+            foreach (var label in _labellist)
+            {
+                label.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void hidelabellist()
+        {
+            foreach (var label in _labellist)
+            {
+                label.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public void RemoveLabels()
+        {
+            foreach (var label in _labellist)
+            {
+                _beam.upcanvas.Children.Remove(label);
+            }
+        }
     }
 }
+

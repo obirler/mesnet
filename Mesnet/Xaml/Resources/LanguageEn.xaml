@@ -113,4 +113,7 @@
     <system:String x:Key="cancel">Cancel</system:String>
     <system:String x:Key="asktosavebeforeopenning">Do you want to save your current changes?</system:String>
     <system:String x:Key="filefilter">Mesnet File (*.mnt)|*.mnt</system:String>
+    <system:String x:Key="systemnotsolvable">Beam system can not be solved</system:String>
+    <system:String x:Key="notloadedsystem">There is no loads on any beam, system will not be solved</system:String>
+
 </ResourceDictionary>

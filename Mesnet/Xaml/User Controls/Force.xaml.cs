@@ -35,14 +35,11 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class Force : UserControl
     {
-        public Force(PiecewisePoly forceppoly, Beam beam)
+        public Force(PiecewisePoly forceppoly, Beam beam, int c = 200)
         {
             _beam = beam;
-
             _forceppoly = forceppoly;
-
             _length = _beam.Length;
-
             _max = _forceppoly.Max;
 
             if (_max < 0)
@@ -51,18 +48,15 @@ namespace Mesnet.Xaml.User_Controls
                 {
                     _max = 0;
                     coeff = 1;
-                    //Height = 200;
                 }
                 else
                 {
-                    coeff = -1 * 200 / Global.MaxForce;
+                    coeff = 200 / Global.MaxForce;
                 }
-
             }
             else if (_max == 0)
             {
                 coeff = 1;
-                //Height = 200;
             }
             else
             {
@@ -70,12 +64,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             InitializeComponent();
 
-            draw();
-        }
-
-        public Force()
-        {
-
+            Draw(c);
         }
 
         private double _max;
@@ -96,14 +85,34 @@ namespace Mesnet.Xaml.User_Controls
 
         private TextBlock endtext;
 
-        private void draw()
-        {
-            double calculated = 0;
+        private CardinalSplineShape _spline;
 
+        public void Draw(int c)
+        {
+            if (starttext != null)
+            {
+                _beam.upcanvas.Children.Remove(starttext);
+            }
+            if (endtext != null)
+            {
+                _beam.upcanvas.Children.Remove(endtext);
+            }
+            if (mintext != null)
+            {
+                _beam.upcanvas.Children.Remove(mintext);
+            }
+            if (maxtext != null)
+            {
+                _beam.upcanvas.Children.Remove(maxtext);
+            }
+            forcecanvas.Children.Clear();
+
+            coeff = c / Global.MaxForce;
+            double calculated = 0;
             double value = 0;
 
             var leftpoints = new PointCollection();
-            leftpoints.Add(new Point(0, -coeff * _forceppoly.Calculate(0)));
+            leftpoints.Add(new Point(0, coeff * _forceppoly.Calculate(0)));
             leftpoints.Add(new Point(0, 0));
             var leftspline = new CardinalSplineShape(leftpoints);
             leftspline.Stroke = color;
@@ -121,15 +130,14 @@ namespace Mesnet.Xaml.User_Controls
                 for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
                 {
                     calculated = coeff * poly.Calculate(i / 100);
-                    value = -calculated;
                     if (points.Count == 0)
                     {
-                        var point = new Point(i, value);
+                        var point = new Point(i, calculated);
                         points.Add(point);
                     }
                     else
                     {
-                        points.Add(new Point(i, value));
+                        points.Add(new Point(i, calculated));
                     }
                 }
 
@@ -148,19 +156,19 @@ namespace Mesnet.Xaml.User_Controls
                 }
 
                 lastpoint = points.Last();
-                var spline = new CardinalSplineShape(points);
-                spline.Stroke = color;
-                spline.StrokeThickness = 1;
-                spline.MouseMove += _mw.forcemousemove;
-                spline.MouseEnter += _mw.mouseenter;
-                spline.MouseLeave += _mw.mouseleave;
-                forcecanvas.Children.Add(spline);
+                _spline = new CardinalSplineShape(points);
+                _spline.Stroke = color;
+                _spline.StrokeThickness = 1;
+                _spline.MouseMove += _mw.forcemousemove;
+                _spline.MouseEnter += _mw.mouseenter;
+                _spline.MouseLeave += _mw.mouseleave;
+                forcecanvas.Children.Add(_spline);
 
                 lastcollection = points;
             }
 
             var rightpoints = new PointCollection();
-            var point1 = new Point(100 * _length, -coeff * _forceppoly.Calculate(_length));
+            var point1 = new Point(100 * _length, coeff * _forceppoly.Calculate(_length));
             rightpoints.Add(point1);
             var point2 = new Point(100 * _length, 0);
             rightpoints.Add(point2);
@@ -183,9 +191,16 @@ namespace Mesnet.Xaml.User_Controls
             RotateAround(starttext);
             Canvas.SetLeft(starttext, -starttext.Width / 2);
             calculated = coeff * _forceppoly.Calculate(0);
-            value = calculated;
-            Canvas.SetTop(starttext, value - starttext.Height);
 
+            if (calculated > 0)
+            {
+                Canvas.SetTop(starttext, -calculated - starttext.Height);
+            }
+            else
+            {
+                Canvas.SetTop(starttext, -calculated);
+            }
+            
             if (minlocation != 0 && minlocation != _length)
             {
                 mintext = new TextBlock();
@@ -202,11 +217,18 @@ namespace Mesnet.Xaml.User_Controls
                 calculated = coeff * min;
                 value = calculated;
 
-                Canvas.SetTop(mintext, value);
+                if (calculated > 0)
+                {
+                    Canvas.SetTop(mintext, -calculated - mintext.Height);
+                }
+                else
+                {
+                    Canvas.SetTop(mintext, -calculated);
+                }
 
                 var minpoints = new PointCollection();
                 minpoints.Add(new Point(minlocation * 100, 0));
-                minpoints.Add(new Point(minlocation * 100, -coeff * min));
+                minpoints.Add(new Point(minlocation * 100, calculated));
                 var minspline = new CardinalSplineShape(minpoints);
                 minspline.Stroke = color;
                 forcecanvas.Children.Add(minspline);
@@ -229,11 +251,18 @@ namespace Mesnet.Xaml.User_Controls
                 calculated = coeff * max;
                 value = calculated;
 
-                Canvas.SetTop(maxtext, value);
+                if (calculated > 0)
+                {
+                    Canvas.SetTop(maxtext, -calculated - maxtext.Height);
+                }
+                else
+                {
+                    Canvas.SetTop(maxtext, -calculated);
+                }
 
                 var maxpoints = new PointCollection();
                 maxpoints.Add(new Point(maxlocation * 100, 0));
-                maxpoints.Add(new Point(maxlocation * 100, -coeff * max));
+                maxpoints.Add(new Point(maxlocation * 100, calculated));
                 var maxspline = new CardinalSplineShape(maxpoints);
                 maxspline.Stroke = color;
                 forcecanvas.Children.Add(maxspline);
@@ -248,8 +277,15 @@ namespace Mesnet.Xaml.User_Controls
             RotateAround(endtext);
             Canvas.SetLeft(endtext, _beam.Length * 100 - endtext.Width / 2);
             calculated = coeff * _forceppoly.Calculate(_beam.Length);
-            value = calculated;
-            Canvas.SetTop(endtext, value - endtext.Height);
+
+            if (calculated > 0)
+            {
+                Canvas.SetTop(endtext, -calculated - endtext.Height);
+            }
+            else
+            {
+                Canvas.SetTop(endtext, -calculated);
+            }
         }
 
         public PiecewisePoly ForcePpoly
@@ -330,6 +366,20 @@ namespace Mesnet.Xaml.User_Controls
             }
 
             endtext.Visibility = Visibility.Collapsed;
+        }
+
+        public void RemoveLabels()
+        {
+            _beam.upcanvas.Children.Remove(starttext);
+            _beam.upcanvas.Children.Remove(endtext);
+            if (maxtext != null)
+            {
+                _beam.upcanvas.Children.Remove(maxtext);
+            }
+            if (mintext != null)
+            {
+                _beam.upcanvas.Children.Remove(mintext);
+            }
         }
     }
 }

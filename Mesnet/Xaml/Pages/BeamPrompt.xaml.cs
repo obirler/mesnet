@@ -787,8 +787,8 @@ namespace Mesnet.Xaml.Pages
             inertiappoly.RemoveAt(index);
             if ((bool) stresscbx.IsChecked)
             {
-                dppoly.RemoveAt(index);
-                eppoly.RemoveAt(index);
+                dppoly?.RemoveAt(index);
+                eppoly?.RemoveAt(index);
             }
             fncstk.Children.RemoveAt(index);
 

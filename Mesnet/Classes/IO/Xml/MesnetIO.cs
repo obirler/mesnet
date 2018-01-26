@@ -26,7 +26,7 @@ namespace Mesnet.Classes.IO.Xml
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Objects");
 
-                foreach (object item in objects)
+                foreach (object item in Objects)
                 {
                     switch (GetObjectType(item))
                     {
@@ -133,7 +133,37 @@ namespace Mesnet.Classes.IO.Xml
                         break;
                 }
             }
-            Global.objects.Clear();
+
+            for (int i = 0; i < manifestlist.Count; i++)
+            {
+                switch (manifestlist[i].GetType().Name)
+                {
+                    case "BeamManifest":
+
+                        var beammanifest = manifestlist[i] as BeamManifest;
+                        if (beammanifest.DistributedLoads != null)
+                        {
+                            var maxload = beammanifest.DistributedLoads.Max;
+                            if (maxload > MaxDistLoad)
+                            {
+                                MaxDistLoad = maxload;
+                            }
+                        }
+                        if (beammanifest.ConcentratedLoads != null)
+                        {
+                            foreach (var item in beammanifest.ConcentratedLoads)
+                            {
+                                if (item.Value > MaxConcLoad)
+                                {
+                                    MaxConcLoad = item.Value;
+                                }
+                            }
+                        }
+
+                        break;
+                }
+            }
+            Global.Objects.Clear();
             addtocanvas();
             connectobjects();
             setvariables();
@@ -196,16 +226,14 @@ namespace Mesnet.Classes.IO.Xml
             {
                 if(beammanifest.DistributedLoads.Count > 0)
                 {
-                    var distload = new DistributedLoad(beammanifest.DistributedLoads, beammanifest.Length);
-                    beam.AddLoad(distload, Direction.Up);
+                    beam.AddLoad(beammanifest.DistributedLoads);
                 }               
             }
             if (beammanifest.ConcentratedLoads != null)
             {
                 if (beammanifest.ConcentratedLoads.Count > 0)
                 {
-                    var concload = new ConcentratedLoad(beammanifest.ConcentratedLoads, beam);
-                    beam.AddLoad(concload, Direction.Up);
+                    beam.AddLoad(beammanifest.ConcentratedLoads);
                 }                
             }
             if(beammanifest.EPolies != null)
@@ -222,7 +250,7 @@ namespace Mesnet.Classes.IO.Xml
                     beam.AddD(beammanifest.DPolies);
                 }
             }
-            objects.Add(beam);
+            Objects.Add(beam);
         }
 
         private void addsupport(SupportManifest supportmanifest)
@@ -237,7 +265,7 @@ namespace Mesnet.Classes.IO.Xml
                     bs.SupportId = supportmanifest.SupportId;
                     bs.Name = supportmanifest.Name;
                     bs.SetAngle(supportmanifest.Angle);
-                    objects.Add(bs);
+                    Objects.Add(bs);
 
                     break;
 
@@ -249,7 +277,7 @@ namespace Mesnet.Classes.IO.Xml
                     ss.SupportId = supportmanifest.SupportId;
                     ss.Name = supportmanifest.Name;
                     ss.SetAngle(supportmanifest.Angle);
-                    objects.Add(ss);
+                    Objects.Add(ss);
 
                     break;
             }
@@ -263,7 +291,7 @@ namespace Mesnet.Classes.IO.Xml
             ls.SupportId = supportmanifest.SupportId;
             ls.Name = supportmanifest.Name;
             ls.SetAngle(supportmanifest.Angle);
-            objects.Add(ls);
+            Objects.Add(ls);
         }
 
         private void addrightfixedsupport(RightFixedSupportManifest supportmanifest)
@@ -274,12 +302,12 @@ namespace Mesnet.Classes.IO.Xml
             rs.SupportId = supportmanifest.SupportId;
             rs.Name = supportmanifest.Name;
             rs.SetAngle(supportmanifest.Angle);
-            objects.Add(rs);
+            Objects.Add(rs);
         }
 
         private void connectobjects()
         {
-            foreach(object item in objects)
+            foreach(object item in Objects)
             {
                 switch (GetObjectType(item))
                 {
@@ -453,7 +481,7 @@ namespace Mesnet.Classes.IO.Xml
         {
             BeamCount = 0;
             SupportCount = 0;
-            foreach (object item in objects)
+            foreach (object item in Objects)
             {
                 switch (GetObjectType(item))
                 {

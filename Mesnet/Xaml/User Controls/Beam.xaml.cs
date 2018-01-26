@@ -99,7 +99,12 @@ namespace Mesnet.Xaml.User_Controls
 
             LeftSide = null;
 
-            MainWindow mw = App.Current.MainWindow as MainWindow;
+            BindEvents();
+        }
+
+        private void BindEvents()
+        {
+            var mw = (MainWindow)Application.Current.MainWindow;
             core.MouseDown += mw.core_MouseDown;
             core.MouseUp += mw.core_MouseUp;
             core.MouseMove += mw.core_MouseMove;
@@ -438,7 +443,7 @@ namespace Mesnet.Xaml.User_Controls
 
         public void Remove()
         {
-            objects.Remove(this);
+            Objects.Remove(this);
             _canvas.Children.Remove(this);
         }
 
@@ -1508,50 +1513,19 @@ namespace Mesnet.Xaml.User_Controls
         /// <summary>
         /// Adds the distributed load to beam with specified direction.
         /// </summary>
-        /// <param name="load">The desired distributed load.</param>
-        /// <param name="direction">The direction of load. It can be Up or Down</param>
-        public void AddLoad(DistributedLoad load, Direction direction)
+        /// <param name="loadppoly">The desired distributed load piecewise polynomial.</param>
+        public void AddLoad(PiecewisePoly loadppoly)
         {
-            if (direction == Direction.Up)
-            {
-                //upcanvas.Height = load.Height;
-                load.Length = _length;
-                upcanvas.Children.Add(load);
-                load.VerticalAlignment = VerticalAlignment.Center;
-                Canvas.SetTop(load, upcanvas.Height / 2 - load.Height);
-                _distributedloads = load.LoadPpoly;
-
-                _distload = load;
-
-                _distributedloadshown = true;
-            }
-            else if (direction == Direction.Down)
-            { }
+            _distributedloads = loadppoly;           
         }
 
         /// <summary>
         /// Adds the concentrated load to beam with specified direction.
         /// </summary>
-        /// <param name="load">The desired concentrated load.</param>
-        /// <param name="direction">The direction of load. It can be Up or Down</param>
-        public void AddLoad(ConcentratedLoad load, Direction direction)
+        /// <param name="load">The desired list of concentrated load key value pair.</param>
+        public void AddLoad(List<KeyValuePair<double, double>> loadpairs)
         {
-            if (direction == Direction.Up)
-            {
-                //upcanvas.Height = load.Height;
-                //load.Length = _length;
-                upcanvas.Children.Add(load);
-                load.HorizontalAlignment = HorizontalAlignment.Left;
-                Canvas.SetLeft(load, 0);
-
-                _concentratedloads = load.Loads;
-
-                _concload = load;
-
-                _concentratedloadshown = true;
-            }
-            else if (direction == Direction.Down)
-            { }
+            _concentratedloads = loadpairs;
         }
 
         public void RemoveDistributedLoad()
@@ -1603,16 +1577,25 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
-        public void ShowDistLoad()
+        public void ShowDistLoadDiagram(int c)
         {
             if (_distload != null)
             {
                 _distload.Show();
                 _distributedloadshown = true;
             }
+            else if (_distributedloads?.Count > 0)
+            {
+                var load = new DistributedLoad(_distributedloads, this, c);
+                upcanvas.Children.Add(load);
+                Canvas.SetBottom(load, 0);
+                Canvas.SetLeft(load, 0);
+                _distload = load;
+                _distributedloadshown = true;
+            }
         }
 
-        public void HideDistLoad()
+        public void HideDistLoadDiagram()
         {
             if (_distload != null)
             {
@@ -1621,16 +1604,25 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
-        public void ShowConcLoad()
+        public void ShowConcLoadDiagram(int c)
         {
             if (_concload != null)
             {
                 _concload.Show();
                 _concentratedloadshown = true;
             }
+            else if(_concentratedloads?.Count > 0)
+            {
+                var concentratedload = new ConcentratedLoad(_concentratedloads, this, c);
+                upcanvas.Children.Add(concentratedload);
+                Canvas.SetBottom(concentratedload, 0);
+                Canvas.SetLeft(concentratedload, 0);
+                _concload = concentratedload;
+                _concentratedloadshown = true;
+            }
         }
 
-        public void HideConcLoad()
+        public void HideConcLoadDiagram()
         {
             if (_concload != null)
             {
@@ -1638,8 +1630,8 @@ namespace Mesnet.Xaml.User_Controls
                 _concentratedloadshown = false;
             }
         }
-       
-        public void AddFixedEndForceDiagram()
+
+        public void ShowFixedEndForceDiagram(int c)
         {
             if (_feforce != null)
             {
@@ -1647,7 +1639,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                var force = new Force(_fixedendforce, this);
+                var force = new Force(_fixedendforce, this, c);
                 upcanvas.Children.Add(force);
                 Canvas.SetBottom(force, 0);
                 Canvas.SetLeft(force, 0);
@@ -1665,21 +1657,31 @@ namespace Mesnet.Xaml.User_Controls
             _forceshown = false;
         }
 
-        public void AddFixedEndMomentDiagram()
+        public void DestroyFixedEndForceDiagram()
+        {
+            if(_feforce != null)
+            {
+                _feforce.RemoveLabels();
+                upcanvas.Children.Remove(_feforce);
+                _feforce = null;
+            }         
+        }
+
+        public void ShowFixedEndMomentDiagram(int c)
         {
             if (_femoment != null)
             {
                 _femoment.Show();
             }
-            else
+            else if(_fixedendmoment?.Count > 0)
             {
-                var moment = new Moment(_fixedendmoment, this);
+                var moment = new Moment(_fixedendmoment, this, c);
                 upcanvas.Children.Add(moment);
                 Canvas.SetBottom(moment, 0);
                 Canvas.SetLeft(moment, 0);
                 _femoment = moment;
-            }
-            _momentshown = true;
+                _momentshown = true;
+            }            
         }
 
         public void HideFixedEndMomentDiagram()
@@ -1691,7 +1693,17 @@ namespace Mesnet.Xaml.User_Controls
             _momentshown = false;
         }
 
-        public void AddInertiaDiagram()
+        public void DestroyFixedEndMomentDiagram()
+        {
+            if(_femoment != null)
+            {
+                _femoment.RemoveLabels();
+                upcanvas.Children.Remove(_femoment);
+                _femoment = null;
+            }     
+        }
+
+        public void ShowInertiaDiagram(int c)
         {
             if (_inertia != null)
             {
@@ -1699,7 +1711,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                var inertia = new Inertia(_inertiappoly, this);
+                var inertia = new Inertia(_inertiappoly, this, c);
                 upcanvas.Children.Add(inertia);
                 Canvas.SetBottom(inertia, 0);
                 Canvas.SetLeft(inertia, 0);
@@ -1717,13 +1729,13 @@ namespace Mesnet.Xaml.User_Controls
             _inertiashown = false;
         }
 
-        public void AddDeflectionDiagram()
+        public void ShowDeflectionDiagram()
         {
             if (_deflectiondigram != null)
             {
                 _deflectiondigram.Show();
             }
-            else
+            else if (_deflection?.Count > 0)
             {
                 var deflection = new Deflection(_deflection, this);
                 upcanvas.Children.Add(deflection);
@@ -1741,15 +1753,15 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
-        public void AddStressDiagram()
+        public void ShowStressDiagram(int c)
         {
             if (_stressdiagram != null)
             {
                 _stressdiagram.Show();
             }
-            else
+            else if (_stress?.Count > 0)
             {
-                var stress = new Stress(_stress, this);
+                var stress = new Stress(_stress, this, c);
                 upcanvas.Children.Add(stress);
                 Canvas.SetBottom(stress, 0);
                 Canvas.SetLeft(stress, 0);
@@ -1765,6 +1777,16 @@ namespace Mesnet.Xaml.User_Controls
                 _stressdiagram.Hide();
             }
             _stressshown = false;
+        }
+
+        public void DestroyStressDiagram()
+        {
+            if (_stressdiagram != null)
+            {
+                _stressdiagram.RemoveLabels();
+                upcanvas.Children.Remove(_stressdiagram);
+                _stressdiagram = null;
+            }       
         }
 
         public void ShowDirectionArrow()
@@ -2474,11 +2496,7 @@ namespace Mesnet.Xaml.User_Controls
                 _zeromoment.Sort();
             }
 
-            foreach (Poly pol in _zeromoment)
-            {
-                MyDebug.WriteInformation(_name + " : zeromomentpoly[" + _zeromoment.IndexOf(pol) + "] = " + pol.ToString() + " , startpoint = " + pol.StartPoint + " , endpoint = " + pol.EndPoint);
-                MyDebug.WriteInformation(_name + " : definite force integral = " + _zeroforce.DefiniteIntegral(0, pol.EndPoint));
-            }
+            WritePPolytoConsole(_name + " : Fixed End Force", _zeromoment);
         }
 
         /// <summary>
@@ -2723,6 +2741,201 @@ namespace Mesnet.Xaml.User_Controls
         }
 
         /// <summary>
+        /// Finds end moments in case of both end have fixed support when there is only one beam.
+        /// </summary>
+        private void ffsolverclapeyron()
+        {
+            if (_zeromoment.Count > 0)
+            {
+                double ma1 = 0;
+                double ma2 = 0;
+                double mb1 = 0;
+                double mb2 = 0;
+                double r1 = 0;
+                double r2 = 0;
+
+                ///////////////////////////////////////////////////////////
+                /////////////////Left Equation Solve///////////////////////
+                //////////////////////////////////////////////////////////
+
+                var xsquare = new Poly("x^2");
+                xsquare.StartPoint = 0;
+                xsquare.EndPoint = _length;
+
+                var x = new Poly("x");
+                x.StartPoint = 0;
+                x.EndPoint = _length;
+
+                var xppoly = new PiecewisePoly();
+                xppoly.Add(x);
+
+                if (_analyticalsolution)
+                {
+                    //When the inertia distribution is constant dont waste time and cpu with simpson numerical integration, integrate it analytically.
+                    //Since izero equals inertia the expression can be simplified
+                    MyDebug.WriteInformation(_name + " : Analytical solution started");
+
+                    ma1 = _length / 3;
+                    MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
+
+                    mb1 = _length / 2 - ma1;
+                    MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
+
+                    var moxp = _zeromoment.Propagate(_length) * xppoly;
+                    r1 = -1 / _length * moxp.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    ma2 = _length / 6;
+                    MyDebug.WriteInformation(_name + " : ma2 = " + ma2);
+
+                    mb2 = _length / 3;
+                    MyDebug.WriteInformation(_name + " : mb2 = " + mb2);
+
+                    var mox = _zeromoment * xppoly;
+                    r2 = -1 / _length * mox.DefiniteIntegral(0, _length);
+                    MyDebug.WriteInformation(_name + " : r2 = " + r2);
+                }
+                else
+                {
+                    //When the inertia distribution is not constant, there is no choice but to use numerical integration 
+                    //since the integration can not be solved analytically using polinomials in this program.
+                    MyDebug.WriteInformation(_name + " : Numerical solution started");
+
+                    var conjugateinertia = _inertiappoly.Conjugate(_length);
+
+                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
+                    }
+
+                    simpson1.Calculate();
+
+                    ma1 = 1 / Math.Pow(_length, 2) * simpson1.Result;
+
+                    MyDebug.WriteInformation(_name + " : ma1 = " + ma1);
+
+                    //////////////////////////////////////////////////////////            
+
+                    var simpson2 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson2.AddData(_izero / conjugateinertia.Calculate(i) * x.Calculate(i));
+                    }
+
+                    simpson2.Calculate();
+
+                    var value1 = 1 / _length * simpson2.Result;
+
+                    mb1 = value1 - ma1;
+
+                    MyDebug.WriteInformation(_name + " : mb1 = " + mb1);
+
+                    ///////////////////////////////////////////////////////////
+
+                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+
+                    var conjugatemoment = _zeromoment.Conjugate(_length);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) *
+                                         x.Calculate(i));
+                    }
+
+                    simpson3.Calculate();
+
+                    r1 = -1 / _length * simpson3.Result;
+
+                    MyDebug.WriteInformation(_name + " : r1 = " + r1);
+
+                    ////////////////////////////////////////////////////////////
+                    /////////////////Right Equation Solve///////////////////////
+                    ////////////////////////////////////////////////////////////
+
+                    var simpson4 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson4.AddData(_izero / _inertiappoly.Calculate(i) * xsquare.Calculate(i));
+                    }
+
+                    simpson4.Calculate();
+
+                    var value2 = 1 / Math.Pow(_length, 2) * simpson4.Result;
+
+                    var simpson5 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson5.AddData((_izero / _inertiappoly.Calculate(i)) * xppoly.Calculate(i));
+                    }
+
+                    simpson5.Calculate();
+
+                    ma2 = 1 / _length * simpson5.Result - value2;
+
+                    MyDebug.WriteInformation(_name + " : ma2 = " + ma2);
+
+                    ///////////////////////////////////////////////////////////
+
+                    mb2 = value2;
+
+                    MyDebug.WriteInformation(_name + " : mb2 = " + mb2);
+
+                    ///////////////////////////////////////////////////////////
+
+                    var simpson6 = new SimpsonIntegrator(SimpsonStep);
+
+                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    {
+                        simpson6.AddData(_zeromoment.Calculate(i) * (_izero / _inertiappoly.Calculate(i)) *
+                                         xppoly.Calculate(i));
+                    }
+
+                    simpson6.Calculate();
+
+                    r2 = -1 / _length * simpson6.Result;
+
+                    MyDebug.WriteInformation(_name + " : r2 = " + r2);
+                }
+
+                double[,] coefficients =
+                {
+                    {ma1, mb1},
+                    {ma2, mb2},
+                };
+
+                double[] results =
+                {
+                    r1, r2
+                };
+
+                //////////////////////////////////////////////////////////
+
+                var moments = LinearEquationSolver(coefficients, results);
+
+                //_ma = Math.Round(moments[0], 4);
+
+                //_mb = Math.Round(moments[1], 4);
+
+                _ma = moments[0];
+
+                _mb = moments[1];
+            }
+            else
+            {
+                _ma = 0;
+                _mb = 0;
+            }
+
+            MyDebug.WriteInformation(_name + " : ma = " + _ma);
+            MyDebug.WriteInformation(_name + " : mb = " + _mb);
+        }
+
+        /// <summary>
         /// Finds end moments in case of the left end has fixed support and the right and basic or sliding support.
         /// </summary>
         private void fbsolver()
@@ -2899,7 +3112,7 @@ namespace Mesnet.Xaml.User_Controls
         /// <summary>
         /// Finds end moments according to end moments that are found by solvers.
         /// </summary>
-        private void findfixedendmoment()
+        private void findfixedendmomentcross()
         {
             var polylist = new List<Poly>();
 
@@ -2913,15 +3126,11 @@ namespace Mesnet.Xaml.User_Controls
             foreach (Poly moment in _zeromoment)
             {
                 var poly = new Poly();
-                var poly1 = new Poly(_ma.ToString());
-                poly1.StartPoint = moment.StartPoint;
-                poly1.EndPoint = moment.EndPoint;
-                var poly2 = new Poly("x");
-                poly2.StartPoint = moment.StartPoint;
-                poly2.EndPoint = moment.EndPoint;
-                if (constant != 0)
+                var poly1 = new Poly(_ma.ToString(), moment.StartPoint, moment.EndPoint);
+                var poly2 = new Poly("x", moment.StartPoint, moment.EndPoint);
+                if (!constant.Equals(0.0))
                 {
-                    var poly3 = new Poly(constant.ToString());
+                    var poly3 = new Poly(constant.ToString(), moment.StartPoint, moment.EndPoint);
                     poly = moment - poly1 - poly2 * poly3;
                 }
                 else
@@ -2933,6 +3142,45 @@ namespace Mesnet.Xaml.User_Controls
                 polylist.Add(poly);
             }
             _fixedendmoment = new PiecewisePoly(polylist);
+
+            WritePPolytoConsole(_name + " : Fixed End Moment", _fixedendmoment);
+        }
+
+        private void findfixedendmomentclapeyron()
+        {
+            var polylist = new List<Poly>();
+
+            var constant = (_mb - _ma) / _length;
+
+            if (Math.Abs(constant) < 0.00000001)
+            {
+                constant = 0.0;
+            }
+
+            foreach (Poly moment in _zeromoment)
+            {
+                var resultpoly = new Poly();
+                resultpoly.StartPoint = moment.StartPoint;
+                resultpoly.EndPoint = moment.EndPoint;
+                var mapoly = new Poly(_ma.ToString(), moment.StartPoint, moment.EndPoint);
+                var xpoly = new Poly("x", moment.StartPoint, moment.EndPoint);
+
+                if (!constant.Equals(0.0))
+                {
+                    var cpoly = new Poly(constant.ToString(), moment.StartPoint, moment.EndPoint);
+                    resultpoly = moment + mapoly + xpoly * cpoly;
+                }
+                else
+                {
+                    resultpoly = moment + mapoly;
+                }
+                resultpoly.StartPoint = moment.StartPoint;
+                resultpoly.EndPoint = moment.EndPoint;
+                polylist.Add(resultpoly);
+            }
+            _fixedendmoment = new PiecewisePoly(polylist);
+
+            WritePPolytoConsole(_name + " : Fixed End Moment", _fixedendmoment);
         }
 
         /// <summary>
@@ -2983,12 +3231,16 @@ namespace Mesnet.Xaml.User_Controls
             findconcentratedzeroforce();
             finddistributedzeroforce();
             _zeroforce = _zeroforceconc + _zeroforcedist;
-            WritePPolytoConsole(_name + " : _zeroforce", _zeroforce);
+            WritePPolytoConsole(_name + " : Zero Force", _zeroforce);
             findzeromoment();
             canbesolvedanalytically();
             clapeyronsupportcase();
-            findfixedendmoment();
-            updateclapeyronmoments();
+            findfixedendmomentclapeyron();
+
+            MyDebug.WriteInformation(_name + " Left End Moment = " + _ma);
+            Logger.WriteLine(_name + " Left End Moment = " + _ma);
+            MyDebug.WriteInformation(_name + " Right End Moment = " + _mb);
+            Logger.WriteLine(_name + " Right End Moment = " + _mb);                     
         }
 
         /// <summary>
@@ -2998,31 +3250,27 @@ namespace Mesnet.Xaml.User_Controls
         {
             #region cross support cases
 
-            switch (LeftSide.GetType().Name)
+            switch (GetObjectType(LeftSide))
             {
-                case "LeftFixedSupport":
+                case ObjectType.LeftFixedSupport:
 
-                    switch (RightSide.GetType().Name)
+                    switch (GetObjectType(RightSide))
                     {
-                        case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
 
                             MyDebug.WriteInformation(_name + " : ffsolver has been executed");
-                            ffsolver();
+                            ffsolverclapeyron();
 
                             break;
 
-                        case "BasicSupport":
-
-                            var basic = RightSide as BasicSupport;
+                        case ObjectType.BasicSupport:
 
                             MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                             fbsolver();
 
                             break;
 
-                        case "SlidingSupport":
-
-                            var sliding = RightSide as SlidingSupport;
+                        case ObjectType.SlidingSupport:
 
                             MyDebug.WriteInformation(_name + " : fbsolver has been executed");
                             fbsolver();
@@ -3032,293 +3280,64 @@ namespace Mesnet.Xaml.User_Controls
 
                     break;
 
-                case "BasicSupport":
+                case ObjectType.BasicSupport:
 
-                    var basic1 = LeftSide as BasicSupport;
-
-                    if (basic1.Members.Count > 1)
+                    switch (GetObjectType(RightSide))
                     {
-                        switch (RightSide.GetType().Name)
-                        {
-                            case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
 
-                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
-                                ffsolver();
+                            MyDebug.WriteInformation(_name + " : bfsolver has been executed");
+                            bfsolver();
 
-                                break;
+                            break;
 
-                            case "BasicSupport":
+                        case ObjectType.BasicSupport:
 
-                                var basic3 = RightSide as BasicSupport;
+                            MyDebug.WriteInformation(_name + " : bbsolver has been executed");
+                            bbsolver();
 
-                                MyDebug.WriteInformation(_name + " : fbsolver has been executed");
-                                fbsolver();
+                            break;
 
-                                break;
+                        case ObjectType.SlidingSupport:
 
-                            case "SlidingSupport":
+                            MyDebug.WriteInformation(_name + " : bbsolver has been executed");
+                            bbsolver();
 
-                                var sliding1 = RightSide as SlidingSupport;
-
-                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
-                                fbsolver();
-
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (RightSide.GetType().Name)
-                        {
-                            case "RightFixedSupport":
-
-                                MyDebug.WriteInformation(_name + " : bfsolver has been executed");
-                                bfsolver();
-
-                                break;
-
-                            case "BasicSupport":
-
-                                var basic3 = RightSide as BasicSupport;
-
-                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
-                                bbsolver();
-
-                                break;
-
-                            case "SlidingSupport":
-
-                                var sliding1 = RightSide as SlidingSupport;
-
-                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
-                                bbsolver();
-
-                                break;
-                        }
+                            break;
                     }
 
                     break;
 
-                case "SlidingSupport":
+                case ObjectType.SlidingSupport:
 
-                    var sliding2 = LeftSide as SlidingSupport;
-
-                    if (sliding2.Members.Count > 1)
+                    switch (GetObjectType(RightSide))
                     {
-                        switch (RightSide.GetType().Name)
-                        {
-                            case "RightFixedSupport":
+                        case ObjectType.RightFixedSupport:
 
-                                MyDebug.WriteInformation(_name + " : ffsolver has been executed");
-                                ffsolver();
+                            MyDebug.WriteInformation(_name + " : bfsolver has been executed");
+                            bfsolver();
 
-                                break;
+                            break;
 
-                            case "BasicSupport":
+                        case ObjectType.BasicSupport:
 
-                                var basic3 = RightSide as BasicSupport;
+                            MyDebug.WriteInformation(_name + " : bbsolver has been executed");
+                            bbsolver();
 
-                                MyDebug.WriteInformation(_name + " : fbsolver has been executed");
-                                fbsolver();
+                            break;
 
-                                break;
+                        case ObjectType.SlidingSupport:
 
-                            case "SlidingSupport":
+                            MyDebug.WriteInformation(_name + " : bbsolver has been executed");
+                            bbsolver();
 
-                                var sliding1 = RightSide as SlidingSupport;
-
-                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
-                                fbsolver();
-
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (RightSide.GetType().Name)
-                        {
-                            case "RightFixedSupport":
-
-                                MyDebug.WriteInformation(_name + " : bfsolver has been executed");
-                                bfsolver();
-
-                                break;
-
-                            case "BasicSupport":
-
-                                var basic3 = RightSide as BasicSupport;
-
-                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
-                                bbsolver();
-
-                                break;
-
-                            case "SlidingSupport":
-
-                                var sliding1 = RightSide as SlidingSupport;
-
-                                MyDebug.WriteInformation(_name + " : bbsolver has been executed");
-                                bbsolver();
-
-                                break;
-                        }
+                            break;
                     }
 
                     break;
             }
 
             #endregion
-        }
-
-        /// <summary>
-        /// Updates moments to obtain fixed end moments of a beam system when there is only one beam presented.
-        /// </summary>
-        private void updateclapeyronmoments()
-        {
-            var polylist = new List<Poly>();
-
-            double constant = 0;
-
-            if (_zeromoment.Length > 0)
-            {
-                //Cross to normal convention sign conversion
-                if (Deflection(0.001) < 0)
-                {
-                    if (_ma > 0)
-                    {
-                        _ma = Negative(_ma);
-                    }
-                    else
-                    {
-                        _ma = Positive(_ma);
-                    }
-                }
-                else
-                {
-                    if (_ma > 0)
-                    {
-                        _ma = Negative(_ma);
-                    }
-                    else
-                    {
-                        _ma = Positive(_ma);
-                    }
-                }
-
-                if (Deflection(_length - 0.001) < 0)
-                {
-                    if (_mb > 0)
-                    {
-                        _mb = Positive(_mb);
-                    }
-                    else
-                    {
-                        _mb = Negative(_mb);
-                    }
-                }
-                else
-                {
-                    if (_mb > 0)
-                    {
-                        _mb = Positive(_mb);
-                    }
-                    else
-                    {
-                        _mb = Negative(_mb);
-                    }
-                }
-
-                constant = (_mb - _ma) / _length;
-
-                foreach (Poly moment in _zeromoment)
-                {
-                    var poly = new Poly();
-                    var poly1 = new Poly(_ma.ToString());
-                    poly1.StartPoint = moment.StartPoint;
-                    poly1.EndPoint = moment.EndPoint;
-                    var poly2 = new Poly("x");
-                    poly2.StartPoint = moment.StartPoint;
-                    poly2.EndPoint = moment.EndPoint;
-
-                    if (constant != 0)
-                    {
-                        if (Math.Abs(constant) < 0.000001)
-                        {
-                            poly = moment + poly1;
-                        }
-                        else
-                        {
-                            var poly3 = new Poly(constant.ToString());
-                            poly = moment + poly1 + poly2 * poly3;
-                        }
-                    }
-                    else
-                    {
-                        poly = moment + poly1;
-                    }
-                    poly.StartPoint = moment.StartPoint;
-                    poly.EndPoint = moment.EndPoint;
-                    polylist.Add(poly);
-                }
-            }
-            else
-            {
-                //There is no load on this beam
-                if (_ma > 0)
-                {
-                    _ma = Negative(_ma);
-                }
-                else
-                {
-                    _ma = Positive(_ma);
-                }
-
-                if (_mb > 0)
-                {
-                    _mb = Positive(_mb);
-                }
-                else
-                {
-                    _mb = Negative(_mb);
-                }
-
-                constant = (_mb - _ma) / _length;
-
-                if (Math.Abs(constant) < 0.000001)
-                {
-                    constant = 0.0;
-                }
-
-                var poly = new Poly();
-                var poly1 = new Poly(_ma.ToString());
-                poly1.StartPoint = 0;
-                poly1.EndPoint = _length;
-                var poly2 = new Poly("x");
-                poly2.StartPoint = 0;
-                poly2.EndPoint = _length;
-
-                if (constant != 0)
-                {
-                    var poly3 = new Poly(constant.ToString());
-                    poly = poly1 + poly2 * poly3;
-                }
-                else
-                {
-                    poly = poly1;
-                }
-                
-                poly.StartPoint = 0;
-                poly.EndPoint = _length;
-                polylist.Add(poly);
-            }
-
-            _fixedendmoment = new PiecewisePoly(polylist);
-
-            _maxmoment = _fixedendmoment.Max;
-
-            _minmoment = _fixedendmoment.Min;
-
-            _fixedendforce = _fixedendmoment.Derivate();
         }
 
         /// <summary>
@@ -3333,12 +3352,14 @@ namespace Mesnet.Xaml.User_Controls
             if (_inertiappoly.Count > 1)
             {
                 _analyticalsolution = false;
+                MyDebug.WriteInformation(_name + " : Analytical solution is not possible");
             }
 
             //Check if inertia ppoly is constant or not dependant on x
             if (_inertiappoly.Degree() > 0)
             {
                 _analyticalsolution = false;
+                MyDebug.WriteInformation(_name + " : Analytical solution is not possible");
             }
           
             //Check if zero moment ppoly has any term with non-integer power
@@ -3351,11 +3372,13 @@ namespace Mesnet.Xaml.User_Controls
                         if (term.Power % 1 != 0)
                         {
                             _analyticalsolution = false;
+                            MyDebug.WriteInformation(_name + " : Analytical solution is not possible");
                         }
                     }
                 }
             }          
             _analyticalsolution = true;
+            MyDebug.WriteInformation(_name + " : Analytical solution is possible");
         }
 
         #endregion
@@ -4273,7 +4296,7 @@ namespace Mesnet.Xaml.User_Controls
 
             crosssupportcases();
 
-            findfixedendmoment();
+            findfixedendmomentcross();
 
             findcrosscoefficients();
 
@@ -4299,12 +4322,6 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _ma = Positive(_ma);
             }
-            
-            MyDebug.WriteInformation(_name + " : Ma = " + _ma);
-
-            Logger.WriteLine(_name + " : Cross Ma = " + _ma);
-
-            //Normal to Cross sign conversion
 
             if (Deflection(_length - 0.001) < 0)
             {
@@ -4314,7 +4331,11 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _mb = Negative(_mb);
             }
-            
+
+            MyDebug.WriteInformation(_name + " : Ma = " + _ma);
+
+            Logger.WriteLine(_name + " : Cross Ma = " + _ma);
+
             Logger.WriteLine(_name + " : Cross Mb = " + _mb);
 
             Logger.NextLine();
@@ -4347,6 +4368,18 @@ namespace Mesnet.Xaml.User_Controls
 
         public void PostClapeyronUpdate()
         {
+            _maxmoment = _fixedendmoment.Max;
+
+            _minmoment = _fixedendmoment.Min;
+
+            _fixedendforce = _fixedendmoment.Derivate();
+
+            WritePPolytoConsole(_name + " : Fixed End Force", _fixedendforce);
+
+            _maxforce = _fixedendforce.Max;
+
+            _minforce = _fixedendforce.Min;
+
             if (_stressanalysis)
             {
                 updatestresses();
@@ -4500,7 +4533,7 @@ namespace Mesnet.Xaml.User_Controls
 
             _fixedendmoment = new PiecewisePoly(polylist);
 
-            Global.WritePPolytoConsole(_name + " Fixed End Moment : ", _fixedendmoment);
+            WritePPolytoConsole(_name + " : Fixed End Moment", _fixedendmoment);
 
             _maxmoment = _fixedendmoment.Max;
 
@@ -4513,6 +4546,8 @@ namespace Mesnet.Xaml.User_Controls
         private void updateforces()
         {
             _fixedendforce = _fixedendmoment.Derivate();
+
+            WritePPolytoConsole(_name + " : Fixed End Force", _fixedendforce);
 
             _maxforce = _fixedendforce.Max;
 
@@ -4599,6 +4634,64 @@ namespace Mesnet.Xaml.User_Controls
             if (_maxdeflection.yposition > Global.MaxDeflection)
             {
                 Global.MaxDeflection = _maxdeflection.yposition;
+            }
+        }
+
+        #endregion
+
+        #region ReDraw Functions
+
+        public void ReDrawMoment(int c)
+        {
+            if (_femoment != null)
+            {
+                MyDebug.WriteInformation(_name + " : redrawing moment for c = " + c);
+                _femoment.Draw(c);
+            }         
+        }
+
+        public void ReDrawDistLoad(int c)
+        {
+            if (_distload != null)
+            {
+                MyDebug.WriteInformation(_name + " : redrawing distributed load for c = " + c);
+                _distload.Draw(c);
+            }        
+        }
+
+        public void ReDrawConcLoad(int c)
+        {
+            if (_concload != null)
+            {
+                MyDebug.WriteInformation(_name + " : redrawing concentrated load for c = " + c);
+                _concload.Draw(c);
+            }
+        }
+
+        public void ReDrawInertia(int c)
+        {
+            if (_inertia != null)
+            {
+                MyDebug.WriteInformation(_name + " : redrawing inertia for c = " + c);
+                _inertia.Draw(c);
+            }
+        }
+
+        public void ReDrawForce(int c)
+        {
+            if (_feforce != null)
+            {
+                MyDebug.WriteInformation(_name + " : redrawing force for c = " + c);
+                _feforce.Draw(c);
+            }
+        }
+
+        public void ReDrawStress(int c)
+        {
+            if (_stressdiagram != null)
+            {
+                MyDebug.WriteInformation(_name + " : redrawing stress for c = " + c);
+                _stressdiagram.Draw(c);
             }
         }
 

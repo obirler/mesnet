@@ -153,6 +153,7 @@
     <Compile Include="Classes\Tools\TestCases.cs" />
     <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
     <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />
+    <Compile Include="Classes\Ui\UpToolBar.cs" />
     <Compile Include="Xaml\Pages\BeamPrompt.xaml.cs">
       <DependentUpon>BeamPrompt.xaml</DependentUpon>
     </Compile>

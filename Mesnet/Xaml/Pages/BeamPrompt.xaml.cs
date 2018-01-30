@@ -517,7 +517,18 @@ namespace Mesnet.Xaml.Pages
                 return;
             }
 
-            var poly = new Poly(vi.Text);
+            Poly poly;
+
+            try
+            {
+                poly = new Poly(vi.Text);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(GetString("invalidpolynomial"));
+                vi.Focus();
+                return;
+            }
 
             poly.StartPoint = Convert.ToDouble(vix1.Text);
             poly.EndPoint = Convert.ToDouble(vix2.Text);

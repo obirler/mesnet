@@ -98,7 +98,7 @@ namespace Mesnet.Classes.IO.Xml
         {
             _writer.WriteStartElement("Loads");
 
-            if(_beam.ConcentratedLoads.Count > 0)
+            if(_beam.ConcentratedLoads?.Count > 0)
             {
                 _writer.WriteStartElement("ConcentratedLoads");
                 foreach (KeyValuePair<double, double> pair in _beam.ConcentratedLoads)
@@ -111,7 +111,7 @@ namespace Mesnet.Classes.IO.Xml
                 _writer.WriteEndElement();
             }
 
-            if(_beam.DistributedLoads.Count > 0)
+            if(_beam.DistributedLoads?.Count > 0)
             {
                 _writer.WriteStartElement("DistributedLoads");
                 foreach (Math.Poly poly in _beam.DistributedLoads)

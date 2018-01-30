@@ -188,44 +188,43 @@ namespace Mesnet.Classes.Math
                 digit = 0;
             }
 
-            var list = new Dictionary<double, double>();
+            var diff = 1 / 200.0;
 
-            var diff = 1/1000.0;
+            double left;
+            double right;
+            double max = Double.MinValue;
+            double value;
+            double maxindex = 0;
 
-            double left = 0;
-            double right = 0;
-
-            for (double i = startpoint; i < endpoint; i=i+diff)
+            for (double i = _startpoint; i < _endpoint; i = i + diff)
             {
-                list.Add(i, Calculate(i));
+                value = Calculate(i);
+                if (value > max)
+                {
+                    max = value;
+                    maxindex = i;
+                }
             }
-
-            list.Add(endpoint, Calculate(endpoint));
-
-            var max = list.Max(x => x.Value);
-            double maxindex = Convert.ToDouble(list.First(x => x.Value == max).Key);
 
             left = maxindex - diff;
 
             right = maxindex + diff;
 
-            if (left < startpoint || right > endpoint)
+            if (left < _startpoint || right > _endpoint)
             {
                 return System.Math.Round(max, digit);
             }
 
-            diff = (right - left)/100.0;
-
-            list.Clear();
+            diff = (right - left) / 100.0;
 
             for (double i = left; i < right; i = i + diff)
             {
-                list.Add(i, Calculate(i));
+                value = Calculate(i);
+                if (value > max)
+                {
+                    max = value;
+                }
             }
-
-            list.Add(right, Calculate(right));
-
-            max= list.Max(x => x.Value);
 
             return System.Math.Round(max, digit);
         }
@@ -235,6 +234,54 @@ namespace Mesnet.Classes.Math
             return Maximum(_startpoint, _endpoint);
         }
 
+        public double MaximumAbs(double initialstep, double endstep, int digit = 4)
+        {
+            if (digit < 0)
+            {
+                digit = 0;
+            }
+
+            var diff = 1 / initialstep;
+
+            double left;
+            double right;
+            double absmax = Double.MinValue;
+            double value;
+            double maxindex = 0;
+
+            for (double i = _startpoint; i < _endpoint; i = i + diff)
+            {
+                value = System.Math.Abs(Calculate(i));
+                if (value > absmax)
+                {
+                    absmax = value;
+                    maxindex = i;
+                }
+            }
+
+            left = maxindex - diff;
+
+            right = maxindex + diff;
+
+            if (left < _startpoint || right > _endpoint)
+            {
+                return System.Math.Round(absmax, digit);
+            }
+
+            diff = (right - left) / endstep;
+
+            for (double i = left; i < right; i = i + diff)
+            {
+                value = System.Math.Abs(Calculate(i));
+                if (value > absmax)
+                {
+                    absmax = value;
+                }
+            }
+
+            return System.Math.Round(absmax, digit);
+        }
+
         public double MaxLocation(double startpoint, double endpoint, int digit = 4)
         {
             if (digit < 0)
@@ -242,60 +289,51 @@ namespace Mesnet.Classes.Math
                 digit = 0;
             }
 
-            var list = new Dictionary<double, double>();
+            var diff = 1 / 200.0;
 
-            var diff = 1 / 1000.0;
+            double left;
+            double right;
+            double max = Double.MinValue;
+            double value;
+            double maxindex = 0;
 
-            double left = 0;
-            double right = 0;
-
-            for (double i = startpoint; i < endpoint; i = i + diff)
+            for (double i = _startpoint; i < _endpoint; i = i + diff)
             {
-                list.Add(i, Calculate(i));
+                value = Calculate(i);
+                if (value > max)
+                {
+                    max = value;
+                    maxindex = i;
+                }
             }
-
-            list.Add(endpoint, Calculate(endpoint));
-
-            var max = list.Max(x => x.Value);
-            double maxindex = Convert.ToDouble(list.First(x => x.Value == max).Key);
 
             left = maxindex - diff;
 
             right = maxindex + diff;
 
-            if (left < startpoint)
+            if (left < _startpoint || right > _endpoint)
             {
-                return System.Math.Round(startpoint, digit); 
-            }
-            if(right > endpoint)
-            {
-                return System.Math.Round(endpoint, digit);
+                return System.Math.Round(maxindex, digit);
             }
 
             diff = (right - left) / 100.0;
 
-            list.Clear();
-
             for (double i = left; i < right; i = i + diff)
             {
-                list.Add(i, Calculate(i));
-            }
-
-            list.Add(right, Calculate(right));
-
-            max = list.Max(x => x.Value);
-
-            double loc = 0;
-
-            foreach (var item in list)
-            {
-                if (item.Value == max)
+                value = Calculate(i);
+                if (value > max)
                 {
-                    loc = item.Key;
+                    max = value;
+                    maxindex = i;
                 }
             }
 
-            return System.Math.Round(loc, digit);
+            return System.Math.Round(maxindex, digit);
+        }
+
+        public double MaxLocation(int digit = 4)
+        {
+            return MaxLocation(_startpoint, _endpoint, digit);
         }
 
         public double Minimum(double startpoint, double endpoint, int digit = 4)
@@ -305,44 +343,43 @@ namespace Mesnet.Classes.Math
                 digit = 0;
             }
 
-            var list = new Dictionary<double, double>();
+            var diff = 1 / 200.0;
 
-            var diff = 1 / 1000.0;
+            double left;
+            double right;
+            double min = Double.MaxValue;
+            double value;
+            double minindex = 0;
 
-            double left = 0;
-            double right = 0;
-
-            for (double i = startpoint; i < endpoint; i = i + diff)
+            for (double i = _startpoint; i < _endpoint; i = i + diff)
             {
-                list.Add(i, Calculate(i));
+                value = Calculate(i);
+                if (value < min)
+                {
+                    min = value;
+                    minindex = i;
+                }
             }
-
-            list.Add(endpoint, Calculate(endpoint));
-
-            var min = list.Min(x => x.Value);
-            double minindex = Convert.ToDouble(list.First(x => x.Value == min).Key);
 
             left = minindex - diff;
 
             right = minindex + diff;
 
-            if (left < startpoint || right > endpoint)
+            if (left < _startpoint || right > _endpoint)
             {
                 return System.Math.Round(min, digit);
             }
 
             diff = (right - left) / 100.0;
 
-            list.Clear();
-
             for (double i = left; i < right; i = i + diff)
             {
-                list.Add(i, Calculate(i));
+                value = Calculate(i);
+                if (value < min)
+                {
+                    min = value;
+                }
             }
-
-            list.Add(right, Calculate(right));
-
-            min = list.Min(x => x.Value);
 
             return System.Math.Round(min, digit);
         }
@@ -359,60 +396,51 @@ namespace Mesnet.Classes.Math
                 digit = 0;
             }
 
-            var list = new Dictionary<double, double>();
+            var diff = 1 / 200.0;
 
-            var diff = 1 / 100.0;
+            double left;
+            double right;
+            double min = Double.MaxValue;
+            double value;
+            double minindex = 0;
 
-            double left = 0;
-            double right = 0;
-
-            for (double i = startpoint; i < endpoint; i = i + diff)
+            for (double i = _startpoint; i < _endpoint; i = i + diff)
             {
-                list.Add(i, Calculate(i));
+                value = Calculate(i);
+                if (value < min)
+                {
+                    min = value;
+                    minindex = i;
+                }
             }
-
-            list.Add(endpoint, Calculate(endpoint));
-
-            var min = list.Min(x => x.Value);
-            double minindex = Convert.ToDouble(list.First(x => x.Value == min).Key);
 
             left = minindex - diff;
 
             right = minindex + diff;
 
-            if (left < startpoint)
+            if (left < _startpoint || right > _endpoint)
             {
-                return System.Math.Round(startpoint, digit);
-            }
-            if (right > endpoint)
-            {
-                return System.Math.Round(endpoint, digit);
+                return System.Math.Round(minindex, digit);
             }
 
             diff = (right - left) / 100.0;
 
-            list.Clear();
-
             for (double i = left; i < right; i = i + diff)
             {
-                list.Add(i, Calculate(i));
-            }
-
-            list.Add(right, Calculate(right));
-
-            min = list.Min(x => x.Value);
-
-            double loc = 0;
-
-            foreach (var item in list)
-            {
-                if (item.Value == min)
+                value = Calculate(i);
+                if (value < min)
                 {
-                    loc = item.Key;
+                    min = value;
+                    minindex = i;
                 }
             }
 
-            return System.Math.Round(loc, digit);
+            return System.Math.Round(minindex, digit);
+        }
+
+        public double MinLocation(int digit = 4)
+        {
+            return MinLocation(_startpoint, _endpoint, digit);
         }
 
         /// <summary>
@@ -439,7 +467,9 @@ namespace Mesnet.Classes.Math
             foreach (char c in Expression)
             {
                 if (ValidChars.IndexOf(c) == -1)
+                {
                     result = false;
+                } 
             }
             return result;
         }
@@ -730,6 +760,36 @@ namespace Mesnet.Classes.Math
                 }
             }
             return value;
+        }
+
+        public bool IsConstant()
+        {
+            if (Terms.Count == 1)
+            {
+                if (Terms[0].Power == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsLinear()
+        {
+            if (Terms.Count > 2)
+            {
+                return false;
+            }
+
+            foreach (Term term in Terms)
+            {
+                if (System.Math.Abs(term.Power - 1.0) > 0.000001 && System.Math.Abs(term.Power) > 0.000001)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>

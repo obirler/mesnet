@@ -40,18 +40,18 @@ namespace Mesnet.Xaml.Pages
 
             _length = beam.Length;
 
-            _loads = new List<KeyValuePair<double, double>>();
+            _loads = new KeyValueCollection();
 
-            if (beam.ConcentratedLoads.Count > 0)
+            if (beam.ConcentratedLoads?.Count > 0)
             {
-                foreach (var pair in beam.ConcentratedLoads)
+                foreach (KeyValuePair<double, double> pair in beam.ConcentratedLoads)
                 {                   
                     var fnc = new ConcentratedLoadFunction();
                     fnc.function.Text = "P = " + pair.Value + " kN";
                     fnc.limits.Text = "x = " + pair.Key + " m";
                     fnc.removebtn.Click += Remove_Click;
                     fncstk.Children.Add(fnc);
-                    _loads.Add(new KeyValuePair<double, double>(pair.Key, pair.Value));
+                    _loads.Add(pair.Key, pair.Value);
                 }
                 finishbtn.Visibility = Visibility.Visible;
             }
@@ -61,9 +61,9 @@ namespace Mesnet.Xaml.Pages
 
         private double _length;
 
-        private List<KeyValuePair<double, double>> _loads;
+        private KeyValueCollection _loads;
 
-        public List<KeyValuePair<double, double>> Loads
+        public KeyValueCollection Loads
         {
             get { return _loads; }
         }
@@ -80,13 +80,16 @@ namespace Mesnet.Xaml.Pages
                     loadx.Focus();
                     return;
                 }
-
-                if (_loads.Any(item => item.Key == x))
+                
+                foreach (KeyValuePair<double, double> load in _loads)
                 {
-                    MessageBox.Show(GetString("invalidpoint"));
-                    loadx.Focus();
-                    return;
-                }                
+                    if (load.Key == x)
+                    {
+                        MessageBox.Show(GetString("invalidpoint"));
+                        loadx.Focus();
+                        return;
+                    }
+                }        
             }
             else
             {
@@ -114,7 +117,7 @@ namespace Mesnet.Xaml.Pages
                 return;
             }
 
-            _loads.Add(new KeyValuePair<double, double>(x, y));
+            _loads.Add(x, y);
 
             var fnc = new ConcentratedLoadFunction();
             fnc.function.Text = "P = " + y + " kN";

@@ -35,39 +35,17 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class Stress : UserControl
     {
-        public Stress(DotCollection stresslist, Beam beam, int c = 200)
+        public Stress(KeyValueCollection stresslist, Beam beam, int c = 200)
         {
             InitializeComponent();
             _beam = beam;
             _stress = stresslist;
-            _max = _stress.YMax;
             _labellist = new List<TextBlock>();
-
-            if (_max < 0)
-            {
-                if (Math.Abs(_max) < 0.00001)
-                {
-                    _max = 0;
-                    coeff = 1;
-                }
-                else
-                {
-                    coeff = 200 / Global.MaxMoment;
-                }
-            }
-            else if (_max == 0)
-            {
-                coeff = 1;
-            }
-            else
-            {
-                coeff = 200 / Global.MaxMoment;
-            }
 
             Draw(c);
         }
 
-        private DotCollection _stress;
+        private KeyValueCollection _stress;
 
         private Beam _beam;
 
@@ -78,8 +56,6 @@ namespace Mesnet.Xaml.User_Controls
         private SolidColorBrush color = new SolidColorBrush(Colors.Green);
 
         private SolidColorBrush exceedcolor = new SolidColorBrush(Colors.Red);
-
-        private double _max;
 
         private List<TextBlock> _labellist;
 

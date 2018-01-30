@@ -27,6 +27,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Mesnet.Classes;
+using Mesnet.Classes.Math;
 using MoreLinq;
 
 namespace Mesnet.Xaml.User_Controls
@@ -36,36 +37,13 @@ namespace Mesnet.Xaml.User_Controls
     /// </summary>
     public partial class ConcentratedLoad : UserControl
     {
-        public ConcentratedLoad(List<KeyValuePair<double, double>> loads, Beam beam, int c = 200)
+        public ConcentratedLoad(KeyValueCollection loads, Beam beam, int c = 200)
         {           
             _beam = beam;
 
             _loads = loads;
 
             _length = _beam.Length;
-
-            _max = _loads.MaxBy(x => x.Value).Value;
-
-            if (_max < 0)
-            {
-                if (Math.Abs(_max) < 0.00001)
-                {
-                    _max = 0;
-                    coeff = 1;
-                }
-                else
-                {
-                    coeff = 200 / Global.MaxConcLoad;
-                }
-            }
-            else if (_max == 0)
-            {
-                coeff = 1;
-            }
-            else
-            {
-                coeff = 200 / Global.MaxConcLoad;
-            }
 
             InitializeComponent();
 
@@ -79,11 +57,9 @@ namespace Mesnet.Xaml.User_Controls
         /// <summary>
         /// The load list. List<KeyValuePair<xpos, loadmagnitude>>
         /// </summary>
-        private List<KeyValuePair<double, double>> _loads;
+        private KeyValueCollection _loads;
 
         private List<TextBlock> _labellist;
-
-        private double _max;
 
         private double _length;
 
@@ -99,7 +75,7 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
-        public List<KeyValuePair<double, double>> Loads
+        public KeyValueCollection Loads
         {
             get { return _loads; }
         }

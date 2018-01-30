@@ -170,7 +170,7 @@ namespace Mesnet.Classes.IO.Xml
 
                     case "ConcentratedLoads":
 
-                        var concloads = new List<KeyValuePair<double, double>>();
+                        var concloads = new KeyValueCollection();
 
                         double magnitude = 0;
 
@@ -190,8 +190,7 @@ namespace Mesnet.Classes.IO.Xml
                                         break;
                                 }
                             }
-                            var concload = new KeyValuePair<double, double>(location, magnitude);
-                            concloads.Add(concload);
+                            concloads.Add(location, magnitude);
                         }
 
                         if(concloads.Count > 0)

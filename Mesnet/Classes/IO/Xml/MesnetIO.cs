@@ -1,4 +1,25 @@
-﻿using Mesnet.Classes.IO.Manifest;
+﻿/*
+========================================================================
+    Copyright (C) 2016 Omer Birler.
+    
+    This file is part of Mesnet.
+
+    Mesnet is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Mesnet is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
+========================================================================
+*/
+
+using Mesnet.Classes.IO.Manifest;
 using Mesnet.Xaml.User_Controls;
 using System;
 using System.Collections.Generic;
@@ -15,6 +36,12 @@ namespace Mesnet.Classes.IO.Xml
 {
     public class MesnetIO
     {
+        public MesnetIO()
+        {           
+        }
+
+        private MainWindow _mw;
+
         public void WriteXml(string path)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -87,8 +114,9 @@ namespace Mesnet.Classes.IO.Xml
             }
         }
 
-        public bool ReadXml(Canvas canvas, string path)
+        public bool ReadXml(Canvas canvas, string path, MainWindow mw)
         {
+            _mw = mw;
             _canvas = canvas;
             manifestlist = new List<object>();
 
@@ -133,40 +161,13 @@ namespace Mesnet.Classes.IO.Xml
                         break;
                 }
             }
-
-            for (int i = 0; i < manifestlist.Count; i++)
-            {
-                switch (manifestlist[i].GetType().Name)
-                {
-                    case "BeamManifest":
-
-                        var beammanifest = manifestlist[i] as BeamManifest;
-                        if (beammanifest.DistributedLoads != null)
-                        {
-                            var maxload = beammanifest.DistributedLoads.Max;
-                            if (maxload > MaxDistLoad)
-                            {
-                                MaxDistLoad = maxload;
-                            }
-                        }
-                        if (beammanifest.ConcentratedLoads != null)
-                        {
-                            foreach (var item in beammanifest.ConcentratedLoads)
-                            {
-                                if (item.Value > MaxConcLoad)
-                                {
-                                    MaxConcLoad = item.Value;
-                                }
-                            }
-                        }
-
-                        break;
-                }
-            }
+            setmaxvalues();
+            
             Global.Objects.Clear();
             addtocanvas();
             connectobjects();
             setvariables();
+            _mw.UpdateLoadDiagrams();
             return true;
         }
 
@@ -508,8 +509,41 @@ namespace Mesnet.Classes.IO.Xml
             }
         }
 
+        private void setmaxvalues()
+        {
+            for (int i = 0; i < manifestlist.Count; i++)
+            {
+                switch (manifestlist[i].GetType().Name)
+                {
+                    case "BeamManifest":
+
+                        var beammanifest = manifestlist[i] as BeamManifest;
+                        if (beammanifest.Inertias.MaxAbs > MaxInertia)
+                        {
+                            MaxInertia = beammanifest.Inertias.MaxAbs;
+                        }
+                        if (beammanifest.DistributedLoads?.Count > 0)
+                        {
+                            if (beammanifest.DistributedLoads.MaxAbs > MaxDistLoad)
+                            {
+                                MaxDistLoad = beammanifest.DistributedLoads.MaxAbs;
+                            }
+                        }
+                        if (beammanifest.ConcentratedLoads?.Count > 0)
+                        {
+                            if (beammanifest.ConcentratedLoads.YMaxAbs > MaxConcLoad)
+                            {
+                                MaxConcLoad = beammanifest.ConcentratedLoads.YMaxAbs;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
         private Canvas _canvas;
 
-        private List<object> manifestlist;
+        private List<object> manifestlist;       
     }
 }

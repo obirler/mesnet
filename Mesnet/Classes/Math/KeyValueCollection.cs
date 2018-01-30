@@ -24,16 +24,16 @@ using System.Collections.Generic;
 
 namespace Mesnet.Classes.Math
 {
-    public class DotCollection:CollectionBase
+    public class KeyValueCollection:CollectionBase
     {
-        public DotCollection()
+        public KeyValueCollection()
         {
         }
 
         public void Add(double xpos, double ypos)
         {
             var pair = new KeyValuePair<double, double>(xpos, ypos);
-            List.Add(pair);
+            List.Add(pair);         
         }
 
         public bool ContainsKey(double xpos)

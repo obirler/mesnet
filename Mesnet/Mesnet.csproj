@@ -303,7 +303,7 @@
     <Compile Include="Classes\Math\ConjugateTerm.cs" />
     <Compile Include="Classes\Math\ConjugateTermCollection.cs" />
     <Compile Include="Classes\Math\Dijkstras.cs" />
-    <Compile Include="Classes\Math\DotCollection.cs" />
+    <Compile Include="Classes\Math\KeyValueCollection.cs" />
     <Compile Include="Classes\Math\PiecewiseConjugatePoly.cs" />
     <Compile Include="Classes\Math\PiecewisePoly.cs" />
     <Compile Include="Classes\Math\Poly.cs" />
@@ -577,6 +577,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\No-Symbol.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

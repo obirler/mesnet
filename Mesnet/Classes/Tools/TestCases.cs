@@ -102,7 +102,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -258,11 +258,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly8 = new PiecewisePoly(loadpolies8);
                 beam8.AddLoad(ppoly8);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -489,11 +485,7 @@ namespace Mesnet.Classes.Tools
                 beam8.AddD(new PiecewisePoly(dpolies8));
                 beam8.MaxAllowableStress = 150;
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -700,11 +692,7 @@ namespace Mesnet.Classes.Tools
                 beam12.SetAngleLeft(90);
                 beam12.CircularConnect(Global.Direction.Right, beam6, Global.Direction.Right);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -806,11 +794,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly5 = new PiecewisePoly(loadpolies5);
                 beam5.AddLoad(ppoly5);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -922,11 +906,7 @@ namespace Mesnet.Classes.Tools
                 var load5 = new DistributedLoad(ppoly5, beam5);
                 beam5.AddLoad(ppoly5);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1036,11 +1016,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly5 = new PiecewisePoly(loadpolies5);
                 beam5.AddLoad(ppoly5);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1095,11 +1071,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly1 = new PiecewisePoly(loadpolies1);
                 beam1.AddLoad(ppoly1);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1175,11 +1147,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1260,16 +1228,11 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                var concloadlist = new List<KeyValuePair<double, double>>();
-                var conc = new KeyValuePair<double, double>(0.5, 20);
-                concloadlist.Add(conc);
+                var concloadlist = new KeyValueCollection();
+                concloadlist.Add(0.5, 20);
                 beam2.AddLoad(concloadlist);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1327,11 +1290,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1399,11 +1358,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly3 = new PiecewisePoly(loadpolies3);
                 beam3.AddLoad(ppoly3);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1643,11 +1598,7 @@ namespace Mesnet.Classes.Tools
 
                 /////////////////////////////////////////////////////////////
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1732,11 +1683,7 @@ namespace Mesnet.Classes.Tools
                 var rightfixedsupport = new RightFixedSupport(_mw.canvas);
                 rightfixedsupport.AddBeam(beam4);
 
-                _mw.LoadsShown = true;
-                _mw.loads.Header = GetString("hideloads");
-                _mw.loads.IsEnabled = true;
-
-                updateloads();
+                _mw.UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
 
@@ -1747,50 +1694,5 @@ namespace Mesnet.Classes.Tools
             _mw.testmenu.Items.Add(menuitem);
         }
 
-        private void updateloads()
-        {
-            foreach (var item in Objects)
-            {
-                switch (GetObjectType(item))
-                {
-                    case ObjectType.Beam:
-
-                        var beam = item as Beam;
-                        if (beam.DistributedLoads != null)
-                        {
-                            var maxload = beam.DistributedLoads.Max;
-                            if (maxload > MaxDistLoad)
-                            {
-                                MaxDistLoad = maxload;
-                            }
-                        }
-                        if (beam.ConcentratedLoads != null)
-                        {
-                            foreach (var load in beam.ConcentratedLoads)
-                            {
-                                if (load.Value > MaxConcLoad)
-                                {
-                                    MaxConcLoad = load.Value;
-                                }
-                            }
-                        }
-                        break;
-                }
-            }
-
-            foreach (var item in Objects)
-            {
-                switch (GetObjectType(item))
-                {
-                    case ObjectType.Beam:
-
-                        var beam = item as Beam;
-                        beam.ReDrawDistLoad(200);
-                        beam.ReDrawConcLoad(200);
-
-                        break;
-                }
-            }
-        }
     }
 }

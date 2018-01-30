@@ -87,14 +87,6 @@ namespace Mesnet.Xaml.User_Controls
             MyDebug.WriteInformation(_name + " has been created : length = " + _length + " m, Width = " + Width + " Height = " + Height);
             MyDebug.WriteInformation(_name + " Width = " + Width + " core width = " + core.Width);
 
-            _concentratedloads = new List<KeyValuePair<double, double>>();
-
-            _distributedloads = new PiecewisePoly();
-
-            _zeroforceconc = new PiecewisePoly();
-
-            _zeroforceconc = new PiecewisePoly();
-
             RightSide = null;
 
             LeftSide = null;
@@ -134,7 +126,7 @@ namespace Mesnet.Xaml.User_Controls
 
         private double _toppos;
 
-        private List<KeyValuePair<double, double>> _concentratedloads;
+        KeyValueCollection _concentratedloads;
 
         private PiecewisePoly _distributedloads;
 
@@ -160,7 +152,7 @@ namespace Mesnet.Xaml.User_Controls
 
         private PiecewisePoly _fixedendforce;
 
-        private DotCollection _stress;
+        private KeyValueCollection _stress;
 
         private PiecewisePoly _e;
 
@@ -202,18 +194,6 @@ namespace Mesnet.Xaml.User_Controls
 
         private bool _directionshown = false;
 
-        private bool _momentshown = false;
-
-        private bool _forceshown = false;
-
-        private bool _stressshown = false;
-
-        private bool _distributedloadshown = false;
-
-        private bool _concentratedloadshown = false;
-
-        private bool _inertiashown = false;
-
         /// <summary>
         /// The left support force of the beam.
         /// </summary>
@@ -221,16 +201,12 @@ namespace Mesnet.Xaml.User_Controls
 
         private double _leftsupportforceconc;
 
-        //private double _leftsupportforce;
-
         /// <summary>
         /// The right support force of the beam.
         /// </summary>
         private double _rightsupportforcedist;
 
         private double _rightsupportforceconc;
-
-        //private double _rightsupportforce;
 
         /// <summary>
         /// The resultant force that is the sum of the all acting force on beam.
@@ -288,15 +264,29 @@ namespace Mesnet.Xaml.User_Controls
 
         private double _maxmoment;
 
+        private double _maxabsmoment;
+
         private double _minmoment;
 
         private double _maxforce;
+
+        private double _maxabsforce;
 
         private double _minforce;
 
         private double _maxinertia;
 
         private double _maxstress;
+
+        private double _maxabsstress;
+
+        private double _maxconcload;
+
+        private double _maxabsconcload;
+
+        private double _maxdistload;
+
+        private double _maxabsdistload;
 
         private TransformGeometry _tgeometry;
 
@@ -1516,16 +1506,20 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="loadppoly">The desired distributed load piecewise polynomial.</param>
         public void AddLoad(PiecewisePoly loadppoly)
         {
-            _distributedloads = loadppoly;           
+            _distributedloads = loadppoly;
+            _maxdistload = _distributedloads.Max;
+            _maxabsdistload = _distributedloads.MaxAbs;
         }
 
         /// <summary>
         /// Adds the concentrated load to beam with specified direction.
         /// </summary>
         /// <param name="load">The desired list of concentrated load key value pair.</param>
-        public void AddLoad(List<KeyValuePair<double, double>> loadpairs)
+        public void AddLoad(KeyValueCollection loadpairs)
         {
             _concentratedloads = loadpairs;
+            _maxconcload = _concentratedloads.YMax;
+            _maxabsconcload = _concentratedloads.YMaxAbs;
         }
 
         public void RemoveDistributedLoad()
@@ -1546,9 +1540,9 @@ namespace Mesnet.Xaml.User_Controls
             if (distload != null)
             {
                 upcanvas.Children.Remove(distload);
-                _distributedloads.Clear();
+                _distributedloads = null;
+                _maxdistload = Double.MinValue;
                 _distload = null;
-                _distributedloadshown = false;
             }
         }
 
@@ -1571,9 +1565,9 @@ namespace Mesnet.Xaml.User_Controls
             {
                 concload.RemoveLabels();
                 upcanvas.Children.Remove(concload);
-                _concentratedloads.Clear();
+                _concentratedloads=null;
                 _concload = null;
-                _concentratedloadshown = false;
+                _maxconcload = double.MinValue;
             }
         }
 
@@ -1582,7 +1576,6 @@ namespace Mesnet.Xaml.User_Controls
             if (_distload != null)
             {
                 _distload.Show();
-                _distributedloadshown = true;
             }
             else if (_distributedloads?.Count > 0)
             {
@@ -1591,7 +1584,6 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetBottom(load, 0);
                 Canvas.SetLeft(load, 0);
                 _distload = load;
-                _distributedloadshown = true;
             }
         }
 
@@ -1600,7 +1592,6 @@ namespace Mesnet.Xaml.User_Controls
             if (_distload != null)
             {
                 _distload.Hide();
-                _distributedloadshown = false;
             }
         }
 
@@ -1609,7 +1600,6 @@ namespace Mesnet.Xaml.User_Controls
             if (_concload != null)
             {
                 _concload.Show();
-                _concentratedloadshown = true;
             }
             else if(_concentratedloads?.Count > 0)
             {
@@ -1618,7 +1608,6 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetBottom(concentratedload, 0);
                 Canvas.SetLeft(concentratedload, 0);
                 _concload = concentratedload;
-                _concentratedloadshown = true;
             }
         }
 
@@ -1627,7 +1616,6 @@ namespace Mesnet.Xaml.User_Controls
             if (_concload != null)
             {
                 _concload.Hide();
-                _concentratedloadshown = false;
             }
         }
 
@@ -1645,7 +1633,6 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(force, 0);
                 _feforce = force;
             }
-            _forceshown = true;
         }
 
         public void HideFixedEndForceDiagram()
@@ -1654,7 +1641,6 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _feforce.Hide();
             }
-            _forceshown = false;
         }
 
         public void DestroyFixedEndForceDiagram()
@@ -1680,7 +1666,6 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetBottom(moment, 0);
                 Canvas.SetLeft(moment, 0);
                 _femoment = moment;
-                _momentshown = true;
             }            
         }
 
@@ -1690,7 +1675,6 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _femoment.Hide();
             }
-            _momentshown = false;
         }
 
         public void DestroyFixedEndMomentDiagram()
@@ -1717,7 +1701,6 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(inertia, 0);
                 _inertia = inertia;
             }
-            _inertiashown = true;
         }
 
         public void HideInertiaDiagram()
@@ -1726,7 +1709,6 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _inertia.Hide();
             }
-            _inertiashown = false;
         }
 
         public void ShowDeflectionDiagram()
@@ -1767,7 +1749,6 @@ namespace Mesnet.Xaml.User_Controls
                 Canvas.SetLeft(stress, 0);
                 _stressdiagram = stress;
             }
-            _stressshown = true;
         }
 
         public void HideStressDiagram()
@@ -1776,7 +1757,6 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _stressdiagram.Hide();
             }
-            _stressshown = false;
         }
 
         public void DestroyStressDiagram()
@@ -1920,16 +1900,19 @@ namespace Mesnet.Xaml.User_Controls
         /// </summary>
         public void UnSelect()
         {
-            core.Fill = new SolidColorBrush(Colors.Black);
-            startcircle.Visibility = Visibility.Collapsed;
-            startcircle.Stroke = new SolidColorBrush(Color.FromArgb(255, 5, 118, 0));
-            endcircle.Visibility = Visibility.Collapsed;
-            endcircle.Stroke = new SolidColorBrush(Color.FromArgb(255, 5, 118, 0));
-            circledirection = Direction.None;
-            selected = false;
-            UnSelectCircle();
-            _tgeometry.HideCorners();
-            MyDebug.WriteInformation(_name + " Beam unselected : left = " + Canvas.GetLeft(this) + " top = " + Canvas.GetTop(this));
+            if(selected)
+            {
+                core.Fill = new SolidColorBrush(Colors.Black);
+                startcircle.Visibility = Visibility.Collapsed;
+                startcircle.Stroke = new SolidColorBrush(Color.FromArgb(255, 5, 118, 0));
+                endcircle.Visibility = Visibility.Collapsed;
+                endcircle.Stroke = new SolidColorBrush(Color.FromArgb(255, 5, 118, 0));
+                circledirection = Direction.None;
+                selected = false;
+                UnSelectCircle();
+                _tgeometry.HideCorners();
+                MyDebug.WriteInformation(_name + " Beam unselected : left = " + Canvas.GetLeft(this) + " top = " + Canvas.GetTop(this));
+            }          
         }
 
         /// <summary>
@@ -2271,12 +2254,7 @@ namespace Mesnet.Xaml.User_Controls
             double resultantforcedistance = 0;
             double multiply = 0;
 
-            if (_distributedloads.Count == 0)
-            {
-                _leftsupportforcedist = 0;
-                _rightsupportforcedist = 0;
-            }
-            else
+            if (_distributedloads?.Count > 0)
             {
                 var forcelist = new List<KeyValuePair<double, double>>();
 
@@ -2298,9 +2276,14 @@ namespace Mesnet.Xaml.User_Controls
                 double rightmoment = 0;
                 foreach (var force in forcelist)
                 {
-                    rightmoment += (_length -force.Key) * force.Value;
+                    rightmoment += (_length - force.Key) * force.Value;
                 }
                 _leftsupportforcedist = rightmoment / _length;
+            }
+            else
+            {
+                _leftsupportforcedist = 0;
+                _rightsupportforcedist = 0;
             }
 
             MyDebug.WriteInformation(_name + " : resultantforce = " + resultantforce + " resultantforcedistance = " + resultantforcedistance);
@@ -2315,16 +2298,11 @@ namespace Mesnet.Xaml.User_Controls
             double resultantforcedistance = 0;
             double multiply = 0;
 
-            if (_concentratedloads.Count == 0)
-            {
-                _leftsupportforceconc = 0;
-                _rightsupportforceconc = 0;
-            }
-            else
+            if (_concentratedloads?.Count > 0)
             {
                 //Moment from left support point
                 double leftmoment = 0;
-                foreach (var force in _concentratedloads)
+                foreach (KeyValuePair<double, double> force in _concentratedloads)
                 {
                     leftmoment += force.Key * force.Value;
                 }
@@ -2332,11 +2310,16 @@ namespace Mesnet.Xaml.User_Controls
 
                 //Moment from right support point
                 double rightmoment = 0;
-                foreach (var force in _concentratedloads)
+                foreach (KeyValuePair<double, double> force in _concentratedloads)
                 {
                     rightmoment += (_length - force.Key) * force.Value;
                 }
-                _leftsupportforceconc = rightmoment / _length;
+                _leftsupportforceconc = rightmoment / _length;              
+            }
+            else
+            {
+                _leftsupportforceconc = 0;
+                _rightsupportforceconc = 0;
             }
 
             MyDebug.WriteInformation(_name + " : resultantforcedistance = " + resultantforcedistance);
@@ -2350,7 +2333,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             _zeroforceconc = new PiecewisePoly();
 
-            if (_concentratedloads.Count != 0)
+            if (_concentratedloads?.Count > 0)
             {
                 double leftforce = _leftsupportforceconc;
 
@@ -2391,7 +2374,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             _zeroforcedist = new PiecewisePoly();
 
-            if (_distributedloads.Count != 0)
+            if (_distributedloads?.Count > 0)
             {
                 if (_distributedloads[0].StartPoint != 0)
                 {
@@ -4370,6 +4353,8 @@ namespace Mesnet.Xaml.User_Controls
         {
             _maxmoment = _fixedendmoment.Max;
 
+            _maxabsmoment = _fixedendmoment.MaxAbs;
+
             _minmoment = _fixedendmoment.Min;
 
             _fixedendforce = _fixedendmoment.Derivate();
@@ -4377,6 +4362,8 @@ namespace Mesnet.Xaml.User_Controls
             WritePPolytoConsole(_name + " : Fixed End Force", _fixedendforce);
 
             _maxforce = _fixedendforce.Max;
+
+            _maxabsforce = _fixedendforce.MaxAbs;
 
             _minforce = _fixedendforce.Min;
 
@@ -4393,8 +4380,6 @@ namespace Mesnet.Xaml.User_Controls
         private void updatemoments()
         {
             var polylist = new List<Poly>();
-
-            string name = this.Name;
 
             double constant = 0;
 
@@ -4537,6 +4522,8 @@ namespace Mesnet.Xaml.User_Controls
 
             _maxmoment = _fixedendmoment.Max;
 
+            _maxabsmoment = _fixedendmoment.MaxAbs;
+
             _minmoment = _fixedendmoment.Min;          
         }
 
@@ -4551,6 +4538,8 @@ namespace Mesnet.Xaml.User_Controls
 
             _maxforce = _fixedendforce.Max;
 
+            _maxabsforce = _fixedendforce.MaxAbs;
+
             _minforce = _fixedendforce.Min;
         }
 
@@ -4560,7 +4549,7 @@ namespace Mesnet.Xaml.User_Controls
         private void updatestresses()
         {
             double precision = 0.001;
-            _stress = new DotCollection();
+            _stress = new KeyValueCollection();
             double stress = 0;
             double y = 0;
             double e = 0;
@@ -4579,14 +4568,7 @@ namespace Mesnet.Xaml.User_Controls
                     y = d - e;
                 }
                 stress = Math.Pow(10, 3) * _fixedendmoment.Calculate(i * precision) * y / (_inertiappoly.Calculate(i * precision));
-                _stress.Add(i * precision, stress);
-
-                double max = _stress.YMaxAbs;
-
-                if (max > MaxStress)
-                {
-                    _maxstress = max;
-                }
+                _stress.Add(i * precision, stress);               
             }
 
             if (!_stress.ContainsKey(_length))
@@ -4604,6 +4586,9 @@ namespace Mesnet.Xaml.User_Controls
                 stress = Math.Pow(10, 3) * _fixedendmoment.Calculate(_length) * y / (_inertiappoly.Calculate(_length));
                 _stress.Add(_length, stress);
             }
+
+            _maxstress = _stress.YMax;
+            _maxabsstress = _stress.YMaxAbs;
         }
 
         private void updatedeflection()
@@ -4647,7 +4632,11 @@ namespace Mesnet.Xaml.User_Controls
             {
                 MyDebug.WriteInformation(_name + " : redrawing moment for c = " + c);
                 _femoment.Draw(c);
-            }         
+            }
+            else
+            {
+                
+            }
         }
 
         public void ReDrawDistLoad(int c)
@@ -4812,7 +4801,7 @@ namespace Mesnet.Xaml.User_Controls
             get { return _loads; }
         }
 
-        public List<KeyValuePair<double, double>> ConcentratedLoads
+        public KeyValueCollection ConcentratedLoads
         {
             get { return _concentratedloads; }
         }
@@ -4847,7 +4836,7 @@ namespace Mesnet.Xaml.User_Controls
             get { return _fixedendforce; }
         }
 
-        public DotCollection Stress
+        public KeyValueCollection Stress
         {
             get { return _stress; }
         }
@@ -4943,42 +4932,6 @@ namespace Mesnet.Xaml.User_Controls
             set { _directionshown = value; }
         }
 
-        public bool MomentShown
-        {
-            get { return _momentshown; }
-            set { _momentshown = value; }
-        }
-
-        public bool ForceShown
-        {
-            get { return _forceshown; }
-            set { _forceshown = value; }
-        }
-
-        public bool DistributedLoadShown
-        {
-            get { return _distributedloadshown; }
-            set { _distributedloadshown = value; }
-        }
-
-        public bool ConcentratedLoadShown
-        {
-            get { return _concentratedloadshown; }
-            set { _concentratedloadshown = value; }
-        }
-
-        public bool InertiaShown
-        {
-            get { return _inertiashown; }
-            set { _inertiashown = value; }
-        }
-
-        public bool StressShown
-        {
-            get { return _stressshown; }
-            set { _stressshown = value; }
-        }
-
         #endregion
 
         #region Cross Properties
@@ -5019,6 +4972,11 @@ namespace Mesnet.Xaml.User_Controls
             get { return _maxmoment; }
         }
 
+        public double MaxAbsMoment
+        {
+            get { return _maxabsmoment; }
+        }
+
         public double MinMoment
         {
             get { return _minmoment; }
@@ -5027,6 +4985,11 @@ namespace Mesnet.Xaml.User_Controls
         public double MaxForce
         {
             get { return _maxforce; }
+        }
+
+        public double MaxAbsForce
+        {
+            get { return _maxabsforce; }
         }
 
         public double MinForce
@@ -5042,8 +5005,32 @@ namespace Mesnet.Xaml.User_Controls
         public double MaxStress
         {
             get { return _maxstress; }
-        }      
+        }
 
+        public double MaxAbsStress
+        {
+            get { return _maxabsstress; }
+        }
+
+        public double MaxConcLoad
+        {
+            get { return _maxconcload; }
+        }
+
+        public double MaxAbsConcLoad
+        {
+            get { return _maxabsconcload; }
+        }
+
+        public double MaxDistLoad
+        {
+            get { return _maxdistload; }
+        }
+
+        public double MaxAbsDistLoad
+        {
+            get { return _maxabsdistload; }
+        }
         #endregion
 
         #endregion

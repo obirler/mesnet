@@ -17,6 +17,38 @@
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
         <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
     </Window.InputBindings>
+    
+    <Window.Resources>
+        <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Background="WhiteSmoke">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                                </ContentPresenter>
+                            </Border>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#338FEE"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FFBCDDFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -38,98 +70,80 @@
                 </MenuItem>
 
                 <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>
-
                 <MenuItem x:Name="testmenu" Header="{DynamicResource tests}"/>
-
-                <MenuItem x:Name="solve" Header="{DynamicResource solve}" Click="solve_Click"></MenuItem>
-                <MenuItem x:Name="moment" Header="{DynamicResource showmoment}" IsEnabled="false" Click="moment_Click" ></MenuItem>
-                <MenuItem x:Name="force" Header="{DynamicResource showforce}" IsEnabled="false" Click="force_Click" ></MenuItem>
-                <!--<MenuItem x:Name="deflection" Header="Show Deflection" IsEnabled="false" Click="deflection_Click" ></MenuItem>-->
-                <MenuItem x:Name="stress" Header="{DynamicResource showstress}" IsEnabled="false" Click="stress_Click" ></MenuItem>
-                <MenuItem x:Name="loads" Header="{DynamicResource showloads}" IsEnabled="false" Click="loads_Click"></MenuItem>
-                <MenuItem x:Name="delete" Header="{DynamicResource clearall}" IsEnabled="true" Click="delete_Click" ></MenuItem>
-                <MenuItem x:Name="corner" Header="Show Corners" IsEnabled="true" Click="corner_Click"></MenuItem>
+                <MenuItem x:Name="about" Header="{DynamicResource about}" IsEnabled="true" Click="about_Click"></MenuItem>
             </Menu>
         </DockPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
 
-            <Border x:Name="border" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Button x:Name="solvebtn" Height="45" VerticalAlignment="Center" Width="60" Background="{x:Null}" BorderBrush="{x:Null}">
-                    <Button.ToolTip>
-                        <ToolTip>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource solve}"/>
-                            </StackPanel>
-                        </ToolTip>
-                    </Button.ToolTip>
-                    
-                    
+            <Button x:Name="solvebtn" Margin="5,0,0,0" Style="{DynamicResource RoundCorner}" Height="45" MinWidth="55">
+                <Button.ToolTip>
+                    <ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource solve}"/>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
 
-                    <Grid Height="30" Width="20">
-                        <Polygon Points="0,0 0,30 20,15" Fill="#FF018D01"></Polygon>
-                        <Polygon Points="2,4 2,26 16.5,15 " Fill="#FF05CD17"></Polygon>
-                    </Grid>
-                </Button>
-                
-            </Border>
-            
-
-            <!--<ToggleButton Height="40" Width="110" IsChecked="True">
-
-                <StackPanel Orientation="Horizontal" >
-
-                    <Grid Height="26" Width="26">
-                        <Polygon Points="2,20 24,20 24,22 2,22" Fill="Black"/>
-                        <Polygon Points="2,4 24,4 24,6 2,6" Fill="Black"/>
-                        <Polygon Points="5,20 2,15 3.75,15 3.75,6 6.25,6 6.25,15 8,15 5,20" Fill="Black"/>
-                        <Polygon Points="13,20 10,15 11.75,15 11.75,6 14.25,6 14.25,15 16,15 13,20" Fill="Black"/>
-                        <Polygon Points="21,20 18,15 19.75,15 19.75,6 22.25,6 22.25,15 24,15 21,20" Fill="Black"/>
-                    </Grid>
-
-                    <Slider Orientation="Horizontal" VerticalAlignment="Center" Width="70" Margin="5,0,0,0"></Slider>
-
-                </StackPanel>
-
-            </ToggleButton>-->
-
+                <Grid Height="30" Width="20">
+                    <Polygon Points="0,0 0,30 20,15" Fill="#FF018D01"></Polygon>
+                    <Polygon Points="2,4 2,26 16.5,15 " Fill="#FF05CD17"></Polygon>
+                </Grid>
+            </Button>
+           
             <Border x:Name="inertiaborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Expander x:Name="inertiaexpander" Header="Inertia" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Expander x:Name="inertiaexpander" Header="{DynamicResource inertiamenu}" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Slider x:Name="inertiaslider" Width="80" Minimum="0" Maximum="300" Value="200" Margin="5,0,0,0" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
 
             <Border x:Name="distloadborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Expander x:Name="distloadexpander" Header="Dist. Load" HorizontalAlignment="Center" ExpandDirection="Right" VerticalAlignment="Center">
+                <Expander x:Name="distloadexpander" Header="{DynamicResource distloadmenu}" HorizontalAlignment="Center" ExpandDirection="Right" VerticalAlignment="Center">
                     <Slider x:Name="distloadslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
 
             <Border x:Name="concloadborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Expander x:Name="concloadexpander" Header="Conc. Load" HorizontalAlignment="Center" ExpandDirection="Right" VerticalAlignment="Center">
+                <Expander x:Name="concloadexpander" Header="{DynamicResource concloadmenu}" HorizontalAlignment="Center" ExpandDirection="Right" VerticalAlignment="Center">
                     <Slider x:Name="concloadslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
             
             <Border x:Name="momentborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Expander x:Name="momentexpander" Header="Moment" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Expander x:Name="momentexpander" Header="{DynamicResource momentmenu}" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Slider x:Name="momentslider" Width="80" Minimum="0" Maximum="300" Value="200" Margin="5,0,0,0" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
 
             <Border x:Name="forceborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Expander x:Name="forceexpander" Header="Force" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Expander x:Name="forceexpander" Header="{DynamicResource forcemenu}" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Slider x:Name="forceslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
 
             <Border x:Name="stressborder" Margin="5,0,0,0" Background="WhiteSmoke" MinWidth="55" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
-                <Expander x:Name="stressexpander" Header="Stress" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Expander x:Name="stressexpander" Header="{DynamicResource stressmenu}" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Slider x:Name="stressslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="200" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
+            
         </StackPanel>
 
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Margin="0,0,5,0" Click="delete_All_Click" Style="{DynamicResource RoundCorner}" Height="45" MinWidth="55">
+                <Button.ToolTip>
+                    <ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource deleteall}"/>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+
+                <Image Source="Assets/No-Symbol.png" Height="25"></Image>
+            </Button>
+        </StackPanel>
+        
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
 
             <Grid.ColumnDefinitions>

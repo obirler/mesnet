@@ -40,34 +40,12 @@ namespace Mesnet.Xaml.User_Controls
             _beam = beam;
             _forceppoly = forceppoly;
             _length = _beam.Length;
-            _max = _forceppoly.Max;
 
-            if (_max < 0)
-            {
-                if (Math.Abs(_max) < 0.00001)
-                {
-                    _max = 0;
-                    coeff = 1;
-                }
-                else
-                {
-                    coeff = 200 / Global.MaxForce;
-                }
-            }
-            else if (_max == 0)
-            {
-                coeff = 1;
-            }
-            else
-            {
-                coeff = 200 / Global.MaxForce;
-            }
             InitializeComponent();
 
             Draw(c);
         }
 
-        private double _max;
 
         private Beam _beam;
 
@@ -127,20 +105,23 @@ namespace Mesnet.Xaml.User_Controls
             {
                 var points = new PointCollection();
 
-                for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
+                if (!poly.IsLinear())
                 {
-                    calculated = coeff * poly.Calculate(i / 100);
-                    if (points.Count == 0)
+                    for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
                     {
-                        var point = new Point(i, calculated);
-                        points.Add(point);
-                    }
-                    else
-                    {
+                        calculated = coeff * poly.Calculate(i / 100);
                         points.Add(new Point(i, calculated));
                     }
                 }
+                else
+                {
+                    calculated = coeff * poly.Calculate(poly.StartPoint);
+                    points.Add(new Point(poly.StartPoint * 100, calculated));
 
+                    calculated = coeff * poly.Calculate(poly.EndPoint);
+                    points.Add(new Point(poly.EndPoint * 100, calculated));
+                }
+                
                 if (lastcollection != null && lastcollection.Count > 0)
                 {
                     if (lastcollection.Last().Y != points.First().Y)

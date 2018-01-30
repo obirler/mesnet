@@ -258,8 +258,7 @@ namespace Mesnet.Classes.Math
                 double result = Double.MinValue;
 
                 if (List.Count > 0)
-                {
-                    
+                {                   
                     double polymax = 0;
 
                     foreach (Poly poly in List)
@@ -276,6 +275,34 @@ namespace Mesnet.Classes.Math
                     result = 0;
                 }
                 
+                return result;
+            }
+        }
+
+        public double MaxAbs
+        {
+            get
+            {
+                double result = Double.MinValue;
+
+                if (List.Count > 0)
+                {
+                    double polymax = 0;
+
+                    foreach (Poly poly in List)
+                    {
+                        polymax = poly.MaximumAbs(poly.StartPoint, poly.EndPoint);
+                        if (polymax > result)
+                        {
+                            result = polymax;
+                        }
+                    }
+                }
+                else
+                {
+                    result = 0;
+                }
+
                 return result;
             }
         }

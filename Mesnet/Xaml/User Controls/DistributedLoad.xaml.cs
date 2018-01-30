@@ -41,28 +41,6 @@ namespace Mesnet.Xaml.User_Controls
             _beam = beam;
             _loadppoly = ppoly;
             _length = beam.Length;
-            _max = _loadppoly.Max;
-
-            if (_max < 0)
-            {
-                if (Math.Abs(_max) < 0.00001)
-                {
-                    _max = 0;
-                    coeff = 1;
-                }
-                else
-                {
-                    coeff = 200 / Global.MaxDistLoad;
-                }
-            }
-            else if (_max == 0)
-            {
-                coeff = 1;
-            }
-            else
-            {
-                coeff = 200 / Global.MaxDistLoad;
-            }
 
             InitializeComponent();
 
@@ -72,8 +50,6 @@ namespace Mesnet.Xaml.User_Controls
         private Beam _beam;
 
         private MainWindow _mw = (MainWindow)Application.Current.MainWindow;
-
-        private double _max;
 
         private double _length;
 
@@ -144,10 +120,21 @@ namespace Mesnet.Xaml.User_Controls
                 arrownumber = Convert.ToInt32(Math.Round(diff / 10, 0));
 
                 //draw spline
-                for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
+                if (!poly.IsLinear())
                 {
-                    calculated = coeff * poly.Calculate(i / 100);
-                    points.Add(new Point(i, calculated));
+                    for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
+                    {
+                        calculated = coeff * poly.Calculate(i / 100);
+                        points.Add(new Point(i, calculated));
+                    }
+                }
+                else
+                {
+                    calculated = coeff * poly.Calculate(poly.StartPoint);
+                    points.Add(new Point(poly.StartPoint * 100, calculated));
+
+                    calculated = coeff * poly.Calculate(poly.EndPoint);
+                    points.Add(new Point(poly.EndPoint * 100, calculated));
                 }
 
                 //draw arrows

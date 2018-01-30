@@ -128,19 +128,24 @@ namespace Mesnet.Xaml.User_Controls
                 var points = new PointCollection();
                 points.Clear();
 
-                for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
+                if (!poly.IsLinear())
                 {
-                    calculated = coeff * poly.Calculate(i / 100);
-                    value = -calculated;
-                    if (points.Count == 0)
+                    for (double i = poly.StartPoint * 100; i <= poly.EndPoint * 100; i++)
                     {
-                        var point = new Point(i, value);
-                        points.Add(point);
-                    }
-                    else
-                    {
+                        calculated = coeff * poly.Calculate(i / 100);
+                        value = -calculated;
                         points.Add(new Point(i, value));
                     }
+                }
+                else
+                {
+                    calculated = coeff * poly.Calculate(poly.StartPoint);
+                    value = -calculated;
+                    points.Add(new Point(poly.StartPoint * 100, value));
+
+                    calculated = coeff * poly.Calculate(poly.EndPoint);
+                    value = -calculated;
+                    points.Add(new Point(poly.EndPoint*100, value));
                 }
 
                 lastpoint = points.Last();

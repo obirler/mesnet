@@ -42,7 +42,7 @@ namespace Mesnet.Xaml.Pages
 
             Loadpolies = new List<Poly>();
 
-            if (beam.DistributedLoads.Count > 0)
+            if (beam.DistributedLoads?.Count > 0)
             {
                 foreach (Poly loadpoly in beam.DistributedLoads.PolyList())
                 {
@@ -319,7 +319,18 @@ namespace Mesnet.Xaml.Pages
                 return;
             }
 
-            var poly = new Poly(vdlload.Text);
+            Poly poly;
+            try
+            {
+                poly = new Poly(vdlload.Text);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(GetString("invalidpolynomial"));
+                vdlload.Focus();
+                return;
+            }
+            
             poly.StartPoint = Convert.ToDouble(vdlx1.Text);
             poly.EndPoint = Convert.ToDouble(vdlx2.Text);
 

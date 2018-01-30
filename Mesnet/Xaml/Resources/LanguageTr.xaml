@@ -33,7 +33,7 @@
     <system:String x:Key="varyinginertia">Değişken Atalet Momenti</system:String>
     <system:String x:Key="zoomin">Yakınlaştır</system:String>
     <system:String x:Key="zoomout">Uzaklaştır</system:String>
-    <system:String x:Key="selectsupport">Mesnet seçiniz</system:String>
+    <system:String x:Key="selectsupport">Mesnet ekle</system:String>
     <system:String x:Key="fixedsupportput">Ankastre mesnet yerleştirildi</system:String>
     <system:String x:Key="beamput">Kiriş yerleştirildi</system:String>
     <system:String x:Key="basicsupportput">Basit mesnet yerleştirildi</system:String>
@@ -106,8 +106,10 @@
     <system:String x:Key="multithreaded">Çok İş Parçacıklı</system:String>
     <system:String x:Key="singlethreaded">Tek İş Parçacıklı</system:String>
     <system:String x:Key="fileread">Dosya okundu</system:String>
+    <system:String x:Key="filereading">Dosya okunuyor</system:String>
     <system:String x:Key="filereaderror">Dosya okunamadı</system:String>
     <system:String x:Key="filesave">Dosya kaydedildi</system:String>
+    <system:String x:Key="filesaving">Dosya kaydediliyor</system:String>
     <system:String x:Key="yes">Evet</system:String>
     <system:String x:Key="no">Hayır</system:String>
     <system:String x:Key="cancel">İptal</system:String>
@@ -115,4 +117,21 @@
     <system:String x:Key="filefilter">Mesnet Dosyası (*.mnt)|*.mnt</system:String>
     <system:String x:Key="systemnotsolvable">Kiriş sistemi çözülemez</system:String>
     <system:String x:Key="notloadedsystem">Hiçbir kirişte yük yok, sistem çözülmeyecek</system:String>
+    <system:String x:Key="clickforbeam">Kirişi eklenmesini istediğiniz yere tıklayın.</system:String>
+    <system:String x:Key="zoomedin">Yakınlaştırıldı</system:String>
+    <system:String x:Key="zoomedout">Uzaklaştırıldı</system:String>
+    <system:String x:Key="beamdeleted">Kiriş silindi</system:String>
+    <system:String x:Key="concloadput">Tekil yük eklendi</system:String>
+    <system:String x:Key="distloadput">Yayılı yük eklendi</system:String>
+    <system:String x:Key="about">Hakkında</system:String>
+    <system:String x:Key="solved">Kiriş sistemi çözüldü</system:String>
+    <system:String x:Key="inertiamenu">Atalet</system:String>
+    <system:String x:Key="distloadmenu">Yay. Yük</system:String>
+    <system:String x:Key="concloadmenu">Tek. Yük</system:String>
+    <system:String x:Key="momentmenu">Moment</system:String>
+    <system:String x:Key="forcemenu">Kuvvet</system:String>
+    <system:String x:Key="stressmenu">Gerilme</system:String>
+    <system:String x:Key="askforbeamdelete">Bu kirişi gerçekten silmek istiyor musunuz?</system:String>
+    <system:String x:Key="deleteall">Hepsini sil</system:String>
+    <system:String x:Key="askfordeleteall">Bütün nesneleri gerçekten silmek istiyor musunuz?</system:String>
 </ResourceDictionary>

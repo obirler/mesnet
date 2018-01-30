@@ -10,6 +10,7 @@ using System.Xml;
 using Mesnet.Classes.IO.Xml;
 using Mesnet.Classes.Tools;
 using System.Diagnostics;
+using Mesnet.Classes;
 using Mesnet.Classes.Math;
 
 namespace TestConsole
@@ -18,10 +19,37 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            var poly = new Poly("x^4");
-            var newpoly = poly.Propagate(1);
-            Console.WriteLine(newpoly.ToString());
-
+            Global.SetDecimalSeperator();
+            while (true)
+            {
+                Console.Write("Enter polynomial expression : ");
+                var exp = Console.ReadLine();
+                try
+                {
+                    if (!Poly.ValidateExpression(exp))
+                    {
+                        Console.WriteLine("Invalid polynomial!");
+                    }
+                    else
+                    {
+                        var poly = new Poly(exp);
+                        Console.Write(poly.ToString());
+                        if (poly.IsLinear())
+                        {
+                            Console.WriteLine(" is linear");
+                        }
+                        else
+                        {
+                            Console.WriteLine(" is not linear");
+                        }
+                    }                  
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Invalid polynomial!");
+                }
+            }
+       
             Console.ReadKey();
         }
     }

@@ -68,7 +68,7 @@ namespace Mesnet.Xaml.User_Controls
 
         private double _totalstiffness;
 
-        private int _crossindex;
+        private int _crossindex = -1;
 
         public List<Member> Members;
 
@@ -475,7 +475,7 @@ namespace Mesnet.Xaml.User_Controls
 
         public int Id
         {
-            get { return _id; }
+            get { return Objects.IndexOf(this); }
             set { _id = value; }
         }
 

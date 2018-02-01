@@ -62,7 +62,7 @@ namespace Mesnet.Xaml.User_Controls
 
         private bool _selected;
 
-        private int _crossindex;
+        private int _crossindex = -1;
 
         public void Add(Canvas canvas, double leftpos, double toppos)
         {

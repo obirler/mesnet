@@ -44,5 +44,14 @@ namespace Mesnet.Xaml.Pages
             Result = Global.DialogResult.Cancel;
             DialogResult = true;
         }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Result = Global.DialogResult.Yes;
+                DialogResult = true;
+            }
+        }
     }
 }

@@ -1,0 +1,67 @@
+﻿<Window x:Class="Mesnet.Xaml.Pages.AboutWindowTr"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
+        mc:Ignorable="d"
+        Title="Mesnet Hakkında" WindowStartupLocation="CenterOwner" Height="570" Width="620" Background="#f0f0f0" ResizeMode="NoResize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Column="0" Margin="0,30,0,0" Source="../../Assets/logo.png" Width="80" VerticalAlignment="Top"/>
+
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+
+            <TextBlock TextAlignment="Center" Margin="0,20,0,0">
+                <Bold>
+                    <Run Text="Mesnet V 0.1" FontSize="20"></Run>
+                </Bold>
+            </TextBlock>
+
+            <TextBlock  TextAlignment="Center">      
+                <Bold>
+                    <Run Text="2 Boyutlu Çerveve Analiz Programı" FontSize="20"></Run>
+                </Bold>
+            </TextBlock>
+
+            <TextBlock TextAlignment="Justify" Margin="0,10,0,0" TextWrapping="Wrap">      
+
+                <Run FontSize="15">Bu program </Run>
+                <Hyperlink x:Name="developerpage" FontSize="15" NavigateUri="http://www.linkedin.com/in/ömer-birler-9582696b" RequestNavigate="developerpage_RequestNavigate">Ömer BİRLER</Hyperlink>             
+                <Run FontSize="15">tarafından İstanbul Teknik Üniversitesi Gemi İnşaatı ve Gemi Makinaları Mühendisliği bitirme projesi olarak geliştirilmiştir. Projenin danışmanı olan </Run>
+                <Hyperlink x:Name="instructorpage" FontSize="15" NavigateUri="http://knot.gidb.itu.edu.tr/gemi/personel/bayraktarkatal.html" RequestNavigate="instructorpage_RequestNavigate">Yard. Doç. Dr. Ertekin Bayraktarkatal</Hyperlink>             
+                <Run FontSize="15">'a teşekkürler.</Run>
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
+                <Run  FontSize="15">Bu program çerçeve çözümünde Cross Metodu'nu kullanır. Programın kullanışından oluşabilecek hatalardan ya da program tarafından elde edilebilecek hatalı sonuçlardan geliştirici, danışman veya üniversite sorumlu değildir.</Run>
+                <Hyperlink x:Name="mailtodeveloper" FontSize="15" NavigateUri="mailto:omer.birler@gmail.com" RequestNavigate="mailtodeveloper_RequestNavigate">Bu</Hyperlink>
+                <Run FontSize="15">mail adresini kullanarak geliştiriciyle iletişime geçip hata raporlayabilir veya yeni bir özellik önerisi sunabilirsiniz.</Run>
+
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
+                <Run  FontSize="15">Mesnet ücretsiz ve açık kaynak kodlu bir yazılımdır: Free Software Foundation tarafından yayımlanan GPL (GNU General Public License) lisansına uymak şartıyla programı yeniden dağıtabilir ya da değiştirilebilir.</Run>
+                <Hyperlink  x:Name="sourcecodepage" FontSize="15" NavigateUri="https://bitbucket.org/omerbirler/mesnet" RequestNavigate="sourcecodepage_RequestNavigate">Buradan</Hyperlink>
+                <Run  FontSize="15"> programın kaynak koduna ulaşabilirsiniz.</Run>
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
+                <Run  FontSize="15">	Mesnet belirli mühendislik alanlarında kullanışlı bir araç olması amacıyla geliştirilmiştir. Programın doğru çalışacağı ve doğru sonuç vereceği konusunda HİÇBİR GARANTİ YOKTUR.</Run>
+                <Hyperlink x:Name="gpllicencepage" FontSize="15" NavigateUri="http://www.gnu.org/licenses" RequestNavigate="gpllicencepage_RequestNavigate">Buradan</Hyperlink>
+                <Run FontSize="15">GPL lisansı detaylarına ulaşabilirsiniz</Run>
+            </TextBlock>
+
+            <Button x:Name="closebtn" Content="Kapat" Width="100" Margin="0,10,0,0" Click="closebtn_Click" ></Button>
+        </StackPanel>
+
+
+        <Image Grid.Column="2" Margin="0,8,0,0" Source="../../Assets/itulogo.png" Width="80"  VerticalAlignment="Top"></Image>
+
+    </Grid>
+</Window>

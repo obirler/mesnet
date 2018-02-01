@@ -1,0 +1,73 @@
+﻿<Window x:Class="Mesnet.Xaml.Pages.AboutWindowEn"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
+        mc:Ignorable="d"
+        Title="About Mesnet" WindowStartupLocation="CenterOwner" Height="600" Width="620" Background="#f0f0f0" ResizeMode="NoResize">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Column="0" Margin="0,30,0,0" Source="../../Assets/logo.png" Width="80" VerticalAlignment="Top"/>
+
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            
+            <TextBlock TextAlignment="Center" Margin="0,20,0,0">
+                <Bold>
+                    <Run Text="Mesnet V 0.1" FontSize="20"></Run>
+                </Bold>
+            </TextBlock>
+
+            <TextBlock  TextAlignment="Center">      
+                <Bold>
+                    <Run Text="2-Dimensional Frame Analyzer" FontSize="20"></Run>
+                </Bold>
+            </TextBlock>
+
+            <TextBlock TextAlignment="Justify" Margin="0,10,0,0" TextWrapping="Wrap">      
+
+                <Run FontSize="15">This program developed by </Run>
+                <Hyperlink x:Name="developerpage" FontSize="15" NavigateUri="http://www.linkedin.com/in/ömer-birler-9582696b" RequestNavigate="developerpage_RequestNavigate">Ömer BİRLER</Hyperlink>             
+                <Run FontSize="15"> as Istanbul Technical University Naval Architecture and Marine Engineering graduation project. Special thanks to </Run>
+                <Hyperlink x:Name="instructorpage" FontSize="15" NavigateUri="http://knot.gidb.itu.edu.tr/gemi/personel/bayraktarkatal.html" RequestNavigate="instructorpage_RequestNavigate">Asst. Prof. Ertekin Bayraktarkatal</Hyperlink>             
+                <Run FontSize="15">who is the instructor and advisor of this project. </Run>
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
+                <Run  FontSize="15">The program implements Moment Distribution Method (or Cross Method) to solve given 2-dimensional frame. However, neither the developer, nor the instructor nor any related institution are responsible for any use or misuse of the program and the results. You can contact the developer either report a bug or suggest a feature using </Run>
+                <Hyperlink x:Name="mailtodeveloper" FontSize="15" NavigateUri="mailto:omer.birler@gmail.com" RequestNavigate="mailtodeveloper_RequestNavigate">this</Hyperlink>
+                <Run  FontSize="15">mail adress.</Run>
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
+                <Run  FontSize="15">Mesnet is a free and open-sourced software: you can redistribute it and/or modify
+                it under the terms of the GNU General Public License (GPL) as published by
+                the Free Software Foundation, either version 3 of the License, or
+                (at your option) any later version. The source code of the program can be found </Run>
+                <Hyperlink x:Name="sourcecodepage" FontSize="15" NavigateUri="https://bitbucket.org/omerbirler/mesnet" RequestNavigate="sourcecodepage_RequestNavigate">here.</Hyperlink>
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
+                <Run  FontSize="15">Mesnet is distributed in the hope that it will be useful,
+                    but WITHOUT ANY WARRANTY; without even the implied warranty of
+                    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                    GNU General Public License for more details</Run>
+                <Hyperlink x:Name="gpllicencepage" FontSize="15" NavigateUri="http://www.gnu.org/licenses" RequestNavigate="gpllicencepage_RequestNavigate">here.</Hyperlink>
+            </TextBlock>
+            
+            <Button x:Name="closebtn" Content="Close" Width="100" Margin="0,10,0,0" Click="closebtn_Click"></Button>
+        </StackPanel>
+        
+        
+
+        <Image Grid.Column="2" Margin="0,8,0,0" Source="../../Assets/itulogo.png" Width="80"  VerticalAlignment="Top"></Image>
+
+    </Grid>
+
+</Window>

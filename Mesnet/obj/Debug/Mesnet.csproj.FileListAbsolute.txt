@@ -656,6 +656,8 @@ C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SlidingS
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\Stress.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\User Controls\SupportBeamItem.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\MainWindow.g.cs
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\AboutWindowEn.g.cs
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\AboutWindowTr.g.cs
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\BeamPrompt.g.cs
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\ConcentratedLoadPrompt.g.cs
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\CrossSolve.g.cs
@@ -706,6 +708,8 @@ C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet_Content.g.cs
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet_MarkupCompile.cache
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Mesnet_MarkupCompile.lref
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\AboutWindowEn.baml
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\AboutWindowTr.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\BeamPrompt.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\ConcentratedLoadPrompt.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Debug\Xaml\Pages\CrossSolve.baml

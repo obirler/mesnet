@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -4774,6 +4775,287 @@ namespace Mesnet
                     }
                 }
             }
+
+            writecrossindexes();
+        }
+
+        /// <summary>
+        /// Tries indexing the beam system. Returns false if there are any exception in indexing, true otherwise.
+        /// It is used to check if there are any seperate beam systems.
+        /// </summary>
+        /// <returns></returns>
+        public bool TryIndex()
+        {
+            object startsup = null;
+            Graph graph = new Graph();
+
+            #region create graph
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.BasicSupport:
+                        {
+                            var bs = item as BasicSupport;
+                            if (startsup == null)
+                            {
+                                startsup = bs;
+                            }
+                            var supportdict = new Dictionary<string, int>();
+
+                            foreach (Member member in bs.Members)
+                            {
+                                Beam beam = member.Beam;
+                                Direction direction = member.Direction;
+
+                                switch (direction)
+                                {
+                                    case Direction.Left:
+
+                                        var supright = beam.RightSide;
+
+                                        supportdict.Add(SupportName(supright), 1);
+
+                                        break;
+
+                                    case Direction.Right:
+
+                                        var supleft = beam.LeftSide;
+
+                                        supportdict.Add(SupportName(supleft), 1);
+
+                                        break;
+                                }
+                            }
+
+                            graph.AddSupport(SupportName(bs), supportdict);
+
+                            break;
+                        }
+
+                    case ObjectType.SlidingSupport:
+                        {
+                            var ss = item as SlidingSupport;
+                            if (startsup == null)
+                            {
+                                startsup = ss;
+                            }
+                            var supportdict = new Dictionary<string, int>();
+
+                            foreach (Member member in ss.Members)
+                            {
+                                Beam beam = member.Beam;
+                                Direction direction = member.Direction;
+
+                                switch (direction)
+                                {
+                                    case Direction.Left:
+
+                                        var supright = beam.RightSide;
+
+                                        supportdict.Add(SupportName(supright), 1);
+
+                                        break;
+
+                                    case Direction.Right:
+
+                                        var supleft = beam.LeftSide;
+
+                                        supportdict.Add(SupportName(supleft), 1);
+
+                                        break;
+                                }
+                            }
+
+                            graph.AddSupport(SupportName(ss), supportdict);
+
+                            break;
+                        }
+
+                    case ObjectType.LeftFixedSupport:
+                        {
+                            var ls = item as LeftFixedSupport;
+                            if (startsup == null)
+                            {
+                                startsup = ls;
+                            }
+                            var supportdict = new Dictionary<string, int>();
+
+                            Beam beam = ls.Member.Beam;
+                            Direction direction = ls.Member.Direction;
+
+                            switch (direction)
+                            {
+                                case Direction.Left:
+
+                                    var supright = beam.RightSide;
+
+                                    supportdict.Add(SupportName(supright), 1);
+
+                                    break;
+
+                                case Direction.Right:
+
+                                    var supleft = beam.LeftSide;
+
+                                    supportdict.Add(SupportName(supleft), 1);
+
+                                    break;
+                            }
+
+                            graph.AddSupport(SupportName(ls), supportdict);
+
+                            break;
+                        }
+
+                    case ObjectType.RightFixedSupport:
+                        {
+                            var rs = item as RightFixedSupport;
+                            if (startsup == null)
+                            {
+                                startsup = rs;
+                            }
+                            var supportdict = new Dictionary<string, int>();
+
+                            Beam beam = rs.Member.Beam;
+                            Direction direction = rs.Member.Direction;
+
+                            switch (direction)
+                            {
+                                case Direction.Left:
+
+                                    var supright = beam.RightSide;
+
+                                    supportdict.Add(SupportName(supright), 1);
+
+                                    break;
+
+                                case Direction.Right:
+
+                                    var supleft = beam.LeftSide;
+
+                                    supportdict.Add(SupportName(supleft), 1);
+
+                                    break;
+                            }
+
+                            graph.AddSupport(SupportName(rs), supportdict);
+
+                            break;
+                        }
+                }
+            }
+            #endregion
+
+            string startsupport = SupportName(startsup);
+
+            try
+            {
+                foreach (var supportname in graph.Vertices.Keys)
+                {
+                    int index = graph.ShortestPath(startsupport, supportname).Count;
+
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.BasicSupport:
+
+                                var bs = item as BasicSupport;
+
+                                if (bs.Name == supportname)
+                                {
+                                    bs.CrossIndex = index;
+                                }
+
+                                break;
+
+                            case ObjectType.SlidingSupport:
+
+                                var ss = item as SlidingSupport;
+
+                                if (ss.Name == supportname)
+                                {
+                                    ss.CrossIndex = index;
+                                }
+
+                                break;
+
+                            case ObjectType.LeftFixedSupport:
+
+                                var ls = item as LeftFixedSupport;
+
+                                if (ls.Name == supportname)
+                                {
+                                    ls.CrossIndex = index;
+                                }
+
+                                break;
+
+                            case ObjectType.RightFixedSupport:
+
+                                var rs = item as RightFixedSupport;
+
+                                if (rs.Name == supportname)
+                                {
+                                    rs.CrossIndex = index;
+                                }
+
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void writecrossindexes()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.BasicSupport:
+                    {
+                        var bs = item as BasicSupport;
+
+                        MyDebug.WriteInformation(bs.Name + " crossindex = " + bs.CrossIndex);
+
+                        break;
+                    }
+
+                    case ObjectType.SlidingSupport:
+                    {
+                        var ss = item as SlidingSupport;
+
+                        MyDebug.WriteInformation(ss.Name + " crossindex = " + ss.CrossIndex);
+
+                        break;
+                    }
+
+                    case ObjectType.LeftFixedSupport:
+                    {
+                        var ls = item as LeftFixedSupport;
+
+                        MyDebug.WriteInformation(ls.Name + " crossindex = " + ls.CrossIndex);
+
+                        break;
+                    }
+
+                    case ObjectType.RightFixedSupport:
+                    {
+                        var rs = item as RightFixedSupport;
+
+                        MyDebug.WriteInformation(rs.Name + " crossindex = " + rs.CrossIndex);
+
+                        break;
+                    }
+                }
+            }
         }
         #endregion
             
@@ -4835,6 +5117,8 @@ namespace Mesnet
             supporttree.Items.Clear();
             enabletestmenus();
             _savefilepath = null;
+            _uptoolbar.DeActivateAll();
+            _uptoolbar.CollapseAll();
         }
 
         /// <summary>
@@ -5468,6 +5752,14 @@ namespace Mesnet
                 notify.Text = GetString("notloadedsystem");
                 return false;
             }
+
+            //check if there are any seperate beam systems
+            if (!TryIndex())
+            {
+                notify.Text = GetString("systemnotsolvable");
+                return false;
+            }
+
             return true;
         }
 
@@ -5518,7 +5810,24 @@ namespace Mesnet
 
         private void about_Click(object sender, RoutedEventArgs e)
         {
+            switch (Settings.Default.language)
+            {
+                case "en-EN":
 
+                    var abouten = new AboutWindowEn();
+                    abouten.Owner = this;
+                    abouten.ShowDialog();
+
+                    break;
+
+                case "tr-TR":
+
+                    var abouttr = new AboutWindowTr();
+                    abouttr.Owner = this;
+                    abouttr.ShowDialog();
+
+                    break;
+            }     
         }
 
         public UpToolBar UpToolBar()

@@ -154,6 +154,16 @@ namespace Mesnet.Classes.Ui
             _mw.stressborder.Visibility = Visibility.Collapsed;
         }
 
+        public void DeActivateAll()
+        {
+            DeActivateInertia();
+            DeActivateDistLoad();
+            DeActivateConcLoad();
+            DeActivateMoment();
+            DeActivateForce();
+            DeActivateStress();
+        }
+
         public void CollapseInertia()
         {
             _mw.inertiaexpander.IsExpanded = false;
@@ -182,6 +192,16 @@ namespace Mesnet.Classes.Ui
         public void CollapseStress()
         {
             _mw.stressexpander.IsExpanded = false;
+        }
+
+        public void CollapseAll()
+        {
+            CollapseInertia();
+            CollapseConcLoad();
+            CollapseDistLoad();
+            CollapseMoment();
+            CollapseForce();
+            CollapseStress();
         }
 
         #region Toolbar Events

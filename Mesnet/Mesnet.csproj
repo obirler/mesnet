@@ -16,6 +16,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,8 +33,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -154,6 +154,12 @@
     <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
     <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />
     <Compile Include="Classes\Ui\UpToolBar.cs" />
+    <Compile Include="Xaml\Pages\AboutWindowEn.xaml.cs">
+      <DependentUpon>AboutWindowEn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\AboutWindowTr.xaml.cs">
+      <DependentUpon>AboutWindowTr.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Xaml\Pages\BeamPrompt.xaml.cs">
       <DependentUpon>BeamPrompt.xaml</DependentUpon>
     </Compile>
@@ -325,6 +331,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Xaml\Pages\AboutWindowEn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\AboutWindowTr.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Xaml\Pages\BeamPrompt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -551,9 +565,6 @@
     <Resource Include="Assets\moment.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logomsmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\rotate.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -578,6 +589,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\No-Symbol.png" />
+    <Resource Include="Assets\logo.png" />
+    <Resource Include="Assets\itulogo.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -320,11 +320,6 @@ namespace Mesnet.Xaml.User_Controls
 
         #region Cross
 
-        private void AddCrossMoment(double moment)
-        {
-
-        }
-
         /// <summary>
         /// Seperates moment in the support to the beams that are bounded and call Conduct function of each beam.
         /// </summary>
@@ -447,6 +442,12 @@ namespace Mesnet.Xaml.User_Controls
 
                 }
             }
+        }
+
+        public void ResetSolution()
+        {
+            _totalstiffness = 0;
+            _crossindex = -1;
         }
 
         #endregion

@@ -291,7 +291,7 @@ namespace Mesnet.Classes.Math
 
                     foreach (Poly poly in List)
                     {
-                        polymax = poly.MaximumAbs(poly.StartPoint, poly.EndPoint);
+                        polymax = poly.MaximumAbs();
                         if (polymax > result)
                         {
                             result = polymax;

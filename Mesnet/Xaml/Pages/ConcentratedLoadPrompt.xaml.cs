@@ -53,7 +53,6 @@ namespace Mesnet.Xaml.Pages
                     fncstk.Children.Add(fnc);
                     _loads.Add(pair.Key, pair.Value);
                 }
-                finishbtn.Visibility = Visibility.Visible;
             }
 
             loadx.Text = (_length/2).ToString();
@@ -124,10 +123,6 @@ namespace Mesnet.Xaml.Pages
             fnc.limits.Text = "x = " + x + " m";
             fnc.removebtn.Click += Remove_Click;
 
-            if (fncstk.Children.Count == 0)
-            {
-                finishbtn.Visibility = Visibility.Visible;
-            }
             fncstk.Children.Add(fnc);
 
             load.Text = "10";
@@ -141,11 +136,6 @@ namespace Mesnet.Xaml.Pages
             var index = fncstk.Children.IndexOf(fnc);
             _loads.RemoveAt(index);
             fncstk.Children.RemoveAt(index);
-
-            if (fncstk.Children.Count == 0)
-            {
-                finishbtn.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void finishbtn_Click(object sender, RoutedEventArgs e)

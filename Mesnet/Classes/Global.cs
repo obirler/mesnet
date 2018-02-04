@@ -50,6 +50,336 @@ namespace Mesnet.Classes
 
         public static double MaxConcLoad = Double.MinValue;
 
+        public static void UpdateMaxInertia()
+        {
+            MaxInertia = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.Inertias?.Count > 0)
+                        {
+                            if (beam.MaxInertia > MaxInertia)
+                            {
+                                MaxInertia = beam.MaxInertia;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        public static void UpdateMaxDistLoad()
+        {
+            MaxDistLoad = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.DistributedLoads?.Count > 0)
+                        {
+                            if (beam.MaxAbsDistLoad > MaxDistLoad)
+                            {
+                                MaxDistLoad = beam.MaxAbsDistLoad;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        public static void UpdateMaxConcLoad()
+        {
+            MaxConcLoad = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.ConcentratedLoads?.Count > 0)
+                        {
+                            if (beam.MaxAbsConcLoad > MaxConcLoad)
+                            {
+                                MaxConcLoad = beam.MaxAbsConcLoad;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        public static void UpdateMaxMoment()
+        {            
+            MaxMoment = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                       
+                        if (beam.FixedEndMoment?.Count > 0)
+                        {
+                            if (beam.MaxAbsMoment > MaxMoment)
+                            {
+                                MaxMoment = beam.MaxAbsMoment;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        public static void UpdateMaxForce()
+        {
+            MaxForce = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.FixedEndForce?.Count > 0)
+                        {
+                            if (beam.MaxAbsForce > MaxForce)
+                            {
+                                MaxForce = beam.MaxAbsForce;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        public static void UpdateMaxStress()
+        {
+            MaxStress = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+
+                        if (beam.Stress?.Count > 0)
+                        {
+                            if (beam.MaxAbsStress > MaxStress)
+                            {
+                                MaxStress = beam.MaxAbsStress;
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        public static void UpdateAllMaxValues()
+        {
+            MaxInertia = Double.MinValue;
+            MaxDistLoad = Double.MinValue;
+            MaxConcLoad = Double.MinValue;
+            MaxMoment = Double.MinValue;
+            MaxForce = Double.MinValue;
+            MaxStress = Double.MinValue;
+
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.MaxInertia > MaxInertia)
+                        {
+                            MaxInertia = beam.MaxInertia;
+                        }
+                        if (beam.DistributedLoads?.Count > 0)
+                        {
+                            if (beam.MaxAbsDistLoad > MaxDistLoad)
+                            {
+                                MaxDistLoad = beam.MaxAbsDistLoad;
+                            }
+                        }
+                        if (beam.ConcentratedLoads?.Count > 0)
+                        {
+                            if (beam.MaxAbsConcLoad > MaxConcLoad)
+                            {
+                                MaxConcLoad = beam.MaxAbsConcLoad;
+                            }
+                        }
+                        if (beam.FixedEndMoment?.Count > 0)
+                        {
+                            if (beam.MaxAbsMoment > MaxMoment)
+                            {
+                                MaxMoment = beam.MaxAbsMoment;
+                            }
+                        }
+                        if (beam.FixedEndForce?.Count > 0)
+                        {
+                            if (beam.MaxAbsForce > MaxForce)
+                            {
+                                MaxForce = beam.MaxAbsForce;
+                            }
+                        }
+                        if (beam.Stress?.Count > 0)
+                        {
+                            if (beam.MaxAbsStress > MaxForce)
+                            {
+                                MaxForce = beam.MaxAbsStress;
+                            }
+                        }
+                        break;
+                }
+            }           
+        }
+
+        public static bool AnyInertia()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.Inertias?.Count > 0)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public static bool AnyDistLoad()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.DistributedLoads?.Count > 0)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public static bool AnyConcLoad()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.ConcentratedLoads?.Count > 0)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public static bool AnyStress()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.Stress?.Count > 0)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public static bool AnyMoment()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.FixedEndMoment?.Count > 0)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public static bool AnyForce()
+        {
+            foreach (var item in Objects)
+            {
+                switch (GetObjectType(item))
+                {
+                    case ObjectType.Beam:
+
+                        var beam = item as Beam;
+                        if (beam.FixedEndForce?.Count > 0)
+                        {
+                            return true;
+                        }
+
+                        break;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Sets the language of the application using system language.
         /// </summary>

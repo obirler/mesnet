@@ -134,4 +134,5 @@
     <system:String x:Key="askforbeamdelete">Bu kirişi gerçekten silmek istiyor musunuz?</system:String>
     <system:String x:Key="deleteall">Hepsini sil</system:String>
     <system:String x:Key="askfordeleteall">Bütün nesneleri gerçekten silmek istiyor musunuz?</system:String>
+    <system:String x:Key="beamarranged">Kiriş düzenlendi</system:String>
 </ResourceDictionary>

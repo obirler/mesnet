@@ -282,6 +282,11 @@ namespace Mesnet.Classes.Math
             return System.Math.Round(absmax, digit);
         }
 
+        public double MaximumAbs()
+        {
+            return MaximumAbs(200.0, 100.0, 4);
+        }
+
         public double MaxLocation(double startpoint, double endpoint, int digit = 4)
         {
             if (digit < 0)

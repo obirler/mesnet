@@ -462,6 +462,12 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        public void ResetSolution()
+        {
+            _totalstiffness = 0;
+            _crossindex = -1;
+        }
+
         #endregion
 
         #region Properties

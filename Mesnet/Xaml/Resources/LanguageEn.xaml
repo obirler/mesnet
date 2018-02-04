@@ -134,4 +134,5 @@
     <system:String x:Key="askforbeamdelete">Do you really want to delete this beam?</system:String>
     <system:String x:Key="deleteall">Clear all</system:String>
     <system:String x:Key="askfordeleteall">Do you really want to clear all objects?</system:String>
+    <system:String x:Key="beamarranged">Beam arranged</system:String>
 </ResourceDictionary>

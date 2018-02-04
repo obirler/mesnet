@@ -102,7 +102,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -258,7 +258,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly8 = new PiecewisePoly(loadpolies8);
                 beam8.AddLoad(ppoly8);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -485,7 +485,7 @@ namespace Mesnet.Classes.Tools
                 beam8.AddD(new PiecewisePoly(dpolies8));
                 beam8.MaxAllowableStress = 150;
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -692,7 +692,7 @@ namespace Mesnet.Classes.Tools
                 beam12.SetAngleLeft(90);
                 beam12.CircularConnect(Global.Direction.Right, beam6, Global.Direction.Right);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -794,7 +794,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly5 = new PiecewisePoly(loadpolies5);
                 beam5.AddLoad(ppoly5);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -906,7 +906,7 @@ namespace Mesnet.Classes.Tools
                 var load5 = new DistributedLoad(ppoly5, beam5);
                 beam5.AddLoad(ppoly5);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1016,7 +1016,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly5 = new PiecewisePoly(loadpolies5);
                 beam5.AddLoad(ppoly5);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1071,7 +1071,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly1 = new PiecewisePoly(loadpolies1);
                 beam1.AddLoad(ppoly1);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1147,7 +1147,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1232,7 +1232,7 @@ namespace Mesnet.Classes.Tools
                 concloadlist.Add(0.5, 20);
                 beam2.AddLoad(concloadlist);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1290,7 +1290,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly2 = new PiecewisePoly(loadpolies2);
                 beam2.AddLoad(ppoly2);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1358,7 +1358,7 @@ namespace Mesnet.Classes.Tools
                 var ppoly3 = new PiecewisePoly(loadpolies3);
                 beam3.AddLoad(ppoly3);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1598,7 +1598,7 @@ namespace Mesnet.Classes.Tools
 
                 /////////////////////////////////////////////////////////////
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
                 _mw.UpdateAllSupportTree();
@@ -1683,7 +1683,7 @@ namespace Mesnet.Classes.Tools
                 var rightfixedsupport = new RightFixedSupport(_mw.canvas);
                 rightfixedsupport.AddBeam(beam4);
 
-                _mw.UpdateLoadDiagrams();
+                _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
 

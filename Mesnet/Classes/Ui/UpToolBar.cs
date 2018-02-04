@@ -204,6 +204,207 @@ namespace Mesnet.Classes.Ui
             CollapseStress();
         }
 
+        #region diagram updates
+
+        public void UpdateInertiaDiagrams()
+        {
+            if (AnyInertia())
+            {
+                UpdateMaxInertia();
+                ActivateInertia();
+                if (_mw.inertiaexpander.IsExpanded)
+                {
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                beam.ReDrawInertia((int)_mw.inertiaslider.Value);
+                                break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                DeActivateInertia();
+                CollapseInertia();
+            }
+        }
+
+        public void UpdateDistloadDiagrams()
+        {           
+            if (AnyDistLoad())
+            {
+                UpdateMaxDistLoad();
+                ActivateDistLoad();
+                if (_mw.distloadexpander.IsExpanded)
+                {
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                beam.ReDrawDistLoad((int)_mw.distloadslider.Value);
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    _mw.distloadexpander.IsExpanded = true;
+                }
+            }
+            else
+            {
+                CollapseDistLoad();
+                DeActivateDistLoad();
+            }
+        }
+
+        public void UpdateConcloadDiagrams()
+        {           
+            if (AnyConcLoad())
+            {
+                UpdateMaxConcLoad();
+                ActivateConcLoad();
+                if (_mw.concloadexpander.IsExpanded)
+                {
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                beam.ReDrawConcLoad((int)_mw.concloadslider.Value);
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    _mw.concloadexpander.IsExpanded = true;
+                }
+            }
+            else
+            {
+                CollapseConcLoad();
+                DeActivateConcLoad();
+            }
+        }
+
+        public void UpdateMomentDiagrams(bool show = false)
+        {
+            if (AnyMoment())
+            {
+                UpdateMaxMoment();
+                ActivateMoment();
+                if (_mw.momentexpander.IsExpanded)
+                {
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                beam.ReDrawMoment((int)_mw.momentslider.Value);
+                                break;
+                        }
+                    }
+                }
+                if(show)
+                {
+                    _mw.momentexpander.IsExpanded = true;
+                }
+            }           
+        }
+
+        public void UpdateForceDiagrams(bool show = false)
+        {
+            if (AnyForce())
+            {
+                UpdateMaxForce();
+                ActivateForce();
+                if (_mw.forceexpander.IsExpanded)
+                {
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                beam.ReDrawForce((int)_mw.forceslider.Value);
+                                break;
+                        }
+                    }
+                }
+                if (show)
+                {
+                    _mw.forceexpander.IsExpanded = true;
+                }
+            }           
+        }
+
+        public void UpdateStressDiagrams(bool show = false)
+        {            
+            if (AnyStress())
+            {
+                UpdateMaxStress();
+                ActivateStress();
+                if (_mw.stressexpander.IsExpanded)
+                {
+                    foreach (var item in Objects)
+                    {
+                        switch (GetObjectType(item))
+                        {
+                            case ObjectType.Beam:
+
+                                var beam = item as Beam;
+                                beam.ReDrawStress((int)_mw.stressslider.Value);
+                                break;
+                        }
+                    }
+                }
+                if (show)
+                {
+                    _mw.stressexpander.IsExpanded = true;
+                }
+            }          
+        }
+
+        /// <summary>
+        /// Updates the max value of diagrams and shows concentrated and distributed loads.
+        /// It is used before the solution
+        /// </summary>
+        public void UpdateLoadDiagrams()
+        {
+            UpdateInertiaDiagrams();
+            UpdateDistloadDiagrams();
+            UpdateConcloadDiagrams();
+        }
+
+        /// <summary>
+        /// Updates all diagrams, max value and draws according to expander states.
+        /// </summary>
+        public void UpdateAllDiagrams()
+        {
+            UpdateInertiaDiagrams();
+            UpdateDistloadDiagrams();
+            UpdateConcloadDiagrams();
+            UpdateForceDiagrams();
+            UpdateMomentDiagrams();
+            UpdateStressDiagrams();
+        }
+
+        #endregion
+
         #region Toolbar Events
 
         private void inertiaexpander_Expanded(object sender, RoutedEventArgs e)
@@ -217,7 +418,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.ShowInertiaDiagram((int)_mw.inertiaslider.Value);
+                        beam.ReDrawInertia((int)_mw.inertiaslider.Value);
 
                         break;
                 }
@@ -235,7 +436,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.HideInertiaDiagram();
+                        beam.DestroyInertiaDiagram();
 
                         break;
                 }
@@ -270,7 +471,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.ShowDistLoadDiagram((int)_mw.distloadslider.Value);
+                        beam.ReDrawDistLoad((int)_mw.distloadslider.Value);
 
                         break;
                 }
@@ -288,7 +489,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.HideDistLoadDiagram();
+                        beam.DestroyDistLoadDiagram();
 
                         break;
                 }
@@ -328,7 +529,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.ShowConcLoadDiagram((int)_mw.concloadslider.Value);
+                        beam.ReDrawConcLoad((int)_mw.concloadslider.Value);
 
                         break;
                 }
@@ -346,7 +547,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.HideConcLoadDiagram();
+                        beam.DestroyConcLoadDiagram();
 
                         break;
                 }
@@ -386,7 +587,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.ShowFixedEndMomentDiagram((int)_mw.momentslider.Value);
+                        beam.ReDrawMoment((int)_mw.momentslider.Value);
 
                         break;
                 }
@@ -404,7 +605,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.HideFixedEndMomentDiagram();
+                        beam.DestroyFixedEndMomentDiagram();
 
                         break;
                 }
@@ -439,7 +640,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.ShowFixedEndForceDiagram((int)_mw.forceslider.Value);
+                        beam.ReDrawForce((int)_mw.forceslider.Value);
 
                         break;
                 }
@@ -457,7 +658,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.HideFixedEndForceDiagram();
+                        beam.DestroyFixedEndForceDiagram();
 
                         break;
                 }
@@ -492,7 +693,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.ShowStressDiagram((int)_mw.stressslider.Value);
+                        beam.ReDrawStress((int)_mw.stressslider.Value);
 
                         break;
                 }
@@ -510,7 +711,7 @@ namespace Mesnet.Classes.Ui
                     case ObjectType.Beam:
 
                         Beam beam = item as Beam;
-                        beam.HideStressDiagram();
+                        beam.DestroyStressDiagram();
 
                         break;
                 }

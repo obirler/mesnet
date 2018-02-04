@@ -52,9 +52,7 @@ namespace Mesnet.Xaml.Pages
                     fnc.limits.Text = loadpoly.StartPoint + " <= x <= " + loadpoly.EndPoint;
                     fnc.removebtn.Click += Remove_Click;
                     fncstk.Children.Add(fnc);
-                }
-
-                finishbtn.Visibility = Visibility.Visible;
+                }                
             }
         }
 
@@ -129,10 +127,6 @@ namespace Mesnet.Xaml.Pages
             fnc.limits.Text = poly.StartPoint + " <= x <= " + poly.EndPoint;
             fnc.removebtn.Click += Remove_Click;
 
-            if (fncstk.Children.Count == 0)
-            {
-                finishbtn.Visibility = Visibility.Visible;
-            }
             fncstk.Children.Add(fnc);
 
             resetpanel();
@@ -255,10 +249,6 @@ namespace Mesnet.Xaml.Pages
             fnc.limits.Text = prepoly.StartPoint + " <= x <= " + prepoly.EndPoint;
             fnc.removebtn.Click += Remove_Click;
 
-            if (fncstk.Children.Count == 0)
-            {
-                finishbtn.Visibility = Visibility.Visible;
-            }
             fncstk.Children.Add(fnc);
 
             resetpanel();
@@ -341,10 +331,6 @@ namespace Mesnet.Xaml.Pages
             fnc.limits.Text = poly.StartPoint + " <= x <= " + poly.EndPoint;
             fnc.removebtn.Click += Remove_Click;
 
-            if (fncstk.Children.Count == 0)
-            {
-                finishbtn.Visibility = Visibility.Visible;
-            }
             fncstk.Children.Add(fnc);
 
             resetpanel();
@@ -357,11 +343,6 @@ namespace Mesnet.Xaml.Pages
             var index = fncstk.Children.IndexOf(fnc);
             Loadpolies.RemoveAt(index);
             fncstk.Children.RemoveAt(index);
-
-            if (fncstk.Children.Count == 0)
-            {
-                finishbtn.Visibility = Visibility.Collapsed;
-            }
         }
 
         private void resetpanel()

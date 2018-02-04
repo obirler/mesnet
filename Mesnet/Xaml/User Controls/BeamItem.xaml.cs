@@ -18,6 +18,8 @@
     along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
 ========================================================================
 */
+
+using System.Windows;
 using System.Windows.Controls;
 using static Mesnet.Classes.Global;
 
@@ -36,5 +38,17 @@ namespace Mesnet.Xaml.User_Controls
         }
 
         public Beam Beam;
+
+        public void SetCritical(bool critic)
+        {
+            if (critic)
+            {
+                warning.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                warning.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

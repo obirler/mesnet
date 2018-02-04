@@ -54,7 +54,7 @@
             <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
                 <Run  FontSize="15">	Mesnet belirli mühendislik alanlarında kullanışlı bir araç olması amacıyla geliştirilmiştir. Programın doğru çalışacağı ve doğru sonuç vereceği konusunda HİÇBİR GARANTİ YOKTUR.</Run>
                 <Hyperlink x:Name="gpllicencepage" FontSize="15" NavigateUri="http://www.gnu.org/licenses" RequestNavigate="gpllicencepage_RequestNavigate">Buradan</Hyperlink>
-                <Run FontSize="15">GPL lisansı detaylarına ulaşabilirsiniz</Run>
+                <Run FontSize="15">GPL lisansı detaylarına ulaşabilirsiniz.</Run>
             </TextBlock>
 
             <Button x:Name="closebtn" Content="Kapat" Width="100" Margin="0,10,0,0" Click="closebtn_Click" ></Button>

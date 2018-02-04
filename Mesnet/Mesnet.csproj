@@ -591,6 +591,7 @@
     <Resource Include="Assets\No-Symbol.png" />
     <Resource Include="Assets\logo.png" />
     <Resource Include="Assets\itulogo.png" />
+    <Resource Include="Assets\warning.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

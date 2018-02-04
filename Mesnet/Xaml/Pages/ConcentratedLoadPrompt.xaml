@@ -56,7 +56,7 @@
             <ScrollViewer Height="208" Margin="5" VerticalScrollBarVisibility="Visible">
                 <StackPanel>
                     <StackPanel x:Name="fncstk" />
-                    <Button x:Name="finishbtn" Height="30" Margin="5,10,5,5" Content="{DynamicResource finish}" Visibility="Collapsed" Click="finishbtn_Click"/>
+                    <Button x:Name="finishbtn" Height="30" Margin="5,10,5,5" Content="{DynamicResource finish}" Click="finishbtn_Click"/>
                 </StackPanel>
             </ScrollViewer>
 

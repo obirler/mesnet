@@ -427,8 +427,16 @@ namespace Mesnet.Xaml.User_Controls
             _length = length;
             contentgrid.Width = _length * 100;
             Width = contentgrid.Width;
-
             _tgeometry.ChangeWidth(Width);
+
+            //If the length really is changed then the loads on the beam become meaningless (at least distributed loads), so remove them.
+            if (Math.Abs(oldlength - length) > 0.00001)
+            {
+                RemoveConcentratedLoad();
+                DestroyConcLoadDiagram();
+                RemoveDistributedLoad();
+                DestroyDistLoadDiagram();
+            }
         }
 
         public void Remove()
@@ -1539,6 +1547,7 @@ namespace Mesnet.Xaml.User_Controls
 
             if (distload != null)
             {
+                distload.RemoveLabels();
                 upcanvas.Children.Remove(distload);
                 _distributedloads = null;
                 _maxdistload = Double.MinValue;
@@ -1595,6 +1604,16 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        public void DestroyDistLoadDiagram()
+        {
+            if (_distload != null)
+            {
+                _distload.RemoveLabels();
+                upcanvas.Children.Remove(_distload);
+                _distload = null;
+            }
+        }
+
         public void ShowConcLoadDiagram(int c)
         {
             if (_concload != null)
@@ -1616,6 +1635,16 @@ namespace Mesnet.Xaml.User_Controls
             if (_concload != null)
             {
                 _concload.Hide();
+            }
+        }
+
+        public void DestroyConcLoadDiagram()
+        {
+            if (_concload != null)
+            {
+                _concload.RemoveLabels();
+                upcanvas.Children.Remove(_concload);
+                _concload = null;
             }
         }
 
@@ -1711,6 +1740,16 @@ namespace Mesnet.Xaml.User_Controls
             }
         }
 
+        public void DestroyInertiaDiagram()
+        {
+            if (_inertia != null)
+            {
+                _inertia.RemoveLabels();
+                upcanvas.Children.Remove(_inertia);
+                _inertia = null;
+            }
+        }
+
         public void ShowDeflectionDiagram()
         {
             if (_deflectiondigram != null)
@@ -1790,6 +1829,16 @@ namespace Mesnet.Xaml.User_Controls
             _inertiappoly = inertiappoly;
             _izero = _inertiappoly.Min;
             _maxinertia = _inertiappoly.Max;
+            WritePPolytoConsole(_name + " inertia added", inertiappoly);
+        }
+
+        public void ChangeInertia(PiecewisePoly inertiappoly)
+        {
+            DestroyInertiaDiagram();
+            _inertiappoly = inertiappoly;
+            _izero = _inertiappoly.Min;
+            _maxinertia = _inertiappoly.Max;
+            WritePPolytoConsole(_name + " inertia changed", inertiappoly);
         }
 
         /// <summary>
@@ -2196,7 +2245,7 @@ namespace Mesnet.Xaml.User_Controls
         /// <param name="radiusouter">The outer transform geometry circle radius.</param>
         public void ShowCorners(double radiusinner, double radiusouter)
         {
-            _tgeometry.ShowCorners(radiusinner, radiusouter);
+            //_tgeometry.ShowCorners(radiusinner, radiusouter);
         }
 
         public void HideCorners()
@@ -2236,11 +2285,6 @@ namespace Mesnet.Xaml.User_Controls
             catch (Exception ex)
             {
             }
-        }
-
-        public void WriteToDebug()
-        {
-
         }
 
         #region SoM
@@ -4328,6 +4372,29 @@ namespace Mesnet.Xaml.User_Controls
             MyDebug.WriteInformation(_name + " : CrossCalculate has finished to work");
         }
 
+        public void ResetSolution()
+        {
+            _ma = 0;
+            _mb = 0;
+            _fixedendforce = null;
+            _fixedendmoment = null;
+            _zeroforce = null;
+            _zeroforceconc = null;
+            _zeroforcedist = null;
+            _zeromoment = null;
+            _maxforce = Double.MinValue;
+            _maxabsmoment = Double.MinValue;
+            _minmoment = Double.MaxValue;
+            _maxforce = Double.MinValue;
+            _maxabsforce = Double.MinValue;
+            _minforce = Double.MinValue;
+            _maxstress = Double.MinValue;
+            _maxabsstress = Double.MinValue;
+            DestroyFixedEndMomentDiagram();
+            DestroyFixedEndForceDiagram();
+            DestroyStressDiagram();
+        }
+
         #endregion
 
         #region post-cross
@@ -4633,9 +4700,9 @@ namespace Mesnet.Xaml.User_Controls
                 MyDebug.WriteInformation(_name + " : redrawing moment for c = " + c);
                 _femoment.Draw(c);
             }
-            else
+            else if(_fixedendmoment?.Count > 0)
             {
-                
+                ShowFixedEndMomentDiagram(c);
             }
         }
 
@@ -4645,7 +4712,11 @@ namespace Mesnet.Xaml.User_Controls
             {
                 MyDebug.WriteInformation(_name + " : redrawing distributed load for c = " + c);
                 _distload.Draw(c);
-            }        
+            }
+            else if (_distributedloads?.Count > 0)
+            {
+                ShowDistLoadDiagram(c);
+            }
         }
 
         public void ReDrawConcLoad(int c)
@@ -4654,6 +4725,10 @@ namespace Mesnet.Xaml.User_Controls
             {
                 MyDebug.WriteInformation(_name + " : redrawing concentrated load for c = " + c);
                 _concload.Draw(c);
+            }
+            else if (_concentratedloads?.Count > 0)
+            {
+                ShowConcLoadDiagram(c);
             }
         }
 
@@ -4664,14 +4739,22 @@ namespace Mesnet.Xaml.User_Controls
                 MyDebug.WriteInformation(_name + " : redrawing inertia for c = " + c);
                 _inertia.Draw(c);
             }
+            else if(_inertiappoly?.Count > 0)
+            {
+                ShowInertiaDiagram(c);
+            }
         }
-
+        
         public void ReDrawForce(int c)
         {
             if (_feforce != null)
             {
                 MyDebug.WriteInformation(_name + " : redrawing force for c = " + c);
                 _feforce.Draw(c);
+            }
+            else if (_fixedendforce?.Count > 0)
+            {
+                ShowFixedEndForceDiagram(c);
             }
         }
 
@@ -4681,6 +4764,10 @@ namespace Mesnet.Xaml.User_Controls
             {
                 MyDebug.WriteInformation(_name + " : redrawing stress for c = " + c);
                 _stressdiagram.Draw(c);
+            }
+            else if (_stress?.Count > 0)
+            {
+                ShowStressDiagram(c);
             }
         }
 

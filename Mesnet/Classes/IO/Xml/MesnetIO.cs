@@ -167,7 +167,7 @@ namespace Mesnet.Classes.IO.Xml
             addtocanvas();
             connectobjects();
             setvariables();
-            _mw.UpdateLoadDiagrams();
+            _mw.UpToolBar().UpdateLoadDiagrams();
             return true;
         }
 
@@ -511,6 +511,11 @@ namespace Mesnet.Classes.IO.Xml
 
         private void setmaxvalues()
         {
+            MaxInertia = Double.MinValue;
+            MaxMoment = Double.MinValue;
+            MaxConcLoad = Double.MinValue;
+            MaxDistLoad = Double.MinValue;
+
             for (int i = 0; i < manifestlist.Count; i++)
             {
                 switch (manifestlist[i].GetType().Name)

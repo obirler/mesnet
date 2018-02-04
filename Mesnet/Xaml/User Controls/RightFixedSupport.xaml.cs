@@ -179,6 +179,11 @@ namespace Mesnet.Xaml.User_Controls
             _angle = angle;
         }
 
+        public void ResetSolution()
+        {
+            _crossindex = -1;
+        }
+
         #region Properties
 
         public int Id

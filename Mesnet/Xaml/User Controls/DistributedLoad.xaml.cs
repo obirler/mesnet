@@ -353,5 +353,40 @@ namespace Mesnet.Xaml.User_Controls
 
             endtext.Visibility = Visibility.Collapsed;
         }
+
+        public void RemoveLabels()
+        {
+            if (starttext != null)
+            {
+                if (_beam.upcanvas.Children.Contains(starttext))
+                {
+                    _beam.upcanvas.Children.Remove(starttext);
+                }
+            }
+
+            if (endtext != null)
+            {
+                if (_beam.upcanvas.Children.Contains(endtext))
+                {
+                    _beam.upcanvas.Children.Remove(endtext);
+                }
+            }
+
+            if (mintext != null)
+            {
+                if (_beam.upcanvas.Children.Contains(mintext))
+                {
+                    _beam.upcanvas.Children.Remove(mintext);
+                }
+            }
+
+            if (maxtext != null)
+            {
+                if (_beam.upcanvas.Children.Contains(maxtext))
+                {
+                    _beam.upcanvas.Children.Remove(maxtext);
+                }
+            }
+        }
     }
 }

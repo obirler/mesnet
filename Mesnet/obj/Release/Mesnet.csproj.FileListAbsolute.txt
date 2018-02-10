@@ -476,7 +476,6 @@ C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\EntityFramework.SqlServer
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\MoreLinq.xml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.xml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.dll.config
-C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csprojResolveAssemblyReference.cache
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\MainWindow.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\SettingsPrompt.baml
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Inertia.baml
@@ -584,3 +583,8 @@ C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe.manifest
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.application
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.pdb
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowEn.g.cs
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowTr.g.cs
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowEn.baml
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowTr.baml
+C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csprojResolveAssemblyReference.cache

@@ -67,6 +67,8 @@ namespace Mesnet
 
             _uptoolbar = new UpToolBar(this);
 
+            _treehandler = new TreeHandler(this);
+
             scaleslider.Value = zoomAndPanControl.ContentScale;
 
             zoomAndPanControl.MaxContentScale = 12;
@@ -128,10 +130,11 @@ namespace Mesnet
      
         private string _savefilepath = null;
 
-        private bool beamTreeItemSelectedEventEnabled = true;
+        public bool beamTreeItemSelectedEventEnabled = true;
 
         private UpToolBar _uptoolbar;
-      
+
+        private TreeHandler _treehandler;
 
         #region zoomandpancontrol
 
@@ -181,6 +184,15 @@ namespace Mesnet
         private bool mousemoved = false;
 
         private bool writetodebug = true;
+
+        /// <summary>
+        /// Only make mouse handling mode none.
+        /// Used in dragging.
+        /// </summary>
+        private void SetMouseHandlingModeNone()
+        {
+            mouseHandlingMode = MouseHandlingMode.None;
+        }
 
         private void SetMouseHandlingMode(string sender, MouseHandlingMode mode)
         {
@@ -277,8 +289,8 @@ namespace Mesnet
                     Notify("beamput");
                     ResetSolution();
                     _uptoolbar.UpdateLoadDiagrams();
-                    UpdateAllBeamTree();
-                    UpdateAllSupportTree();
+                    _treehandler.UpdateAllBeamTree();
+                    _treehandler.UpdateAllSupportTree();
 
                     Reset();
 
@@ -668,11 +680,6 @@ namespace Mesnet
                 return;
             }
 
-            if (!assembly)
-            {
-                SetMouseHandlingMode("core_MouseUp", MouseHandlingMode.None);
-            }
-
             beammouseuppoint = e.GetPosition(canvas);
 
             MyDebug.WriteInformation("mouseuppoint : " + beammouseuppoint.X + " : " + beammouseuppoint.Y);
@@ -693,12 +700,26 @@ namespace Mesnet
                     if (!assembly)
                     {
                         UnselectAll();
-                        UnSelectAllBeamItem();
+                        _treehandler.UnSelectAllBeamItem();
                     }
                     SelectBeam(beam);
 
-                    SelectBeamItem(beam);
+                    _treehandler.SelectBeamItem(beam);
                 }
+            }
+
+            if (mouseHandlingMode == MouseHandlingMode.Dragging)
+            {
+                //Dont disable buttons after dragging
+                SetMouseHandlingModeNone();
+                core.ReleaseMouseCapture();
+                e.Handled = true;
+                return;
+            }
+
+            if (!assembly)
+            {
+                SetMouseHandlingMode("core_MouseUp", MouseHandlingMode.None);
             }
 
             core.ReleaseMouseCapture();
@@ -806,22 +827,16 @@ namespace Mesnet
                                                 newbeam.CircularConnect(Direction.Right, beam, Direction.Left);
                                                 Notify("beamput");
                                                 _uptoolbar.UpdateLoadDiagrams();
-                                                UpdateAllBeamTree();
-                                                UpdateAllSupportTree();
+                                                _treehandler.UpdateAllBeamTree();
+                                                _treehandler.UpdateAllSupportTree();
                                                 Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
-                                        }
-                                        else
-                                        {
+                                            //If the user cancels the dialog, reser the system.
                                             Reset();
+                                            e.Handled = true;
                                             return;
                                         }
-                                    }
-                                    else
-                                    {
-                                        Reset();
-                                        return;
                                     }
                                 }
                                 else if (assemblybeam.LeftSide != null && beam.LeftSide != null)
@@ -874,22 +889,16 @@ namespace Mesnet
                                                 newbeam.CircularConnect(Direction.Right, beam, Direction.Left);;
                                                 Notify("beamput");
                                                 _uptoolbar.UpdateLoadDiagrams();
-                                                UpdateAllBeamTree();
-                                                UpdateAllSupportTree();
+                                                _treehandler.UpdateAllBeamTree();
+                                                _treehandler.UpdateAllSupportTree();
                                                 Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
-                                        }
-                                        else
-                                        {
+                                            //If the user cancels the dialog, reser the system.
                                             Reset();
+                                            e.Handled = true;
                                             return;
                                         }
-                                    }
-                                    else
-                                    {
-                                        Reset();
-                                        return;
                                     }
                                 }
                                 else if (assemblybeam.RightSide != null && beam.LeftSide != null)
@@ -908,8 +917,8 @@ namespace Mesnet
                                 break;
                         }
                         Reset();
-                        UpdateAllBeamTree();
-                        UpdateAllSupportTree();
+                        _treehandler.UpdateAllBeamTree();
+                        _treehandler.UpdateAllSupportTree();
                         return;
                     }
                 }
@@ -1005,22 +1014,16 @@ namespace Mesnet
                                                 newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
                                                 Notify("beamput");
                                                 _uptoolbar.UpdateLoadDiagrams();
-                                                UpdateAllBeamTree();
-                                                UpdateAllSupportTree();
+                                                _treehandler.UpdateAllBeamTree();
+                                                _treehandler.UpdateAllSupportTree();
                                                 Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
-                                        }
-                                        else
-                                        {
+                                            //If the user cancels the dialog, reser the system.
                                             Reset();
+                                            e.Handled = true;
                                             return;
                                         }
-                                    }
-                                    else
-                                    {
-                                        Reset();
-                                        return;
                                     }
                                 }
                                 else if (assemblybeam.LeftSide != null && beam.RightSide != null)
@@ -1054,12 +1057,12 @@ namespace Mesnet
                                             var beamdialog = new BeamPrompt(assemblybeam.RightPoint, beam.RightPoint);
                                             beamdialog.maxstresstbx.Text = _maxstress.ToString();
                                             beamdialog.Owner = this;
-                                            if ((bool)beamdialog.ShowDialog())
+                                            if ((bool) beamdialog.ShowDialog())
                                             {
                                                 var newbeam = new Beam(canvas, beamdialog.beamlength);
                                                 newbeam.AddElasticity(beamdialog.beamelasticitymodulus);
                                                 newbeam.AddInertia(beamdialog.inertiappoly);
-                                                if ((bool)beamdialog.stresscbx.IsChecked)
+                                                if ((bool) beamdialog.stresscbx.IsChecked)
                                                 {
                                                     newbeam.PerformStressAnalysis = true;
                                                     newbeam.AddE(beamdialog.eppoly);
@@ -1072,25 +1075,17 @@ namespace Mesnet
                                                 newbeam.CircularConnect(Direction.Right, beam, Direction.Right);
                                                 Notify("beamput");
                                                 _uptoolbar.UpdateLoadDiagrams();
-                                                UpdateAllBeamTree();
-                                                UpdateAllSupportTree();
+                                                _treehandler.UpdateAllBeamTree();
+                                                _treehandler.UpdateAllSupportTree();
                                                 Reset(MouseHandlingMode.CircularBeamConnection);
                                                 return;
                                             }
-                                        }
-                                        else
-                                        {
+                                            //If the user cancels the dialog, reser the system.
                                             Reset();
                                             e.Handled = true;
                                             return;
                                         }
-                                    }
-                                    else
-                                    {
-                                        Reset();
-                                        e.Handled = true;
-                                        return;
-                                    }
+                                    }                                    
                                 }
                                 else if (assemblybeam.RightSide != null && beam.RightSide != null)
                                 {
@@ -1109,8 +1104,8 @@ namespace Mesnet
                                 break;
                         }
                         Reset();
-                        UpdateAllBeamTree();
-                        UpdateAllSupportTree();
+                        _treehandler.UpdateAllBeamTree();
+                        _treehandler.UpdateAllSupportTree();
                         return;
                     }
                 }
@@ -1204,8 +1199,8 @@ namespace Mesnet
                                         Notify("beamput");
                                         ResetSolution();
                                         _uptoolbar.UpdateLoadDiagrams();
-                                        UpdateAllBeamTree();
-                                        UpdateAllSupportTree();
+                                        _treehandler.UpdateAllBeamTree();
+                                        _treehandler.UpdateAllSupportTree();
                                     }
                                 }
                                 else
@@ -1239,8 +1234,8 @@ namespace Mesnet
                                         Notify("beamput");
                                         ResetSolution();
                                         _uptoolbar.UpdateLoadDiagrams();
-                                        UpdateAllBeamTree();
-                                        UpdateAllSupportTree();
+                                        _treehandler.UpdateAllBeamTree();
+                                        _treehandler.UpdateAllSupportTree();
                                     }
                                 }
                                 else
@@ -1335,7 +1330,7 @@ namespace Mesnet
 
                     Notify("concloadput");
                     ResetSolution();
-                    UpdateBeamTree(selectedbeam);
+                    _treehandler.UpdateBeamTree(selectedbeam);
                     assemblybeam = null;
                     assembly = false;
                     UnselectAll();
@@ -1366,7 +1361,7 @@ namespace Mesnet
                     
                     Notify("distloadput");
                     ResetSolution();
-                    UpdateBeamTree(selectedbeam);
+                    _treehandler.UpdateBeamTree(selectedbeam);
                     assemblybeam = null;
                     assembly = false;
                     UnselectAll();
@@ -1402,14 +1397,14 @@ namespace Mesnet
                         var leftfixedsupport = new LeftFixedSupport(canvas);
                         leftfixedsupport.AddBeam(selectedbeam);
                         Notify("fixedsupportput");
-                        UpdateSupportTree(leftfixedsupport);
+                        _treehandler.UpdateSupportTree(leftfixedsupport);
                         break;
 
                     case Direction.Right:
                         var rightfixedsupport = new RightFixedSupport(canvas);
                         rightfixedsupport.AddBeam(selectedbeam);
                         Notify("fixedsupportput");
-                        UpdateSupportTree(rightfixedsupport);
+                        _treehandler.UpdateSupportTree(rightfixedsupport);
                         break;
 
                     default:
@@ -1418,7 +1413,7 @@ namespace Mesnet
 
                         break;
                 }
-                UpdateBeamTree(selectedbeam);
+                _treehandler.UpdateBeamTree(selectedbeam);
                 SetMouseHandlingMode("fixedsupportbtn_Click", MouseHandlingMode.None);
             }
             else
@@ -1457,8 +1452,8 @@ namespace Mesnet
                 }
                 Notify("basicsupportput");
                 SetMouseHandlingMode("basicsupportbtn_Click", MouseHandlingMode.None);
-                UpdateSupportTree(basicsupport);
-                UpdateBeamTree(selectedbeam);
+                _treehandler.UpdateSupportTree(basicsupport);
+                _treehandler.UpdateBeamTree(selectedbeam);
             }
             else
             {
@@ -1495,8 +1490,8 @@ namespace Mesnet
                 }
                 SetMouseHandlingMode("slidingsupportbtn_Click", MouseHandlingMode.None);
                 Notify("slidingsupportput");
-                UpdateSupportTree(slidingsupport);
-                UpdateBeamTree(selectedbeam);
+                _treehandler.UpdateSupportTree(slidingsupport);
+                _treehandler.UpdateBeamTree(selectedbeam);
             }
             else
             {
@@ -1964,8 +1959,8 @@ namespace Mesnet
                 ResetSolution();
                 _uptoolbar.UpdateAllDiagrams();
                 Notify("beamarranged");
-                UpdateAllBeamTree();
-                UpdateAllSupportTree();
+                _treehandler.UpdateAllBeamTree();
+                _treehandler.UpdateAllSupportTree();
                 Reset();
             }
             else
@@ -2066,8 +2061,8 @@ namespace Mesnet
                     Notify("beamdeleted");
                     ResetSolution();
                     _uptoolbar.UpdateAllDiagrams();
-                    UpdateAllBeamTree();
-                    UpdateAllSupportTree();
+                    _treehandler.UpdateAllBeamTree();
+                    _treehandler.UpdateAllSupportTree();
                 }
             }
         }
@@ -2106,7 +2101,7 @@ namespace Mesnet
 
         private void deleteBeam(Beam beam)
         {
-            RemoveBeamTree(beam);
+            _treehandler.RemoveBeamTree(beam);
             canvas.Children.Remove(beam);
             Objects.Remove(beam);
             MyDebug.WriteInformation(beam.Name + " deleted");
@@ -2114,7 +2109,7 @@ namespace Mesnet
 
         private void deleteSupport(object support)
         {
-            RemoveSupportTree(support);
+            _treehandler.RemoveSupportTree(support);
             switch (GetObjectType(support))
             {
                 case ObjectType.BasicSupport:
@@ -2293,825 +2288,11 @@ namespace Mesnet
         #region Beam and Suppport Tree Events and Functions
 
         /// <summary>
-        /// Updates given beam in the beam tree view.
-        /// </summary>
-        /// <param name="beam">The beam.</param>
-        private void UpdateBeamTree(Beam beam)
-        {
-            var beamitem = new TreeViewBeamItem(beam);
-            bool exists = false;
-
-            foreach (TreeViewBeamItem item in tree.Items)
-            {
-                if (Equals(beam, item.Beam))
-                {
-                    item.Items.Clear();
-                    beamitem = item;
-                    exists = true;
-                    break;
-                }
-            }
-
-            BeamItem bitem;
-
-            if (!exists)
-            {
-                bitem = new BeamItem(beam);
-                beamitem.Header = bitem;
-                tree.Items.Add(beamitem);
-            }
-            else
-            {
-                bitem = new BeamItem(beam);
-                beamitem.Header = bitem;
-            }
-
-            if (beam.PerformStressAnalysis)
-            {
-                if (beam.Stress != null)
-                {
-                    if (beam.Stress.YMaxAbs >= beam.MaxAllowableStress)
-                    {
-                        bitem.SetCritical(true);
-                    }
-                    else
-                    {
-                        bitem.SetCritical(false);
-                    }
-                }
-            }
-            else
-            {
-                bitem.SetCritical(false);
-            }
-
-            beamitem.Selected += BeamTreeItemSelected;
-
-            var arrowitem = new TreeViewItem();
-            var arrowbutton = new ButtonItem();
-            if (!beam.DirectionShown)
-            {
-                arrowbutton.SetName(GetString("showdirection"));
-            }
-            else
-            {
-                arrowbutton.SetName(GetString("hidedirection"));
-            }
-            arrowitem.Header = arrowbutton;
-            arrowbutton.content.Click += arrow_Click;
-            beamitem.Items.Add(arrowitem);
-
-            var lengthitem = new TreeViewItem();
-            lengthitem.Header = new LengthItem(GetString("length") + " : " + beam.Length + " m");
-            beamitem.Items.Add(lengthitem);
-
-            var leftsideitem = new BeamSupportItem();
-
-            if (beam.LeftSide != null)
-            {
-                string leftname = GetString("null");
-                switch (GetObjectType(beam.LeftSide))
-                {
-                    case ObjectType.LeftFixedSupport:
-                        var ls = beam.LeftSide as LeftFixedSupport;
-                        leftname = GetString("leftfixedsupport") + " " + ls.SupportId;
-                        leftsideitem.Support = ls;
-                        break;
-
-                    case ObjectType.SlidingSupport:
-                        var ss = beam.LeftSide as SlidingSupport;
-                        leftname = GetString("slidingsupport") + " " + ss.SupportId;
-                        leftsideitem.Support = ss;
-                        break;
-
-                    case ObjectType.BasicSupport:
-                        var bs = beam.LeftSide as BasicSupport;
-                        leftname = GetString("basicsupport") + " " + bs.SupportId;
-                        leftsideitem.Support = bs;
-                        break;
-                }
-                leftsideitem.Header.Text = GetString("leftside") + " : " + leftname;
-                beamitem.Items.Add(leftsideitem);
-            }
-            else
-            {
-                leftsideitem.Header.Text = GetString("leftside") + " : " + GetString("null");
-                beamitem.Items.Add(leftsideitem);
-            }
-
-            var rightsideitem = new BeamSupportItem();
-
-            if (beam.RightSide != null)
-            {
-                string rightname = GetString("null");
-                switch (GetObjectType(beam.RightSide))
-                {
-                    case ObjectType.RightFixedSupport:
-                        var rs = beam.RightSide as RightFixedSupport;
-                        rightname = GetString("rightfixedsupport") + " " + rs.SupportId;
-                        rightsideitem.Support = rs;
-                        break;
-
-                    case ObjectType.SlidingSupport:
-                        var ss = beam.RightSide as SlidingSupport;
-                        rightname = GetString("slidingsupport") + " " + ss.SupportId;
-                        rightsideitem.Support = ss;
-                        break;
-
-                    case ObjectType.BasicSupport:
-                        var bs = beam.RightSide as BasicSupport;
-                        rightname = GetString("basicsupport") + " " + bs.SupportId;
-                        rightsideitem.Support = bs;
-                        break;
-                }
-                rightsideitem.Header.Text = GetString("rightside") + " : " + rightname;
-                beamitem.Items.Add(rightsideitem);
-            }
-            else
-            {
-                rightsideitem.Header.Text = GetString("rightside") + " : " + GetString("null");
-                beamitem.Items.Add(rightsideitem);
-            }
-
-            var elasticityitem = new TreeViewItem();
-            elasticityitem.Header = new ElasticityItem(GetString("elasticity") + " : " + beam.ElasticityModulus + " GPa");
-            beamitem.Items.Add(elasticityitem);
-
-            var inertiaitem = new TreeViewItem();
-
-            inertiaitem.Header = new InertiaItem(GetString("inertia"));
-            beamitem.Items.Add(inertiaitem);
-
-            foreach (Poly inertiapoly in beam.Inertias)
-            {
-                var inertiachilditem = new TreeViewItem();
-                inertiachilditem.Header = inertiapoly.GetString(4) + " ,  " + inertiapoly.StartPoint + " <= x <= " + inertiapoly.EndPoint;
-                inertiaitem.Items.Add(inertiachilditem);
-            }
-
-            if (beam.ConcentratedLoads?.Count > 0)
-            {
-                var concloaditem = new TreeViewItem();
-                concloaditem.Header = new ConcentratedLoadItem(GetString("concentratedloads"));
-                beamitem.Items.Add(concloaditem);
-
-                foreach (KeyValuePair<double, double> item in beam.ConcentratedLoads)
-                {
-                    var concloadchilditem = new TreeViewItem();
-                    concloadchilditem.Header = Math.Round(item.Value, 4) + " ,  " + Math.Round(item.Key, 4) + " m";
-                    concloaditem.Items.Add(concloadchilditem);
-                }
-            }
-
-            if (beam.DistributedLoads?.Count > 0)
-            {
-                var distloaditem = new TreeViewItem();
-                distloaditem.Header = new LoadItem(GetString("distributedloads"));
-                beamitem.Items.Add(distloaditem);
-
-                foreach (Poly distloadpoly in beam.DistributedLoads)
-                {
-                    var distloadchilditem = new TreeViewItem();
-                    distloadchilditem.Header = distloadpoly.GetString(4) + " ,  " + distloadpoly.StartPoint + " <= x <= " + distloadpoly.EndPoint;
-                    distloaditem.Items.Add(distloadchilditem);
-                }
-            }
-
-            if (beam.FixedEndForce != null)
-            {
-                var forcetitem = new TreeViewItem();
-                forcetitem.Header = new ForceItem(GetString("forcefunction"));
-                beamitem.Items.Add(forcetitem);
-
-                foreach (Poly forcepoly in beam.FixedEndForce)
-                {
-                    var forcechilditem = new TreeViewItem();
-                    forcechilditem.Header = forcepoly.GetString(4) + " ,  " + forcepoly.StartPoint + " <= x <= " + forcepoly.EndPoint;
-                    forcetitem.Items.Add(forcechilditem);
-                }
-
-                var infoitem = new TreeViewItem();
-                var info = new Information(GetString("information"));
-                infoitem.Header = info;
-                forcetitem.Items.Add(infoitem);
-
-                var leftside = new TreeViewItem();
-                leftside.Header = GetString("leftside") + " : " + Math.Round(beam.FixedEndForce.Calculate(0), 4) + " kN";
-                infoitem.Items.Add(leftside);
-
-                var rightside = new TreeViewItem();
-                rightside.Header = GetString("rightside") + " : " + Math.Round(beam.FixedEndForce.Calculate(beam.Length), 4) + " kN";
-                infoitem.Items.Add(rightside);
-
-                var maxvalue = new TreeViewItem();
-                maxvalue.Header = GetString("maxvalue") + " : " + Math.Round(beam.FixedEndForce.Max, 4) + " kN";
-                infoitem.Items.Add(maxvalue);
-                var maxloc = new TreeViewItem();
-                maxloc.Header = GetString("maxloc") + " : " + Math.Round(beam.FixedEndForce.MaxLocation, 4) + " m";
-                infoitem.Items.Add(maxloc);
-
-                var minvalue = new TreeViewItem();
-                minvalue.Header = GetString("minvalue") + " : " + Math.Round(beam.FixedEndForce.Min, 4) + " kN";
-                infoitem.Items.Add(minvalue);
-                var minloc = new TreeViewItem();
-                minloc.Header = GetString("minloc") + " : " + Math.Round(beam.FixedEndForce.MinLocation, 4) + " m";
-                infoitem.Items.Add(minloc);
-
-                var exploreritem = new TreeViewItem();
-                var forceexplorer = new ForceExplorer();
-                forceexplorer.xvalue.Text = "0";
-                forceexplorer.funcvalue.Text = Math.Round(beam.FixedEndForce.Calculate(0), 4).ToString();
-                forceexplorer.xvalue.TextChanged += fixedendforceexplorer_TextChanged;
-                exploreritem.Header = forceexplorer;
-                infoitem.Items.Add(exploreritem);
-            }
-
-            if (beam.FixedEndMoment != null)
-            {
-                var momentitem = new TreeViewItem();
-                momentitem.Header = new MomentItem(GetString("momentfunction"));
-                beamitem.Items.Add(momentitem);
-
-                foreach (Poly momentpoly in beam.FixedEndMoment)
-                {
-                    var momentchilditem = new TreeViewItem();
-                    momentchilditem.Header = momentpoly.GetString(4) + " ,  " + momentpoly.StartPoint + " <= x <= " + momentpoly.EndPoint;
-                    momentitem.Items.Add(momentchilditem);
-                }
-
-                var infoitem = new TreeViewItem();
-                var info = new Information(GetString("information"));
-                infoitem.Header = info;
-                momentitem.Items.Add(infoitem);
-
-                var leftside = new TreeViewItem();
-                leftside.Header = GetString("leftside") + " : " + Math.Round(beam.FixedEndMoment.Calculate(0), 4) + " kNm";
-                infoitem.Items.Add(leftside);
-
-                var rightside = new TreeViewItem();
-                rightside.Header = GetString("rightside") + " : " + Math.Round(beam.FixedEndMoment.Calculate(beam.Length), 4) + " kNm";
-                infoitem.Items.Add(rightside);
-
-                var maxvalue = new TreeViewItem();
-                maxvalue.Header = GetString("maxvalue") + " : " + Math.Round(beam.FixedEndMoment.Max, 4) + " kNm";
-                infoitem.Items.Add(maxvalue);
-                var maxloc = new TreeViewItem();
-                maxloc.Header = GetString("maxloc") + " : " + Math.Round(beam.FixedEndMoment.MaxLocation, 4) + " m";
-                infoitem.Items.Add(maxloc);
-
-                var minvalue = new TreeViewItem();
-                minvalue.Header = GetString("minvalue") + " : " + Math.Round(beam.FixedEndMoment.Min, 4) + " kNm";
-                infoitem.Items.Add(minvalue);
-                var minloc = new TreeViewItem();
-                minloc.Header = GetString("minloc") + " : " + Math.Round(beam.FixedEndMoment.MinLocation, 4) + " m";
-                infoitem.Items.Add(minloc);
-
-                var exploreritem = new TreeViewItem();
-                var momentexplorer = new MomentExplorer();
-                momentexplorer.xvalue.Text = "0";
-                momentexplorer.funcvalue.Text = Math.Round(beam.FixedEndMoment.Calculate(0), 4).ToString();
-                momentexplorer.xvalue.TextChanged += fixedendmomentexplorer_TextChanged;
-                exploreritem.Header = momentexplorer;
-                infoitem.Items.Add(exploreritem);
-            }
-
-            if (beam.PerformStressAnalysis && beam.Stress != null)
-            {
-                var stressitem = new TreeViewItem();
-                stressitem.Header = new StressItem(GetString("stressdist"));
-                beamitem.Items.Add(stressitem);
-
-                var infoitem = new TreeViewItem();
-                var info = new Information(GetString("information"));
-                infoitem.Header = info;
-                stressitem.Items.Add(infoitem);
-
-                var leftside = new TreeViewItem();
-                leftside.Header = GetString("leftside") + " : " + Math.Round(beam.Stress.Calculate(0), 4) + " MPa";
-                infoitem.Items.Add(leftside);
-
-                var rightside = new TreeViewItem();
-                rightside.Header = GetString("rightside") + " : " + Math.Round(beam.Stress.Calculate(beam.Length), 4) + " MPa";
-                infoitem.Items.Add(rightside);
-
-                var maxvalue = new TreeViewItem();
-                maxvalue.Header = GetString("maxvalue") + " : " + Math.Round(beam.Stress.YMax, 4) + " MPa";
-                infoitem.Items.Add(maxvalue);
-                var maxloc = new TreeViewItem();
-                maxloc.Header = GetString("maxloc") + " : " + Math.Round(beam.Stress.YMaxPosition, 4) + " m";
-                infoitem.Items.Add(maxloc);
-
-                var minvalue = new TreeViewItem();
-                minvalue.Header = GetString("minvalue") + " : " + Math.Round(beam.Stress.YMin, 4) + " MPa";
-                infoitem.Items.Add(minvalue);
-                var minloc = new TreeViewItem();
-                minloc.Header = GetString("minloc") + " : " + Math.Round(beam.Stress.YMinPosition, 4) + " m";
-                infoitem.Items.Add(minloc);
-
-                var exploreritem = new TreeViewItem();
-                var stressexplorer = new StressExplorer();
-                stressexplorer.xvalue.Text = "0";
-                stressexplorer.funcvalue.Text = Math.Round(beam.Stress.Calculate(0), 4).ToString();
-                stressexplorer.xvalue.TextChanged += stressexplorer_TextChanged;
-                exploreritem.Header = stressexplorer;
-                infoitem.Items.Add(exploreritem);
-            }
-        }
-
-        /// <summary>
-        /// Removes TreeViewBeamItem from beam tree
-        /// </summary>
-        /// <param name="beam">The beam of the TreeViewBeamItem.</param>
-        private void RemoveBeamTree(Beam beam)
-        {
-            foreach (TreeViewBeamItem item in tree.Items)
-            {
-                if (item.Beam.Equals(beam))
-                {
-                    tree.Items.Remove(item);
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates all the tree view items.
-        /// </summary>
-        public void UpdateAllBeamTree()
-        {
-            MyDebug.WriteInformation("Update All Tree Started");
-            
-            foreach (var item in Objects)
-            {
-                switch (GetObjectType(item))
-                {
-                    case ObjectType.Beam:
-                        Beam beam = (Beam)item;
-                        UpdateBeamTree(beam);
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates given support in the support tree view.
-        /// </summary>
-        /// <param name="support">The support.</param>
-        private void UpdateSupportTree(object support)
-        {
-            var supportitem = new TreeViewSupportItem(support);
-            bool exists = false;
-
-            switch (GetObjectType(support))
-            {
-                case ObjectType.SlidingSupport:
-
-                    var slidingsup = support as SlidingSupport;
-
-                    foreach (TreeViewSupportItem item in supporttree.Items)
-                    {
-                        if (GetObjectType(item.Support) == ObjectType.SlidingSupport)
-                        {
-                            if (Equals(supportitem.Support, item.Support))
-                            {
-                                item.Items.Clear();
-                                supportitem = item;
-                                exists = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!exists)
-                    {
-                        supportitem.Header =
-                            new SlidingSupportItem(slidingsup);
-                        supporttree.Items.Add(supportitem);
-                        supportitem.Selected += SupportTreeItemSelected;
-                    }
-                    else
-                    {
-                        supportitem.Header =
-                            new SlidingSupportItem(slidingsup);
-                    }
-
-                    if (slidingsup.CrossIndex != null)
-                    {
-                        var crossitem = new TreeViewItem();
-                        crossitem.Header = GetString("crossindex") + " : " + slidingsup.CrossIndex;
-                        supportitem.Items.Add(crossitem);
-                    }
-
-                    var slmembersitem = new TreeViewItem();
-                    slmembersitem.Header = GetString("connections");
-                    supportitem.Items.Add(slmembersitem);
-
-                    foreach (Member member in slidingsup.Members)
-                    {
-                        var memberitem = new TreeViewItem();
-                        var ssbeamitem = new SupportBeamItem(member.Beam.BeamId, member.Direction, member.Moment);
-                        memberitem.Header = ssbeamitem;
-
-                        slmembersitem.Items.Add(memberitem);
-                    }
-
-                    break;
-
-                case ObjectType.BasicSupport:
-
-                    var basicsup = support as BasicSupport;
-
-                    foreach (TreeViewSupportItem item in supporttree.Items)
-                    {
-                        if (GetObjectType(item.Support) == ObjectType.BasicSupport)
-                        {
-                            if (Equals(supportitem.Support, item.Support))
-                            {
-                                item.Items.Clear();
-                                supportitem = item;
-                                exists = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!exists)
-                    {
-                        supportitem.Header = new BasicSupportItem(basicsup);
-                        supporttree.Items.Add(supportitem);
-                        supportitem.Selected += SupportTreeItemSelected;
-                    }
-                    else
-                    {
-                        supportitem.Header = new BasicSupportItem(basicsup);
-                    }
-
-                    if (basicsup.CrossIndex != null)
-                    {
-                        var crossitem = new TreeViewItem();
-                        crossitem.Header = GetString("crossindex") + " : " + basicsup.CrossIndex;
-                        supportitem.Items.Add(crossitem);
-                    }
-
-                    var bsmembersitem = new TreeViewItem();
-                    bsmembersitem.Header = GetString("connections");
-                    supportitem.Items.Add(bsmembersitem);
-
-                    foreach (Member member in basicsup.Members)
-                    {
-                        var memberitem = new TreeViewItem();
-                        var bsbeamitem = new SupportBeamItem(member.Beam.BeamId, member.Direction, member.Moment);
-                        memberitem.Header = bsbeamitem;
-                        bsmembersitem.Items.Add(memberitem);
-                    }
-
-                    break;
-
-                case ObjectType.LeftFixedSupport:
-
-                    var lfixedsup = support as LeftFixedSupport;
-
-                    foreach (TreeViewSupportItem item in supporttree.Items)
-                    {
-                        if (GetObjectType(item.Support) == ObjectType.LeftFixedSupport)
-                        {
-                            if (Equals(supportitem.Support, item.Support))
-                            {
-                                item.Items.Clear();
-                                supportitem = item;
-                                exists = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!exists)
-                    {
-                        supportitem.Header =
-                            new LeftFixedSupportItem(lfixedsup);
-                        supporttree.Items.Add(supportitem);
-                        supportitem.Selected += SupportTreeItemSelected;
-                    }
-                    else
-                    {
-                        supportitem.Header =
-                            new LeftFixedSupportItem(lfixedsup);
-                    }
-
-                    if (lfixedsup.CrossIndex != null)
-                    {
-                        var crossitem = new TreeViewItem();
-                        crossitem.Header = GetString("crossindex") + " : " + lfixedsup.CrossIndex;
-                        supportitem.Items.Add(crossitem);
-                    }
-
-                    var lfmembersitem = new TreeViewItem();
-                    lfmembersitem.Header = GetString("connection");
-                    supportitem.Items.Add(lfmembersitem);
-
-                    var lfmemberitem = new TreeViewItem();
-
-                    var lfbeamitem = new SupportBeamItem(lfixedsup.Member.Beam.BeamId, lfixedsup.Member.Direction,
-                        lfixedsup.Member.Moment);
-
-                    lfmemberitem.Header = lfbeamitem;
-
-                    lfmembersitem.Items.Add(lfmemberitem);
-
-                    break;
-
-                case ObjectType.RightFixedSupport:
-
-                    var rfixedsup = support as RightFixedSupport;
-
-                    foreach (TreeViewSupportItem item in supporttree.Items)
-                    {
-                        if (GetObjectType(item.Support) == ObjectType.RightFixedSupport)
-                        {
-                            if (Equals(supportitem.Support, item.Support))
-                            {
-                                item.Items.Clear();
-                                supportitem = item;
-                                exists = true;
-                                break;
-                            }
-                        }
-
-                    }
-
-                    if (!exists)
-                    {
-                        supportitem.Header =
-                            new RightFixedSupportItem(rfixedsup);
-                        supporttree.Items.Add(supportitem);
-                        supportitem.Selected += SupportTreeItemSelected;
-                    }
-                    else
-                    {
-                        supportitem.Header =
-                           new RightFixedSupportItem(rfixedsup);
-                    }
-
-                    if (rfixedsup.CrossIndex != null)
-                    {
-                        var crossitem = new TreeViewItem();
-                        crossitem.Header = GetString("crossindex") + " : " + rfixedsup.CrossIndex;
-                        supportitem.Items.Add(crossitem);
-                    }
-
-                    var rfmembersitem = new TreeViewItem();
-                    rfmembersitem.Header = GetString("connection");
-                    supportitem.Items.Add(rfmembersitem);
-
-                    var rfmemberitem = new TreeViewItem();
-
-                    var rfbeamitem = new SupportBeamItem(rfixedsup.Member.Beam.BeamId, rfixedsup.Member.Direction,
-                        rfixedsup.Member.Moment);
-
-                    rfmemberitem.Header = rfbeamitem;
-
-                    rfmembersitem.Items.Add(rfmemberitem);
-
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Removes TreeViewSupportItem from support tree.
-        /// </summary>
-        /// <param name="support">The support of the TreeViewSupportItem.</param>
-        private void RemoveSupportTree(object support)
-        {
-            foreach (TreeViewSupportItem item in supporttree.Items)
-            {
-                if (item.Support.Equals(support))
-                {
-                    supporttree.Items.Remove(item);
-                    break;
-                }
-            }          
-        }
-
-        /// <summary>
-        /// Updates all the support tree view items.
-        /// </summary>
-        public void UpdateAllSupportTree()
-        {
-            MyDebug.WriteInformation("Update All Support Tree Started");
-            foreach (var item in Objects)
-            {
-                switch (GetObjectType(item))
-                {
-                    case ObjectType.SlidingSupport:
-
-                        SlidingSupport sliding = (SlidingSupport)item;
-                        UpdateSupportTree(sliding);
-
-                        break;
-
-                    case ObjectType.BasicSupport:
-
-                        BasicSupport basic = (BasicSupport)item;
-                        UpdateSupportTree(basic);
-
-                        break;
-
-                    case ObjectType.LeftFixedSupport:
-
-                        LeftFixedSupport left = (LeftFixedSupport)item;
-                        UpdateSupportTree(left);
-
-                        break;
-
-                    case ObjectType.RightFixedSupport:
-
-                        RightFixedSupport right = (RightFixedSupport)item;
-                        UpdateSupportTree(right);
-
-                        break;
-                }
-            }
-        }
-
-        private void BeamTreeItemSelected(object sender, RoutedEventArgs e)
-        {
-            if (beamTreeItemSelectedEventEnabled)
-            {
-                Reset();
-
-                var treeitem = sender as TreeViewItem;
-                var beam = (treeitem.Header as BeamItem).Beam;
-
-                SelectBeamItem(beam);
-
-                foreach (var item in Objects)
-                {
-                    switch (GetObjectType(item))
-                    {
-                        case ObjectType.Beam:
-
-                            var beam1 = item as Beam;
-
-                            if (Equals(beam1, beam))
-                            {
-                                SelectBeam(beam1);
-                                return;
-                            }
-
-                            break;
-                    }
-                }
-            }          
-        }
-
-        /// <summary>
-        /// Selects the beam item corresponds to given beam in beam tree.
-        /// </summary>
-        /// <param name="beam">The beam.</param>
-        private void SelectBeamItem(Beam beam)
-        {
-            foreach (TreeViewBeamItem item in tree.Items)
-            {
-                if (Equals(beam, item.Beam))
-                {
-                    beamTreeItemSelectedEventEnabled = false;
-                    item.IsSelected = true;
-                    beamTreeItemSelectedEventEnabled = true;
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Unselects all beam items in beam tree.
-        /// </summary>
-        private void UnSelectAllBeamItem()
-        {
-            MyDebug.WriteInformation("UnSelectAllBeamItem executed");
-            foreach (TreeViewBeamItem item in tree.Items)
-            {
-                item.Selected -= BeamTreeItemSelected;
-                item.IsSelected = false;
-                item.Selected += BeamTreeItemSelected;
-            }
-        }
-
-        /// <summary>
-        /// Executed when any support item selected in the treeview. It selects and highlights corresponding support.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void SupportTreeItemSelected(object sender, RoutedEventArgs e)
-        {
-            MyDebug.WriteInformation("SupportTreeItemSelected");
-            Reset();
-            var treeitem = sender as TreeViewItem;
-            switch (treeitem.Header.GetType().Name)
-            {
-                case "SlidingSupportItem":
-
-                    var ss = (treeitem.Header as SlidingSupportItem).Support;
-
-                    foreach (var item in Objects)
-                    {
-                        switch (GetObjectType(item))
-                        {
-                            case ObjectType.SlidingSupport:
-
-                                var slidingsupport = item as SlidingSupport;
-
-                                if (Equals(ss, slidingsupport))
-                                {
-                                    slidingsupport.Select();
-                                    return;
-                                }
-
-                                break;
-                        }
-                    }
-
-                    break;
-
-                case "BasicSupportItem":
-
-                    var bs = (treeitem.Header as BasicSupportItem).Support;
-
-                    foreach (var item in Objects)
-                    {
-                        switch (GetObjectType(item))
-                        {
-                            case ObjectType.BasicSupport:
-
-                                var basicsupport = item as BasicSupport;
-
-                                if (Equals(bs, basicsupport))
-                                {
-                                    basicsupport.Select();
-                                    return;
-                                }
-
-                                break;
-                        }
-                    }
-
-                    break;
-
-                case "LeftFixedSupportItem":
-
-                    var ls = (treeitem.Header as LeftFixedSupportItem).Support;
-
-                    foreach (var item in Objects)
-                    {
-                        switch (GetObjectType(item))
-                        {
-                            case ObjectType.LeftFixedSupport:
-
-                                var leftfixedsupport = item as LeftFixedSupport;
-
-                                if (Equals(ls, leftfixedsupport))
-                                {
-                                    leftfixedsupport.Select();
-                                    return;
-                                }
-
-                                break;
-                        }
-                    }
-
-                    break;
-
-                case "RightFixedSupportItem":
-
-                    var rs = (treeitem.Header as RightFixedSupportItem).Support;
-
-                    foreach (var item in Objects)
-                    {
-                        switch (GetObjectType(item))
-                        {
-                            case ObjectType.RightFixedSupport:
-
-                                var rightfixedsupport = item as RightFixedSupport;
-
-                                if (Equals(rs, rightfixedsupport))
-                                {
-                                    rightfixedsupport.Select();
-                                    return;
-                                }
-
-                                break;
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Shows or hides the direction arrow on the beam
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void arrow_Click(object sender, RoutedEventArgs e)
+        public void arrow_Click(object sender, RoutedEventArgs e)
         {
             var uc = (sender as Button).Parent as ButtonItem;
             var showbuttonitem = uc.Parent as TreeViewItem;
@@ -3142,8 +2323,8 @@ namespace Mesnet
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                UpdateAllBeamTree();
-                UpdateAllSupportTree();
+                _treehandler.UpdateAllBeamTree();
+                _treehandler.UpdateAllSupportTree();
             }));
         }
 
@@ -3154,7 +2335,7 @@ namespace Mesnet
 
         #region Menubar SOM Graphics and Functions
 
-        private void fixedendforceexplorer_TextChanged(object sender, TextChangedEventArgs e)
+        public void fixedendforceexplorer_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -3176,7 +2357,7 @@ namespace Mesnet
             { }
         }
 
-        private void fixedendmomentexplorer_TextChanged(object sender, TextChangedEventArgs e)
+        public void fixedendmomentexplorer_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -3198,7 +2379,7 @@ namespace Mesnet
             { }
         }
 
-        private void stressexplorer_TextChanged(object sender, TextChangedEventArgs e)
+        public void stressexplorer_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -3295,14 +2476,14 @@ namespace Mesnet
         /// <summary>
         /// Resets the system.
         /// </summary>
-        private void Reset()
+        public void Reset()
         {
             tempbeam = null;
             assemblybeam = null;
             assembly = false;
             UnselectAll();
             btndisableall();
-            UnSelectAllBeamItem();
+            _treehandler.UnSelectAllBeamItem();
             SetMouseHandlingMode("Reset", MouseHandlingMode.None);
         }
 
@@ -3323,7 +2504,7 @@ namespace Mesnet
         /// Selects the given beam.
         /// </summary>
         /// <param name="beam">The beam to be selected.</param>
-        private void SelectBeam(Beam beam)
+        public void SelectBeam(Beam beam)
         {
             beam.Select();
             selectedbeam = beam;
@@ -3363,9 +2544,9 @@ namespace Mesnet
                 {
                     UpdateBeam();
                 }
-                
-                UpdateAllBeamTree();
-                UpdateAllSupportTree();
+
+                _treehandler.UpdateAllBeamTree();
+                _treehandler.UpdateAllSupportTree();
             }
         }
 
@@ -3582,6 +2763,9 @@ namespace Mesnet
             Logger.CloseLogger();
         }
 
+        /// <summary>
+        /// Updates all beams after Cross loop.
+        /// </summary>
         public void UpdateBeams()
         {
             bool stressananalysis = false;
@@ -3602,9 +2786,12 @@ namespace Mesnet
             });
             _uptoolbar.UpdateMomentDiagrams(true);
             _uptoolbar.UpdateForceDiagrams();
-            _uptoolbar.UpdateForceDiagrams();
+            _uptoolbar.UpdateStressDiagrams();
         }
 
+        /// <summary>
+        /// Updates beamsafter Clapeyron.
+        /// </summary>
         public void UpdateBeam()
         {
             foreach (var item in Objects)
@@ -3618,7 +2805,7 @@ namespace Mesnet
                         MyDebug.WriteInformation(beam.Name + " has been updated");
                         _uptoolbar.UpdateMomentDiagrams(true);
                         _uptoolbar.UpdateForceDiagrams();
-                        _uptoolbar.UpdateForceDiagrams();
+                        _uptoolbar.UpdateStressDiagrams();
 
                         break;
                 }
@@ -4349,9 +3536,9 @@ namespace Mesnet
 
         public void UpdateLanguages()
         {
-            UpdateAllBeamTree();
+            _treehandler.UpdateAllBeamTree();
 
-            UpdateAllSupportTree();
+            _treehandler.UpdateAllSupportTree();
         }
 
         private void hidediagrams()
@@ -4588,8 +3775,8 @@ namespace Mesnet
                                 #endif
                             }
                         }
-                        UpdateAllBeamTree();
-                        UpdateAllSupportTree();
+                        _treehandler.UpdateAllBeamTree();
+                        _treehandler.UpdateAllSupportTree();
                         MyDebug.WriteInformation("xml file has been read from " + path);
                         MesnetSettings.WriteSetting("openpath", System.IO.Path.GetDirectoryName(path), "mainwindow");
                         Notify("fileread");
@@ -4607,8 +3794,8 @@ namespace Mesnet
                     Notify("filereaderror");
                     Objects.Clear();
                     canvas.Children.Clear();
-                    UpdateAllBeamTree();
-                    UpdateAllSupportTree();
+                    _treehandler.UpdateAllBeamTree();
+                    _treehandler.UpdateAllSupportTree();
                     resetsystem();
                     return;
                 }                          
@@ -4814,8 +4001,8 @@ namespace Mesnet
             Notify("filereading");
             var openxmlio = new MesnetIO();
             openxmlio.ReadXml(canvas, path, this);
-            UpdateAllBeamTree();
-            UpdateAllSupportTree();
+            _treehandler.UpdateAllBeamTree();
+            _treehandler.UpdateAllSupportTree();
             MyDebug.WriteInformation("xml file has been read from " + path);
             Notify("fileread");
         }
@@ -5014,7 +4201,12 @@ namespace Mesnet
         public UpToolBar UpToolBar()
         {
             return _uptoolbar;
-        }   
+        }
+
+        public TreeHandler TreeHandler()
+        {
+            return _treehandler;
+        }
 
         public void ResetSolution()
         {

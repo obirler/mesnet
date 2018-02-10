@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
         mc:Ignorable="d"
-        Title="About Mesnet" WindowStartupLocation="CenterOwner" Height="600" Width="620" Background="#f0f0f0" ResizeMode="NoResize">
+        Title="About Mesnet" WindowStartupLocation="CenterOwner" Height="590" Width="630" Background="#f0f0f0" ResizeMode="NoResize">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -20,7 +20,7 @@
             
             <TextBlock TextAlignment="Center" Margin="0,20,0,0">
                 <Bold>
-                    <Run Text="Mesnet V 0.1" FontSize="20"></Run>
+                    <Run Text="Mesnet" FontSize="20"></Run>
                 </Bold>
             </TextBlock>
 
@@ -36,7 +36,7 @@
                 <Hyperlink x:Name="developerpage" FontSize="15" NavigateUri="http://www.linkedin.com/in/ömer-birler-9582696b" RequestNavigate="developerpage_RequestNavigate">Ömer BİRLER</Hyperlink>             
                 <Run FontSize="15"> as Istanbul Technical University Naval Architecture and Marine Engineering graduation project. Special thanks to </Run>
                 <Hyperlink x:Name="instructorpage" FontSize="15" NavigateUri="http://knot.gidb.itu.edu.tr/gemi/personel/bayraktarkatal.html" RequestNavigate="instructorpage_RequestNavigate">Asst. Prof. Ertekin Bayraktarkatal</Hyperlink>             
-                <Run FontSize="15">who is the instructor and advisor of this project. </Run>
+                <Run FontSize="15">who is the instructor and the advisor of this project. </Run>
             </TextBlock>
 
             <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
@@ -49,8 +49,8 @@
                 <Run  FontSize="15">Mesnet is a free and open-sourced software: you can redistribute it and/or modify
                 it under the terms of the GNU General Public License (GPL) as published by
                 the Free Software Foundation, either version 3 of the License, or
-                (at your option) any later version. The source code of the program can be found </Run>
-                <Hyperlink x:Name="sourcecodepage" FontSize="15" NavigateUri="https://bitbucket.org/omerbirler/mesnet" RequestNavigate="sourcecodepage_RequestNavigate">here.</Hyperlink>
+                (at your option) any later version.</Run>
+                <!--<Hyperlink x:Name="sourcecodepage" FontSize="15" NavigateUri="https://bitbucket.org/omerbirler/mesnet" RequestNavigate="sourcecodepage_RequestNavigate">here.</Hyperlink>-->
             </TextBlock>
 
             <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
@@ -62,10 +62,11 @@
             </TextBlock>
             
             <Button x:Name="closebtn" Content="Close" Width="100" Margin="0,10,0,0" Click="closebtn_Click"></Button>
-        </StackPanel>
-        
-        
 
+            <TextBlock x:Name="versiontext" Text="V 0.1.0.0" Margin="0,10,0,0" TextAlignment="Center" Foreground="#BF707070"></TextBlock>
+
+        </StackPanel>
+              
         <Image Grid.Column="2" Margin="0,8,0,0" Source="../../Assets/itulogo.png" Width="80"  VerticalAlignment="Top"></Image>
 
     </Grid>

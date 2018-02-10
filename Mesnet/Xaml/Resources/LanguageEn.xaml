@@ -135,4 +135,10 @@
     <system:String x:Key="deleteall">Clear all</system:String>
     <system:String x:Key="askfordeleteall">Do you really want to clear all objects?</system:String>
     <system:String x:Key="beamarranged">Beam arranged</system:String>
+    <system:String x:Key="new">New</system:String>
+    <system:String x:Key="open">Open</system:String>
+    <system:String x:Key="save">Save</system:String>
+    <system:String x:Key="saveas">Save As</system:String>
+    <system:String x:Key="close">Close</system:String>
+    <system:String x:Key="invalidfile">Invalid file!</system:String>
 </ResourceDictionary>

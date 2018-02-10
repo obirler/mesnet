@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Mesnet.Classes;
 
 namespace Mesnet.Xaml.Pages
 {
@@ -21,6 +22,8 @@ namespace Mesnet.Xaml.Pages
         public AboutWindowEn()
         {
             InitializeComponent();
+
+            versiontext.Text = "V " + Global.VERSION_NUMBER;
         }
 
         private void closebtn_Click(object sender, RoutedEventArgs e)

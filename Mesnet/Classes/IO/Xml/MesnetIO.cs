@@ -127,7 +127,8 @@ namespace Mesnet.Classes.IO.Xml
             }
             catch (Exception)
             {
-                MessageBox.Show("The file is not valid!");
+                MessageBox.Show(GetString("invalidfile"));
+                _mw.Notify();
                 return false;
             }
             
@@ -175,28 +176,21 @@ namespace Mesnet.Classes.IO.Xml
         {
             foreach(object item in manifestlist)
             {
-                switch(item.GetType().Name)
+                if (item is BeamManifest beammanifest)
                 {
-                    case "BeamManifest":
-                        var beammanifest = item as BeamManifest;
-                        addbeam(beammanifest);
-                        break;
-
-                    case "SupportManifest":
-                        var bsupportmanifest = item as SupportManifest;
-                        addsupport(bsupportmanifest);
-                        break;
-
-                    case "LeftFixedSupportManifest":
-                        var lssupportmanifest = item as LeftFixedSupportManifest;
-                        addleftfixedsupport(lssupportmanifest);
-
-                        break;
-
-                    case "RightFixedSupportManifest":
-                        var rssupportmanifest = item as RightFixedSupportManifest;
-                        addrightfixedsupport(rssupportmanifest);
-                        break;
+                    addbeam(beammanifest);
+                }
+                else if(item is SupportManifest bsupportmanifest)
+                {
+                    addsupport(bsupportmanifest);
+                }
+                else if(item is LeftFixedSupportManifest lssupportmanifest)
+                {
+                    addleftfixedsupport(lssupportmanifest);
+                }
+                else if (item is RightFixedSupportManifest rssupportmanifest)
+                {
+                    addrightfixedsupport(rssupportmanifest);
                 }
             }
             _canvas.UpdateLayout();

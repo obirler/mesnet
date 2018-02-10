@@ -32,6 +32,9 @@ namespace Mesnet.Classes
 {
     public static class Global
     {
+        public static string VERSION_NUMBER =
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
         public static List<object> Objects = new List<object>();
 
         public static double MaxMoment = Double.MinValue;
@@ -550,24 +553,26 @@ namespace Mesnet.Classes
 
         public static ObjectType GetObjectType(object obj)
         {
-            switch (obj.GetType().Name)
+            if (obj is Beam)
             {
-                case "Beam":
-                    return ObjectType.Beam;
-
-                case "BasicSupport":
-                    return ObjectType.BasicSupport;
-
-                case "LeftFixedSupport":
-                    return ObjectType.LeftFixedSupport;
-
-                case "RightFixedSupport":
-                    return ObjectType.RightFixedSupport;
-
-                case "SlidingSupport":
-                    return ObjectType.SlidingSupport;
+                return ObjectType.Beam;
             }
-
+            if (obj is BasicSupport)
+            {
+                return ObjectType.BasicSupport;
+            }
+            if (obj is LeftFixedSupport)
+            {
+                return ObjectType.LeftFixedSupport;
+            }
+            if (obj is RightFixedSupport)
+            {
+                return ObjectType.RightFixedSupport;
+            }
+            if (obj is SlidingSupport)
+            {
+                return ObjectType.SlidingSupport;
+            }
             return ObjectType.None;
         }
 

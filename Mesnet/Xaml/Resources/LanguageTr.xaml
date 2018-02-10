@@ -135,4 +135,10 @@
     <system:String x:Key="deleteall">Hepsini sil</system:String>
     <system:String x:Key="askfordeleteall">Bütün nesneleri gerçekten silmek istiyor musunuz?</system:String>
     <system:String x:Key="beamarranged">Kiriş düzenlendi</system:String>
+    <system:String x:Key="new">Yeni</system:String>
+    <system:String x:Key="open">Aç</system:String>
+    <system:String x:Key="save">Kaydet</system:String>
+    <system:String x:Key="saveas">Farklı Kaydet</system:String>
+    <system:String x:Key="close">Kapat</system:String>
+    <system:String x:Key="invalidfile">Geçersiz dosya!</system:String>
 </ResourceDictionary>

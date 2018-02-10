@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
         mc:Ignorable="d"
-        Title="Mesnet Hakkında" WindowStartupLocation="CenterOwner" Height="570" Width="620" Background="#f0f0f0" ResizeMode="NoResize">
+        Title="Mesnet Hakkında" WindowStartupLocation="CenterOwner" Height="550" Width="630" Background="#f0f0f0" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -19,7 +19,7 @@
 
             <TextBlock TextAlignment="Center" Margin="0,20,0,0">
                 <Bold>
-                    <Run Text="Mesnet V 0.1" FontSize="20"></Run>
+                    <Run Text="Mesnet" FontSize="20"></Run>
                 </Bold>
             </TextBlock>
 
@@ -47,8 +47,8 @@
 
             <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
                 <Run  FontSize="15">Mesnet ücretsiz ve açık kaynak kodlu bir yazılımdır: Free Software Foundation tarafından yayımlanan GPL (GNU General Public License) lisansına uymak şartıyla programı yeniden dağıtabilir ya da değiştirilebilir.</Run>
-                <Hyperlink  x:Name="sourcecodepage" FontSize="15" NavigateUri="https://bitbucket.org/omerbirler/mesnet" RequestNavigate="sourcecodepage_RequestNavigate">Buradan</Hyperlink>
-                <Run  FontSize="15"> programın kaynak koduna ulaşabilirsiniz.</Run>
+                <!--<Hyperlink  x:Name="sourcecodepage" FontSize="15" NavigateUri="https://bitbucket.org/omerbirler/mesnet" RequestNavigate="sourcecodepage_RequestNavigate">Buradan</Hyperlink>-->
+                <!--<Run  FontSize="15"> programın kaynak koduna ulaşabilirsiniz.</Run>-->
             </TextBlock>
 
             <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
@@ -58,6 +58,8 @@
             </TextBlock>
 
             <Button x:Name="closebtn" Content="Kapat" Width="100" Margin="0,10,0,0" Click="closebtn_Click" ></Button>
+        
+            <TextBlock x:Name="versiontext" Text="V 0.1.0.0" Margin="0,10,0,0" TextAlignment="Center" Foreground="#BF707070"></TextBlock>
         </StackPanel>
 
 

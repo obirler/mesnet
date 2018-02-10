@@ -105,8 +105,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -261,8 +261,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -488,8 +488,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -695,8 +695,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -797,8 +797,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -909,8 +909,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1019,8 +1019,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1074,8 +1074,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1150,8 +1150,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
         }
 
@@ -1235,8 +1235,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1293,8 +1293,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1361,8 +1361,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1601,8 +1601,8 @@ namespace Mesnet.Classes.Tools
                 _mw.UpToolBar().UpdateLoadDiagrams();
 
                 _mw.DisableTestMenus();
-                _mw.UpdateAllSupportTree();
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }
@@ -1687,9 +1687,9 @@ namespace Mesnet.Classes.Tools
 
                 _mw.DisableTestMenus();
 
-                _mw.UpdateAllSupportTree();
+                _mw.TreeHandler().UpdateAllSupportTree();
 
-                _mw.UpdateAllBeamTree();
+                _mw.TreeHandler().UpdateAllBeamTree();
             };
             _mw.testmenu.Items.Add(menuitem);
         }

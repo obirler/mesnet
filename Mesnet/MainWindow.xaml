@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:zoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
         mc:Ignorable="d"
-        Title="Mes.Net" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized" Closing="Window_Closing">
+        Title="Mesnet" Icon="/Assets/applogo.ico" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" WindowState="Maximized" Closing="Window_Closing">
 
     <Window.CommandBindings>
         <CommandBinding x:Name="NewCommand" Command="New" Executed="NewCommand_Executed" />
@@ -61,12 +61,12 @@
         <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Top" Background="#FFDADADA" BorderBrush="#FF999999" BorderThickness="0,0,0,1">
                 <MenuItem Header="{DynamicResource filemenu}">
-                    <MenuItem Header="New" Click="MenuNew_Click"/>
-                    <MenuItem Header="Open" Click="MenuOpen_Click"/>
-                    <MenuItem Header="Save" Click="MenuSave_Click" />
-                    <MenuItem Header="Save As" Click="MenuSaveAs_Click"/>
+                    <MenuItem Header="{DynamicResource new}" Click="MenuNew_Click"/>
+                    <MenuItem Header="{DynamicResource open}" Click="MenuOpen_Click"/>
+                    <MenuItem Header="{DynamicResource save}" Click="MenuSave_Click" />
+                    <MenuItem Header="{DynamicResource saveas}" Click="MenuSaveAs_Click"/>
                     <Separator />
-                    <MenuItem Header="Exit" Click="MenuExit_Click"/>
+                    <MenuItem Header="{DynamicResource close}" Click="MenuExit_Click"/>
                 </MenuItem>
 
                 <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>

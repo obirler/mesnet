@@ -10,6 +10,7 @@
     </UserControl.RenderTransform>
 
     <Grid>
-        <Polygon x:Name="p1" Points="13,0 4,16 22,16 13,0 13,3 6.5,14.5 19.5,14.5 13,3" Fill="Black"/>
+        <Polygon x:Name="triangle" Points="13,0 4,16 22,16 13,0 13,3 6.5,14.5 19.5,14.5 13,3" Fill="Black"/>
+        <Polygon x:Name="core" Points="13,3 6.5,14.5 19.5,14.5 13,3" Fill="Transparent"/>
     </Grid>
 </UserControl>

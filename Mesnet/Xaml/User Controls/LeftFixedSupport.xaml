@@ -16,6 +16,7 @@
         <Polygon x:Name="p4" Points="6,10 0,16 1,17 6,12.2" Fill="Black"/>
         <Polygon x:Name="p5" Points="6,15 0,21 1,22 6,17.2" Fill="Black"/>
         <Polygon x:Name="p6" Points="6,20 0,26 1,27 6,22.2" Fill="Black"/>
+        <Polygon x:Name="core" Points="0,0 6,0 6,27 0,27 0,0" Fill="Transparent"/>
     </Grid>
 
 </UserControl>

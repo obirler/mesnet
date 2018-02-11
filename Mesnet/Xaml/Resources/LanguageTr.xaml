@@ -121,6 +121,8 @@
     <system:String x:Key="zoomedin">Yakınlaştırıldı</system:String>
     <system:String x:Key="zoomedout">Uzaklaştırıldı</system:String>
     <system:String x:Key="beamdeleted">Kiriş silindi</system:String>
+    <system:String x:Key="supportdeleted">Mesnet silindi</system:String>
+    <system:String x:Key="supportcantdeleted">Bu mesnet silinemez</system:String>
     <system:String x:Key="concloadput">Tekil yük eklendi</system:String>
     <system:String x:Key="distloadput">Yayılı yük eklendi</system:String>
     <system:String x:Key="about">Hakkında</system:String>
@@ -132,6 +134,7 @@
     <system:String x:Key="forcemenu">Kuvvet</system:String>
     <system:String x:Key="stressmenu">Gerilme</system:String>
     <system:String x:Key="askforbeamdelete">Bu kirişi gerçekten silmek istiyor musunuz?</system:String>
+    <system:String x:Key="askforsupportdelete">Bu mesnedi gerçekten silmek istiyor musunuz?</system:String>
     <system:String x:Key="deleteall">Hepsini sil</system:String>
     <system:String x:Key="askfordeleteall">Bütün nesneleri gerçekten silmek istiyor musunuz?</system:String>
     <system:String x:Key="beamarranged">Kiriş düzenlendi</system:String>
@@ -141,4 +144,8 @@
     <system:String x:Key="saveas">Farklı Kaydet</system:String>
     <system:String x:Key="close">Kapat</system:String>
     <system:String x:Key="invalidfile">Geçersiz dosya!</system:String>
+    <system:String x:Key="invalidevalue">Geçersiz e değeri</system:String>
+    <system:String x:Key="invaliddvalue">Geçersiz d değeri</system:String>
+    <system:String x:Key="ehigheroregualtod">e değeri d değerinden büyük ya da eşit olamaz</system:String>
+    <system:String x:Key="message">Mesaj</system:String>
 </ResourceDictionary>

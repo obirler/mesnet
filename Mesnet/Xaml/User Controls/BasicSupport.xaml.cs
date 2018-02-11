@@ -45,6 +45,7 @@ namespace Mesnet.Xaml.User_Controls
             _name = "Basic Support " + SupportCount;
             canvas.Children.Add(this);
             _id = AddObject(this);
+            BindEvents();
         }
 
         public BasicSupport()
@@ -52,6 +53,7 @@ namespace Mesnet.Xaml.User_Controls
             InitializeComponent();
             _canbedragged = true;
             Members = new List<Member>();
+            BindEvents();
         }
 
         private int _id;
@@ -74,6 +76,19 @@ namespace Mesnet.Xaml.User_Controls
 
         #region Methods
 
+        private void BindEvents()
+        {
+            var mw = (MainWindow)Application.Current.MainWindow;
+            core.MouseDown += mw.BasicSupportMouseDown;
+            core.MouseUp += mw.BasicSupportMouseUp;
+        }
+
+        /// <summary>
+        /// Adds basic support in the specified canvas. Used in xml read.
+        /// </summary>
+        /// <param name="canvas">The canvas.</param>
+        /// <param name="leftpos">The leftpos.</param>
+        /// <param name="toppos">The toppos.</param>
         public void Add(Canvas canvas, double leftpos, double toppos)
         {
             canvas.Children.Add(this);
@@ -250,19 +265,14 @@ namespace Mesnet.Xaml.User_Controls
 
         public void Select()
         {
-            p1.Fill = new SolidColorBrush(Color.FromArgb(180, 255, 165, 0));
+            triangle.Fill = new SolidColorBrush(Color.FromArgb(180, 255, 165, 0));
             _selected = true;
         }
 
         public void UnSelect()
         {
-            p1.Fill = new SolidColorBrush(Colors.Black);
+            triangle.Fill = new SolidColorBrush(Colors.Black);
             _selected = false;
-        }
-
-        private bool IsSelected()
-        {
-            return _selected;
         }
 
         /// <summary>

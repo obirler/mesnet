@@ -18,6 +18,8 @@
     along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
 ========================================================================
 */
+
+using System.Windows;
 using System.Windows.Controls;
 using static Mesnet.Classes.Global;
 

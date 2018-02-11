@@ -19,38 +19,16 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            Global.SetDecimalSeperator();
-            while (true)
-            {
-                Console.Write("Enter polynomial expression : ");
-                var exp = Console.ReadLine();
-                try
-                {
-                    if (!Poly.ValidateExpression(exp))
-                    {
-                        Console.WriteLine("Invalid polynomial!");
-                    }
-                    else
-                    {
-                        var poly = new Poly(exp);
-                        Console.Write(poly.ToString());
-                        if (poly.IsLinear())
-                        {
-                            Console.WriteLine(" is linear");
-                        }
-                        else
-                        {
-                            Console.WriteLine(" is not linear");
-                        }
-                    }                  
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Invalid polynomial!");
-                }
-            }
+            check();
+
+            Console.WriteLine("function returned");
        
             Console.ReadKey();
+        }
+
+        private static void check()
+        {
+            return;
         }
     }
 }

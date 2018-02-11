@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
         mc:Ignorable="d"
-        Title="Message" Height="140" Width="302" Icon="/Assets/applogo.ico" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" KeyDown="Window_KeyDown">
+        Title="{DynamicResource message}" Height="140" Width="302" Icon="/Assets/applogo.ico" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" KeyDown="Window_KeyDown">
     <StackPanel>
         <Grid Height="50" Margin="10">
            <TextBlock x:Name="Message" TextAlignment="Center" Text="Hello, world!" VerticalAlignment="Center" TextWrapping="Wrap" Width="276"/> 

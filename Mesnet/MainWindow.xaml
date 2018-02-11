@@ -421,7 +421,7 @@
                 <ScrollViewer Grid.Row="0" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Text="{DynamicResource beams}" FontSize="13" Margin="0,0,0,-1" Height="20" TextAlignment="Center" Background="#FFC9C8C8"></TextBlock>
-                        <TreeView x:Name="tree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                        <TreeView x:Name="tree" BorderBrush="Transparent" Background="#FFDADADA" Margin="-1"/>
                     </StackPanel>
 
                 </ScrollViewer>
@@ -431,7 +431,7 @@
                 <ScrollViewer Grid.Row="2" Background="#FFDADADA" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Text="{DynamicResource supports}" FontSize="13" Height="20" Margin="0,0,0,-1" TextAlignment="Center" Background="#FFC9C8C8"></TextBlock>
-                        <TreeView x:Name="supporttree"  BorderBrush="Transparent" Background="#FFDADADA" Margin="-1" ></TreeView>
+                        <TreeView x:Name="supporttree" BorderBrush="Transparent" Background="#FFDADADA" Margin="-1"/>
                     </StackPanel>
                 </ScrollViewer>
 

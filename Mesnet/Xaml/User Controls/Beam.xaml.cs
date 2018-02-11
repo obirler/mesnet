@@ -97,11 +97,11 @@ namespace Mesnet.Xaml.User_Controls
         private void BindEvents()
         {
             var mw = (MainWindow)Application.Current.MainWindow;
-            core.MouseDown += mw.core_MouseDown;
-            core.MouseUp += mw.core_MouseUp;
-            core.MouseMove += mw.core_MouseMove;
-            startcircle.MouseDown += mw.StartCircle_MouseDown;
-            endcircle.MouseDown += mw.EndCircle_MouseDown;
+            core.MouseDown += mw.BeamCoreMouseDown;
+            core.MouseUp += mw.BeamCoreMouseUp;
+            core.MouseMove += mw.BeamCoreMouseMove;
+            startcircle.MouseDown += mw.StartCircleMouseDown;
+            endcircle.MouseDown += mw.EndCircleMouseDown;
         }
 
         #region internal variables

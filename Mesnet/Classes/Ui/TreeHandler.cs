@@ -47,6 +47,12 @@ namespace Mesnet.Classes.Ui
 
         private TreeView _supporttree;
 
+        public bool BeamTreeItemSelectedEventEnabled = true;
+
+        public bool SupportTreeItemSelectedEventEnabled = true;
+
+        #region Beam Tree Methods and Events
+
         /// <summary>
         /// Updates given beam in the beam tree view.
         /// </summary>
@@ -408,6 +414,73 @@ namespace Mesnet.Classes.Ui
             }
         }
 
+        public void BeamTreeItemSelected(object sender, RoutedEventArgs e)
+        {
+            if (BeamTreeItemSelectedEventEnabled)
+            {
+                _mw.Reset();
+
+                var treeitem = sender as TreeViewItem;
+                var beam = (treeitem.Header as BeamItem).Beam;
+
+                SelectBeamItem(beam);
+
+                foreach (var item in Objects)
+                {
+                    switch (GetObjectType(item))
+                    {
+                        case Global.ObjectType.Beam:
+
+                            var beam1 = item as Beam;
+
+                            if (Equals(beam1, beam))
+                            {
+                                _mw.SelectBeam(beam1);
+                                return;
+                            }
+
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Selects the beam item corresponds to given beam in beam tree.
+        /// </summary>
+        /// <param name="beam">The beam.</param>
+        public void SelectBeamItem(Beam beam)
+        {
+            foreach (TreeViewBeamItem item in _beamtree.Items)
+            {
+                if (Equals(beam, item.Beam))
+                {
+                    BeamTreeItemSelectedEventEnabled = false;
+                    item.IsSelected = true;
+                    BeamTreeItemSelectedEventEnabled = true;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unselects all beam items in beam tree.
+        /// </summary>
+        public void UnSelectAllBeamItem()
+        {
+            MyDebug.WriteInformation("UnSelectAllBeamItem executed");
+            foreach (TreeViewBeamItem item in _beamtree.Items)
+            {
+                item.Selected -= BeamTreeItemSelected;
+                item.IsSelected = false;
+                item.Selected += BeamTreeItemSelected;
+            }
+        }
+
+        #endregion
+
+        #region Support Tree Methods and Events
+
         /// <summary>
         /// Updates given support in the support tree view.
         /// </summary>
@@ -494,7 +567,7 @@ namespace Mesnet.Classes.Ui
                     {
                         supportitem.Header = new BasicSupportItem(basicsup);
                         _supporttree.Items.Add(supportitem);
-                        supportitem.Selected += SupportTreeItemSelected;
+                        supportitem.Selected += SupportTreeItemSelected;                      
                     }
                     else
                     {
@@ -688,66 +761,35 @@ namespace Mesnet.Classes.Ui
             }
         }
 
-        public void BeamTreeItemSelected(object sender, RoutedEventArgs e)
-        {
-            if (_mw.beamTreeItemSelectedEventEnabled)
-            {
-                _mw.Reset();
-
-                var treeitem = sender as TreeViewItem;
-                var beam = (treeitem.Header as BeamItem).Beam;
-
-                SelectBeamItem(beam);
-
-                foreach (var item in Objects)
-                {
-                    switch (GetObjectType(item))
-                    {
-                        case Global.ObjectType.Beam:
-
-                            var beam1 = item as Beam;
-
-                            if (Equals(beam1, beam))
-                            {
-                                _mw.SelectBeam(beam1);
-                                return;
-                            }
-
-                            break;
-                    }
-                }
-            }
-        }
-
         /// <summary>
-        /// Selects the beam item corresponds to given beam in beam tree.
+        /// Selects the support item corresponds to given support in support tree.
         /// </summary>
-        /// <param name="beam">The beam.</param>
-        public void SelectBeamItem(Beam beam)
+        /// <param name="support">The support.</param>
+        public void SelectSupportItem(object support)
         {
-            foreach (TreeViewBeamItem item in _beamtree.Items)
+            foreach (TreeViewSupportItem item in _supporttree.Items)
             {
-                if (Equals(beam, item.Beam))
+                if (Equals(support, item.Support))
                 {
-                    _mw.beamTreeItemSelectedEventEnabled = false;
+                    SupportTreeItemSelectedEventEnabled = false;
                     item.IsSelected = true;
-                    _mw.beamTreeItemSelectedEventEnabled = true;
+                    SupportTreeItemSelectedEventEnabled = true;
                     break;
                 }
             }
         }
 
         /// <summary>
-        /// Unselects all beam items in beam tree.
+        /// Unselects all support items in support tree.
         /// </summary>
-        public void UnSelectAllBeamItem()
+        public void UnSelectAllSupportItem()
         {
-            MyDebug.WriteInformation("UnSelectAllBeamItem executed");
-            foreach (TreeViewBeamItem item in _beamtree.Items)
+            MyDebug.WriteInformation("UnSelectAllSupportItem executed");
+            foreach (TreeViewSupportItem item in _supporttree.Items)
             {
-                item.Selected -= BeamTreeItemSelected;
+                item.Selected -= SupportTreeItemSelected;
                 item.IsSelected = false;
-                item.Selected += BeamTreeItemSelected;
+                item.Selected += SupportTreeItemSelected;
             }
         }
 
@@ -758,15 +800,14 @@ namespace Mesnet.Classes.Ui
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         public void SupportTreeItemSelected(object sender, RoutedEventArgs e)
         {
-            MyDebug.WriteInformation("SupportTreeItemSelected");
-            _mw.Reset();
-            var treeitem = sender as TreeViewItem;
-            switch (treeitem.Header.GetType().Name)
+            if (SupportTreeItemSelectedEventEnabled)
             {
-                case "SlidingSupportItem":
+                MyDebug.WriteInformation("SupportTreeItemSelected");
+                _mw.Reset();
+                var treeitem = sender as TreeViewItem;
 
-                    var ss = (treeitem.Header as SlidingSupportItem).Support;
-
+                if (treeitem.Header is SlidingSupportItem ssitem)
+                {
                     foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
@@ -775,22 +816,20 @@ namespace Mesnet.Classes.Ui
 
                                 var slidingsupport = item as SlidingSupport;
 
-                                if (Equals(ss, slidingsupport))
+                                if (Equals(ssitem.Support, slidingsupport))
                                 {
                                     slidingsupport.Select();
+                                    _mw.selectesupport = slidingsupport;
+                                    SelectSupportItem(slidingsupport);
                                     return;
                                 }
 
                                 break;
                         }
                     }
-
-                    break;
-
-                case "BasicSupportItem":
-
-                    var bs = (treeitem.Header as BasicSupportItem).Support;
-
+                }
+                else if (treeitem.Header is BasicSupportItem bsitem)
+                {
                     foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
@@ -799,22 +838,20 @@ namespace Mesnet.Classes.Ui
 
                                 var basicsupport = item as BasicSupport;
 
-                                if (Equals(bs, basicsupport))
+                                if (Equals(bsitem.Support, basicsupport))
                                 {
                                     basicsupport.Select();
+                                    _mw.selectesupport = basicsupport;
+                                    SelectSupportItem(basicsupport);
                                     return;
                                 }
 
                                 break;
                         }
                     }
-
-                    break;
-
-                case "LeftFixedSupportItem":
-
-                    var ls = (treeitem.Header as LeftFixedSupportItem).Support;
-
+                }
+                else if (treeitem.Header is LeftFixedSupportItem lsitem)
+                {
                     foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
@@ -823,22 +860,20 @@ namespace Mesnet.Classes.Ui
 
                                 var leftfixedsupport = item as LeftFixedSupport;
 
-                                if (Equals(ls, leftfixedsupport))
+                                if (Equals(lsitem.Support, leftfixedsupport))
                                 {
                                     leftfixedsupport.Select();
+                                    _mw.selectesupport = leftfixedsupport;
+                                    SelectSupportItem(leftfixedsupport);
                                     return;
                                 }
 
                                 break;
                         }
                     }
-
-                    break;
-
-                case "RightFixedSupportItem":
-
-                    var rs = (treeitem.Header as RightFixedSupportItem).Support;
-
+                }
+                else if (treeitem.Header is RightFixedSupportItem rsitem)
+                {
                     foreach (var item in Objects)
                     {
                         switch (GetObjectType(item))
@@ -847,18 +882,20 @@ namespace Mesnet.Classes.Ui
 
                                 var rightfixedsupport = item as RightFixedSupport;
 
-                                if (Equals(rs, rightfixedsupport))
+                                if (Equals(rsitem.Support, rightfixedsupport))
                                 {
                                     rightfixedsupport.Select();
+                                    _mw.selectesupport = rightfixedsupport;
+                                    SelectSupportItem(rightfixedsupport);
                                     return;
                                 }
 
                                 break;
                         }
                     }
-
-                    break;
+                }
             }
         }
+        #endregion
     }
 }

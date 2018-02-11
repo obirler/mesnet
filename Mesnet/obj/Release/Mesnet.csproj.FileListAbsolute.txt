@@ -461,8 +461,6 @@ C:\Users\whatsnext\Desktop\NewMesnet\mesnet\Mesnet\obj\Release\Mesnet.pdb
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\x64\SQLite.Interop.dll
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\x86\SQLite.Interop.dll
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.exe.config
-C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.exe.manifest
-C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.application
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.exe
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.pdb
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\bin\Release\EntityFramework.dll
@@ -579,8 +577,6 @@ C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.g.resources
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.Properties.Resources.resources
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csproj.GenerateResource.Cache
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csproj.CoreCompileInputs.cache
-C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe.manifest
-C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.application
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.pdb
 C:\Users\omer\Desktop\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowEn.g.cs

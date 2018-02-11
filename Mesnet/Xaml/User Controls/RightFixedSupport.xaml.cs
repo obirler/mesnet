@@ -40,12 +40,14 @@ namespace Mesnet.Xaml.User_Controls
             SupportCount++;
             _supportid = SupportCount;
             _name = "Right Fixed Support " + SupportCount;
+            BindEvents();
         }
 
         public RightFixedSupport()
         {
             InitializeComponent();
             _canbedragged = true;
+            BindEvents();
         }
 
         private int _id;
@@ -63,6 +65,13 @@ namespace Mesnet.Xaml.User_Controls
         private bool _selected;
 
         private int _crossindex = -1;
+
+        private void BindEvents()
+        {
+            var mw = (MainWindow)Application.Current.MainWindow;
+            core.MouseDown += mw.RightFixedSupportMouseDown;
+            core.MouseUp += mw.RightFixedSupportMouseUp;
+        }
 
         public void Add(Canvas canvas, double leftpos, double toppos)
         {
@@ -119,11 +128,6 @@ namespace Mesnet.Xaml.User_Controls
             p5.Fill = new SolidColorBrush(Colors.Black);
             p6.Fill = new SolidColorBrush(Colors.Black);
             _selected = false;
-        }
-
-        private bool IsSelected()
-        {
-            return _selected;
         }
 
         /// <summary>

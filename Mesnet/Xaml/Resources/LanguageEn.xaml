@@ -121,6 +121,8 @@
     <system:String x:Key="zoomedin">Zoomed in</system:String>
     <system:String x:Key="zoomedout">Zoomed out</system:String>
     <system:String x:Key="beamdeleted">Beam deleted</system:String>
+    <system:String x:Key="supportdeleted">Support deleted</system:String>
+    <system:String x:Key="supportcantdeleted">This support can not be deleted</system:String>
     <system:String x:Key="concloadput">Concentrated load placed</system:String>
     <system:String x:Key="distloadput">Distributed load placed</system:String>
     <system:String x:Key="about">About</system:String>
@@ -132,6 +134,7 @@
     <system:String x:Key="forcemenu">Force</system:String>
     <system:String x:Key="stressmenu">Stress</system:String>
     <system:String x:Key="askforbeamdelete">Do you really want to delete this beam?</system:String>
+    <system:String x:Key="askforsupportdelete">Do you really want to delete this support?</system:String>
     <system:String x:Key="deleteall">Clear all</system:String>
     <system:String x:Key="askfordeleteall">Do you really want to clear all objects?</system:String>
     <system:String x:Key="beamarranged">Beam arranged</system:String>
@@ -141,4 +144,8 @@
     <system:String x:Key="saveas">Save As</system:String>
     <system:String x:Key="close">Close</system:String>
     <system:String x:Key="invalidfile">Invalid file!</system:String>
+    <system:String x:Key="invalidevalue">Invalid e value</system:String>
+    <system:String x:Key="invaliddvalue">Invalid d value</system:String>
+    <system:String x:Key="ehigheroregualtod">e value can not be higher or egual to d value</system:String>
+    <system:String x:Key="message">Message</system:String>
 </ResourceDictionary>

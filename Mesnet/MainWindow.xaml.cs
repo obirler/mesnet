@@ -96,23 +96,23 @@ namespace Mesnet
             }
         }
 
-        private object selectedobj;
-
         private object preselect;
 
         private Point selectpoint;
 
         private Point circlelocation;
 
-        private Point beammousedownpoint;
+        private Point mousedownpoint;
 
-        private Point beammouseuppoint;
+        private Point mouseuppoint;
 
         private Beam tempbeam;
 
         private Beam selectedbeam;
 
         private Beam assemblybeam;
+
+        public object selectesupport;
 
         private int beamcount = 0;
 
@@ -129,8 +129,6 @@ namespace Mesnet
         private double _maxstress = 150;
      
         private string _savefilepath = null;
-
-        public bool beamTreeItemSelectedEventEnabled = true;
 
         private UpToolBar _uptoolbar;
 
@@ -174,10 +172,6 @@ namespace Mesnet
         /// Set to 'true' when the previous zoom rect is saved.
         /// </summary>
         private bool prevZoomRectSet = false;
-
-        private Point mousedownpoint;
-
-        private Point mouseuppoint;
 
         public static BackgroundWorker bwupdate;
 
@@ -626,7 +620,7 @@ namespace Mesnet
         /// Event raised when a mouse button is clicked
         ///  down over beam rectangle.
         /// </summary>
-        public void core_MouseDown(object sender, MouseButtonEventArgs e)
+        public void BeamCoreMouseDown(object sender, MouseButtonEventArgs e)
         {
             canvas.Focus();
             Keyboard.Focus(canvas);
@@ -652,7 +646,7 @@ namespace Mesnet
 
             origContentMouseDownPoint = e.GetPosition(canvas);
 
-            beammousedownpoint = e.GetPosition(canvas);
+            mousedownpoint = e.GetPosition(canvas);
 
             //MyDebug.WriteInformation("Object_MouseDown", "mousedownpoint : " + beammousedownpoint.X + " : " + beammousedownpoint.Y);
 
@@ -669,7 +663,7 @@ namespace Mesnet
         /// <summary>
         /// Event raised when a mouse button is released over beam rectangle.
         /// </summary>
-        public void core_MouseUp(object sender, MouseButtonEventArgs e)
+        public void BeamCoreMouseUp(object sender, MouseButtonEventArgs e)
         {
             var core = (Rectangle)sender;
 
@@ -680,13 +674,13 @@ namespace Mesnet
                 return;
             }
 
-            beammouseuppoint = e.GetPosition(canvas);
+            mouseuppoint = e.GetPosition(canvas);
 
-            MyDebug.WriteInformation("mouseuppoint : " + beammouseuppoint.X + " : " + beammouseuppoint.Y);
+            MyDebug.WriteInformation("mouseuppoint : " + mouseuppoint.X + " : " + mouseuppoint.Y);
 
-            if (beammouseuppoint.Equals(beammousedownpoint))
+            if (mouseuppoint.Equals(mousedownpoint))
             {
-                MyDebug.WriteInformation("clicked");
+                MyDebug.WriteInformation("beam core clicked");
                 var grid1 = core.Parent as Grid;
                 var grid2 = grid1.Parent as Grid;
                 var beam = grid2.Parent as Beam;
@@ -701,6 +695,7 @@ namespace Mesnet
                     {
                         UnselectAll();
                         _treehandler.UnSelectAllBeamItem();
+                        _treehandler.UnSelectAllSupportItem();
                     }
                     SelectBeam(beam);
 
@@ -730,7 +725,7 @@ namespace Mesnet
         /// <summary>
         /// Event raised when the mouse cursor is moved over an object.
         /// </summary>
-        public void core_MouseMove(object sender, MouseEventArgs e)
+        public void BeamCoreMouseMove(object sender, MouseEventArgs e)
         {
             var core = (Rectangle)sender;
             if (mouseHandlingMode != MouseHandlingMode.Dragging)
@@ -776,7 +771,7 @@ namespace Mesnet
             e.Handled = true;
         }
 
-        public void StartCircle_MouseDown(object sender, MouseButtonEventArgs e)
+        public void StartCircleMouseDown(object sender, MouseButtonEventArgs e)
         {
             var ellipse = sender as Ellipse;
             var grid = ellipse.Parent as Grid;
@@ -964,7 +959,7 @@ namespace Mesnet
             //e.Handled = true;
         }
 
-        public void EndCircle_MouseDown(object sender, MouseButtonEventArgs e)
+        public void EndCircleMouseDown(object sender, MouseButtonEventArgs e)
         {
             var ellipse = sender as Ellipse;
             var grid = ellipse.Parent as Grid;
@@ -1156,6 +1151,103 @@ namespace Mesnet
 
         #endregion
 
+        #region Support Events
+
+        public void BasicSupportMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            mousedownpoint = e.GetPosition(canvas);
+            e.Handled = true;
+        }
+
+        public void BasicSupportMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            mouseuppoint = e.GetPosition(canvas);
+
+            if (mouseuppoint.Equals(mousedownpoint))
+            {
+                MyDebug.WriteInformation("Basic support clicked");
+
+                var core = sender as Polygon;
+                var grid = core.Parent as Grid;
+                var bs = grid.Parent as BasicSupport;
+                
+                UnselectAll();                
+                _treehandler.UnSelectAllBeamItem();
+                _treehandler.UnSelectAllSupportItem();
+                bs.Select();
+                _treehandler.SelectSupportItem(bs);
+                selectesupport = bs;
+                btndisableall();               
+            }
+            e.Handled = true;
+        }
+
+        public void LeftFixedSupportMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            mousedownpoint = e.GetPosition(canvas);
+            e.Handled = true;
+        }
+
+        public void LeftFixedSupportMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            mouseuppoint = e.GetPosition(canvas);
+
+            if (mouseuppoint.Equals(mousedownpoint))
+            {
+                MyDebug.WriteInformation("Left fixed support clicked");
+
+                var core = sender as Polygon;
+                var grid = core.Parent as Grid;
+                var ls = grid.Parent as LeftFixedSupport;
+
+                UnselectAll();
+                _treehandler.UnSelectAllBeamItem();
+                _treehandler.UnSelectAllSupportItem();
+                ls.Select();
+                _treehandler.SelectSupportItem(ls);
+                selectesupport = ls;
+                btndisableall();
+            }
+            e.Handled = true;
+        }
+
+        public void RightFixedSupportMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            mousedownpoint = e.GetPosition(canvas);
+            e.Handled = true;
+        }
+
+        public void RightFixedSupportMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            canvas.Focus();
+            mouseuppoint = e.GetPosition(canvas);
+
+            if (mouseuppoint.Equals(mousedownpoint))
+            {
+                MyDebug.WriteInformation("Right fixed support clicked");
+
+                var core = sender as Polygon;
+                var grid = core.Parent as Grid;
+                var rs = grid.Parent as RightFixedSupport;
+
+                UnselectAll();
+                _treehandler.UnSelectAllBeamItem();
+                _treehandler.UnSelectAllSupportItem();
+                rs.Select();
+                _treehandler.SelectSupportItem(rs);
+                selectesupport = rs;
+                btndisableall();
+            }
+            e.Handled = true;
+        }
+
+        #endregion
+
         #region Left Toolbar Button Events
 
         private void beambtn_Click(object sender, RoutedEventArgs e)
@@ -1284,12 +1376,12 @@ namespace Mesnet
                 var beamdialog = new BeamPrompt();
                 beamdialog.maxstresstbx.Text = _maxstress.ToString();
                 beamdialog.Owner = this;
-                if ((bool)beamdialog.ShowDialog())
+                if ((bool) beamdialog.ShowDialog())
                 {
                     var beam = new Beam(beamdialog.beamlength);
                     beam.AddElasticity(beamdialog.beamelasticitymodulus);
                     beam.AddInertia(beamdialog.inertiappoly);
-                    if ((bool)beamdialog.stresscbx.IsChecked)
+                    if ((bool) beamdialog.stresscbx.IsChecked)
                     {
                         beam.PerformStressAnalysis = true;
                         beam.AddE(beamdialog.eppoly);
@@ -1301,6 +1393,10 @@ namespace Mesnet
                     tempbeam = beam;
                     SetMouseHandlingMode("beambtn_Click", MouseHandlingMode.BeamPlacing);
                     Notify("clickforbeam");
+                }
+                else
+                {
+                    Reset();
                 }
             }
         }
@@ -1629,7 +1725,7 @@ namespace Mesnet
             */
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        public void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
@@ -1640,7 +1736,14 @@ namespace Mesnet
             else if (e.Key == Key.Delete)
             {
                 MyDebug.WriteInformation("Delete key down");
-                handledeletebeam();
+                if (selectedbeam != null)
+                {
+                    handledeletebeam();
+                }
+                else if (selectesupport != null)
+                {
+                    hendledeletesupport();
+                }
             }
         }
 
@@ -1976,7 +2079,7 @@ namespace Mesnet
         {
             if (selectedbeam != null)
             {
-                if (askfordelete())
+                if (askfordelete("askforbeamdelete"))
                 {
                     if (selectedbeam.RightSide != null)
                     {
@@ -2066,14 +2169,156 @@ namespace Mesnet
                 }
             }
         }
-    
+
+        private void hendledeletesupport()
+        {
+            if (selectesupport != null)
+            {
+                switch (GetObjectType(selectesupport))
+                {
+                    case ObjectType.BasicSupport:
+                        var bs = selectesupport as BasicSupport;
+                        if (bs.Members.Count == 1)
+                        {
+                            if (askfordelete("askforsupportdelete"))
+                            {
+                                var beam = bs.Members.First().Beam;
+                                switch (bs.Members.First().Direction)
+                                {
+                                    case Direction.Left:
+                                        beam.LeftSide = null;
+                                        break;
+
+                                    case Direction.Right:
+                                        beam.RightSide = null;
+                                        break;
+                                }                               
+                                deleteSupport(selectesupport);
+                                UnselectAll();
+                                Notify("supportdeleted");
+                                ResetSolution();
+                                _uptoolbar.UpdateAllDiagrams();
+                                _treehandler.UpdateAllBeamTree();
+                                _treehandler.UpdateAllSupportTree();
+                            }
+                            else
+                            {
+                                UnselectAll();
+                            }
+                        }
+                        else
+                        {
+                            Notify("supportcantdeleted");
+                            UnselectAll();
+                        }
+
+                        break;
+
+                    case ObjectType.SlidingSupport:
+                        var ss = selectesupport as SlidingSupport;
+                        if (ss.Members.Count == 1)
+                        {
+                            if (askfordelete("askforsupportdelete"))
+                            {
+                                var beam = ss.Members.First().Beam;
+                                switch (ss.Members.First().Direction)
+                                {
+                                    case Direction.Left:
+                                        beam.LeftSide = null;
+                                        break;
+
+                                    case Direction.Right:
+                                        beam.RightSide = null;
+                                        break;
+                                }
+                                deleteSupport(selectesupport);
+                                UnselectAll();
+                                Notify("supportdeleted");
+                                ResetSolution();
+                                _uptoolbar.UpdateAllDiagrams();
+                                _treehandler.UpdateAllBeamTree();
+                                _treehandler.UpdateAllSupportTree();
+                            }
+                            else
+                            {
+                                UnselectAll();
+                            }
+                        }
+                        else
+                        {
+                            Notify("supportcantdeleted");
+                            UnselectAll();
+                        }
+                        break;
+
+                    case ObjectType.LeftFixedSupport:
+                        if (askfordelete("askforsupportdelete"))
+                        {
+                            var ls = selectesupport as LeftFixedSupport;
+                            var beam = ls.Member.Beam;
+                            switch (ls.Member.Direction)
+                            {
+                                case Direction.Left:
+                                    beam.LeftSide = null;
+                                    break;
+
+                                case Direction.Right:
+                                    beam.RightSide = null;
+                                    break;
+                            }
+                            deleteSupport(selectesupport);
+                            UnselectAll();
+                            Notify("supportdeleted");
+                            ResetSolution();
+                            _uptoolbar.UpdateAllDiagrams();
+                            _treehandler.UpdateAllBeamTree();
+                            _treehandler.UpdateAllSupportTree();
+                        }
+                        else
+                        {
+                            UnselectAll();
+                        }
+                        break;
+
+                    case ObjectType.RightFixedSupport:
+                        if (askfordelete("askforsupportdelete"))
+                        {
+                            var rs = selectesupport as RightFixedSupport;
+                            var beam = rs.Member.Beam;
+                            switch (rs.Member.Direction)
+                            {
+                                case Direction.Left:
+                                    beam.LeftSide = null;
+                                    break;
+
+                                case Direction.Right:
+                                    beam.RightSide = null;
+                                    break;
+                            }
+                            deleteSupport(selectesupport);
+                            UnselectAll();
+                            Notify("supportdeleted");
+                            ResetSolution();
+                            _uptoolbar.UpdateAllDiagrams();
+                            _treehandler.UpdateAllBeamTree();
+                            _treehandler.UpdateAllSupportTree();
+                        }
+                        else
+                        {
+                            UnselectAll();
+                        }
+                        break;
+                }              
+            }
+        }
+
         /// <summary>
         /// Prompts a message window to user whether he/she really wants to delete the beam.
         /// </summary>
         /// <returns>true if user accept to delete the specified beam, otherwise false</returns>
-        private bool askfordelete()
+        private bool askfordelete(string messagekey)
         {
-            var prompt = new MessagePrompt(GetString("askforbeamdelete"));
+            var prompt = new MessagePrompt(GetString(messagekey));
             prompt.Owner = this;
             if ((bool) prompt.ShowDialog())
             {
@@ -2116,6 +2361,7 @@ namespace Mesnet
                     var bs = support as BasicSupport;
                     canvas.Children.Remove(bs);
                     MyDebug.WriteInformation(bs.Name + " deleted");
+
                     break;
 
                 case ObjectType.SlidingSupport:
@@ -2252,6 +2498,7 @@ namespace Mesnet
                 }
             }
             selectedbeam = null;
+            selectesupport = null;
         }
 
         private void BringToFront(Canvas pParent, UserControl pToMove)
@@ -2311,11 +2558,6 @@ namespace Mesnet
         }
 
         #endregion
-
-        private void selectsupport(object support)
-        {
-            
-        }
 
         private void bwupdate_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -2484,6 +2726,7 @@ namespace Mesnet
             UnselectAll();
             btndisableall();
             _treehandler.UnSelectAllBeamItem();
+            _treehandler.UnSelectAllSupportItem();
             SetMouseHandlingMode("Reset", MouseHandlingMode.None);
         }
 
@@ -2641,92 +2884,6 @@ namespace Mesnet
 
                                 break;
                         }
-                    }
-                }
-                step++;
-
-                if (checklist.All(x => x == true))
-                {
-                    stop = true;
-                }
-
-                if (stop)
-                {
-                    MyDebug.WriteInformation("stopped");
-                }
-            }
-
-            Logger.WriteLine("Cross loop stopped");
-            Logger.NextLine();
-
-            foreach (var item in Objects)
-            {
-                switch (item.GetType().Name)
-                {
-                    case "Beam":
-
-                        Beam beam = (Beam)item;
-                        MyDebug.WriteInformation("beam " + beam.Name + " Left End Moment = " + beam.LeftEndMoment);
-                        Logger.WriteLine(beam.Name + " Left End Moment = " + beam.LeftEndMoment);
-                        MyDebug.WriteInformation("beam " + beam.Name + " Right End Moment = " + beam.RightEndMoment);
-                        Logger.WriteLine(beam.Name + " Right End Moment = " + beam.RightEndMoment);
-                        break;
-                }
-            }
-
-            Logger.CloseLogger();
-        }
-
-        public void BasicCrossLoop()
-        {
-            int step = 0;
-            bool stop = false;
-            List<bool> checklist = new List<bool>();
-
-            Logger.WriteLine("Basic Cross Solver Initialized");
-            Logger.NextLine();
-
-            while (!stop)
-            {
-                checklist.Clear();
-                MyDebug.WriteInformation("Step : " + step);
-                Logger.WriteLine("**********************************************STEP : " + step + "*************************************************");
-                Logger.NextLine();
-
-                foreach (var support in Objects)
-                {
-                    string name = support.GetType().Name;
-                    switch (name)
-                    {
-                        case "BasicSupport":
-
-                            var bs = support as BasicSupport;
-
-                            if (bs.Members.Count > 1)
-                            {
-                                MyDebug.WriteInformation("Moment difference = " + bs.MomentDifference + " at BasicSupport, " + bs.Name);
-                                Logger.SplitLine();
-                                Logger.WriteLine(bs.Name + " : cross index = " + bs.CrossIndex);
-                                Logger.NextLine();
-                                checklist.Add(bs.Seperate());
-                            }
-
-                            break;
-
-                        case "SlidingSupport":
-
-                            var ss = support as SlidingSupport;
-
-                            if (ss.Members.Count > 1)
-                            {
-                                MyDebug.WriteInformation("Moment difference = " + ss.MomentDifference + " at SlidingSupport, " + ss.Name);
-                                Logger.SplitLine();
-                                Logger.WriteLine(ss.Name + " : cross index = " + ss.CrossIndex);
-                                Logger.NextLine();
-                                checklist.Add(ss.Seperate());
-                            }
-
-                            break;
                     }
                 }
                 step++;

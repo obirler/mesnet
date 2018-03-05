@@ -14,7 +14,7 @@ It can solve complex frames.
 
 Stress distributions can be obtained according to given parametes.
 
-![Screen Shot 03-05-18 at 11.22 PM.PNG](https://bitbucket.org/repo/pbr98r/images/1891944494-Screen%20Shot%2003-05-18%20at%2011.22%20PM.PNG)
+![Screen Shot 03-05-18 at 11.46 PM.PNG](https://bitbucket.org/repo/pbr98r/images/3755117208-Screen%20Shot%2003-05-18%20at%2011.46%20PM.PNG)
 
 The tree view on the right allows user to analyze the beam easily.
 

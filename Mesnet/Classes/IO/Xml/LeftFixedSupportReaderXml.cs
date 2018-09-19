@@ -27,21 +27,19 @@ using System.Text;
 
 namespace Mesnet.Classes.IO.Xml
 {
-    public class BasicSupportReader
+    public class LeftFixedSupportReaderXml
     {
-        public BasicSupportReader(System.Xml.Linq.XElement supportelement)
+        public LeftFixedSupportReaderXml(System.Xml.Linq.XElement supportelement)
         {
             _supportelement = supportelement;
-            _support = new SupportManifest();
+            _support = new LeftFixedSupportManifest();
         }
 
-        public SupportManifest Read()
+        public LeftFixedSupportManifest Read()
         {
-            _support.Type = "BasicSupport";
-
             readproperties();
 
-            readmembers();
+            readmember();
 
             return _support;
         }
@@ -76,52 +74,44 @@ namespace Mesnet.Classes.IO.Xml
             }
         }
 
-        private void readmembers()
+        private void readmember()
         {
-            var memberselement = _supportelement.Elements().Where(x => x.Name == "Members").First();
+            var memberelement = _supportelement.Elements().Where(x => x.Name == "Member").First();
 
-            var members = new List<Member>();
+            var member = new Member();
 
-            foreach (var item in memberselement.Elements())
+            foreach (var memberitem in memberelement.Elements())
             {
-                var member = new Member();
-                foreach (var memberitem in item.Elements())
+                switch (memberitem.Name.ToString())
                 {
-                    switch (memberitem.Name.ToString())
-                    {
-                        case "id":
-                            member.Id = Convert.ToInt32(memberitem.Value);
-                            break;
-                        case "beamid":
-                            member.BeamId = Convert.ToInt32(memberitem.Value);
-                            break;
-                        case "name":
-                            member.Name = memberitem.Value;
-                            break;
-                        case "direction":
+                    case "id":
+                        member.Id = Convert.ToInt32(memberitem.Value);
+                        break;
+                    case "beamid":
+                        member.BeamId = Convert.ToInt32(memberitem.Value);
+                        break;
+                    case "name":
+                        member.Name = memberitem.Value;
+                        break;
+                    case "direction":
 
-                            if(memberitem.Value== "Left")
-                            {
-                                member.Direction = Global.Direction.Left;
-                            }
-                            else if(memberitem.Value == "Right")
-                            {
-                                member.Direction = Global.Direction.Right;
-                            }
-                            break;
-                    }
+                        if (memberitem.Value == "Left")
+                        {
+                            member.Direction = Global.Direction.Left;
+                        }
+                        else if (memberitem.Value == "Right")
+                        {
+                            member.Direction = Global.Direction.Right;
+                        }
+                        break;
                 }
-                members.Add(member);
             }
 
-            if(members.Count > 0)
-            {
-                _support.Members = members;
-            }
+            _support.Member = member;
         }
 
         System.Xml.Linq.XElement _supportelement;
 
-        SupportManifest _support;
+        LeftFixedSupportManifest _support;
     }
 }

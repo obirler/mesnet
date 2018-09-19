@@ -17,7 +17,7 @@
         <Image Grid.Column="0" Margin="0,30,0,0" Source="../../Assets/logo.png" Width="80" VerticalAlignment="Top"/>
 
         <StackPanel Grid.Column="1" Orientation="Vertical">
-            
+
             <TextBlock TextAlignment="Center" Margin="0,20,0,0">
                 <Bold>
                     <Run Text="Mesnet" FontSize="20"></Run>
@@ -40,7 +40,7 @@
             </TextBlock>
 
             <TextBlock Margin="0,5,0,0" TextAlignment="Justify" TextWrapping="Wrap">
-                <Run  FontSize="15">The program implements Moment Distribution Method (or Cross Method) to solve given 2-dimensional frame. However, neither the developer, nor the instructor nor any related institution are responsible for any use or misuse of the program and the results. You can contact the developer either report a bug or suggest a feature using </Run>
+                <Run  FontSize="15">The program implements Moment Distribution Method (or Cross Method) to solve given 2-dimensional frame. However, neither the developer, nor the instructor nor any related institution are responsible for any use or misuse of the program and the results. You can contact the developer in order to either report a bug or suggest a feature using </Run>
                 <Hyperlink x:Name="mailtodeveloper" FontSize="15" NavigateUri="mailto:omer.birler@gmail.com" RequestNavigate="mailtodeveloper_RequestNavigate">this</Hyperlink>
                 <Run  FontSize="15">mail adress.</Run>
             </TextBlock>
@@ -60,13 +60,13 @@
                     GNU General Public License for more details</Run>
                 <Hyperlink x:Name="gpllicencepage" FontSize="15" NavigateUri="http://www.gnu.org/licenses" RequestNavigate="gpllicencepage_RequestNavigate">here.</Hyperlink>
             </TextBlock>
-            
+
             <Button x:Name="closebtn" Content="Close" Width="100" Margin="0,10,0,0" Click="closebtn_Click"></Button>
 
             <TextBlock x:Name="versiontext" Text="V 0.1.0.0" Margin="0,10,0,0" TextAlignment="Center" Foreground="#BF707070"></TextBlock>
 
         </StackPanel>
-              
+
         <Image Grid.Column="2" Margin="0,8,0,0" Source="../../Assets/itulogo.png" Width="80"  VerticalAlignment="Top"></Image>
 
     </Grid>

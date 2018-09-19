@@ -43,6 +43,7 @@ namespace Mesnet.Xaml.User_Controls
             _name = "Sliding Support " + SupportCount;
             canvas.Children.Add(this);
             _id = AddObject(this);
+            MesnetDebug.WriteInformation(_name + " has been added to canvas");
         }
 
         public SlidingSupport()
@@ -98,6 +99,8 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.LeftSide = this;
 
+                            MesnetDebug.WriteInformation("Left side of " + beam.Name + " has been added to " + _name);
+
                             break;
 
                         case Direction.Right:
@@ -107,6 +110,8 @@ namespace Mesnet.Xaml.User_Controls
                             Canvas.SetTop(this, beam.RightPoint.Y);
 
                             beam.RightSide = this;
+
+                            MesnetDebug.WriteInformation("Right side of " + beam.Name + " has been added to " + _name);
 
                             break;
                     }
@@ -121,11 +126,15 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.LeftSide = this;
 
+                            MesnetDebug.WriteInformation("Left side of " + beam.Name + " has been added to " + _name);
+
                             break;
 
                         case Direction.Right:
 
                             beam.RightSide = this;
+
+                            MesnetDebug.WriteInformation("Right side of " + beam.Name + " has been added to " + _name);
 
                             break;
                     }
@@ -133,7 +142,7 @@ namespace Mesnet.Xaml.User_Controls
             }
             else
             {
-                MyDebug.WriteWarning("the beam is already added!");
+                MesnetDebug.WriteWarning("the beam is already added!");
             }
         }
 
@@ -149,6 +158,7 @@ namespace Mesnet.Xaml.User_Controls
                 }
             }
             Members.Remove(remove);
+            MesnetDebug.WriteInformation(remove.Beam.Name + " has been removed from " + _name);
         }
 
         public void SetBeam(Beam beam, Direction direction)
@@ -166,11 +176,15 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.LeftSide = this;
 
+                            MesnetDebug.WriteInformation("Left side of " + beam.Name + " has been set from " + _name);
+
                             break;
 
                         case Direction.Right:
 
                             beam.RightSide = this;
+
+                            MesnetDebug.WriteInformation("Right side of " + beam.Name + " has been set from " + _name);
 
                             break;
                     }
@@ -185,6 +199,8 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.IsBound = true;
 
+                            MesnetDebug.WriteInformation("Left side of " + beam.Name + " has been set from " + _name);
+
                             break;
 
                         case Direction.Right:
@@ -193,13 +209,15 @@ namespace Mesnet.Xaml.User_Controls
 
                             beam.IsBound = true;
 
+                            MesnetDebug.WriteInformation("Right side of " + beam.Name + " has been set from " + _name);
+
                             break;
                     }
                 }
             }
             else
             {
-                MyDebug.WriteWarning("the beam is already added!");
+                MesnetDebug.WriteWarning("the beam is already added!");
             }
         }
 
@@ -303,11 +321,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteInformation("Position has been set : " + left + " : " + right);
+                MesnetDebug.WriteInformation(_name + ": Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
+                MesnetDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -326,11 +344,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteWarning("Position has been set : " + left + " : " + right);
+                MesnetDebug.WriteInformation(_name + ": Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
+                MesnetDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -348,11 +366,11 @@ namespace Mesnet.Xaml.User_Controls
 
             bool isstop = false;
 
-            MyDebug.WriteInformation("Started");
+            MesnetDebug.WriteInformation(_name + ": Seperation started");
 
             if (Members.Count == 1)
             {
-                MyDebug.WriteInformation("This support is an end support, returning");
+                MesnetDebug.WriteInformation(_name + ": This support is an end support, returning");
                 return true;
             }
 
@@ -373,7 +391,7 @@ namespace Mesnet.Xaml.User_Controls
                         coeff = beam.StiffnessA / _totalstiffness;
                         beammoment = coeff * momenttoadd;
                         beam.LeftEndMoment += beammoment;
-                        MyDebug.WriteInformation("Left Moment = " + beam.LeftEndMoment);
+                        MesnetDebug.WriteInformation(_name + ": Left Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Left, beammoment);
                         if (Math.Abs(beammoment * beam.CarryOverAB) < CrossLoopTreshold)
@@ -393,7 +411,7 @@ namespace Mesnet.Xaml.User_Controls
                         coeff = beam.StiffnessB / _totalstiffness;
                         beammoment = coeff * momenttoadd;
                         beam.RightEndMoment += beammoment;
-                        MyDebug.WriteInformation("Right Moment = " + beam.RightEndMoment);
+                        MesnetDebug.WriteInformation(_name + ": Right Moment = " + beam.RightEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Right, beammoment);
                         if (Math.Abs(beammoment * beam.CarryOverBA) < 0.00001)
@@ -448,16 +466,17 @@ namespace Mesnet.Xaml.User_Controls
                         case Direction.Left:
 
                             Logger.WriteLine(this.Name + " : " + member.Beam.Name + " stiffness = " + member.Beam.StiffnessA / _totalstiffness);
+                            MesnetDebug.WriteInformation(this.Name + " : " + member.Beam.Name + " stiffness = " + member.Beam.StiffnessA / _totalstiffness);
 
                             break;
 
                         case Direction.Right:
 
                             Logger.WriteLine(this.Name + " : " + member.Beam.Name + " stiffness = " + member.Beam.StiffnessB / _totalstiffness);
+                            MesnetDebug.WriteInformation(this.Name + " : " + member.Beam.Name + " stiffness = " + member.Beam.StiffnessB / _totalstiffness);
 
                             break;
                     }
-
                 }
             }
         }
@@ -492,7 +511,7 @@ namespace Mesnet.Xaml.User_Controls
 
         public int Id
         {
-            get { return Objects.IndexOf(this); }
+            get { return _id; }
             set { _id = value; }
         }
 

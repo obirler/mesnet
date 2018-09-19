@@ -23,9 +23,9 @@ using System.Collections.Generic;
 
 namespace Mesnet.Classes.IO.Xml
 {
-    public class BeamWriter
+    public class BeamWriterXml
     {
-        public BeamWriter(System.Xml.XmlWriter writer, Xaml.User_Controls.Beam beam)
+        public BeamWriterXml(System.Xml.XmlWriter writer, Xaml.User_Controls.Beam beam)
         {
             _writer = writer;
 

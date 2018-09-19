@@ -41,10 +41,10 @@ namespace Mesnet.Classes.IO
 
             SQLiteConnection.CreateFile(_dbname);
 
-            _connection = new SQLiteConnection("Data Source=" + _dbname + ";Version=3;");
+            _connection = new SQLiteConnection("Data Source=" + _dbname + ";MesnetVersion=3;");
             _connection.Open();
            
-            string sql = "create table if not exists userlog (id INTEGER PRIMARY KEY, logtye text, logmessage text, time text, info text)";
+            string sql = "create table if not exists userlog (id INTEGER PRIMARY KEY, logtype text, logmessage text, time text, info text)";
             SQLiteCommand command = new SQLiteCommand(sql, _connection);
             lock (_connection)
             {                                             

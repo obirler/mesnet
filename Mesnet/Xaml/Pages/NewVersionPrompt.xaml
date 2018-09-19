@@ -1,0 +1,23 @@
+﻿<Window x:Class="Mesnet.Xaml.Pages.NewVersionPrompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
+        mc:Ignorable="d"
+        Title="{DynamicResource newversiontitle}" Height="140" Width="302" Icon="/Assets/applogo.ico" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" KeyDown="Window_KeyDown">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="16" Margin="10,20,10,10">
+            <TextBlock x:Name="Message" Text="{DynamicResource newversionalert}"/>
+            <TextBlock x:Name="version"/>
+        </StackPanel>
+
+        <CheckBox x:Name="dontshowcbx" Content="{DynamicResource dontaskagain}" Margin="10,10,5,5"/>
+
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="yesbtn" Content="{DynamicResource yes}" Height="30" Width="80" Margin="10,0,16,0" BorderBrush="{x:Null}" Click="yesbtn_Click"/>
+            <Button x:Name="nobtn" Content="{DynamicResource no}" Height="30" Width="80" Margin="0,0,16,0" BorderBrush="{x:Null}" Click="nobtn_Click"/>
+            <Button x:Name="cancelbtn" Content="{DynamicResource cancel}" Height="30" Width="80" BorderBrush="{x:Null}" Click="cancelbtn_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

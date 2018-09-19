@@ -23,7 +23,7 @@ namespace Mesnet.Xaml.Pages
         {
             InitializeComponent();
 
-            versiontext.Text = "V " + Global.VERSION_NUMBER;
+            versiontext.Text = "V " + Global.VersionNumber;
         }
 
         private void closebtn_Click(object sender, RoutedEventArgs e)

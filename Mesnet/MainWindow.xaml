@@ -17,7 +17,7 @@
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
         <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
     </Window.InputBindings>
-    
+
     <Window.Resources>
         <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -91,7 +91,7 @@
                     <Polygon Points="2,4 2,26 16.5,15 " Fill="#FF05CD17"></Polygon>
                 </Grid>
             </Button>
-           
+
             <Border x:Name="inertiaborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
                 <Expander x:Name="inertiaexpander" Header="{DynamicResource inertiamenu}" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Slider x:Name="inertiaslider" Width="80" Minimum="0" Maximum="300" Value="150" Margin="5,0,0,0" VerticalAlignment="Center"></Slider>
@@ -109,7 +109,7 @@
                     <Slider x:Name="concloadslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="150" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
-            
+
             <Border x:Name="momentborder" Margin="5,0,0,0" MinWidth="55" Background="WhiteSmoke" Height="45" BorderBrush="Black" CornerRadius="5" BorderThickness="1">
                 <Expander x:Name="momentexpander" Header="{DynamicResource momentmenu}" ExpandDirection="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Slider x:Name="momentslider" Width="80" Minimum="0" Maximum="300" Value="150" Margin="5,0,0,0" VerticalAlignment="Center"></Slider>
@@ -127,10 +127,17 @@
                     <Slider x:Name="stressslider" Width="80" Margin="5,0,0,0" Minimum="0" Maximum="300" Value="150" VerticalAlignment="Center"></Slider>
                 </Expander>
             </Border>
-            
+
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <Button Margin="0,0,5,0" Click="debug_Click" Style="{DynamicResource RoundCorner}" Height="45" MinWidth="55">
+                <Button.Content>
+                    <TextBlock FontSize="14">Debug</TextBlock>
+                </Button.Content>
+            </Button>
+
             <Button Margin="0,0,5,0" Click="delete_All_Click" Style="{DynamicResource RoundCorner}" Height="45" MinWidth="55">
                 <Button.ToolTip>
                     <ToolTip>
@@ -143,7 +150,7 @@
                 <Image Source="Assets/No-Symbol.png" Height="25"></Image>
             </Button>
         </StackPanel>
-        
+
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
 
             <Grid.ColumnDefinitions>
@@ -445,6 +452,6 @@
         </StackPanel>
 
     </Grid>
-    
+
 </Window>
 

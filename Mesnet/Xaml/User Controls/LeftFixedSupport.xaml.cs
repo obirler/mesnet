@@ -40,6 +40,7 @@ namespace Mesnet.Xaml.User_Controls
             SupportCount++;
             _supportid = SupportCount;
             _name = "Left Fixed Support " + SupportCount;
+            MesnetDebug.WriteInformation(_name + " has been added to canvas");
             BindEvents();
         }
 
@@ -50,7 +51,7 @@ namespace Mesnet.Xaml.User_Controls
             BindEvents();
         }
 
-        private int _id;      
+        private int _id;
 
         private int _supportid;
 
@@ -76,10 +77,9 @@ namespace Mesnet.Xaml.User_Controls
         public void Add(Canvas canvas, double leftpos, double toppos)
         {
             canvas.Children.Add(this);
-
             Canvas.SetLeft(this, leftpos);
-
             Canvas.SetTop(this, toppos);
+            MesnetDebug.WriteInformation(_name + " has been added to canvas");
         }
 
         public void AddBeam(Beam beam)
@@ -92,14 +92,9 @@ namespace Mesnet.Xaml.User_Controls
 
             beam.LeftSide = this;
 
+            MesnetDebug.WriteInformation("Left side of " + beam.Name + " has been added to " + _name);
+
             SetAngle(beam.Angle);
-        }
-
-        public void SetBeam(Beam beam)
-        {
-            Member = new Member(beam, Direction.Left);
-
-            beam.LeftSide = this;
         }
 
         /// <summary>
@@ -153,11 +148,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteInformation("Position has been set : " + left + " : " + right);
+                MesnetDebug.WriteInformation(_name + ": Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
+                MesnetDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -176,11 +171,11 @@ namespace Mesnet.Xaml.User_Controls
 
                 Canvas.SetTop(this, right);
 
-                MyDebug.WriteWarning("Position has been set : " + left + " : " + right);
+                MesnetDebug.WriteInformation(_name + ": Position has been set : " + left + " : " + right);
             }
             else
             {
-                MyDebug.WriteWarning("The beam to be dragged can not be dragged");
+                MesnetDebug.WriteWarning("The beam to be dragged can not be dragged");
             }
         }
 
@@ -207,6 +202,11 @@ namespace Mesnet.Xaml.User_Controls
         {
             get { return _supportid; }
             set { _supportid = value; }
+        }
+
+        public string AName
+        {
+            get { return _name; }
         }
 
         public string Name

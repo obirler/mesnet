@@ -43,7 +43,6 @@ namespace Mesnet.Xaml.Pages
             InitializeComponent();
 
             timer.Tick += timer_Tick;
-
             timer.Interval = TimeSpan.FromMilliseconds(10);
 
             bw.DoWork += bw_DoWork;
@@ -52,6 +51,8 @@ namespace Mesnet.Xaml.Pages
 
             timer.Start();
         }
+
+        public int LoopResult = Int32.MinValue;
 
         private MainWindow _mw;
 
@@ -77,7 +78,7 @@ namespace Mesnet.Xaml.Pages
             {
                 Logger.InitializeLogger();
             }
-            MyDebug.WriteInformation("************************************************************Cross Solve Algorithm Started****************************************");
+            MesnetDebug.WriteInformation("******************************Cross Solve Algorithm Started********************************");
 
             Logger.WriteLine("**************************Cross Solve Algorithm Started****************************");
 
@@ -91,9 +92,9 @@ namespace Mesnet.Xaml.Pages
 
                         foreach (var item in Objects)
                         {
-                            if (GetObjectType(item) == ObjectType.Beam)
+                            if (GetObjectType(item.Value) == ObjectType.Beam)
                             {
-                                Beam beam = (Beam)item;
+                                var beam = item.Value as Beam;
                                 beam.CrossCalculate();
                                 Dispatcher.BeginInvoke(new Action(() =>
                                 {
@@ -101,7 +102,7 @@ namespace Mesnet.Xaml.Pages
                                     progress.Value = calculated / BeamCount * 100;
                                     progress.UpdateLayout();
                                     status.Text = GetString("calculatingbeam") + " " + beam.BeamId;
-                                }));                               
+                                }));
                             }
                         }
 
@@ -113,9 +114,9 @@ namespace Mesnet.Xaml.Pages
 
                         foreach (var item in Objects)
                         {
-                            if (GetObjectType(item) == ObjectType.Beam)
+                            if (GetObjectType(item.Value) == ObjectType.Beam)
                             {
-                                Beam beam = (Beam)item;
+                                var beam = item.Value as Beam;
                                 QueueList.Add(beam);
                             }
                         }
@@ -140,11 +141,11 @@ namespace Mesnet.Xaml.Pages
             {
                 foreach (var item in Objects)
                 {
-                    switch (GetObjectType(item))
+                    switch (GetObjectType(item.Value))
                     {
                         case ObjectType.Beam:
 
-                            Beam beam = (Beam)item;
+                            var beam = item.Value as Beam;
                             Dispatcher.BeginInvoke(new Action(() =>
                             {
                                 calculated++;
@@ -164,13 +165,12 @@ namespace Mesnet.Xaml.Pages
         private void bwbeam_DoWork(object senderbw, DoWorkEventArgs ebw)
         {
             int threadnumber = (int)ebw.Argument;
-            MyDebug.WriteInformation(" started to work");
+            MesnetDebug.WriteInformation("BackgroundWorker " + threadnumber + " has started to work");
             SetDecimalSeperator();
             Beam cachebeam;
             while (QueueList.Count > 0)
             {
                 mutex.WaitOne();
-
                 try
                 {
                     cachebeam = QueueList.First();
@@ -195,7 +195,7 @@ namespace Mesnet.Xaml.Pages
                 catch (Exception)
                 {
                     mutex.ReleaseMutex();
-                }                                             
+                }
             }
 
             foreach (var worker in bwlist)
@@ -228,7 +228,7 @@ namespace Mesnet.Xaml.Pages
                     _mw.WriteCarryoverFactors();
                     var obj = _mw.MaxMomentSupport();
                     _mw.IndexAll(obj);
-                    _mw.CrossLoop();
+                    LoopResult = _mw.CrossLoop();
                     DialogResult = true;
                 }));
             }
@@ -237,6 +237,7 @@ namespace Mesnet.Xaml.Pages
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     SetDecimalSeperator();
+                    LoopResult = 0;
                     DialogResult = true;
                 }));
             }

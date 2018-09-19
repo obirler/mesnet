@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace Mesnet.Classes.Math
 {
-    class Graph
+    public class Graph
     {
         public Dictionary<string, Dictionary<string, int>> Vertices = new Dictionary<string, Dictionary<string, int>>();
 

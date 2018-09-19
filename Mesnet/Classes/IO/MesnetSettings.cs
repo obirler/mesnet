@@ -19,9 +19,11 @@
 ========================================================================
 */
 
+using System;
+using System.Data.SqlClient;
+using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace Mesnet.Classes.IO
 {
@@ -30,124 +32,113 @@ namespace Mesnet.Classes.IO
         //Static constructor that runs only once when one of the static methods of the class called at the first time
         static MesnetSettings()
         {
-            if (!File.Exists(filename))
+            if (!File.Exists(_dbname))
             {
-                createfile();
+                SQLiteConnection.CreateFile(_dbname);
             }
-            _doc = XDocument.Load(filename);
+            _connection = new SQLiteConnection("Data Source=" + _dbname + ";MesnetVersion=3;");
+            _connection.Open();
+            string sql = "create table if not exists MesnetSettings (Id integer primary key, SettingKey text, SettingValue text)";
+            SQLiteCommand command = new SQLiteCommand(sql, _connection);
+            lock (_connection)
+            {
+                command.ExecuteNonQuery();
+            }
         }
 
-        private const string filename = "settings.cfg";
+        private const string _dbname = "settings.db";
 
-        static XDocument _doc;
+        private static SQLiteConnection _connection;
 
-        public static void WriteSetting(string settingname, string value, string group)
-        {           
-            if(!IsSettingGroupExists(group))
+        public static void WriteSetting(string settingname, string settingvalue)
+        {
+            if (IsSettingExists(settingname))
             {
-                createsettinggroup(group);
+                Update(settingname, settingvalue);
             }
+            else
+            {
+                Insert(settingname, settingvalue);
+            }
+        }
 
-            if(IsSettingExists(settingname, group))
-            {               
-                foreach (XElement groupelement in _doc.Element("MesnetSettings").Elements())
+        public static string ReadSetting(string settingname)
+        {
+            if (IsSettingExists(settingname))
+            {
+                SQLiteDataReader rdr;
+                SQLiteCommand contentCommand;
+                String cmd = String.Format("select * from MesnetSettings where SettingKey ='{0}'", settingname);
+
+                contentCommand = _connection.CreateCommand();
+                contentCommand.CommandText = cmd;
+                rdr = contentCommand.ExecuteReader();
+                if (rdr.Read())
                 {
-                    if (groupelement.Name == group)
-                    {
-                        foreach(XElement settingelement in groupelement.Elements())
-                        {
-                            if(settingelement.Name == settingname)
-                            {
-                                settingelement.Value = value;
-                                _doc.Save(filename);
-                                return;
-                            }
-                        }
-                    }
+                    return rdr.GetString(2);
+                }
+                else
+                {
+                    return null;
                 }
             }
             else
             {
-                foreach (XElement groupelement in _doc.Element("MesnetSettings").Elements())
+                return null;
+            }
+        }
+
+        private static void Insert(string settingname, string settingvalue)
+        {
+            try
+            {
+                string commandtext = String.Format("insert into MesnetSettings (Id, SettingKey, SettingValue) values (NULL,'{0}','{1}')", settingname, settingvalue);
+
+                using (SQLiteCommand comm = new SQLiteCommand(commandtext, _connection))
                 {
-                    if (groupelement.Name == group)
+                    lock (_connection)
                     {
-                        var settingelement = new XElement(settingname, value);
-                        groupelement.Add(settingelement);
-                        _doc.Save(filename);
-                        return;
+                        comm.ExecuteNonQuery();
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("Sql exception : " + ex.Message);
+            }
         }
 
-        public static string ReadSetting(string settingname, string group)
+        private static void Update(string settingname, string settingvalue)
         {
-            foreach (XElement groupelement in _doc.Element("MesnetSettings").Elements())
+            try
             {
-                if (groupelement.Name == group)
+                string commandtext = String.Format("update MesnetSettings set SettingValue = '{1}' where SettingKey = '{0}'", settingname, settingvalue);
+                using (SQLiteCommand comm = new SQLiteCommand(commandtext, _connection))
                 {
-                    foreach (XElement settingelement in groupelement.Elements())
+                    lock (_connection)
                     {
-                        if (settingelement.Name == settingname)
-                        {
-                            return settingelement.Value;
-                        }
+                        comm.ExecuteNonQuery();
                     }
                 }
             }
-            return null;
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("Sql exception : " + ex.Message);
+            }
         }
 
-        public static bool IsSettingExists(string settingname, string group)
+        public static bool IsSettingExists(string settingkey)
         {
-            foreach (XElement groupelement in _doc.Element("MesnetSettings").Elements())
-            {
-                if (groupelement.Name == group)
-                {
-                    foreach (XElement settingelement in groupelement.Elements())
-                    {
-                        if(settingelement.Name == settingname)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        
-        public static bool IsSettingGroupExists(string group)
-        {
-            foreach (XElement groupelement in _doc.Element("MesnetSettings").Elements())
-            {
-                if (groupelement.Name == group)
-                {                    
-                    return true;
-                }
-            }
-            return false;
+            SQLiteCommand command = new SQLiteCommand(_connection);
+            command.CommandText =
+                String.Format("select count(*) from MesnetSettings where SettingKey='{0}'", settingkey);
+            int count = Convert.ToInt32(command.ExecuteScalar());
+            return count > 0;
         }
 
-        private static void createsettinggroup(string group)
+        public static void Close()
         {
-            _doc.Root.Add(new XElement(group));
-            _doc.Save(filename);
-        }
-
-        public static void createfile()
-        {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = ("\t");
-            settings.OmitXmlDeclaration = false;
-            using (XmlWriter writer = XmlWriter.Create(filename, settings))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("MesnetSettings");              
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
-            }
+            _connection.Close();
         }
     }
 }

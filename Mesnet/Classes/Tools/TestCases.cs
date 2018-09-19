@@ -1550,8 +1550,8 @@ namespace Mesnet.Classes.Tools
                 beam10.SetAngleLeft(-90);
                 beam10.CircularConnect(Global.Direction.Right, beam1, Global.Direction.Right);
 
-                //var basicsupport10 = new BasicSupport(_mw.canvas);
-                //basicsupport10.AddBeam(beam10, Direction.Right);
+                var basicsupport10 = new BasicSupport(_mw.canvas);
+                basicsupport10.AddBeam(beam10, Direction.Right);
 
                 var loadpolies10 = new List<Poly>();
                 loadpolies10.Add(new Poly("50", 0, beam10.Length));

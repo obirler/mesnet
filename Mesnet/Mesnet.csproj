@@ -99,9 +99,16 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -116,6 +123,8 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.104.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -137,26 +146,68 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Global.cs" />
     <Compile Include="Classes\IO\DatabaseLogger.cs" />
+    <Compile Include="Classes\IO\Json\BasicSupportWriterJson.cs" />
+    <Compile Include="Classes\IO\Json\BeamWriterJson.cs" />
+    <Compile Include="Classes\IO\Json\LeftFixedSupportWriterJson.cs" />
+    <Compile Include="Classes\IO\Json\MesnetIOJson.cs" />
+    <Compile Include="Classes\IO\Json\RightFixedSupportWriterJson.cs" />
+    <Compile Include="Classes\IO\Logger.cs" />
+    <Compile Include="Classes\IO\Manifest\BeamManifest.cs" />
     <Compile Include="Classes\IO\Manifest\LeftFixedSupportManifest.cs" />
     <Compile Include="Classes\IO\Manifest\Member.cs" />
     <Compile Include="Classes\IO\Manifest\RightFixedSupportManifest.cs" />
     <Compile Include="Classes\IO\Manifest\RightFixedSupportReader.cs" />
     <Compile Include="Classes\IO\Manifest\SupportManifest.cs" />
-    <Compile Include="Classes\IO\Manifest\BeamManifest.cs" />
     <Compile Include="Classes\IO\MesnetSettings.cs" />
-    <Compile Include="Classes\IO\Xml\BasicSupportReader.cs" />
-    <Compile Include="Classes\IO\Xml\BeamReader.cs" />
-    <Compile Include="Classes\IO\Xml\BeamWriter.cs" />
-    <Compile Include="Classes\IO\Xml\BasicSupportWriter.cs" />
-    <Compile Include="Classes\IO\Xml\LeftFixedSupportReader.cs" />
-    <Compile Include="Classes\IO\Xml\LeftFixedSupportWriter.cs" />
-    <Compile Include="Classes\IO\Xml\MesnetIO.cs" />
-    <Compile Include="Classes\IO\Xml\RightFixedSupportWriter.cs" />
-    <Compile Include="Classes\IO\Xml\SlidingSupportReader.cs" />
-    <Compile Include="Classes\IO\Xml\SlidingSupportWriter.cs" />
+    <Compile Include="Classes\IO\Reporter\CrashReport.cs" />
+    <Compile Include="Classes\IO\Reporter\Entry.cs" />
+    <Compile Include="Classes\IO\Reporter\Log.cs" />
+    <Compile Include="Classes\IO\Reporter\Multipartform.cs" />
+    <Compile Include="Classes\IO\Reporter\OperatingSystemReport.cs" />
+    <Compile Include="Classes\IO\Reporter\PostInfo.cs" />
+    <Compile Include="Classes\IO\Reporter\ReleaseLogger.cs" />
+    <Compile Include="Classes\IO\Reporter\Report.cs" />
+    <Compile Include="Classes\IO\Reporter\Reporter.cs" />
+    <Compile Include="Classes\IO\Reporter\StringReport.cs" />
+    <Compile Include="Classes\IO\Reporter\TelemetryReport.cs" />
+    <Compile Include="Classes\IO\Xml\BasicSupportReaderXml.cs" />
+    <Compile Include="Classes\IO\Xml\BasicSupportWriterXml.cs" />
+    <Compile Include="Classes\IO\Xml\BeamReaderXml.cs" />
+    <Compile Include="Classes\IO\Xml\BeamWriterXml.cs" />
+    <Compile Include="Classes\IO\Xml\LeftFixedSupportReaderXml.cs" />
+    <Compile Include="Classes\IO\Xml\LeftFixedSupportWriterXml.cs" />
+    <Compile Include="Classes\IO\Xml\MesnetIOXml.cs" />
+    <Compile Include="Classes\IO\Xml\RightFixedSupportWriterXml.cs" />
+    <Compile Include="Classes\Math\Algebra.cs" />
+    <Compile Include="Classes\Math\ConjugatePoly.cs" />
+    <Compile Include="Classes\Math\ConjugateTerm.cs" />
+    <Compile Include="Classes\Math\ConjugateTermCollection.cs" />
+    <Compile Include="Classes\Math\Dijkstras.cs" />
     <Compile Include="Classes\Math\Geometry.cs" />
+    <Compile Include="Classes\Math\KeyValueCollection.cs" />
+    <Compile Include="Classes\Math\PiecewiseConjugatePoly.cs" />
+    <Compile Include="Classes\Math\PiecewisePoly.cs" />
+    <Compile Include="Classes\Math\Poly.cs" />
+    <Compile Include="Classes\Math\SimpsonIntegrator.cs" />
+    <Compile Include="Classes\Math\Term.cs" />
+    <Compile Include="Classes\Math\TermCollection.cs" />
+    <Compile Include="Classes\Math\TPolygon.cs" />
+    <Compile Include="Classes\Math\TransformGeometry.cs" />
+    <Compile Include="Classes\Math\TrapezeIntegrator.cs" />
+    <Compile Include="Classes\Math\Triangle.cs" />
+    <Compile Include="Classes\Tools\Computer.cs" />
+    <Compile Include="Classes\Tools\InternetAvailability.cs" />
+    <Compile Include="Classes\Tools\Member.cs" />
+    <Compile Include="Classes\Tools\MesnetDebug.cs" />
+    <Compile Include="Classes\Tools\MesnetVersion.cs" />
+    <Compile Include="Classes\Tools\OSInfo.cs" />
     <Compile Include="Classes\Tools\TestCases.cs" />
+    <Compile Include="Classes\Ui\CardinalSplineShape.cs" />
+    <Compile Include="Classes\Ui\DragCanvas.cs" />
+    <Compile Include="Classes\Ui\MouseHandlingMode.cs" />
+    <Compile Include="Classes\Ui\ScaleToPercentConverter.cs" />
     <Compile Include="Classes\Ui\TreeHandler.cs" />
     <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
     <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />
@@ -182,11 +233,17 @@
     <Compile Include="Xaml\Pages\MessagePrompt.xaml.cs">
       <DependentUpon>MessagePrompt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Xaml\Pages\NewVersionPrompt.xaml.cs">
+      <DependentUpon>NewVersionPrompt.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Xaml\Pages\RotatePrompt.xaml.cs">
       <DependentUpon>RotatePrompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\Pages\SettingsPrompt.xaml.cs">
       <DependentUpon>SettingsPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\Pages\VersionDownloader.xaml.cs">
+      <DependentUpon>VersionDownloader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\User Controls\BeamSupportItem.xaml.cs">
       <DependentUpon>BeamSupportItem.xaml</DependentUpon>
@@ -310,30 +367,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Global.cs" />
-    <Compile Include="Classes\Math\Algebra.cs" />
-    <Compile Include="Classes\Math\ConjugatePoly.cs" />
-    <Compile Include="Classes\Math\ConjugateTerm.cs" />
-    <Compile Include="Classes\Math\ConjugateTermCollection.cs" />
-    <Compile Include="Classes\Math\Dijkstras.cs" />
-    <Compile Include="Classes\Math\KeyValueCollection.cs" />
-    <Compile Include="Classes\Math\PiecewiseConjugatePoly.cs" />
-    <Compile Include="Classes\Math\PiecewisePoly.cs" />
-    <Compile Include="Classes\Math\Poly.cs" />
-    <Compile Include="Classes\Math\SimpsonIntegrator.cs" />
-    <Compile Include="Classes\Math\Term.cs" />
-    <Compile Include="Classes\Math\TermCollection.cs" />
-    <Compile Include="Classes\Math\TPolygon.cs" />
-    <Compile Include="Classes\Math\TransformGeometry.cs" />
-    <Compile Include="Classes\Math\TrapezeIntegrator.cs" />
-    <Compile Include="Classes\Math\Triangle.cs" />
-    <Compile Include="Classes\IO\Logger.cs" />
-    <Compile Include="Classes\Tools\Member.cs" />
-    <Compile Include="Classes\Tools\MyDebug.cs" />
-    <Compile Include="Classes\Ui\CardinalSplineShape.cs" />
-    <Compile Include="Classes\Ui\DragCanvas.cs" />
-    <Compile Include="Classes\Ui\MouseHandlingMode.cs" />
-    <Compile Include="Classes\Ui\ScaleToPercentConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -366,11 +399,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Xaml\Pages\NewVersionPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Xaml\Pages\RotatePrompt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Xaml\Pages\SettingsPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\Pages\VersionDownloader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

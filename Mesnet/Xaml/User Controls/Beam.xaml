@@ -9,6 +9,7 @@
         <RotateTransform x:Name="rotateTransform"/>
     </UserControl.RenderTransform>
 
+
     <Grid x:Name="contentgrid" Height="14" Background="Transparent">
 
         <Grid>

@@ -52,6 +52,11 @@ namespace Mesnet.Xaml.Pages
                 Result = Global.DialogResult.Yes;
                 DialogResult = true;
             }
+            else if (e.Key == Key.Escape)
+            {
+                Result = Global.DialogResult.No;
+                DialogResult = true;
+            }
         }
     }
 }

@@ -23,19 +23,29 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
+using Mesnet.Classes.IO;
 using Mesnet.Classes.Math;
 using Mesnet.Classes.Tools;
-using Mesnet.Properties;
 using Mesnet.Xaml.User_Controls;
 
 namespace Mesnet.Classes
 {
     public static class Global
     {
-        public static string VERSION_NUMBER =
+        public static string AppName = "Mesnet";
+
+        public static string VersionNumber =
             System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        public static List<object> Objects = new List<object>();
+        public static string UserName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+
+        public static string ServerUrl = "http://127.0.0.1:80";
+
+        public static bool CommunicateWithServer = false;
+
+        public static int IdCount = 0;
+
+        public static Dictionary<int, object> Objects = new Dictionary<int, object>();
 
         public static double MaxMoment = Double.MinValue;
 
@@ -59,11 +69,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
 
                         if (beam.Inertias?.Count > 0)
                         {
@@ -84,11 +94,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
 
                         if (beam.DistributedLoads?.Count > 0)
                         {
@@ -109,11 +119,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
 
                         if (beam.ConcentratedLoads?.Count > 0)
                         {
@@ -134,11 +144,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                        
                         if (beam.FixedEndMoment?.Count > 0)
                         {
@@ -159,11 +169,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
 
                         if (beam.FixedEndForce?.Count > 0)
                         {
@@ -184,11 +194,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
 
                         if (beam.Stress?.Count > 0)
                         {
@@ -214,11 +224,11 @@ namespace Mesnet.Classes
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.MaxInertia > MaxInertia)
                         {
                             MaxInertia = beam.MaxInertia;
@@ -267,11 +277,11 @@ namespace Mesnet.Classes
         {
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.Inertias?.Count > 0)
                         {
                             return true;
@@ -287,11 +297,11 @@ namespace Mesnet.Classes
         {
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.DistributedLoads?.Count > 0)
                         {
                             return true;
@@ -307,11 +317,11 @@ namespace Mesnet.Classes
         {
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.ConcentratedLoads?.Count > 0)
                         {
                             return true;
@@ -327,11 +337,11 @@ namespace Mesnet.Classes
         {
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.Stress?.Count > 0)
                         {
                             return true;
@@ -347,11 +357,11 @@ namespace Mesnet.Classes
         {
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.FixedEndMoment?.Count > 0)
                         {
                             return true;
@@ -367,11 +377,11 @@ namespace Mesnet.Classes
         {
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
 
-                        var beam = item as Beam;
+                        var beam = item.Value as Beam;
                         if (beam.FixedEndForce?.Count > 0)
                         {
                             return true;
@@ -398,18 +408,17 @@ namespace Mesnet.Classes
                 case "tr-TR":
 
                     dict.Source = new Uri(@"..\Xaml\Resources\LanguageTr.xaml", UriKind.Relative);
-                    Settings.Default.language = "tr-TR";
+                    MesnetSettings.WriteSetting("language", "tr-TR");
 
                     break;
 
                 default:
 
                     dict.Source = new Uri(@"..\Xaml\Resources\LanguageEn.xaml", UriKind.Relative);
-                    Settings.Default.language = "en-EN";
+                    MesnetSettings.WriteSetting("language", "en-EN");
 
                     break;
             }
-            Settings.Default.Save();
             App.Current.Resources.MergedDictionaries.Add(dict);
         }
 
@@ -417,30 +426,31 @@ namespace Mesnet.Classes
         /// Sets the language of the application to the given language.
         /// </summary>
         /// <param name="lang">The desired language.</param>
-        public static void SetLanguageDictionary(string lang)
+        public static void SetLanguageDictionary(LanguageType newlanguage)
         {
             if (App.Current.Resources.MergedDictionaries.Count != 0)
             {
                 App.Current.Resources.MergedDictionaries.RemoveAt(0);
             }
             ResourceDictionary dict = new ResourceDictionary();
-            switch (lang)
+            switch (newlanguage)
             {
-                case "tr-TR":
+                case LanguageType.Turkish:
 
                     dict.Source = new Uri(@"..\Xaml\Resources\LanguageTr.xaml", UriKind.Relative);
-                    Settings.Default.language = "tr-TR";
+                    MesnetSettings.WriteSetting("language", "tr-TR");
+                    Language = LanguageType.Turkish;
 
                     break;
 
-                default:
+                case LanguageType.English:
 
                     dict.Source = new Uri(@"..\Xaml\Resources\LanguageEn.xaml", UriKind.Relative);
-                    Settings.Default.language = "en-EN";
+                    MesnetSettings.WriteSetting("language", "en-EN");
+                    Language = LanguageType.English;
 
                     break;
             }
-            Settings.Default.Save();
             App.Current.Resources.MergedDictionaries.Add(dict);
         }      
 
@@ -456,37 +466,55 @@ namespace Mesnet.Classes
 
         public static int AddObject(object obj)
         {
-            if (!Objects.Contains(obj))
+            switch (GetObjectType(obj))
             {
-                Objects.Add(obj);
-                return Objects.IndexOf(obj);
+                case ObjectType.Beam:
+                    var beam = obj as Beam;
+                    while (Objects.ContainsKey(IdCount))
+                    {
+                        IdCount++;
+                    }
+                    Objects.Add(IdCount, beam);
+                    break;
+
+                case ObjectType.BasicSupport:
+                    var bs = obj as BasicSupport;
+                    while (Objects.ContainsKey(IdCount))
+                    {
+                        IdCount++;
+                    }
+                    Objects.Add(IdCount, bs);
+                    break;
+
+                case ObjectType.SlidingSupport:
+                    var ss = obj as SlidingSupport;
+                    while (Objects.ContainsKey(IdCount))
+                    {
+                        IdCount++;
+                    }
+                    Objects.Add(IdCount, ss);
+                    break;
+
+                case ObjectType.LeftFixedSupport:
+                    var ls = obj as LeftFixedSupport;
+                    while (Objects.ContainsKey(IdCount))
+                    {
+                        IdCount++;
+                    }
+                    Objects.Add(IdCount, ls);
+                    break;
+
+                case ObjectType.RightFixedSupport:
+                    var rs = obj as RightFixedSupport;
+                    while (Objects.ContainsKey(IdCount))
+                    {
+                        IdCount++;
+                    }
+                    Objects.Add(IdCount, rs);
+                    break;
             }
-            else
-            {
-                MyDebug.WriteWarning("the object already added!");
-                return -1;
-            }
-        }
 
-        public static Beam GetBeam(string Name)
-        {
-            foreach (var item in Objects)
-            {
-                switch (item.GetType().Name)
-                {
-                    case "Beam":
-
-                        var beam = item as Beam;
-
-                        if (beam.Name == Name)
-                        {
-                            return beam;
-                        }
-
-                        break;                       
-                }
-            }
-            return null;
+            return IdCount;
         }
 
         public static object GetObject(int id)
@@ -551,6 +579,22 @@ namespace Mesnet.Classes
             Cancel
         }
 
+        public enum ReportType
+        {
+            StringReport=0,
+            TelemetryReport=1,
+            ExtendedTelemetryReport=2,
+            CrashReport=3,
+            OperatingSystemReport=4,
+            UniqueUserReport=5
+        }
+
+        public enum LanguageType
+        {
+            English,
+            Turkish
+        }
+
         public static ObjectType GetObjectType(object obj)
         {
             if (obj is Beam)
@@ -580,7 +624,7 @@ namespace Mesnet.Classes
         {
             foreach (Poly poly in ppoly)
             {
-                MyDebug.WriteInformation(message + " : " + poly.ToString() + " , " + poly.StartPoint + " <= x <= " + poly.EndPoint);
+                MesnetDebug.WriteInformation(message + " : " + poly.ToString() + " , " + poly.StartPoint + " <= x <= " + poly.EndPoint);
             }
         }
 
@@ -601,6 +645,12 @@ namespace Mesnet.Classes
 
         public static List<string> LogList = new List<string>();
 
+        public static List<string> FileLogList = new List<string>();
+
+        public static LanguageType Language = LanguageType.English;
+
         public static CalculationType Calculation = CalculationType.SingleThreaded;
+
+        public static bool LogInRelease = true;
     }
 }

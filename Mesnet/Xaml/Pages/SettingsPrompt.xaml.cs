@@ -20,6 +20,8 @@
 */
 using System.Windows;
 using System.Windows.Controls;
+using Mesnet.Classes;
+using Mesnet.Classes.IO;
 using Mesnet.Properties;
 using static Mesnet.Classes.Global;
 
@@ -34,15 +36,56 @@ namespace Mesnet.Xaml.Pages
         {
             InitializeComponent();
 
-            switch (Settings.Default.language)
+            readsettings();
+        }
+
+        private void englishbtn_Checked(object sender, RoutedEventArgs e)
+        {
+            SetLanguageDictionary(LanguageType.English);
+            MainWindow mw = App.Current.MainWindow as MainWindow;
+            UpdateLanguages();
+            mw.UpdateLanguages();
+        }
+
+        private void turkishbtn_Checked(object sender, RoutedEventArgs e)
+        {
+            SetLanguageDictionary(LanguageType.Turkish);
+            MainWindow mw = App.Current.MainWindow as MainWindow;
+            UpdateLanguages();
+            mw.UpdateLanguages();
+        }
+
+        private void calculationcbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (calculationcbx.SelectedIndex)
             {
-                case "en-EN":
+                case 0:
+
+                    Calculation = CalculationType.SingleThreaded;
+                    MesnetSettings.WriteSetting("calculationtype", "singlethreaded");
+
+                    break;
+
+                case 1:
+
+                    Calculation = CalculationType.MultiThreaded;
+                    MesnetSettings.WriteSetting("calculationtype", "multithreaded");
+
+                    break;
+            }
+        }
+
+        private void readsettings()
+        {
+            switch (Global.Language)
+            {
+                case LanguageType.English:
 
                     englishbtn.IsChecked = true;
 
                     break;
 
-                case "tr-TR":
+                case LanguageType.Turkish:
 
                     turkishbtn.IsChecked = true;
 
@@ -60,40 +103,6 @@ namespace Mesnet.Xaml.Pages
                 case CalculationType.MultiThreaded:
 
                     calculationcbx.SelectedIndex = 1;
-
-                    break;
-            }
-        }
-
-        private void englishbtn_Checked(object sender, RoutedEventArgs e)
-        {
-            SetLanguageDictionary("en-EN");
-            MainWindow mw = App.Current.MainWindow as MainWindow;
-            UpdateLanguages();
-            mw.UpdateLanguages();
-        }
-
-        private void turkishbtn_Checked(object sender, RoutedEventArgs e)
-        {
-            SetLanguageDictionary("tr-TR");
-            MainWindow mw = App.Current.MainWindow as MainWindow;
-            UpdateLanguages();
-            mw.UpdateLanguages();
-        }
-
-        private void calculationcbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (calculationcbx.SelectedIndex)
-            {
-                case 0:
-
-                    Calculation = CalculationType.SingleThreaded;
-
-                    break;
-
-                case 1:
-
-                    Calculation = CalculationType.MultiThreaded;
 
                     break;
             }

@@ -21,9 +21,9 @@
 
 namespace Mesnet.Classes.IO.Xml
 {
-    public class RightFixedSupportWriter
+    public class RightFixedSupportWriterXml
     {
-        public RightFixedSupportWriter(System.Xml.XmlWriter writer, Xaml.User_Controls.RightFixedSupport support)
+        public RightFixedSupportWriterXml(System.Xml.XmlWriter writer, Xaml.User_Controls.RightFixedSupport support)
         {
             _writer = writer;
 

@@ -32,9 +32,9 @@ using System.Xml.Linq;
 
 namespace Mesnet.Classes.IO.Xml
 {
-    public class BeamReader
+    public class BeamReaderXml
     {
-        public BeamReader(System.Xml.Linq.XElement beamelement)
+        public BeamReaderXml(System.Xml.Linq.XElement beamelement)
         {           
             _beamelement = beamelement;
             _beam = new BeamManifest();

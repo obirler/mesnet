@@ -1,0 +1,22 @@
+﻿<Window x:Class="Mesnet.Xaml.Pages.VersionDownloader"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mesnet.Xaml.Pages"
+        mc:Ignorable="d"
+        Title="{DynamicResource message}" Height="140" Width="302" Icon="/Assets/applogo.ico" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+   
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="16" Margin="10,15,10,7">
+            <TextBlock Text="{DynamicResource downloadmessage}"/>
+            <TextBlock Text=" V"/>
+            <TextBlock x:Name="version"/>
+        </StackPanel>
+        
+        <ProgressBar x:Name="progresspercent" Height="25" Minimum="0" Maximum="100" Margin="10"/>
+
+        <TextBlock x:Name="progresstxt" HorizontalAlignment="Center"/>
+
+    </StackPanel>
+</Window>

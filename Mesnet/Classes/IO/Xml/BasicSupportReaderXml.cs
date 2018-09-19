@@ -23,12 +23,13 @@ using Mesnet.Classes.IO.Manifest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Mesnet.Classes.IO.Xml
 {
-    class SlidingSupportReader
+    public class BasicSupportReaderXml
     {
-        public SlidingSupportReader(System.Xml.Linq.XElement supportelement)
+        public BasicSupportReaderXml(System.Xml.Linq.XElement supportelement)
         {
             _supportelement = supportelement;
             _support = new SupportManifest();
@@ -36,7 +37,7 @@ namespace Mesnet.Classes.IO.Xml
 
         public SupportManifest Read()
         {
-            _support.Type = "SlidingSupport";
+            _support.Type = "BasicSupport";
 
             readproperties();
 
@@ -89,21 +90,21 @@ namespace Mesnet.Classes.IO.Xml
                     switch (memberitem.Name.ToString())
                     {
                         case "id":
-                            member.Id = Convert.ToInt32(item.Value);
+                            member.Id = Convert.ToInt32(memberitem.Value);
                             break;
                         case "beamid":
-                            member.BeamId = Convert.ToInt32(item.Value);
+                            member.BeamId = Convert.ToInt32(memberitem.Value);
                             break;
                         case "name":
-                            member.Name = item.Value;
+                            member.Name = memberitem.Value;
                             break;
                         case "direction":
 
-                            if (item.Value == "Left")
+                            if(memberitem.Value== "Left")
                             {
                                 member.Direction = Global.Direction.Left;
                             }
-                            else if (item.Value == "Right")
+                            else if(memberitem.Value == "Right")
                             {
                                 member.Direction = Global.Direction.Right;
                             }
@@ -113,7 +114,7 @@ namespace Mesnet.Classes.IO.Xml
                 members.Add(member);
             }
 
-            if (members.Count > 0)
+            if(members.Count > 0)
             {
                 _support.Members = members;
             }

@@ -40,7 +40,7 @@
     <system:String x:Key="slidingsupportput">Sliding support has been placed</system:String>
     <system:String x:Key="fixedinertiamoment">Fixed Moment of Inertia</system:String>
     <system:String x:Key="variableinertiamoment">Variable Moment of Inertia</system:String>
-    <system:String x:Key="magnitude">Magnitude : </system:String>
+    <system:String x:Key="magnitude">Magnitude :</system:String>
     <system:String x:Key="enterbeamlength">Enter beam length first</system:String>
     <system:String x:Key="invalidstartpoint">Invalid start point</system:String>
     <system:String x:Key="invalidendpoint">Invalid end point</system:String>
@@ -65,6 +65,7 @@
     <system:String x:Key="clearall">Clear All</system:String>
     <system:String x:Key="tests">Tests</system:String>
     <system:String x:Key="solve">Solve</system:String>
+    <system:String x:Key="solving">Solving</system:String>
     <system:String x:Key="showmoment">Show Moment Distribution</system:String>
     <system:String x:Key="hidemoment">Hide Moment Distribution</system:String>
     <system:String x:Key="showforce">Show Force Distribution</system:String>
@@ -94,10 +95,10 @@
     <system:String x:Key="maxloc">Max Location</system:String>
     <system:String x:Key="minloc">Min Location</system:String>
     <system:String x:Key="information">Information</system:String>
-    <system:String x:Key="stressdist">Stress Disribution</system:String>
+    <system:String x:Key="stressdist">Stress Distribution</system:String>
     <system:String x:Key="crossindex">Cross Index</system:String>
     <system:String x:Key="connections">Connetions</system:String>
-    <system:String x:Key="connection">Connetion</system:String>
+    <system:String x:Key="connection">Connection</system:String>
     <system:String x:Key="degree">Degree</system:String>
     <system:String x:Key="calculatingbeam">Calculating Beam</system:String>
     <system:String x:Key="crosssolver">Cross Solver</system:String>
@@ -116,6 +117,8 @@
     <system:String x:Key="asktosavebeforeopenning">Do you want to save your current changes?</system:String>
     <system:String x:Key="filefilter">Mesnet File (*.mnt)|*.mnt</system:String>
     <system:String x:Key="systemnotsolvable">Beam system can not be solved</system:String>
+    <system:String x:Key="nosolvebeamwithoutsupport">System not solvable. There are beams one of the end has not supports</system:String>
+    <system:String x:Key="nosolveseperatedbeamsystems">System not solvable. There are seperated beam systems</system:String>
     <system:String x:Key="notloadedsystem">There is no loads on any beam, system will not be solved</system:String>
     <system:String x:Key="clickforbeam">Click somewhere the beam to be placed</system:String>
     <system:String x:Key="zoomedin">Zoomed in</system:String>
@@ -126,7 +129,8 @@
     <system:String x:Key="concloadput">Concentrated load placed</system:String>
     <system:String x:Key="distloadput">Distributed load placed</system:String>
     <system:String x:Key="about">About</system:String>
-    <system:String x:Key="solved">Frame system has been solved</system:String>
+    <system:String x:Key="solved">Beam system has been solved</system:String>
+    <system:String x:Key="notsolved">Beam system could not be solved</system:String>
     <system:String x:Key="inertiamenu">Inertia</system:String>
     <system:String x:Key="distloadmenu">Dist. Load</system:String>
     <system:String x:Key="concloadmenu">Conc. Load</system:String>
@@ -146,6 +150,12 @@
     <system:String x:Key="invalidfile">Invalid file!</system:String>
     <system:String x:Key="invalidevalue">Invalid e value</system:String>
     <system:String x:Key="invaliddvalue">Invalid d value</system:String>
-    <system:String x:Key="ehigheroregualtod">e value can not be higher or egual to d value</system:String>
+    <system:String x:Key="ehigheroregualtod">e value can not be higher or equal to d value</system:String>
     <system:String x:Key="message">Message</system:String>
+    <system:String x:Key="systemnotconverging">The system is not converging. Solution will stop!</system:String>
+    <system:String x:Key="dontaskagain">Don't ask again</system:String>
+    <system:String x:Key="newversionalert">New version found:</system:String>
+    <system:String x:Key="newversiontitle">New version</system:String>
+    <system:String x:Key="downloadmessage">Downloading</system:String>
+
 </ResourceDictionary>

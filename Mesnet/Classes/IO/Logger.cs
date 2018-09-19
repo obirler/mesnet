@@ -38,21 +38,25 @@ namespace Mesnet.Classes.Tools
         public static void WriteLine(string message)
         {
             stw.WriteLine(message);
+            Global.FileLogList.Add(message);
         }
 
         public static void NextLine()
         {
             stw.WriteLine("");
+            Global.FileLogList.Add("");
         }
 
         public static void SplitLine()
         {
             stw.WriteLine("-------------------------------------------------------------------------------------------------------");
+            Global.FileLogList.Add("-------------------------------------------------------------------------------------------------------");
         }
 
         public static void Write(string message)
         {
             stw.Write(message);
+            Global.FileLogList.Add(message);
         }
 
         public static bool IsClosed()

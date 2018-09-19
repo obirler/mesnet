@@ -19,13 +19,11 @@
 ========================================================================
 */
 
-using Mesnet.Classes.Tools;
-
 namespace Mesnet.Classes.IO.Xml
 {
-    public class SlidingSupportWriter
+    public class LeftFixedSupportWriterXml
     {
-        public SlidingSupportWriter(System.Xml.XmlWriter writer, Xaml.User_Controls.SlidingSupport support)
+        public LeftFixedSupportWriterXml(System.Xml.XmlWriter writer, Xaml.User_Controls.LeftFixedSupport support)
         {
             _writer = writer;
 
@@ -34,7 +32,7 @@ namespace Mesnet.Classes.IO.Xml
 
         public void Write()
         {
-            _writer.WriteStartElement("SlidingSupport");
+            _writer.WriteStartElement("LeftFixedSupport");
 
             _writer.WriteStartElement("SupportProperties");
 
@@ -52,41 +50,34 @@ namespace Mesnet.Classes.IO.Xml
 
             _writer.WriteEndElement();
 
-            writemembers();
+            writemember();
 
             _writer.WriteEndElement();
         }
 
-        private void writemembers()
+        private void writemember()
         {
-            _writer.WriteStartElement("Members");
+            _writer.WriteStartElement("Member");
 
-            foreach (Member member in _support.Members)
+            _writer.WriteElementString("id", _support.Member.Beam.Id.ToString());
+
+            _writer.WriteElementString("beamid", _support.Member.Beam.BeamId.ToString());
+
+            _writer.WriteElementString("name", _support.Member.Beam.Name.ToString());
+
+            switch (_support.Member.Direction)
             {
-                _writer.WriteStartElement("Member");
+                case Global.Direction.Left:
 
-                _writer.WriteElementString("id", member.Beam.Id.ToString());
+                    _writer.WriteElementString("direction", "Left");
 
-                _writer.WriteElementString("beamid", member.Beam.BeamId.ToString());
+                    break;
 
-                _writer.WriteElementString("name", member.Beam.Name.ToString());
+                case Global.Direction.Right:
 
-                switch (member.Direction)
-                {
-                    case Global.Direction.Left:
+                    _writer.WriteElementString("direction", "Right");
 
-                        _writer.WriteElementString("direction", "Left");
-
-                        break;
-
-                    case Global.Direction.Right:
-
-                        _writer.WriteElementString("direction", "Right");
-
-                        break;
-                }
-
-                _writer.WriteEndElement();
+                    break;
             }
 
             _writer.WriteEndElement();
@@ -94,6 +85,6 @@ namespace Mesnet.Classes.IO.Xml
 
         System.Xml.XmlWriter _writer;
 
-        Xaml.User_Controls.SlidingSupport _support;
+        Xaml.User_Controls.LeftFixedSupport _support;
     }
 }

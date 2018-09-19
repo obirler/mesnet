@@ -122,6 +122,12 @@ namespace Mesnet.Classes.Ui
             arrowbutton.content.Click += _mw.arrow_Click;
             beamitem.Items.Add(arrowitem);
 
+#if DEBUG
+            var ideitem = new TreeViewItem();
+            ideitem.Header = "Id : " + beam.Id;
+            beamitem.Items.Add(ideitem);
+#endif
+
             var lengthitem = new TreeViewItem();
             lengthitem.Header = new LengthItem(GetString("length") + " : " + beam.Length + " m");
             beamitem.Items.Add(lengthitem);
@@ -400,14 +406,14 @@ namespace Mesnet.Classes.Ui
         /// </summary>
         public void UpdateAllBeamTree()
         {
-            MyDebug.WriteInformation("Update All Tree Started");
+            MesnetDebug.WriteInformation("Update All Tree Started");
 
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case Global.ObjectType.Beam:
-                        Beam beam = (Beam)item;
+                        Beam beam = item.Value as Beam;
                         UpdateBeamTree(beam);
                         break;
                 }
@@ -427,11 +433,11 @@ namespace Mesnet.Classes.Ui
 
                 foreach (var item in Objects)
                 {
-                    switch (GetObjectType(item))
+                    switch (GetObjectType(item.Value))
                     {
                         case Global.ObjectType.Beam:
 
-                            var beam1 = item as Beam;
+                            var beam1 = item.Value as Beam;
 
                             if (Equals(beam1, beam))
                             {
@@ -468,7 +474,7 @@ namespace Mesnet.Classes.Ui
         /// </summary>
         public void UnSelectAllBeamItem()
         {
-            MyDebug.WriteInformation("UnSelectAllBeamItem executed");
+            MesnetDebug.WriteInformation("UnSelectAllBeamItem executed");
             foreach (TreeViewBeamItem item in _beamtree.Items)
             {
                 item.Selected -= BeamTreeItemSelected;
@@ -477,9 +483,9 @@ namespace Mesnet.Classes.Ui
             }
         }
 
-        #endregion
+#endregion
 
-        #region Support Tree Methods and Events
+#region Support Tree Methods and Events
 
         /// <summary>
         /// Updates given support in the support tree view.
@@ -522,6 +528,12 @@ namespace Mesnet.Classes.Ui
                         supportitem.Header =
                             new SlidingSupportItem(slidingsup);
                     }
+
+#if DEBUG
+                    var slideitem = new TreeViewItem();
+                    slideitem.Header = "Id : " + slidingsup.Id;
+                    supportitem.Items.Add(slideitem);
+#endif
 
                     if (slidingsup.CrossIndex != null)
                     {
@@ -574,6 +586,12 @@ namespace Mesnet.Classes.Ui
                         supportitem.Header = new BasicSupportItem(basicsup);
                     }
 
+#if DEBUG
+                    var bsideitem = new TreeViewItem();
+                    bsideitem.Header = "Id : " + basicsup.Id;
+                    supportitem.Items.Add(bsideitem);
+#endif
+
                     if (basicsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
@@ -625,6 +643,12 @@ namespace Mesnet.Classes.Ui
                         supportitem.Header =
                             new LeftFixedSupportItem(lfixedsup);
                     }
+
+#if DEBUG
+                    var lsideitem = new TreeViewItem();
+                    lsideitem.Header = "Id : " + lfixedsup.Id;
+                    supportitem.Items.Add(lsideitem);
+#endif
 
                     if (lfixedsup.CrossIndex != null)
                     {
@@ -680,6 +704,12 @@ namespace Mesnet.Classes.Ui
                            new RightFixedSupportItem(rfixedsup);
                     }
 
+#if DEBUG
+                    var rsideitem = new TreeViewItem();
+                    rsideitem.Header = "Id : " + rfixedsup.Id;
+                    supportitem.Items.Add(rsideitem);
+#endif
+
                     if (rfixedsup.CrossIndex != null)
                     {
                         var crossitem = new TreeViewItem();
@@ -725,35 +755,35 @@ namespace Mesnet.Classes.Ui
         /// </summary>
         public void UpdateAllSupportTree()
         {
-            MyDebug.WriteInformation("Update All Support Tree Started");
+            MesnetDebug.WriteInformation("Update All Support Tree Started");
             foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case Global.ObjectType.SlidingSupport:
 
-                        SlidingSupport sliding = (SlidingSupport)item;
+                        var sliding = item.Value as SlidingSupport;
                         UpdateSupportTree(sliding);
 
                         break;
 
                     case Global.ObjectType.BasicSupport:
 
-                        BasicSupport basic = (BasicSupport)item;
+                        var basic = item.Value as BasicSupport;
                         UpdateSupportTree(basic);
 
                         break;
 
                     case Global.ObjectType.LeftFixedSupport:
 
-                        LeftFixedSupport left = (LeftFixedSupport)item;
+                        var left = item.Value as LeftFixedSupport;
                         UpdateSupportTree(left);
 
                         break;
 
                     case Global.ObjectType.RightFixedSupport:
 
-                        RightFixedSupport right = (RightFixedSupport)item;
+                        var right = item.Value as RightFixedSupport;
                         UpdateSupportTree(right);
 
                         break;
@@ -784,7 +814,7 @@ namespace Mesnet.Classes.Ui
         /// </summary>
         public void UnSelectAllSupportItem()
         {
-            MyDebug.WriteInformation("UnSelectAllSupportItem executed");
+            MesnetDebug.WriteInformation("UnSelectAllSupportItem executed");
             foreach (TreeViewSupportItem item in _supporttree.Items)
             {
                 item.Selected -= SupportTreeItemSelected;
@@ -802,7 +832,7 @@ namespace Mesnet.Classes.Ui
         {
             if (SupportTreeItemSelectedEventEnabled)
             {
-                MyDebug.WriteInformation("SupportTreeItemSelected");
+                MesnetDebug.WriteInformation("SupportTreeItemSelected");
                 _mw.Reset();
                 var treeitem = sender as TreeViewItem;
 
@@ -810,11 +840,11 @@ namespace Mesnet.Classes.Ui
                 {
                     foreach (var item in Objects)
                     {
-                        switch (GetObjectType(item))
+                        switch (GetObjectType(item.Value))
                         {
                             case Global.ObjectType.SlidingSupport:
 
-                                var slidingsupport = item as SlidingSupport;
+                                var slidingsupport = item.Value as SlidingSupport;
 
                                 if (Equals(ssitem.Support, slidingsupport))
                                 {
@@ -832,11 +862,11 @@ namespace Mesnet.Classes.Ui
                 {
                     foreach (var item in Objects)
                     {
-                        switch (GetObjectType(item))
+                        switch (GetObjectType(item.Value))
                         {
                             case Global.ObjectType.BasicSupport:
 
-                                var basicsupport = item as BasicSupport;
+                                var basicsupport = item.Value as BasicSupport;
 
                                 if (Equals(bsitem.Support, basicsupport))
                                 {
@@ -854,11 +884,11 @@ namespace Mesnet.Classes.Ui
                 {
                     foreach (var item in Objects)
                     {
-                        switch (GetObjectType(item))
+                        switch (GetObjectType(item.Value))
                         {
                             case Global.ObjectType.LeftFixedSupport:
 
-                                var leftfixedsupport = item as LeftFixedSupport;
+                                var leftfixedsupport = item.Value as LeftFixedSupport;
 
                                 if (Equals(lsitem.Support, leftfixedsupport))
                                 {
@@ -876,11 +906,11 @@ namespace Mesnet.Classes.Ui
                 {
                     foreach (var item in Objects)
                     {
-                        switch (GetObjectType(item))
+                        switch (GetObjectType(item.Value))
                         {
                             case Global.ObjectType.RightFixedSupport:
 
-                                var rightfixedsupport = item as RightFixedSupport;
+                                var rightfixedsupport = item.Value as RightFixedSupport;
 
                                 if (Equals(rsitem.Support, rightfixedsupport))
                                 {
@@ -896,6 +926,6 @@ namespace Mesnet.Classes.Ui
                 }
             }
         }
-        #endregion
+#endregion
     }
 }

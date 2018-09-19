@@ -40,7 +40,7 @@
     <system:String x:Key="slidingsupportput">Kayıcı mesnet yerleştirildi</system:String>
     <system:String x:Key="fixedinertiamoment">Sabit Atalet Momenti</system:String>
     <system:String x:Key="variableinertiamoment">Değişken Atalet Momenti</system:String>
-    <system:String x:Key="magnitude">Büyüklük : </system:String>
+    <system:String x:Key="magnitude">Büyüklük :</system:String>
     <system:String x:Key="enterbeamlength">Önce kiriş uzunluğunu girin</system:String>
     <system:String x:Key="invalidstartpoint">Geçersiz başlangıç noktası</system:String>
     <system:String x:Key="invalidendpoint">Geçersiz bitiş noktası</system:String>
@@ -52,7 +52,7 @@
     <system:String x:Key="angle">Açı :</system:String>
     <system:String x:Key="invalidangle">Geçersiz kiriş açısı</system:String>
     <system:String x:Key="performstressanalalysis">Gerilme Analizi Yap</system:String>
-    <system:String x:Key="maxstress">İzin verilen en yüksek gerilme </system:String>
+    <system:String x:Key="maxstress">İzin verilen en yüksek gerilme</system:String>
     <system:String x:Key="calculationtype">Hesaplama Tipi</system:String>
     <system:String x:Key="notcoveredinertia">Geçersiz atalet fonksiyonu. Sıfırdan kiriş boyuna kadar bütün x değerleri için atalet fonksiyonu tanımlanmalı.</system:String>
     <system:String x:Key="minusinertia">Atalet momenti sıfıra eşit yada sıfırdan küçük olamaz.</system:String>
@@ -65,6 +65,7 @@
     <system:String x:Key="clearall">Hepsini Sil</system:String>
     <system:String x:Key="tests">Testler</system:String>
     <system:String x:Key="solve">Çöz</system:String>
+    <system:String x:Key="solving">Çözülüyor</system:String>
     <system:String x:Key="showmoment">Moment Dağılımını Göster</system:String>
     <system:String x:Key="hidemoment">Moment Dağılımını Gizle</system:String>
     <system:String x:Key="showforce">Kuvvet Dağılımını Göster</system:String>
@@ -116,8 +117,10 @@
     <system:String x:Key="asktosavebeforeopenning">Şu anki değişiklikleri kaydetmek istiyor musunuz?</system:String>
     <system:String x:Key="filefilter">Mesnet Dosyası (*.mnt)|*.mnt</system:String>
     <system:String x:Key="systemnotsolvable">Kiriş sistemi çözülemez</system:String>
+    <system:String x:Key="nosolvebeamwithoutsupport">Sistem çözülemez. Bir ucunda mesnet olmayan kiriş var</system:String>
+    <system:String x:Key="nosolveseperatedbeamsystems">Sistem çözülemez. Birbirinden bağımsız kiriş sistemleri var</system:String>
     <system:String x:Key="notloadedsystem">Hiçbir kirişte yük yok, sistem çözülmeyecek</system:String>
-    <system:String x:Key="clickforbeam">Kirişi eklenmesini istediğiniz yere tıklayın.</system:String>
+    <system:String x:Key="clickforbeam">Kirişi eklenmesini istediğiniz yere tıklayın</system:String>
     <system:String x:Key="zoomedin">Yakınlaştırıldı</system:String>
     <system:String x:Key="zoomedout">Uzaklaştırıldı</system:String>
     <system:String x:Key="beamdeleted">Kiriş silindi</system:String>
@@ -127,6 +130,7 @@
     <system:String x:Key="distloadput">Yayılı yük eklendi</system:String>
     <system:String x:Key="about">Hakkında</system:String>
     <system:String x:Key="solved">Kiriş sistemi çözüldü</system:String>
+    <system:String x:Key="notsolved">Kiriş sistemi çözülemedi</system:String>
     <system:String x:Key="inertiamenu">Atalet</system:String>
     <system:String x:Key="distloadmenu">Yay. Yük</system:String>
     <system:String x:Key="concloadmenu">Tek. Yük</system:String>
@@ -148,4 +152,10 @@
     <system:String x:Key="invaliddvalue">Geçersiz d değeri</system:String>
     <system:String x:Key="ehigheroregualtod">e değeri d değerinden büyük ya da eşit olamaz</system:String>
     <system:String x:Key="message">Mesaj</system:String>
+    <system:String x:Key="systemnotconverging">Sistem yakınsamıyor. Çözüm durdurulacak!</system:String>
+    <system:String x:Key="dontaskagain">Bir daha sorma</system:String>
+    <system:String x:Key="newversionalert">Yeni sürüm bulundu:</system:String>
+    <system:String x:Key="newversiontitle">Yeni sürüm</system:String>
+    <system:String x:Key="downloadmessage">İndiriliyor</system:String>
+
 </ResourceDictionary>

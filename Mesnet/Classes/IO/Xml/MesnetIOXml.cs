@@ -34,9 +34,9 @@ using static Mesnet.Classes.Global;
 
 namespace Mesnet.Classes.IO.Xml
 {
-    public class MesnetIO
+    public class MesnetIOXml
     {
-        public MesnetIO()
+        public MesnetIOXml()
         {           
         }
 
@@ -53,15 +53,15 @@ namespace Mesnet.Classes.IO.Xml
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Objects");
 
-                foreach (object item in Objects)
+                foreach (var item in Objects)
                 {
-                    switch (GetObjectType(item))
+                    switch (GetObjectType(item.Value))
                     {
                         case ObjectType.Beam:
 
-                            var beam = item as Beam;
+                            var beam = item.Value as Beam;
 
-                            var beamwriter = new BeamWriter(writer, beam);
+                            var beamwriter = new BeamWriterXml(writer, beam);
 
                             beamwriter.Write();
 
@@ -69,29 +69,19 @@ namespace Mesnet.Classes.IO.Xml
 
                         case ObjectType.BasicSupport:
 
-                            var bs = item as BasicSupport;
+                            var bs = item.Value as BasicSupport;
 
-                            var bswriter = new BasicSupportWriter(writer, bs);
+                            var bswriter = new BasicSupportWriterXml(writer, bs);
 
                             bswriter.Write();
 
                             break;
 
-                        case ObjectType.SlidingSupport:
-
-                            var ss = item as SlidingSupport;
-
-                            var sswriter = new SlidingSupportWriter(writer, ss);
-
-                            sswriter.Write();
-
-                            break;
-
                         case ObjectType.LeftFixedSupport:
 
-                            var ls = item as LeftFixedSupport;
+                            var ls = item.Value as LeftFixedSupport;
 
-                            var lswiter = new LeftFixedSupportWriter(writer, ls);
+                            var lswiter = new LeftFixedSupportWriterXml(writer, ls);
 
                             lswiter.Write();
 
@@ -99,9 +89,9 @@ namespace Mesnet.Classes.IO.Xml
 
                         case ObjectType.RightFixedSupport:
 
-                            var rs = item as RightFixedSupport;
+                            var rs = item.Value as RightFixedSupport;
 
-                            var rswriter = new RightFixedSupportWriter(writer, rs);
+                            var rswriter = new RightFixedSupportWriterXml(writer, rs);
 
                             rswriter.Write();
 
@@ -137,22 +127,22 @@ namespace Mesnet.Classes.IO.Xml
                 switch (element.Name.ToString())
                 {
                     case "Beam":
-                        var beamreader = new BeamReader(element);
+                        var beamreader = new BeamReaderXml(element);
                         manifestlist.Add(beamreader.Read());
                         break;
 
                     case "BasicSupport":
-                        var bsreader = new BasicSupportReader(element);
+                        var bsreader = new BasicSupportReaderXml(element);
                         manifestlist.Add(bsreader.Read());
                         break;
 
                     case "SlidingSupport":
-                        var ssreader = new BasicSupportReader(element);
+                        var ssreader = new BasicSupportReaderXml(element);
                         manifestlist.Add(ssreader.Read());
                         break;
 
                     case "LeftFixedSupport":
-                        var lsreader = new LeftFixedSupportReader(element);
+                        var lsreader = new LeftFixedSupportReaderXml(element);
                         manifestlist.Add(lsreader.Read());
                         break;
 
@@ -170,6 +160,112 @@ namespace Mesnet.Classes.IO.Xml
             setvariables();
             _mw.UpToolBar().UpdateLoadDiagrams();
             return true;
+        }
+
+        public string GetCurrentXml()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = false;
+            settings.Indent = false;
+            StringBuilder builder = new StringBuilder();
+            using (XmlWriter writer = XmlWriter.Create(builder, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Objects");
+
+                foreach (var item in Objects)
+                {
+                    switch (GetObjectType(item.Value))
+                    {
+                        case ObjectType.Beam:
+
+                            var beam = item.Value as Beam;
+
+                            var beamwriter = new BeamWriterXml(writer, beam);
+
+                            beamwriter.Write();
+
+                            break;
+
+                        case ObjectType.BasicSupport:
+
+                            var bs = item.Value as BasicSupport;
+
+                            var bswriter = new BasicSupportWriterXml(writer, bs);
+
+                            bswriter.Write();
+
+                            break;
+
+                        case ObjectType.LeftFixedSupport:
+
+                            var ls = item.Value as LeftFixedSupport;
+
+                            var lswiter = new LeftFixedSupportWriterXml(writer, ls);
+
+                            lswiter.Write();
+
+                            break;
+
+                        case ObjectType.RightFixedSupport:
+
+                            var rs = item.Value as RightFixedSupport;
+
+                            var rswriter = new RightFixedSupportWriterXml(writer, rs);
+
+                            rswriter.Write();
+
+                            break;
+                    }
+                }
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            return builder.ToString();
+        }
+
+        public string GetLogXml()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = false;
+            settings.Indent = false;
+            StringBuilder builder = new StringBuilder();
+            using (XmlWriter writer = XmlWriter.Create(builder, settings))
+            {                
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Logs");              
+                for (int i = 0; i < LogList.Count; i++)
+                {
+                    writer.WriteElementString("Log", LogList[i]);
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            return builder.ToString();
+        }
+
+        public string GetFileLogXml()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = false;
+            settings.Indent = false;
+            StringBuilder builder = new StringBuilder();
+            using (XmlWriter writer = XmlWriter.Create(builder, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("FileLogs");
+                for (int i = 0; i < FileLogList.Count; i++)
+                {
+                    writer.WriteElementString("FileLogs", FileLogList[i]);
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            return builder.ToString();
         }
 
         private void addtocanvas()
@@ -245,7 +341,7 @@ namespace Mesnet.Classes.IO.Xml
                     beam.AddD(beammanifest.DPolies);
                 }
             }
-            Objects.Add(beam);
+            Objects.Add(beam.Id, beam);
         }
 
         private void addsupport(SupportManifest supportmanifest)
@@ -260,7 +356,7 @@ namespace Mesnet.Classes.IO.Xml
                     bs.SupportId = supportmanifest.SupportId;
                     bs.Name = supportmanifest.Name;
                     bs.SetAngle(supportmanifest.Angle);
-                    Objects.Add(bs);
+                    Objects.Add(bs.Id, bs);
 
                     break;
 
@@ -272,7 +368,7 @@ namespace Mesnet.Classes.IO.Xml
                     ss.SupportId = supportmanifest.SupportId;
                     ss.Name = supportmanifest.Name;
                     ss.SetAngle(supportmanifest.Angle);
-                    Objects.Add(ss);
+                    Objects.Add(ss.Id, ss);
 
                     break;
             }
@@ -286,7 +382,7 @@ namespace Mesnet.Classes.IO.Xml
             ls.SupportId = supportmanifest.SupportId;
             ls.Name = supportmanifest.Name;
             ls.SetAngle(supportmanifest.Angle);
-            Objects.Add(ls);
+            Objects.Add(ls.Id, ls);
         }
 
         private void addrightfixedsupport(RightFixedSupportManifest supportmanifest)
@@ -297,33 +393,33 @@ namespace Mesnet.Classes.IO.Xml
             rs.SupportId = supportmanifest.SupportId;
             rs.Name = supportmanifest.Name;
             rs.SetAngle(supportmanifest.Angle);
-            Objects.Add(rs);
+            Objects.Add(rs.Id, rs);
         }
 
         private void connectobjects()
         {
-            foreach(object item in Objects)
+            foreach(var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
-                        connectbeam(item as Beam);
+                        connectbeam(item.Value as Beam);
                         break;
 
                     case ObjectType.BasicSupport:
-                        connectbasicsupport(item as BasicSupport);
+                        connectbasicsupport(item.Value as BasicSupport);
                         break;
 
                     case ObjectType.SlidingSupport:
-                        connectslidingsupport(item as SlidingSupport);
+                        connectslidingsupport(item.Value as SlidingSupport);
                         break;
 
                     case ObjectType.LeftFixedSupport:
-                        connectleftfixedsupport(item as LeftFixedSupport);
+                        connectleftfixedsupport(item.Value as LeftFixedSupport);
                         break;
 
                     case ObjectType.RightFixedSupport:
-                        connectrightfixedsupport(item as RightFixedSupport);
+                        connectrightfixedsupport(item.Value as RightFixedSupport);
                         break;
                 }
             }
@@ -476,9 +572,9 @@ namespace Mesnet.Classes.IO.Xml
         {
             BeamCount = 0;
             SupportCount = 0;
-            foreach (object item in Objects)
+            foreach (var item in Objects)
             {
-                switch (GetObjectType(item))
+                switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
                         BeamCount++;

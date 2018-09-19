@@ -23,7 +23,7 @@ namespace Mesnet.Xaml.Pages
         {
             InitializeComponent();
 
-            versiontext.Text = "V " + Global.VERSION_NUMBER;
+            versiontext.Text = "V " + Global.VersionNumber;
         }
 
         private void closebtn_Click(object sender, RoutedEventArgs e)
@@ -50,7 +50,7 @@ namespace Mesnet.Xaml.Pages
         }
 
         private void sourcecodepage_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {        
+        {
             System.Diagnostics.Process.Start("https://bitbucket.org/omerbirler/mesnet");
             e.Handled = true;
         }

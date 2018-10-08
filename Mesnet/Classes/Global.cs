@@ -31,18 +31,7 @@ using Mesnet.Xaml.User_Controls;
 namespace Mesnet.Classes
 {
     public static class Global
-    {
-        public static string AppName = "Mesnet";
-
-        public static string VersionNumber =
-            System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-        public static string UserName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-
-        public static string ServerUrl = "http://127.0.0.1:80";
-
-        public static bool CommunicateWithServer = false;
-
+    {      
         public static int IdCount = 0;
 
         public static Dictionary<int, object> Objects = new Dictionary<int, object>();
@@ -439,7 +428,7 @@ namespace Mesnet.Classes
 
                     dict.Source = new Uri(@"..\Xaml\Resources\LanguageTr.xaml", UriKind.Relative);
                     MesnetSettings.WriteSetting("language", "tr-TR");
-                    Language = LanguageType.Turkish;
+                    Config.Language = LanguageType.Turkish;
 
                     break;
 
@@ -447,7 +436,7 @@ namespace Mesnet.Classes
 
                     dict.Source = new Uri(@"..\Xaml\Resources\LanguageEn.xaml", UriKind.Relative);
                     MesnetSettings.WriteSetting("language", "en-EN");
-                    Language = LanguageType.English;
+                    Config.Language = LanguageType.English;
 
                     break;
             }
@@ -529,8 +518,6 @@ namespace Mesnet.Classes
 
             Thread.CurrentThread.CurrentCulture = customCulture;
         }
-
-        public static double Scale = 1;
 
         public enum Direction
         {
@@ -632,10 +619,6 @@ namespace Mesnet.Classes
 
         public static int SupportCount = 0;
 
-        public static double SimpsonStep = 0.0001;
-
-        public static double CrossLoopTreshold = 0.00001;
-
         public struct Func
         {
             public int id;
@@ -643,14 +626,14 @@ namespace Mesnet.Classes
             public double yposition;
         }
 
+        /// <summary>
+        /// A list that stores debug entries so. It is needed because the program needs to send all log datas in case of a crash.
+        /// </summary>
         public static List<string> LogList = new List<string>();
 
+        /// <summary>
+        /// A list that stores entries written in log.txt about cross solution. It is needed because sometimes the program needs to send all log datas in case of a crash.
+        /// </summary>
         public static List<string> FileLogList = new List<string>();
-
-        public static LanguageType Language = LanguageType.English;
-
-        public static CalculationType Calculation = CalculationType.SingleThreaded;
-
-        public static bool LogInRelease = true;
     }
 }

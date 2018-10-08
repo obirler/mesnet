@@ -28,8 +28,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>0.1.0.2</ApplicationVersion>
+    <ProductName>Mesnet</ProductName>
+    <PublisherName>Ömer Birler</PublisherName>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.1.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -57,13 +59,13 @@
     <ApplicationIcon>Assets\applogo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>068A3631D04CC8B7B81796468F2DA9F965F049BB</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>871896B6AA91C76E25331E1264FDC9396AF94628</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Mesnet_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Mesnet_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
@@ -147,7 +149,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Global.cs" />
-    <Compile Include="Classes\IO\DatabaseLogger.cs" />
     <Compile Include="Classes\IO\Json\BasicSupportWriterJson.cs" />
     <Compile Include="Classes\IO\Json\BeamWriterJson.cs" />
     <Compile Include="Classes\IO\Json\LeftFixedSupportWriterJson.cs" />
@@ -164,7 +165,6 @@
     <Compile Include="Classes\IO\Reporter\CrashReport.cs" />
     <Compile Include="Classes\IO\Reporter\Entry.cs" />
     <Compile Include="Classes\IO\Reporter\Log.cs" />
-    <Compile Include="Classes\IO\Reporter\Multipartform.cs" />
     <Compile Include="Classes\IO\Reporter\OperatingSystemReport.cs" />
     <Compile Include="Classes\IO\Reporter\PostInfo.cs" />
     <Compile Include="Classes\IO\Reporter\ReleaseLogger.cs" />
@@ -212,6 +212,7 @@
     <Compile Include="Classes\Ui\TreeViewBeamItem.cs" />
     <Compile Include="Classes\Ui\TreeViewSupportItem.cs" />
     <Compile Include="Classes\Ui\UpToolBar.cs" />
+    <Compile Include="Classes\Config.cs" />
     <Compile Include="Xaml\Pages\AboutWindowEn.xaml.cs">
       <DependentUpon>AboutWindowEn.xaml</DependentUpon>
     </Compile>
@@ -594,6 +595,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Mesnet_1_TemporaryKey.pfx" />
     <None Include="Mesnet_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />

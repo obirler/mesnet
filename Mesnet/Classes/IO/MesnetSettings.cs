@@ -22,8 +22,8 @@
 using System;
 using System.Data.SqlClient;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
+using Mesnet.Classes.Tools;
 
 namespace Mesnet.Classes.IO
 {
@@ -32,11 +32,11 @@ namespace Mesnet.Classes.IO
         //Static constructor that runs only once when one of the static methods of the class called at the first time
         static MesnetSettings()
         {
-            if (!File.Exists(_dbname))
+            if (!File.Exists(Config.SettingsDbName))
             {
-                SQLiteConnection.CreateFile(_dbname);
+                SQLiteConnection.CreateFile(Config.SettingsDbName);
             }
-            _connection = new SQLiteConnection("Data Source=" + _dbname + ";MesnetVersion=3;");
+            _connection = new SQLiteConnection("Data Source=" + Config.SettingsDbName + ";MesnetVersion=3;");
             _connection.Open();
             string sql = "create table if not exists MesnetSettings (Id integer primary key, SettingKey text, SettingValue text)";
             SQLiteCommand command = new SQLiteCommand(sql, _connection);
@@ -45,8 +45,6 @@ namespace Mesnet.Classes.IO
                 command.ExecuteNonQuery();
             }
         }
-
-        private const string _dbname = "settings.db";
 
         private static SQLiteConnection _connection;
 
@@ -104,7 +102,7 @@ namespace Mesnet.Classes.IO
             }
             catch (SqlException ex)
             {
-                Debug.WriteLine("Sql exception : " + ex.Message);
+                MesnetDebug.WriteError("Sql exception : " + ex.Message);
             }
         }
 
@@ -123,7 +121,7 @@ namespace Mesnet.Classes.IO
             }
             catch (SqlException ex)
             {
-                Debug.WriteLine("Sql exception : " + ex.Message);
+                MesnetDebug.WriteError("Sql exception : " + ex.Message);
             }
         }
 

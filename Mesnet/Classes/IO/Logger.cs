@@ -31,7 +31,7 @@ namespace Mesnet.Classes.Tools
 
         public static void InitializeLogger()
         {
-            stw = new StreamWriter(@"log.txt");
+            stw = new StreamWriter(Config.CrossLogFileName);
             _isclosed = false;
         }
 

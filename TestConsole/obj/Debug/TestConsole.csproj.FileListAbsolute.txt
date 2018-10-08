@@ -111,3 +111,4 @@ C:\Users\super\ProjectMesnet\old mesnet\mesnet\TestConsole\obj\Debug\TestConsole
 C:\Users\super\ProjectMesnet\old mesnet\mesnet\TestConsole\obj\Debug\TestConsole.csproj.CopyComplete
 C:\Users\super\ProjectMesnet\old mesnet\mesnet\TestConsole\obj\Debug\TestConsole.exe
 C:\Users\super\ProjectMesnet\old mesnet\mesnet\TestConsole\obj\Debug\TestConsole.pdb
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\TestConsole\obj\Debug\TestConsole.csproj.CoreCompileInputs.cache

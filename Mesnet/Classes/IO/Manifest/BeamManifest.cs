@@ -19,10 +19,6 @@
 ========================================================================
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Mesnet.Classes.Math;
 
 namespace Mesnet.Classes.IO.Manifest

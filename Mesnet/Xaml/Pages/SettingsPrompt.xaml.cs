@@ -20,9 +20,7 @@
 */
 using System.Windows;
 using System.Windows.Controls;
-using Mesnet.Classes;
 using Mesnet.Classes.IO;
-using Mesnet.Properties;
 using static Mesnet.Classes.Global;
 
 namespace Mesnet.Xaml.Pages
@@ -61,14 +59,14 @@ namespace Mesnet.Xaml.Pages
             {
                 case 0:
 
-                    Calculation = CalculationType.SingleThreaded;
+                    Config.Calculation = CalculationType.SingleThreaded;
                     MesnetSettings.WriteSetting("calculationtype", "singlethreaded");
 
                     break;
 
                 case 1:
 
-                    Calculation = CalculationType.MultiThreaded;
+                    Config.Calculation = CalculationType.MultiThreaded;
                     MesnetSettings.WriteSetting("calculationtype", "multithreaded");
 
                     break;
@@ -77,7 +75,7 @@ namespace Mesnet.Xaml.Pages
 
         private void readsettings()
         {
-            switch (Global.Language)
+            switch (Config.Language)
             {
                 case LanguageType.English:
 
@@ -92,7 +90,7 @@ namespace Mesnet.Xaml.Pages
                     break;
             }
 
-            switch (Calculation)
+            switch (Config.Calculation)
             {
                 case CalculationType.SingleThreaded:
 
@@ -116,7 +114,7 @@ namespace Mesnet.Xaml.Pages
             calculationcbx.Items.Add(GetString("singlethreaded"));
             calculationcbx.Items.Add(GetString("multithreaded"));
 
-            switch (Calculation)
+            switch (Config.Calculation)
             {
                 case CalculationType.SingleThreaded:
 

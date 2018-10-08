@@ -21,6 +21,7 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -48,6 +49,14 @@ namespace Mesnet
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            if (!System.Diagnostics.Debugger.IsAttached)
+            {
+                //In release mode. So, delete release log so that the file doesnt increase in size
+                if (File.Exists(Config.ReleaseLogDbName))
+                {
+                    File.Delete(Config.ReleaseLogDbName);
+                }
+            }
             AppDomain.CurrentDomain.UnhandledException += new
                 UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             string[] arguments = System.Environment.GetCommandLineArgs();
@@ -71,7 +80,10 @@ namespace Mesnet
             MesnetDebug.WriteError("Unhandled exception catched!!!");
             var crashcontent = new CrashReport(e.ExceptionObject, e.IsTerminating);
             var entry = new Entry("CrashReport", crashcontent);
-            Reporter.Write(entry);
+            Reporter.WriteSynchronously(entry);
+            Reporter.Close();
+            Logger.CloseLogger();
+            MesnetSettings.Close();
         }
 
         private void readsettings()
@@ -167,14 +179,14 @@ namespace Mesnet
                 {
                     case "tr-TR":
 
-                        Global.Language = Global.LanguageType.Turkish;
+                        Config.Language = Global.LanguageType.Turkish;
                         dict.Source = new Uri(@"..\Xaml\Resources\LanguageTr.xaml", UriKind.Relative);
 
                         break;
 
                     case "en-EN":
 
-                        Global.Language = Global.LanguageType.English;
+                        Config.Language = Global.LanguageType.English;
                         dict.Source = new Uri(@"..\Xaml\Resources\LanguageEn.xaml", UriKind.Relative);
 
                         break;
@@ -186,7 +198,7 @@ namespace Mesnet
                 {
                     case "tr-TR":
 
-                        Global.Language = Global.LanguageType.Turkish;
+                        Config.Language = Global.LanguageType.Turkish;
                         dict.Source = new Uri(@"..\Xaml\Resources\LanguageTr.xaml", UriKind.Relative);
                         MesnetSettings.WriteSetting("language", "tr-TR");
 
@@ -194,7 +206,7 @@ namespace Mesnet
 
                     default:
 
-                        Global.Language = Global.LanguageType.English;
+                        Config.Language = Global.LanguageType.English;
                         dict.Source = new Uri(@"..\Xaml\Resources\LanguageEn.xaml", UriKind.Relative);
                         MesnetSettings.WriteSetting("language", "en-EN");
 
@@ -209,20 +221,20 @@ namespace Mesnet
                 {
                     case "singlethreaded":
 
-                        Global.Calculation = Global.CalculationType.SingleThreaded;
+                        Config.Calculation = Global.CalculationType.SingleThreaded;
 
                         break;
 
                     case "multithreaded":
 
-                        Global.Calculation = Global.CalculationType.MultiThreaded;
+                        Config.Calculation = Global.CalculationType.MultiThreaded;
 
                         break;
                 }
             }
             else
             {
-                Global.Calculation = Global.CalculationType.SingleThreaded;
+                Config.Calculation = Global.CalculationType.SingleThreaded;
                 MesnetSettings.WriteSetting("calculationtype", "singlethreaded");
             }
         }

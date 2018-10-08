@@ -25,7 +25,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using Mesnet.Classes;
 using Mesnet.Classes.Tools;
 using Mesnet.Xaml.User_Controls;
 using static Mesnet.Classes.Global;
@@ -86,7 +85,7 @@ namespace Mesnet.Xaml.Pages
 
             if (BeamCount > 1)
             {
-                switch (Calculation)
+                switch (Config.Calculation)
                 {
                     case CalculationType.SingleThreaded:
 

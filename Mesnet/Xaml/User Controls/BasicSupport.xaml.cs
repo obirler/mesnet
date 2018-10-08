@@ -375,7 +375,7 @@ namespace Mesnet.Xaml.User_Controls
                         MesnetDebug.WriteInformation(_name + ": Left Moment = " + beam.LeftEndMoment);
                         Logger.WriteLine(this.Name + " : " + beammoment + " will be conducted to " + beam.Name);
                         beam.Conduct(Direction.Left, beammoment);
-                        if (Math.Abs(beammoment * beam.CarryOverAB) < CrossLoopTreshold)
+                        if (Math.Abs(beammoment * beam.CarryOverAB) < Config.CrossLoopTreshold)
                         {
                             isstop = true;
                         }

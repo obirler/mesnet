@@ -23,7 +23,6 @@ using Mesnet.Classes.IO.Manifest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mesnet.Classes.IO.Xml
 {

@@ -19,7 +19,6 @@
 ========================================================================
 */
 
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows;
@@ -28,7 +27,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Mesnet.Classes.Tools;
 using Mesnet.Xaml.User_Controls;
-using Color = System.Windows.Media.Color;
+using Color = System.Drawing.Color;
 using Point = System.Windows.Point;
 
 namespace Mesnet.Classes.Math
@@ -300,7 +299,7 @@ namespace Mesnet.Classes.Math
 
             itle.Width = innerradius;
             itle.Height = innerradius;
-            itle.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            itle.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 255, 0));
 
             _canvas.Children.Add(itle);
             Canvas.SetLeft(itle, InnerTopLeft.X - innerradius / 2);
@@ -308,7 +307,7 @@ namespace Mesnet.Classes.Math
 
             itre.Width = innerradius;
             itre.Height = innerradius;
-            itre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            itre.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 255, 0));
 
             _canvas.Children.Add(itre);
             Canvas.SetLeft(itre, InnerTopRight.X - innerradius / 2);
@@ -316,7 +315,7 @@ namespace Mesnet.Classes.Math
 
             ibre.Width = innerradius;
             ibre.Height = innerradius;
-            ibre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            ibre.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 255, 0));
 
             _canvas.Children.Add(ibre);
             Canvas.SetLeft(ibre, InnerBottomRight.X - innerradius / 2);
@@ -324,7 +323,7 @@ namespace Mesnet.Classes.Math
 
             ible.Width = innerradius;
             ible.Height = innerradius;
-            ible.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 255, 0));
+            ible.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 255, 0));
 
             _canvas.Children.Add(ible);
             Canvas.SetLeft(ible, InnerBottomLeft.X - innerradius / 2);
@@ -332,7 +331,7 @@ namespace Mesnet.Classes.Math
 
             otle.Width = outerradius;
             otle.Height = outerradius;
-            otle.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+            otle.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 0, 6));
 
             _canvas.Children.Add(otle);
             Canvas.SetLeft(otle, OuterTopLeft.X - outerradius / 2);
@@ -340,7 +339,7 @@ namespace Mesnet.Classes.Math
 
             otre.Width = outerradius;
             otre.Height = outerradius;
-            otre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+            otre.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 0, 6));
 
             _canvas.Children.Add(otre);
             Canvas.SetLeft(otre, OuterTopRight.X - outerradius / 2);
@@ -349,7 +348,7 @@ namespace Mesnet.Classes.Math
 
             obre.Width = outerradius;
             obre.Height = outerradius;
-            obre.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+            obre.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 0, 6));
 
             _canvas.Children.Add(obre);
             Canvas.SetLeft(obre, OuterBottomRight.X - outerradius / 2);
@@ -357,7 +356,7 @@ namespace Mesnet.Classes.Math
 
             oble.Width = outerradius;
             oble.Height = outerradius;
-            oble.Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 6));
+            oble.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(100, 255, 0, 6));
 
             _canvas.Children.Add(oble);
             Canvas.SetLeft(oble, OuterBottomLeft.X - outerradius / 2);

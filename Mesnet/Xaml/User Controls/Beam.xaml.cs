@@ -19,10 +19,7 @@
 ========================================================================
 */
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -33,7 +30,6 @@ using Mesnet.Classes.Tools;
 using MoreLinq;
 using static Mesnet.Classes.Global;
 using static Mesnet.Classes.Math.Algebra;
-using Geometry = Mesnet.Classes.Math.Geometry;
 
 namespace Mesnet.Xaml.User_Controls
 {
@@ -774,7 +770,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.LeftSide != null)
             {
-                if (GetObjectType(LeftSide) != ObjectType.LeftFixedSupport)
+                if (GetObjectType(oldbeam.LeftSide) != ObjectType.LeftFixedSupport)
                 {
                     if (oldbeam.IsBound)
                     {
@@ -795,7 +791,7 @@ namespace Mesnet.Xaml.User_Controls
                         MoveSupports();
                     }
 
-                    switch (GetObjectType(LeftSide))
+                    switch (GetObjectType(oldbeam.LeftSide))
                     {
                         case ObjectType.SlidingSupport:
 
@@ -889,7 +885,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.RightSide != null)
             {
-                if (GetObjectType(RightSide) != ObjectType.RightFixedSupport)
+                if (GetObjectType(oldbeam.RightSide) != ObjectType.RightFixedSupport)
                 {
                     if (oldbeam.IsBound)
                     {
@@ -910,7 +906,7 @@ namespace Mesnet.Xaml.User_Controls
                         MoveSupports();
                     }
 
-                    switch (GetObjectType(RightSide))
+                    switch (GetObjectType(oldbeam.RightSide))
                     {
                         case ObjectType.SlidingSupport:
 
@@ -1115,7 +1111,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.LeftSide != null)
             {
-                switch (GetObjectType(LeftSide))
+                switch (GetObjectType(oldbeam.LeftSide))
                 {
                     case ObjectType.SlidingSupport:
 
@@ -1185,7 +1181,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.RightSide != null)
             {
-                switch (GetObjectType(RightSide))
+                switch (GetObjectType(oldbeam.RightSide))
                 {
                     case ObjectType.SlidingSupport:
 
@@ -1255,7 +1251,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.RightSide != null)
             {
-                switch (GetObjectType(RightSide))
+                switch (GetObjectType(oldbeam.RightSide))
                 {
                     case ObjectType.SlidingSupport:
 
@@ -1325,7 +1321,7 @@ namespace Mesnet.Xaml.User_Controls
         {
             if (oldbeam.LeftSide != null)
             {
-                switch (GetObjectType(LeftSide))
+                switch (GetObjectType(oldbeam.LeftSide))
                 {
                     case ObjectType.SlidingSupport:
 
@@ -2638,9 +2634,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     var conjugateinertia = _inertiappoly.Conjugate(_length);
 
-                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson1 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
                     }
@@ -2653,9 +2649,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     //////////////////////////////////////////////////////////            
 
-                    var simpson2 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson2 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson2.AddData(_izero / conjugateinertia.Calculate(i) * x.Calculate(i));
                     }
@@ -2670,11 +2666,11 @@ namespace Mesnet.Xaml.User_Controls
 
                     ///////////////////////////////////////////////////////////
 
-                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson3 = new SimpsonIntegrator(Config.SimpsonStep);
 
                     var conjugatemoment = _zeromoment.Conjugate(_length);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) *
                                          x.Calculate(i));
@@ -2690,9 +2686,9 @@ namespace Mesnet.Xaml.User_Controls
                     /////////////////Right Equation Solve///////////////////////
                     ////////////////////////////////////////////////////////////
 
-                    var simpson4 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson4 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson4.AddData(_izero / _inertiappoly.Calculate(i) * xsquare.Calculate(i));
                     }
@@ -2701,9 +2697,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     var value2 = 1 / Math.Pow(_length, 2) * simpson4.Result;
 
-                    var simpson5 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson5 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson5.AddData((_izero / _inertiappoly.Calculate(i)) * xppoly.Calculate(i));
                     }
@@ -2722,9 +2718,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     ///////////////////////////////////////////////////////////
 
-                    var simpson6 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson6 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson6.AddData(_zeromoment.Calculate(i) * (_izero / _inertiappoly.Calculate(i)) *
                                          xppoly.Calculate(i));
@@ -2833,9 +2829,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     var conjugateinertia = _inertiappoly.Conjugate(_length);
 
-                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson1 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
                     }
@@ -2848,9 +2844,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     //////////////////////////////////////////////////////////            
 
-                    var simpson2 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson2 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson2.AddData(_izero / conjugateinertia.Calculate(i) * x.Calculate(i));
                     }
@@ -2865,11 +2861,11 @@ namespace Mesnet.Xaml.User_Controls
 
                     ///////////////////////////////////////////////////////////
 
-                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson3 = new SimpsonIntegrator(Config.SimpsonStep);
 
                     var conjugatemoment = _zeromoment.Conjugate(_length);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) *
                                          x.Calculate(i));
@@ -2885,9 +2881,9 @@ namespace Mesnet.Xaml.User_Controls
                     /////////////////Right Equation Solve///////////////////////
                     ////////////////////////////////////////////////////////////
 
-                    var simpson4 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson4 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson4.AddData(_izero / _inertiappoly.Calculate(i) * xsquare.Calculate(i));
                     }
@@ -2896,9 +2892,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     var value2 = 1 / Math.Pow(_length, 2) * simpson4.Result;
 
-                    var simpson5 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson5 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson5.AddData((_izero / _inertiappoly.Calculate(i)) * xppoly.Calculate(i));
                     }
@@ -2917,9 +2913,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     ///////////////////////////////////////////////////////////
 
-                    var simpson6 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson6 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson6.AddData(_zeromoment.Calculate(i) * (_izero / _inertiappoly.Calculate(i)) *
                                          xppoly.Calculate(i));
@@ -3006,9 +3002,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     var conjugateinertia = _inertiappoly.Conjugate(_length);
 
-                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson1 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson1.AddData(_izero / conjugateinertia.Calculate(i) * xsquare.Calculate(i));
                     }
@@ -3021,11 +3017,11 @@ namespace Mesnet.Xaml.User_Controls
 
                     //////////////////////////////////////////////////////////
 
-                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson3 = new SimpsonIntegrator(Config.SimpsonStep);
 
                     var conjugatemoment = _zeromoment.Conjugate(_length);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson3.AddData(conjugatemoment.Calculate(i) * _izero / conjugateinertia.Calculate(i) * x.Calculate(i));
                     }
@@ -3085,9 +3081,9 @@ namespace Mesnet.Xaml.User_Controls
                 else
                 {
                     MesnetDebug.WriteInformation(_name + " : Numerical solution started");
-                    var simpson1 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson1 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson1.AddData(_izero / _inertiappoly.Calculate(i) * xsquare.Calculate(i));
                     }
@@ -3100,9 +3096,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     ///////////////////////////////////////////////////////////
 
-                    var simpson3 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson3 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson3.AddData(_izero / _inertiappoly.Calculate(i) * _zeromoment.Calculate(i) * x.Calculate(i));
                     }
@@ -3585,9 +3581,9 @@ namespace Mesnet.Xaml.User_Controls
             else
             {
                 MesnetDebug.WriteInformation(_name + " : Numerical solution started");
-                var simpson1 = new SimpsonIntegrator(SimpsonStep);
+                var simpson1 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                for (double i = 0; i <= _length; i = i + SimpsonStep)
+                for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                 {
                     simpson1.AddData(Math.Pow(lxpoly.Calculate(i), 2) / _inertiappoly.Calculate(i));
                 }
@@ -3600,13 +3596,13 @@ namespace Mesnet.Xaml.User_Controls
 
                 Logger.WriteLine(this.Name + " : alfaa = " + _alfaa);
 
-                var simpson2 = new SimpsonIntegrator(SimpsonStep);
+                var simpson2 = new SimpsonIntegrator(Config.SimpsonStep);
 
                 var xsquare = new Poly("x^2");
                 xsquare.StartPoint = 0;
                 xsquare.EndPoint = _length;
 
-                for (double i = 0; i <= _length; i = i + SimpsonStep)
+                for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                 {
                     simpson2.AddData(xsquare.Calculate(i) / _inertiappoly.Calculate(i));
                 }
@@ -3619,9 +3615,9 @@ namespace Mesnet.Xaml.User_Controls
 
                 Logger.WriteLine(_name + " : alfab = " + _alfab);
 
-                var simpson3 = new SimpsonIntegrator(SimpsonStep);
+                var simpson3 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                for (double i = 0; i <= _length; i = i + SimpsonStep)
+                for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                 {
                     simpson3.AddData((lxpoly.Calculate(i) * x.Calculate(i)) / _inertiappoly.Calculate(i));
                 }
@@ -3656,9 +3652,9 @@ namespace Mesnet.Xaml.User_Controls
                 }
                 else
                 {
-                    var simpson4 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson4 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson4.AddData(mox.Calculate(i) / _inertiappoly.Calculate(i));
                     }
@@ -3671,9 +3667,9 @@ namespace Mesnet.Xaml.User_Controls
 
                     Logger.WriteLine(_name + " : ka = " + _ka);
 
-                    var simpson5 = new SimpsonIntegrator(SimpsonStep);
+                    var simpson5 = new SimpsonIntegrator(Config.SimpsonStep);
 
-                    for (double i = 0; i <= _length; i = i + SimpsonStep)
+                    for (double i = 0; i <= _length; i = i + Config.SimpsonStep)
                     {
                         simpson5.AddData((_zeromoment.Calculate(i) * lxpoly.Calculate(i)) / _inertiappoly.Calculate(i));
                     }

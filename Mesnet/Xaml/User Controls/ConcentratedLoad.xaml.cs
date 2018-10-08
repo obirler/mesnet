@@ -19,7 +19,6 @@
 ========================================================================
 */
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
@@ -28,7 +27,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Mesnet.Classes;
 using Mesnet.Classes.Math;
-using MoreLinq;
 
 namespace Mesnet.Xaml.User_Controls
 {

@@ -37,7 +37,6 @@ using MoreLinq;
 using ZoomAndPan;
 using static Mesnet.Classes.Global;
 using Mesnet.Classes.IO.Xml;
-using Mesnet.Classes;
 using Mesnet.Classes.IO;
 using Mesnet.Classes.IO.Reporter;
 using Mesnet.Classes.Reporter;
@@ -86,7 +85,7 @@ namespace Mesnet
                 _savefilepath = App.AssociationPath;
             }
 
-            if (CommunicateWithServer)
+            if (Config.CommunicateWithServer)
             {
                 //Check new version if internet is available
                 if (InternetAvailability.IsInternetAvailable())
@@ -385,14 +384,14 @@ namespace Mesnet
 
         private void zoomAndPanControl_ScaleChanged(object sender, EventArgs eventArgs)
         {
-            if (Scale > 0)
+            if (Config.Scale > 0)
             {
-                horizontalrect.Height = 1 / Scale;
-                horizontalrect.Width = 50 / Scale;
+                horizontalrect.Height = 1 / Config.Scale;
+                horizontalrect.Width = 50 / Config.Scale;
                 Canvas.SetTop(horizontalrect, 10000 - horizontalrect.Height / 2);
                 Canvas.SetLeft(horizontalrect, 10000 - horizontalrect.Width / 2);
-                verticalrect.Height = 50 / Scale;
-                verticalrect.Width = 1 / Scale;
+                verticalrect.Height = 50 / Config.Scale;
+                verticalrect.Width = 1 / Config.Scale;
                 Canvas.SetTop(verticalrect, 10000 - verticalrect.Height / 2);
                 Canvas.SetLeft(verticalrect, 10000 - verticalrect.Width / 2);
             }
@@ -423,9 +422,9 @@ namespace Mesnet
         {
             var newscale = zoomAndPanControl.ContentScale - 0.01;
             zoomAndPanControl.ZoomAboutPoint(newscale, contentZoomCenter);
-            Scale = newscale;
-            scaletext.Text = Scale.ToString();
-            scaleslider.Value = Scale;
+            Config.Scale = newscale;
+            scaletext.Text = Config.Scale.ToString();
+            scaleslider.Value = Config.Scale;
             Notify("zoomedout");
 
             /*if (newscale > 0)
@@ -450,9 +449,9 @@ namespace Mesnet
         {
             var newscale = zoomAndPanControl.ContentScale + 0.01;
             zoomAndPanControl.ZoomAboutPoint(newscale, contentZoomCenter);
-            Scale = newscale;
-            scaletext.Text = Scale.ToString();
-            scaleslider.Value = Scale;
+            Config.Scale = newscale;
+            scaletext.Text = Config.Scale.ToString();
+            scaleslider.Value = Config.Scale;
             Notify("zoomedin");
 
             /*if (newscale > 0)
@@ -547,9 +546,9 @@ namespace Mesnet
             double scaleX = zoomAndPanControl.ContentViewportWidth / contentWidth;
             double scaleY = zoomAndPanControl.ContentViewportHeight / contentHeight;
             double newScale = zoomAndPanControl.ContentScale * Math.Min(scaleX, scaleY);
-            Scale = newScale;
-            scaleslider.Value = Scale;
-            scaletext.Text = Scale.ToString();
+            Config.Scale = newScale;
+            scaleslider.Value = Config.Scale;
+            scaletext.Text = Config.Scale.ToString();
 
             /*var timer = new DispatcherTimer();
 
@@ -1751,7 +1750,7 @@ namespace Mesnet
         {
             var value = Math.Round(Convert.ToDouble(e.NewValue), 3);
             zoomAndPanControl.ZoomAboutPoint(value, new Point(zoomAndPanControl.ContentZoomFocusX, zoomAndPanControl.ContentZoomFocusY));
-            Scale = value;
+            Config.Scale = value;
             scaletext.Text = value.ToString();
         }
 
@@ -1774,8 +1773,8 @@ namespace Mesnet
                     {
                         timer.Stop();
 
-                        Scale = 10;
-                        scaleslider.Value = Scale;
+                        Config.Scale = 10;
+                        scaleslider.Value = Config.Scale;
                     };
                 }
                 else if (value < 0)
@@ -1786,8 +1785,8 @@ namespace Mesnet
                     {
                         timer.Stop();
 
-                        Scale = 0;
-                        scaleslider.Value = Scale;
+                        Config.Scale = 0;
+                        scaleslider.Value = Config.Scale;
                     };
                 }
                 else
@@ -1797,8 +1796,8 @@ namespace Mesnet
                     {
                         timer.Stop();
 
-                        Scale = value;
-                        scaleslider.Value = Scale;
+                        Config.Scale = value;
+                        scaleslider.Value = Config.Scale;
                     };
                 }
 
@@ -2671,10 +2670,10 @@ namespace Mesnet
             DistributedLoad load = loadcanvas.Parent as DistributedLoad;
             var mousepoint = e.GetPosition(loadcanvas);
             var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Config.Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Config.Scale);
             tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(load.LoadPpoly.Calculate(mousepoint.X / 100), 4) + " kN/m";
-            viewbox.Height = 20 / Scale;
+            viewbox.Height = 20 / Config.Scale;
         }
 
         public void inertiamousemove(object sender, MouseEventArgs e)
@@ -2683,10 +2682,10 @@ namespace Mesnet
             Inertia inertia = inertiacanvas.Parent as Inertia;
             var mousepoint = e.GetPosition(inertiacanvas);
             var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Config.Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Config.Scale);
             tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(inertia.InertiaPpoly.Calculate(mousepoint.X / 100), 4) + " cm^4";
-            viewbox.Height = 20 / Scale;
+            viewbox.Height = 20 / Config.Scale;
         }
 
         public void momentmousemove(object sender, MouseEventArgs e)
@@ -2695,10 +2694,10 @@ namespace Mesnet
             Moment moment = momentcanvas.Parent as Moment;
             var mousepoint = e.GetPosition(momentcanvas);
             var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Config.Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Config.Scale);
             tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(moment.MomentPpoly.Calculate(mousepoint.X / 100), 4) + " kNm";
-            viewbox.Height = 20 / Scale;
+            viewbox.Height = 20 / Config.Scale;
         }
 
         public void forcemousemove(object sender, MouseEventArgs e)
@@ -2707,10 +2706,10 @@ namespace Mesnet
             Force force = forcecanvas.Parent as Force;
             var mousepoint = e.GetPosition(forcecanvas);
             var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Config.Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Config.Scale);
             tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(force.ForcePpoly.Calculate(mousepoint.X / 100), 4) + " kN";
-            viewbox.Height = 20 / Scale;
+            viewbox.Height = 20 / Config.Scale;
         }
 
         public void stressmousemove(object sender, MouseEventArgs e)
@@ -2719,10 +2718,10 @@ namespace Mesnet
             Stress stress = stresscanvas.Parent as Stress;
             var mousepoint = e.GetPosition(stresscanvas);
             var globalmousepoint = e.GetPosition(canvas);
-            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Scale);
-            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Scale);
+            Canvas.SetTop(viewbox, globalmousepoint.Y + 12 / Config.Scale);
+            Canvas.SetLeft(viewbox, globalmousepoint.X + 12 / Config.Scale);
             tooltip.Text = Math.Round(mousepoint.X / 100, 4) + " , " + Math.Round(stress.Calculate(mousepoint.X / 100), 4) + " MPa";
-            viewbox.Height = 20 / Scale;
+            viewbox.Height = 20 / Config.Scale;
         }
 
         public void mouseenter(object sender, MouseEventArgs e)
@@ -4434,7 +4433,7 @@ namespace Mesnet
 
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            switch (Global.Language)
+            switch (Config.Language)
             {
                 case LanguageType.English:
 
@@ -4518,74 +4517,134 @@ namespace Mesnet
 
         private void debug_Click(object sender, RoutedEventArgs e)
         {
-
+            throw new InvalidEnumArgumentException("This is a test for exception");
         }
 
         private void bwCheckNewVersion_DoWork(object sender, DoWorkEventArgs e)
         {
-            var versionresult = new MesnetVersion();
-
-            var client = new RestClient("http://127.0.0.1:80");
-            var request = new RestRequest("newversion", Method.GET);
-            var versionnumber = client.Execute(request).Content;
-            versionresult.Version = versionnumber;
-            if (versionnumber != Global.VersionNumber)
+            try
             {
-                var client1 = new RestClient("http://127.0.0.1:80");
-                var request1 = new RestRequest("newversionurl", Method.GET);
-                var newversionurl = client1.Execute(request1).Content;
-                versionresult.Url = newversionurl;
+                if (Config.CommunicateWithServer)
+                {
+                    var versionresult = new MesnetVersion();
+
+                    var client = new RestClient(Config.ServerUrl);
+                    var request = new RestRequest(Config.NewVersionKey, Method.GET);
+                    var versionnumber = client.Execute(request).Content;
+                    versionresult.Version = versionnumber;
+                    if (versionnumber != Config.VersionNumber)
+                    {
+                        var client1 = new RestClient(Config.ServerUrl);
+                        var request1 = new RestRequest(Config.NewVersionUrl, Method.GET);
+                        var newversionurl = client1.Execute(request1).Content;
+                        versionresult.Url = newversionurl;
+                    }
+                    e.Result = versionresult;
+                }
+                else
+                {
+                    e.Result = null;
+                }
             }
-            e.Result = versionresult;            
+            catch (Exception exception)
+            {
+                MesnetDebug.WriteInformation(exception.Message);
+                e.Result = null;
+            }                     
         }
 
         private void bwCheckNewVersion_Completed(object o, RunWorkerCompletedEventArgs e)
         {
-            var versionresult = (MesnetVersion)e.Result;
-            if (versionresult.Version != Global.VersionNumber)
+            try
             {
-                var client1 = new RestClient(Global.ServerUrl);
-                var request1 = new RestRequest("newversionurl", Method.GET);
-                var newversionurl = client1.Execute(request1).Content;
-                versionresult.Url = newversionurl;
-                var prompt = new NewVersionPrompt(" V"+versionresult.Version);
-                prompt.Owner = this;
-                if ((bool) prompt.ShowDialog())
+                if (e.Result != null)
                 {
-                    switch (prompt.Result)
+                    if (Config.CommunicateWithServer)
                     {
-                        case Classes.Global.DialogResult.Yes:
-                            //The user has accepted to download new version.     
-                            var downloader = new VersionDownloader(versionresult);
-                            downloader.Owner = this;
-                            if ((bool) downloader.ShowDialog())
+                        var versionresult = (MesnetVersion)e.Result;
+                        if (versionresult.Version != Config.VersionNumber)
+                        {
+                            var client1 = new RestClient(Config.ServerUrl);
+                            var request1 = new RestRequest("newversionurl", Method.GET);
+                            var newversionurl = client1.Execute(request1).Content;
+                            versionresult.Url = newversionurl;
+                            var prompt = new NewVersionPrompt(" V" + versionresult.Version);
+                            prompt.Owner = this;
+                            if ((bool)prompt.ShowDialog())
                             {
-                                try
+                                switch (prompt.Result)
                                 {
-                                    //Open file for installing new version
-                                    System.Diagnostics.Process.Start(downloader.FilePath);
+                                    case Classes.Global.DialogResult.Yes:
+                                        //The user has accepted to download new version.   
+                                        //the file has not been saved before, open file save dialog
+
+                                        //First open a file dialog so that user choose where to download the file
+                                        string path = String.Empty;
+                                        var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
+                                        
+                                        saveFileDialog.FileName = System.IO.Path.GetFileName(Config.ServerUrl + versionresult.Url);
+                                        if (MesnetSettings.IsSettingExists("savepath"))
+                                        {
+                                            string directory = MesnetSettings.ReadSetting("savepath");
+                                            saveFileDialog.InitialDirectory = directory;
+                                            MesnetDebug.WriteInformation("there is a path exists in save file path settings: " + directory);
+                                        }
+                                        else
+                                        {
+                                            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                                            MesnetDebug.WriteInformation("there is no path exists in save file path settings");
+                                        }
+
+                                        if ((bool)saveFileDialog.ShowDialog())
+                                        {
+                                            path = saveFileDialog.FileName;
+                                            MesnetDebug.WriteInformation("user selected a file from save file dialog: " + path);
+                                            MesnetDebug.WriteInformation("xml file has been written to " + path);
+                                            MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path));
+                                        }
+                                        else
+                                        {
+                                            MesnetDebug.WriteInformation("User closed the dialog, aborting saving and opening operation");
+                                            return;
+                                        }
+                                        var downloader = new VersionDownloader(versionresult, path);
+                                        downloader.Owner = this;
+                                        if ((bool)downloader.ShowDialog())
+                                        {
+                                            try
+                                            {
+                                                //Open file for installing new version
+                                                System.Diagnostics.Process.Start(downloader.FilePath);
+                                            }
+                                            catch
+                                            {
+                                                //The user may abort the operation, do nothing
+                                            }
+                                        }
+
+                                        break;
+
+                                    case Classes.Global.DialogResult.No:
+                                        //The user has rejected to download new version.
+                                        break;
+
+                                    case Classes.Global.DialogResult.Cancel:
+                                        //The user cancelled the dialog, abort the operation
+                                        break;
+
+                                    case Classes.Global.DialogResult.None:
+                                        //Something we dont know happened, abort the operation
+                                        break;
                                 }
-                                catch
-                                {
-                                    //The user may abort the operation
-                                }                               
                             }
-
-                            break;
-
-                        case Classes.Global.DialogResult.No:
-                            //The user has rejected to download new version.
-                            break;
-
-                        case Classes.Global.DialogResult.Cancel:
-                            //The user cancelled the dialog, abort the operation
-                            break;
-
-                        case Classes.Global.DialogResult.None:
-                            //Something we dont know happened, abort the operation
-                            break;
+                        }
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                MesnetDebug.WriteInformation(exception.Message);
+                throw;
             }
         }
     }

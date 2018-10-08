@@ -1,21 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+========================================================================
+    Copyright (C) 2016 Omer Birler.
+    
+    This file is part of Mesnet.
+
+    Mesnet is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Mesnet is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
+========================================================================
+*/
+
+using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using Mesnet.Classes;
 using Mesnet.Classes.Tools;
 
 namespace Mesnet.Xaml.Pages
@@ -25,11 +33,12 @@ namespace Mesnet.Xaml.Pages
     /// </summary>
     public partial class VersionDownloader : Window
     {
-        public VersionDownloader(MesnetVersion mesnetversion)
+        public VersionDownloader(MesnetVersion mesnetversion, string path)
         {
             InitializeComponent();
             this.version.Text = mesnetversion.Version;
-            _url = Global.ServerUrl + mesnetversion.Url;
+            FilePath = path;
+            _url = Config.ServerUrl + mesnetversion.Url;
             _timer = new DispatcherTimer();
             _timer.Tick += TimerOnTick;
             _timer.Interval = TimeSpan.FromMilliseconds(500);
@@ -43,7 +52,6 @@ namespace Mesnet.Xaml.Pages
 
         private void BwOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {           
-            FilePath = System.IO.Path.GetFileName(_url);
             _webClient.DownloadFileAsync(new System.Uri(_url), FilePath);
         }
        

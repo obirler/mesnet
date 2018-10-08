@@ -21,7 +21,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using Mesnet.Classes.IO;
 using Mesnet.Classes.IO.Reporter;
 
 namespace Mesnet.Classes.Tools
@@ -39,7 +38,7 @@ namespace Mesnet.Classes.Tools
             Debug.WriteLine(entry);
             Global.LogList.Add(entry);
 #else
-            if (Global.LogInRelease)
+            if (Config.LogInRelease)
             {
                 ReleaseLogger.Write(entry);
             }
@@ -57,7 +56,7 @@ namespace Mesnet.Classes.Tools
             Debug.WriteLine(entry);
             Global.LogList.Add(entry);
 #else
-            if (Global.LogInRelease)
+            if (Config.LogInRelease)
             {
                 ReleaseLogger.Write(entry);
             }
@@ -75,7 +74,7 @@ namespace Mesnet.Classes.Tools
             Debug.WriteLine(entry);
             Global.LogList.Add(entry);
 #else
-            if (Global.LogInRelease)
+            if (Config.LogInRelease)
             {
                 ReleaseLogger.Write(entry);
             }

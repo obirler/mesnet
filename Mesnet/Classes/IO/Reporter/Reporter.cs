@@ -1,13 +1,32 @@
-﻿using System;
+﻿/*
+========================================================================
+    Copyright (C) 2016 Omer Birler.
+    
+    This file is part of Mesnet.
+
+    Mesnet is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Mesnet is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
+========================================================================
+*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using Mesnet.Classes.IO;
 using Mesnet.Classes.IO.Reporter;
 using Mesnet.Classes.Tools;
@@ -22,15 +41,15 @@ namespace Mesnet.Classes.Reporter
             int minWorker, minIOC;
             // Get the current settings.
             ThreadPool.GetMinThreads(out minWorker, out minIOC);
-            ThreadPool.SetMaxThreads(2, minIOC);
+            ThreadPool.SetMaxThreads(Config.MaxReporterThreadCount, minIOC);
 
-            if (!File.Exists(_dbname))
+            if (!File.Exists(Config.TelemetryDbName))
             {
                 MesnetDebug.WriteInformation("Telemetry database file does not exists, creating");
-                SQLiteConnection.CreateFile(_dbname);
+                SQLiteConnection.CreateFile(Config.TelemetryDbName);
             }        
 
-            _connection = new SQLiteConnection("Data Source=" + _dbname + ";Version=3;");
+            _connection = new SQLiteConnection("Data Source=" + Config.TelemetryDbName + ";Version=3;");
             _connection.Open();
 
             string sql = "create table if not exists logs (id INTEGER PRIMARY KEY, username text, appname text, version text, type text, createdate text, content text)";
@@ -45,8 +64,6 @@ namespace Mesnet.Classes.Reporter
             _ids = new List<int>();
         }
 
-        private static string _dbname = "telemetry.db";
-
         private static SQLiteConnection _connection;
 
         private static BackgroundWorker _bwsend;
@@ -57,9 +74,15 @@ namespace Mesnet.Classes.Reporter
             ThreadPool.QueueUserWorkItem(new WaitCallback(writelog), log);
         }
 
+        public static void WriteSynchronously(Entry entry)
+        {
+            var log = entry.Create();
+            writelog(log);
+        }
+
         public static void TryToSend()
         {
-            if (Global.CommunicateWithServer)
+            if (Config.CommunicateWithServer)
             {
                 MesnetDebug.WriteInformation("TryToSend started to work");
                 StartNewBw();
@@ -68,7 +91,7 @@ namespace Mesnet.Classes.Reporter
 
         public static void RegisterUser()
         {
-            if (Global.CommunicateWithServer)
+            if (Config.CommunicateWithServer)
             {
                 var bw = new BackgroundWorker();
                 bw.DoWork += delegate
@@ -87,13 +110,13 @@ namespace Mesnet.Classes.Reporter
 
                                 var request = new RestRequest(Method.POST);
                                 request.AddHeader("Content-Type", "multipart/form-data");
-                                request.AddParameter("username", Global.UserName);
-                                request.AddParameter("appname", Global.AppName);
-                                request.AddParameter("version", Global.VersionNumber);
+                                request.AddParameter("username", Config.UserName);
+                                request.AddParameter("appname", Config.AppName);
+                                request.AddParameter("version", Config.VersionNumber);
                                 request.AddParameter("createdate", createdate);
                                 request.AddParameter("userid", id);
 
-                                var client = new RestClient(userRegisterUrl);
+                                var client = new RestClient(Config.UserRegisterUrl);
 
                                 var response = client.Execute(request);
 
@@ -155,21 +178,17 @@ namespace Mesnet.Classes.Reporter
 
         private static List<int> _ids;
 
-        private static string actionUrl = Global.ServerUrl + "/log";
-
-        private static string userRegisterUrl = Global.ServerUrl + "/user";
-
         private static void BwSendOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            if (Global.CommunicateWithServer)
+            if (Config.CommunicateWithServer)
             {
                 try
                 {
                     if (InternetAvailability.IsInternetAvailable())
                     {
-                        if (!File.Exists(_dbname))
+                        if (!File.Exists(Config.TelemetryDbName))
                         {
-                            MesnetDebug.WriteInformation("Database file does not exists");
+                            MesnetDebug.WriteWarning("Database file does not exists");
                             return;
                         }
                         MesnetDebug.WriteInformation("Internet connection is available");
@@ -290,7 +309,7 @@ namespace Mesnet.Classes.Reporter
                             request.AddParameter("createdate", log.CreatedDate);
                             request.AddParameter("content", log.Content);
 
-                            var client = new RestClient(actionUrl);
+                            var client = new RestClient(Config.LogUrl);
                             var response = client.Execute(request);
 
                             if (response.StatusCode == HttpStatusCode.OK)

@@ -22,13 +22,8 @@
 using Mesnet.Classes.IO.Manifest;
 using Mesnet.Classes.Math;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Media;
-using System.Xml.Linq;
 
 namespace Mesnet.Classes.IO.Xml
 {

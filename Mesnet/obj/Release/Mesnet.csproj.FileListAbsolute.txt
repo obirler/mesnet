@@ -675,3 +675,143 @@ C:\Users\super\OneDrive\Masaüstü\Project Mesnet\old mesnet\mesnet\Mesnet\obj\R
 C:\Users\super\OneDrive\Masaüstü\Project Mesnet\old mesnet\mesnet\Mesnet\obj\Release\Mesnet_MarkupCompile.lref
 C:\Users\super\OneDrive\Masaüstü\Project Mesnet\old mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe
 C:\Users\super\OneDrive\Masaüstü\Project Mesnet\old mesnet\mesnet\Mesnet\obj\Release\Mesnet.pdb
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\x64\SQLite.Interop.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\x86\SQLite.Interop.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.exe.config
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.exe
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.pdb
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\EntityFramework.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\MoreLinq.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Newtonsoft.Json.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\RestSharp.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\EntityFramework.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\MoreLinq.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Newtonsoft.Json.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\RestSharp.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\System.Data.SQLite.dll.config
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\MainWindow.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\SettingsPrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BeamSupportItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Inertia.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Resources\LanguageEn.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Resources\LanguageTr.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BasicSupport.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BasicSupportItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Beam.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BeamItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ButtonItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ConcentratedLoad.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ConcentratedLoadFunction.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ConcentratedLoadItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Deflection.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\DistributedLoad.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\DistributedLoadItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\endcircle.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Force.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ForceItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\InertiaFunction.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\InertiaItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Information.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LeftFixedSupport.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LeftFixedSupportItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LengthItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LoadFunction.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LoadItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\RightFixedSupport.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\RightFixedSupportItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\SlidingSupport.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\SlidingSupportItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Stress.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\SupportBeamItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\MainWindow.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowEn.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowTr.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\BeamPrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\ConcentratedLoadPrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\CrossSolve.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\DistributedLoadPrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\MessagePrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\NewVersionPrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\RotatePrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\SettingsPrompt.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\VersionDownloader.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BeamSupportItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Inertia.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BasicSupport.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BasicSupportItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Beam.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\BeamItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ButtonItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ConcentratedLoad.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ConcentratedLoadFunction.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ConcentratedLoadItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Deflection.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\DistributedLoad.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\DistributedLoadItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ElasticityItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\endcircle.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Force.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ForceExplorer.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ForceItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\InertiaFunction.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\InertiaItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Information.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LeftFixedSupport.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LeftFixedSupportItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LengthItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LoadFunction.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\LoadItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Moment.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\MomentExplorer.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\MomentItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\RightFixedSupport.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\RightFixedSupportItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\SlidingSupport.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\SlidingSupportItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Stress.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\StressExplorer.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\StressItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\SupportBeamItem.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Text.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\App.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet_Content.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet_MarkupCompile.cache
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet_MarkupCompile.lref
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowEn.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\AboutWindowTr.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\BeamPrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\ConcentratedLoadPrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\CrossSolve.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\DistributedLoadPrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\MessagePrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\NewVersionPrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\RotatePrompt.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\Pages\VersionDownloader.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ElasticityItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\ForceExplorer.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Moment.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\MomentExplorer.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\MomentItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\StressExplorer.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\StressItem.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Xaml\User Controls\Text.baml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.g.resources
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.Properties.Resources.resources
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csproj.GenerateResource.cache
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csproj.CoreCompileInputs.cache
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csproj.CopyComplete
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.pdb
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.TrustInfo.xml
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.csprojAssemblyReference.cache
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.exe.manifest
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\bin\Release\Mesnet.application
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.exe.manifest
+C:\Users\omer\ProjectMesnet\Mesnet\mesnet\Mesnet\obj\Release\Mesnet.application

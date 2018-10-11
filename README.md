@@ -1,4 +1,4 @@
-# MESNET: 2 DIMENSIONAL FRAME ANALYZER #
+# MESNET: 2 DIMENSIONAL FRAME ANALYZER WITH MOMENT DISTRIBUTION METHOD #
 
 Mesnet is a structural analysis program that is used to calculate bending force, bending moment, and deflections in 2 dimensional frames. Although it is designed for two dimensional ship frames, it is able to solve many bending problems in many engineering areas. It is free and open-sourced and licenced with GPL.
 

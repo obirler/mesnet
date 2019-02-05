@@ -129,6 +129,8 @@
     <system:String x:Key="concloadput">Concentrated load placed</system:String>
     <system:String x:Key="distloadput">Distributed load placed</system:String>
     <system:String x:Key="about">About</system:String>
+    <system:String x:Key="versioncontrol">New version control</system:String>
+    <system:String x:Key="aboutprogram">About the program</system:String>
     <system:String x:Key="solved">Beam system has been solved</system:String>
     <system:String x:Key="notsolved">Beam system could not be solved</system:String>
     <system:String x:Key="inertiamenu">Inertia</system:String>
@@ -157,5 +159,5 @@
     <system:String x:Key="newversionalert">New version found:</system:String>
     <system:String x:Key="newversiontitle">New version</system:String>
     <system:String x:Key="downloadmessage">Downloading</system:String>
-
+    <system:String x:Key="unabletowritefile">Unable to write file!</system:String>
 </ResourceDictionary>

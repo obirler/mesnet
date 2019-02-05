@@ -1,4 +1,5 @@
 ﻿using System;
+using Mesnet.Classes.Math;
 
 namespace TestConsole
 {
@@ -6,7 +7,9 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            check();
+            var poly = new Poly("x", 4.9, 5);
+
+            var min = poly.Minimum();
 
             Console.WriteLine("function returned");
        

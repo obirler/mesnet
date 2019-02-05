@@ -71,7 +71,10 @@
 
                 <MenuItem x:Name="settings" Header="{DynamicResource settings}" Click="settings_Click"/>
                 <MenuItem x:Name="testmenu" Header="{DynamicResource tests}"/>
-                <MenuItem x:Name="about" Header="{DynamicResource about}" IsEnabled="true" Click="about_Click"></MenuItem>
+                <MenuItem x:Name="about" Header="{DynamicResource about}" IsEnabled="true" Click="about_Click">
+                    <!--<MenuItem Header="{DynamicResource versioncontrol}" Click="versioncontrol_Click"/>
+                    <MenuItem Header="{DynamicResource aboutprogram}" Click="about_Click"/>-->
+                </MenuItem>
             </Menu>
         </DockPanel>
 

@@ -819,11 +819,16 @@ namespace Mesnet.Xaml.Pages
                     starttbx.Focus();
                     return false;
                 }
-                if (inertiappoly.Cast<Poly>().Any(item => startp >= item.StartPoint && startp < item.EndPoint))
+
+                foreach (var item in inertiappoly)
                 {
-                    MessageBox.Show(GetString("invalidrange"));
-                    starttbx.Focus();
-                    return false;
+                    var poly = item as Poly;
+                    if (startp >= poly.StartPoint && startp < poly.EndPoint)
+                    {
+                        MessageBox.Show(GetString("invalidrange"));
+                        starttbx.Focus();
+                        return false;
+                    }
                 }
             }
             else

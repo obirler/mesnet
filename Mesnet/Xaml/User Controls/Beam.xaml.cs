@@ -1714,7 +1714,7 @@ namespace Mesnet.Xaml.User_Controls
                 _femoment = null;
             }
         }
-
+        
         public void ShowInertiaDiagram(int c)
         {
             if (_inertia != null)
@@ -3379,6 +3379,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _analyticalsolution = false;
                 MesnetDebug.WriteInformation(_name + " : Analytical solution is not possible");
+                return;
             }
 
             //Check if inertia ppoly is constant or not dependant on x
@@ -3386,6 +3387,7 @@ namespace Mesnet.Xaml.User_Controls
             {
                 _analyticalsolution = false;
                 MesnetDebug.WriteInformation(_name + " : Analytical solution is not possible");
+                return;
             }
 
             //Check if zero moment ppoly has any term with non-integer power
@@ -3399,6 +3401,7 @@ namespace Mesnet.Xaml.User_Controls
                         {
                             _analyticalsolution = false;
                             MesnetDebug.WriteInformation(_name + " : Analytical solution is not possible");
+                            return;
                         }
                     }
                 }

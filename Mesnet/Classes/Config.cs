@@ -19,6 +19,7 @@
 ========================================================================
 */
 
+using System;
 using System.Reflection;
 using System.Security.Principal;
 using Mesnet.Classes;
@@ -34,7 +35,7 @@ namespace Mesnet
 
         public static string UserName = WindowsIdentity.GetCurrent().Name;
 
-        public static string ServerUrl = "http://mesnet.pythonanywhere.com";
+        public static string ServerUrl = "https://mesnet.pythonanywhere.com";
 
         //public static string ServerUrl = "http://127.0.0.1:80";
 

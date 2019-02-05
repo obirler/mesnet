@@ -18,16 +18,42 @@
     along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
 ========================================================================
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Mesnet.Classes.Math
 {
-    public class PiecewisePoly:CollectionBase
+    public class PiecewisePoly : CollectionBase
     {
         public PiecewisePoly()
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PiecewisePoly"/> class with only one polynomial whose expression and bounds given.
+        /// </summary>
+        /// <param name="polyexpression">The polynomial expression for the polynomial that will be added in piecewisepoly.</param>
+        /// <param name="startpoint">The start point of the polynomial.</param>
+        /// <param name="endpoint">The end point of the polynomial.</param>
+        public PiecewisePoly(string polyexpression, double startpoint, double endpoint)
+        {
+            var poly = new Poly(polyexpression, startpoint, endpoint);
+            var polies = new List<Poly>();
+            polies.Add(poly);
+            initialize(polies);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PiecewisePoly"/> class with ony one polynomial.
+        /// </summary>
+        /// <param name="poly">The polynomial that will be added in piecewisepoly.</param>
+        public PiecewisePoly(Poly poly)
+        {
+            var polies = new List<Poly>();
+            polies.Add(poly);
+            initialize(polies);
         }
 
         /// <summary>
@@ -36,6 +62,11 @@ namespace Mesnet.Classes.Math
         /// <param name="polylist">The polylist.</param>
         public PiecewisePoly(List<Poly> polylist)
         {
+            initialize(polylist);
+        }
+
+        private void initialize(List<Poly> polylist)
+        {
             _sortlist = polylist;
 
             _sortlist.Sort((a, b) => a.StartPoint.CompareTo(b.StartPoint));
@@ -43,7 +74,7 @@ namespace Mesnet.Classes.Math
             foreach (Poly poly in _sortlist)
             {
                 List.Add(poly);
-            }            
+            }
         }
 
         private List<Poly> _sortlist = new List<Poly>();
@@ -79,7 +110,7 @@ namespace Mesnet.Classes.Math
 
         public Poly Last()
         {
-            return (Poly) List[Count - 1];
+            return (Poly)List[Count - 1];
         }
 
         public void Insert(int index, Poly value)
@@ -250,6 +281,19 @@ namespace Mesnet.Classes.Math
             return result;
         }
 
+        public bool IsConstant()
+        {
+            if (List.Count == 1)
+            {
+                var poly = List[0] as Poly;
+                if (poly.IsConstant())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public double Max
         {
             get
@@ -257,7 +301,7 @@ namespace Mesnet.Classes.Math
                 double result = Double.MinValue;
 
                 if (List.Count > 0)
-                {                   
+                {
                     double polymax = 0;
 
                     foreach (Poly poly in List)
@@ -273,7 +317,7 @@ namespace Mesnet.Classes.Math
                 {
                     result = 0;
                 }
-                
+
                 return result;
             }
         }
@@ -346,6 +390,25 @@ namespace Mesnet.Classes.Math
             }
         }
 
+        public double PreciseMin
+        {
+            get
+            {
+                double result = Double.MaxValue;
+                double polymax = 0;
+
+                foreach (Poly poly in List)
+                {
+                    polymax = poly.Minimum(poly.StartPoint, poly.EndPoint, 15);
+                    if (polymax < result)
+                    {
+                        result = polymax;
+                    }
+                }
+                return result;
+            }
+        }
+
         public double MinLocation
         {
             get
@@ -376,12 +439,12 @@ namespace Mesnet.Classes.Math
             {
                 if (!intervallist.Contains(poly1.StartPoint))
                 {
-                   intervallist.Add(poly1.StartPoint); 
+                    intervallist.Add(poly1.StartPoint);
                 }
                 if (!intervallist.Contains(poly1.EndPoint))
                 {
                     intervallist.Add(poly1.EndPoint);
-                }              
+                }
             }
 
             foreach (Poly poly2 in p2)
@@ -398,13 +461,13 @@ namespace Mesnet.Classes.Math
 
             intervallist.Sort();
 
-            Poly tempp1= new Poly();
+            Poly tempp1 = new Poly();
             Poly tempp2 = new Poly();
             Poly tempp = new Poly();
 
             for (int i = 0; i < intervallist.Count; i++)
             {
-                if (i+1 < intervallist.Count)
+                if (i + 1 < intervallist.Count)
                 {
                     foreach (Poly item1 in p1)
                     {
@@ -425,7 +488,7 @@ namespace Mesnet.Classes.Math
                     tempp.StartPoint = intervallist[i];
                     tempp.EndPoint = intervallist[i + 1];
                     plylist.Add(tempp);
-                }                
+                }
             }
 
             return new PiecewisePoly(plylist);

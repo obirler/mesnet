@@ -34,10 +34,6 @@ namespace Mesnet.Classes.IO.Xml
 {
     public class MesnetIOXml
     {
-        public MesnetIOXml()
-        {           
-        }
-
         private MainWindow _mw;
 
         public void WriteXml(string path)
@@ -49,6 +45,10 @@ namespace Mesnet.Classes.IO.Xml
             using (XmlWriter writer = XmlWriter.Create(path, settings))
             {
                 writer.WriteStartDocument();
+                writer.WriteStartElement("Program");
+                writer.WriteElementString("Name", Config.AppName);
+                writer.WriteElementString("Version", Config.VersionNumber);              
+                 
                 writer.WriteStartElement("Objects");
 
                 foreach (var item in Objects)
@@ -98,6 +98,7 @@ namespace Mesnet.Classes.IO.Xml
                 }
 
                 writer.WriteEndElement();
+                writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
         }
@@ -119,37 +120,38 @@ namespace Mesnet.Classes.IO.Xml
                 _mw.Notify();
                 return false;
             }
-            
-            foreach (XElement element in doc.Element("Objects").Elements())
+
+            string version=String.Empty;
+
+            foreach (XElement element in doc.Element("Program").Elements())
             {
                 switch (element.Name.ToString())
                 {
-                    case "Beam":
-                        var beamreader = new BeamReaderXml(element);
-                        manifestlist.Add(beamreader.Read());
+                    case "Name":
+                        if (element.Value != Config.AppName)
+                        {
+                            return false;
+                        }
                         break;
 
-                    case "BasicSupport":
-                        var bsreader = new BasicSupportReaderXml(element);
-                        manifestlist.Add(bsreader.Read());
+                    case "Version":
+                        version = element.Value;
                         break;
 
-                    case "SlidingSupport":
-                        var ssreader = new BasicSupportReaderXml(element);
-                        manifestlist.Add(ssreader.Read());
-                        break;
+                    case "Objects":
 
-                    case "LeftFixedSupport":
-                        var lsreader = new LeftFixedSupportReaderXml(element);
-                        manifestlist.Add(lsreader.Read());
-                        break;
+                        switch (version)
+                        {
+                            case "0.1.1.0":
+                                readxml0110(element);
+                                break;
+                        }
 
-                    case "RightFixedSupport":
-                        var rsreader = new RightFixedSupportReader(element);
-                        manifestlist.Add(rsreader.Read());
                         break;
                 }
             }
+
+            
             setmaxvalues();
             
             Global.Objects.Clear();
@@ -264,6 +266,40 @@ namespace Mesnet.Classes.IO.Xml
             }
 
             return builder.ToString();
+        }
+
+        private void readxml0110(XElement objelement)
+        {
+            foreach (XElement element in objelement.Elements())
+            {
+                switch (element.Name.ToString())
+                {
+                    case "Beam":
+                        var beamreader = new BeamReaderXml(element);
+                        manifestlist.Add(beamreader.Read());
+                        break;
+
+                    case "BasicSupport":
+                        var bsreader = new BasicSupportReaderXml(element);
+                        manifestlist.Add(bsreader.Read());
+                        break;
+
+                    case "SlidingSupport":
+                        var ssreader = new BasicSupportReaderXml(element);
+                        manifestlist.Add(ssreader.Read());
+                        break;
+
+                    case "LeftFixedSupport":
+                        var lsreader = new LeftFixedSupportReaderXml(element);
+                        manifestlist.Add(lsreader.Read());
+                        break;
+
+                    case "RightFixedSupport":
+                        var rsreader = new RightFixedSupportReader(element);
+                        manifestlist.Add(rsreader.Read());
+                        break;
+                }
+            }
         }
 
         private void addtocanvas()

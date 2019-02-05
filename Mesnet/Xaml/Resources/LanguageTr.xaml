@@ -129,6 +129,8 @@
     <system:String x:Key="concloadput">Tekil yük eklendi</system:String>
     <system:String x:Key="distloadput">Yayılı yük eklendi</system:String>
     <system:String x:Key="about">Hakkında</system:String>
+    <system:String x:Key="versioncontrol">Yeni version kontrolü</system:String>
+    <system:String x:Key="aboutprogram">Program hakkında</system:String>
     <system:String x:Key="solved">Kiriş sistemi çözüldü</system:String>
     <system:String x:Key="notsolved">Kiriş sistemi çözülemedi</system:String>
     <system:String x:Key="inertiamenu">Atalet</system:String>
@@ -157,5 +159,6 @@
     <system:String x:Key="newversionalert">Yeni sürüm bulundu:</system:String>
     <system:String x:Key="newversiontitle">Yeni sürüm</system:String>
     <system:String x:Key="downloadmessage">İndiriliyor</system:String>
+    <system:String x:Key="unabletowritefile">Dosyaya yazılamadı!</system:String>
 
 </ResourceDictionary>

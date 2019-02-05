@@ -18,6 +18,7 @@
     along with Mesnet.  If not, see <http://www.gnu.org/licenses/>.
 ========================================================================
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,8 +67,26 @@ namespace Mesnet.Classes.Math
             this.Terms.Sort(TermCollection.SortType.ASC);
         }
 
+        public Poly(TermCollection terms, double startpoint, double endpoint)
+        {
+            this.Terms = terms;
+            this.Terms.Sort(TermCollection.SortType.ASC);
+            _startpoint = startpoint;
+            _endpoint = endpoint;
+        }
+
+        public Poly(Term term, double startpoint, double endpoint)
+        {
+            var terms = new TermCollection();
+            terms.Add(term);
+            this.Terms = terms;
+            this.Terms.Sort(TermCollection.SortType.ASC);
+            _startpoint = startpoint;
+            _endpoint = endpoint;
+        }
+
         public Poly()
-        {           
+        {
         }
         #endregion
 
@@ -169,7 +188,7 @@ namespace Mesnet.Classes.Math
             double result = 0;
             foreach (Term t in this.Terms)
             {
-                result += t.Coefficient *System.Math.Pow(x, t.Power);
+                result += t.Coefficient * System.Math.Pow(x, t.Power);
             }
             return result;
         }
@@ -181,13 +200,8 @@ namespace Mesnet.Classes.Math
         /// <param name="endpoint">The end point of the calculation.</param>
         /// <param name="digit">The desired digit that will be rounded.</param>
         /// <returns>The maximum value of the polynomial</returns>
-        public double Maximum(double startpoint, double endpoint, int digit = 4)
+        public double Maximum(double startpoint, double endpoint)
         {
-            if (digit < 0)
-            {
-                digit = 0;
-            }
-
             var diff = 1 / 200.0;
 
             double left;
@@ -196,8 +210,9 @@ namespace Mesnet.Classes.Math
             double value;
             double maxindex = 0;
 
-            for (double i = _startpoint; i < _endpoint; i = i + diff)
+            for (double i = _startpoint; System.Math.Round(i - _endpoint, 10) <= 0; i = i + diff)
             {
+
                 value = Calculate(i);
                 if (value > max)
                 {
@@ -212,12 +227,12 @@ namespace Mesnet.Classes.Math
 
             if (left < _startpoint || right > _endpoint)
             {
-                return System.Math.Round(max, digit);
+                return max;
             }
 
             diff = (right - left) / 100.0;
 
-            for (double i = left; i < right; i = i + diff)
+            for (double i = left; i <= right; i = i + diff)
             {
                 value = Calculate(i);
                 if (value > max)
@@ -226,7 +241,17 @@ namespace Mesnet.Classes.Math
                 }
             }
 
-            return System.Math.Round(max, digit);
+            if (max < Calculate(startpoint))
+            {
+                max = Calculate(startpoint);
+            }
+
+            if (max < Calculate(endpoint))
+            {
+                max = Calculate(endpoint);
+            }
+
+            return max;
         }
 
         public double Maximum()
@@ -302,7 +327,7 @@ namespace Mesnet.Classes.Math
             double value;
             double maxindex = 0;
 
-            for (double i = _startpoint; i < _endpoint; i = i + diff)
+            for (double i = _startpoint; System.Math.Round(i - _endpoint, 10) <= 0; i = i + diff)
             {
                 value = Calculate(i);
                 if (value > max)
@@ -323,7 +348,7 @@ namespace Mesnet.Classes.Math
 
             diff = (right - left) / 100.0;
 
-            for (double i = left; i < right; i = i + diff)
+            for (double i = left; i <= right; i = i + diff)
             {
                 value = Calculate(i);
                 if (value > max)
@@ -331,6 +356,17 @@ namespace Mesnet.Classes.Math
                     max = value;
                     maxindex = i;
                 }
+            }
+
+            if (max < Calculate(startpoint))
+            {
+                max = Calculate(startpoint);
+                maxindex = startpoint;
+            }
+            if (max < Calculate(endpoint))
+            {
+                max = Calculate(endpoint);
+                maxindex = endpoint;
             }
 
             return System.Math.Round(maxindex, digit);
@@ -341,6 +377,13 @@ namespace Mesnet.Classes.Math
             return MaxLocation(_startpoint, _endpoint, digit);
         }
 
+        /// <summary>
+        /// Return minimum value of the polynomial in given interval. The min value rounded to the desired digit.
+        /// </summary>
+        /// <param name="startpoint">The startpoint of x for minimum scan.</param>
+        /// <param name="endpoint">The endpoint of x for minimum scan.</param>
+        /// <param name="digit">The desired number of decimals to round.</param>
+        /// <returns></returns>
         public double Minimum(double startpoint, double endpoint, int digit = 4)
         {
             if (digit < 0)
@@ -356,7 +399,7 @@ namespace Mesnet.Classes.Math
             double value;
             double minindex = 0;
 
-            for (double i = _startpoint; i < _endpoint; i = i + diff)
+            for (double i = _startpoint; System.Math.Round(i - _endpoint, 10) <= 0; i = i + diff)
             {
                 value = Calculate(i);
                 if (value < min)
@@ -377,13 +420,23 @@ namespace Mesnet.Classes.Math
 
             diff = (right - left) / 100.0;
 
-            for (double i = left; i < right; i = i + diff)
+            for (double i = left; i <= right; i = i + diff)
             {
                 value = Calculate(i);
                 if (value < min)
                 {
                     min = value;
                 }
+            }
+
+            if (min > Calculate(startpoint))
+            {
+                min = Calculate(startpoint);
+            }
+
+            if (min > Calculate(endpoint))
+            {
+                min = Calculate(endpoint);
             }
 
             return System.Math.Round(min, digit);
@@ -409,7 +462,7 @@ namespace Mesnet.Classes.Math
             double value;
             double minindex = 0;
 
-            for (double i = _startpoint; i < _endpoint; i = i + diff)
+            for (double i = _startpoint; System.Math.Round(i - _endpoint, 10) <= 0; i = i + diff)
             {
                 value = Calculate(i);
                 if (value < min)
@@ -467,14 +520,14 @@ namespace Mesnet.Classes.Math
                 Expression = Expression.Replace("^^", "^");
                 Expression = Expression.Replace("xx", "x");
             }
-            string ValidChars = "+-x1234567890^.";
+            string ValidChars = "+-x1234567890^.E";
             bool result = true;
             foreach (char c in Expression)
             {
                 if (ValidChars.IndexOf(c) == -1)
                 {
                     result = false;
-                } 
+                }
             }
             return result;
         }
@@ -488,21 +541,33 @@ namespace Mesnet.Classes.Math
         {
             if (ValidateExpression(PolyExpression))
             {
+                PolyExpression = PolyExpression.Replace(" ", "");
                 string NextChar = string.Empty;
                 string NextTerm = string.Empty;
+                bool epow = false;
                 for (int i = 0; i < PolyExpression.Length; i++)
                 {
                     NextChar = PolyExpression.Substring(i, 1);
+                    if (NextChar == "E")
+                    {
+                        epow = true;
+                    }
+
                     if ((NextChar == "-" | NextChar == "+") & i > 0)
                     {
-                        Term TermItem = new Term(NextTerm);
-                        this.Terms.Add(TermItem);
-                        NextTerm = string.Empty;
+                        if (epow)
+                        {
+                            epow = false;
+                        }
+                        else
+                        {
+                            handleterm(NextTerm);
+                            NextTerm = string.Empty;
+                        }
                     }
                     NextTerm += NextChar;
                 }
-                Term Item = new Term(NextTerm);
-                this.Terms.Add(Item);
+                handleterm(NextTerm);
 
                 this.Terms.Sort(TermCollection.SortType.ASC);
             }
@@ -510,6 +575,47 @@ namespace Mesnet.Classes.Math
             {
                 MesnetDebug.WriteError("Invalid Polynomial Expression : " + PolyExpression);
                 throw new Exception("Invalid Polynomial Expression");
+            }
+        }
+
+        private void handleterm(string term)
+        {
+            Term termitem;
+            if (term.Contains("E"))
+            {
+                var coeffs = term.Split('E');
+                double c = Convert.ToDouble(coeffs[0]);
+                if (coeffs[1].Contains("x^"))
+                {
+                    var epxs = coeffs[1].Split(new string[] { "x^" }, StringSplitOptions.None);
+                    double p1 = Convert.ToDouble(epxs[0]);
+                    double p2 = Convert.ToDouble(epxs[1]);
+                    termitem = new Term();
+                    termitem.Coefficient = c * System.Math.Pow(10, p1);
+                    termitem.Power = p2;
+                    Terms.Add(termitem);
+                }
+                else if (coeffs[1].Contains("x"))
+                {
+                    var epxs = coeffs[1].Split(new string[] { "x" }, StringSplitOptions.None);
+                    double p1 = Convert.ToDouble(epxs[0]);
+                    termitem = new Term();
+                    termitem.Coefficient = c * System.Math.Pow(10, p1);
+                    termitem.Power = 1;
+                    Terms.Add(termitem);
+                }
+                else
+                {
+                    double p = Convert.ToDouble(coeffs[1]);
+                    var termItem = new Term();
+                    termItem.Coefficient = c * System.Math.Pow(10, p);
+                    Terms.Add(termItem);
+                }
+            }
+            else
+            {
+                termitem = new Term(term);
+                Terms.Add(termitem);
             }
         }
 
@@ -583,7 +689,7 @@ namespace Mesnet.Classes.Math
 
             return dict;
         }
-      
+
         public Poly Derivate()
         {
             var terms = new TermCollection();
@@ -611,7 +717,7 @@ namespace Mesnet.Classes.Math
 
             Poly p2 = p1 * this;
 
-            centerpoint = p2.DefiniteIntegral(start, end)/this.DefiniteIntegral(start, end);
+            centerpoint = p2.DefiniteIntegral(start, end) / this.DefiniteIntegral(start, end);
 
             return centerpoint;
         }
@@ -640,11 +746,11 @@ namespace Mesnet.Classes.Math
                     }
                     else if (t.Coefficient == -1)
                     {
-                        newcoeff= "-(" + length + "-x)";
+                        newcoeff = "-(" + length + "-x)";
                     }
                     else
                     {
-                       newcoeff = t.Coefficient + "(" + length + "-x)";
+                        newcoeff = t.Coefficient + "(" + length + "-x)";
                     }
                     var newterm = new ConjugateTerm(t.Power, newcoeff);
                     terms.Add(newterm);
@@ -653,7 +759,7 @@ namespace Mesnet.Classes.Math
                 {
                     var newterm = new ConjugateTerm(t.Power, t.Coefficient.ToString());
                     terms.Add(newterm);
-                }               
+                }
             }
             var conjugatepoly = new ConjugatePoly(terms);
             conjugatepoly.StartPoint = length - EndPoint;
@@ -681,7 +787,7 @@ namespace Mesnet.Classes.Math
                     for (int i = 0; i <= n; i++)
                     {
                         var newterm = new Term();
-                        newterm.Coefficient = t.Coefficient*Mesnet.Classes.Math.Algebra.Combination(n, i) * System.Math.Pow(-1, i) *
+                        newterm.Coefficient = t.Coefficient * Algebra.Combination(n, i) * System.Math.Pow(-1, i) *
                                            System.Math.Pow(length, n - i);
                         newterm.Power = i;
                         terms.Add(newterm);
@@ -699,6 +805,14 @@ namespace Mesnet.Classes.Math
             return newpoly;
         }
 
+        public Poly Cube()
+        {
+            var returnpoly = this * this * this;
+            returnpoly.StartPoint = this.StartPoint;
+            returnpoly.EndPoint = this.EndPoint;
+            return returnpoly;
+        }
+
         /// <summary>
         /// Calculates all root locations
         /// </summary>
@@ -713,7 +827,7 @@ namespace Mesnet.Classes.Math
             var rootlist = new List<double>();
             double previous = 0;
 
-            for (double i = StartPoint; i <= EndPoint; i=i+step)
+            for (double i = StartPoint; i <= EndPoint; i = i + step)
             {
                 if (i > EndPoint)
                 {
@@ -730,7 +844,7 @@ namespace Mesnet.Classes.Math
                             rootlist.Add(root);
                         }
                     }
-                    else if(previous < 0)
+                    else if (previous < 0)
                     {
                         if (Calculate(i) > 0)
                         {
@@ -817,7 +931,7 @@ namespace Mesnet.Classes.Math
                 if (root < Double.MaxValue)
                 {
                     previous = root;
-                }             
+                }
                 root = previous - Calculate(previous) / derivative.Calculate(previous);
             }
             return root;
@@ -911,7 +1025,7 @@ namespace Mesnet.Classes.Math
         {
             if (p1.ToString() == "0")
             {
-                return -1*p2;
+                return -1 * p2;
             }
             else if (p2.ToString() == "0")
             {
@@ -935,16 +1049,31 @@ namespace Mesnet.Classes.Math
         public static Poly operator *(Poly p1, Poly p2)
         {
             TermCollection result = new TermCollection();
-            int counter = 0;
             foreach (Term t1 in p1.Terms)
             {
                 foreach (Term t2 in p2.Terms)
                 {
                     result.Add(new Term(t1.Power + t2.Power, t1.Coefficient * t2.Coefficient));
-                    counter++;
                 }
             }
             return new Poly(result);
+        }
+
+        /// <summary>
+        /// Multiple with a scalar
+        /// </summary>
+        /// <param name="p1">The polynomial to be multiplied</param>
+        /// <param name="v1">The double number to multiply</param>
+        /// <returns>Multiplied polynomial</returns>
+        public static Poly operator *(Poly p1, double v1)
+        {
+            var result = new TermCollection();
+            foreach (Term t in p1.Terms)
+            {
+                Term newterm = new Term(t.Power, t.Coefficient * v1);
+                result.Add(newterm);
+            }
+            return new Poly(result, p1.StartPoint, p1.EndPoint);
         }
 
         /// <summary>
@@ -970,6 +1099,23 @@ namespace Mesnet.Classes.Math
                 p1 = p1 - NewPoly;
             }
             return new Poly(resultTerms);
+        }
+
+        /// <summary>
+        /// Divide operation with a scalar.
+        /// </summary>
+        /// <param name="p1">The polynomial to be devided</param>
+        /// <param name="v1">The double number to devide</param>
+        /// <returns>Devided polynomial</returns>
+        public static Poly operator /(Poly p1, double v1)
+        {
+            var result = new TermCollection();
+            foreach (Term t in p1.Terms)
+            {
+                Term newterm = new Term(t.Power, t.Coefficient / v1);
+                result.Add(newterm);
+            }
+            return new Poly(result, p1.StartPoint, p1.EndPoint);
         }
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace Mesnet
 
             scaleslider.Value = zoomAndPanControl.ContentScale;
 
-            zoomAndPanControl.MaxContentScale = 12;
+            zoomAndPanControl.MaxContentScale = 10;
 
             scaleslider.Maximum = zoomAndPanControl.MaxContentScale;
             scaleslider.Minimum = 0;
@@ -838,7 +838,7 @@ namespace Mesnet
                                 else if (assemblybeam.LeftSide != null && beam.LeftSide != null)
                                 {
                                     //If both beam has support on selected sides do nothing
-                                    //Reset();
+                                    Reset();
                                     return;
                                 }
 
@@ -3025,6 +3025,10 @@ namespace Mesnet
                         break;
                 }
             });
+
+            _uptoolbar.CollapseInertia();
+            _uptoolbar.CollapseConcLoad();
+            _uptoolbar.CollapseDistLoad();
             _uptoolbar.UpdateMomentDiagrams(true);
             _uptoolbar.UpdateForceDiagrams();
             _uptoolbar.UpdateStressDiagrams();
@@ -3044,6 +3048,10 @@ namespace Mesnet
                         Beam beam = item.Value as Beam;
                         beam.PostClapeyronUpdate();
                         MesnetDebug.WriteInformation(beam.Name + " has been updated");
+
+                        _uptoolbar.CollapseInertia();
+                        _uptoolbar.CollapseConcLoad();
+                        _uptoolbar.CollapseDistLoad();
                         _uptoolbar.UpdateMomentDiagrams(true);
                         _uptoolbar.UpdateForceDiagrams();
                         _uptoolbar.UpdateStressDiagrams();
@@ -3839,9 +3847,17 @@ namespace Mesnet
                                     Notify("filesaving");
                                     //the file has been saved before, so save with the previous path
                                     MesnetDebug.WriteInformation("save file path exists " + _savefilepath);
-                                    ioxml.WriteXml(_savefilepath);
-                                    MesnetDebug.WriteInformation("xml file has been written to " + _savefilepath);
-                                    Notify("filesave");
+                                    try
+                                    {
+                                        ioxml.WriteXml(_savefilepath);
+                                        MesnetDebug.WriteInformation("xml file has been written to " + _savefilepath);
+                                        Notify("filesave");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        MesnetDebug.WriteError("Unable to write file: " + e);
+                                        Notify("unabletowritefile");
+                                    }                                                                     
                                 }
                                 else
                                 {
@@ -3865,10 +3881,18 @@ namespace Mesnet
                                         Notify("filesaving");
                                         string path = saveFileDialog.FileName;
                                         MesnetDebug.WriteInformation("user selected a file from save file dialog: " + path);
-                                        ioxml.WriteXml(path);
-                                        MesnetDebug.WriteInformation("xml file has been written to " + path);
-                                        MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path));
-                                        Notify("filesave");
+                                        try
+                                        {
+                                            ioxml.WriteXml(path);
+                                            MesnetDebug.WriteInformation("xml file has been written to " + path);
+                                            MesnetSettings.WriteSetting("savepath", System.IO.Path.GetDirectoryName(path));
+                                            Notify("filesave");
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            MesnetDebug.WriteError("Unable to write file: " + e);
+                                            Notify("unabletowritefile");
+                                        }                                     
                                     }
                                     else
                                     {
@@ -4431,6 +4455,25 @@ namespace Mesnet
             notify.Text = "";
         }
 
+        private void versioncontrol_Click(object sender, RoutedEventArgs e)
+        {
+            if (Config.CommunicateWithServer)
+            {
+                //Check new version if internet is available
+                if (InternetAvailability.IsInternetAvailable())
+                {
+                    var bw = new BackgroundWorker();
+                    bw.DoWork += bwCheckNewVersion_DoWork;
+                    bw.RunWorkerCompleted += bwCheckNewVersion_Completed;
+                    bw.RunWorkerAsync(true);
+                }
+                else
+                {
+                    
+                }
+            }
+        }
+
         private void about_Click(object sender, RoutedEventArgs e)
         {
             switch (Config.Language)
@@ -4471,43 +4514,34 @@ namespace Mesnet
             _uptoolbar.CollapseForce();
             _uptoolbar.CollapseMoment();
             _uptoolbar.CollapseStress();
+
             foreach (var item in Objects)
             {
                 switch (GetObjectType(item.Value))
                 {
                     case ObjectType.Beam:
-
                         var beam = item.Value as Beam;
                         beam.ResetSolution();
-
                         break;
 
                     case ObjectType.BasicSupport:
-
                         var bs = item.Value as BasicSupport;
                         bs.ResetSolution();
-
                         break;
 
                     case ObjectType.SlidingSupport:
-
                         var ss = item.Value as SlidingSupport;
                         ss.ResetSolution();
-
                         break;
 
                     case ObjectType.LeftFixedSupport:
-
                         var ls = item.Value as LeftFixedSupport;
                         ls.ResetSolution();
-
                         break;
 
                     case ObjectType.RightFixedSupport:
-
                         var rs = item.Value as RightFixedSupport;
                         rs.ResetSolution();
-
                         break;
                 }
             }
@@ -4526,20 +4560,34 @@ namespace Mesnet
             {
                 if (Config.CommunicateWithServer)
                 {
+                    bool alert = false;
+                    if (e.Argument != null)
+                    {
+                        alert = (bool)e.Argument;
+                    }
+
                     var versionresult = new MesnetVersion();
 
                     var client = new RestClient(Config.ServerUrl);
                     var request = new RestRequest(Config.NewVersionKey, Method.GET);
                     var versionnumber = client.Execute(request).Content;
                     versionresult.Version = versionnumber;
-                    if (versionnumber != Config.VersionNumber)
+                    if (versionresult.Version != String.Empty)
                     {
-                        var client1 = new RestClient(Config.ServerUrl);
-                        var request1 = new RestRequest(Config.NewVersionUrl, Method.GET);
-                        var newversionurl = client1.Execute(request1).Content;
-                        versionresult.Url = newversionurl;
+                        if (versionnumber != Config.VersionNumber)
+                        {
+                            var client1 = new RestClient(Config.ServerUrl);
+                            var request1 = new RestRequest(Config.NewVersionUrl, Method.GET);
+                            var newversionurl = client1.Execute(request1).Content;
+                            versionresult.Url = newversionurl;
+                        }
+                        e.Result = versionresult;
+                        
                     }
-                    e.Result = versionresult;
+                    else
+                    {
+                        e.Result = null;
+                    }
                 }
                 else
                 {
@@ -4558,7 +4606,7 @@ namespace Mesnet
             try
             {
                 if (e.Result != null)
-                {
+                {                    
                     if (Config.CommunicateWithServer)
                     {
                         var versionresult = (MesnetVersion)e.Result;

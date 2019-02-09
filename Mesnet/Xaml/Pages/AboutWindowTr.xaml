@@ -34,7 +34,7 @@
                 <Run FontSize="15">Bu program </Run>
                 <Hyperlink x:Name="developerpage" FontSize="15" NavigateUri="http://www.linkedin.com/in/ömer-birler-9582696b" RequestNavigate="developerpage_RequestNavigate">Ömer BİRLER</Hyperlink>             
                 <Run FontSize="15">tarafından İstanbul Teknik Üniversitesi Gemi İnşaatı ve Gemi Makinaları Mühendisliği bitirme projesi olarak geliştirilmiştir. Projenin danışmanı olan </Run>
-                <Hyperlink x:Name="instructorpage" FontSize="15" NavigateUri="http://knot.gidb.itu.edu.tr/gemi/personel/bayraktarkatal.html" RequestNavigate="instructorpage_RequestNavigate">Yard. Doç. Dr. Ertekin Bayraktarkatal</Hyperlink>             
+                <Hyperlink x:Name="instructorpage" FontSize="15" NavigateUri="http://knot.gidb.itu.edu.tr/gemi/personel/bayraktarkatal.html" RequestNavigate="instructorpage_RequestNavigate">Doç. Dr. Ertekin Bayraktarkatal</Hyperlink>             
                 <Run FontSize="15">'a teşekkürler.</Run>
             </TextBlock>
 

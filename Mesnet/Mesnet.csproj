@@ -59,10 +59,10 @@
     <ApplicationIcon>Assets\applogo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>871896B6AA91C76E25331E1264FDC9396AF94628</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>B494075F36F3B7E27A490F86F405553AC5D15600</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Mesnet_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Mesnet_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -596,6 +596,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Mesnet_1_TemporaryKey.pfx" />
+    <None Include="Mesnet_2_TemporaryKey.pfx" />
     <None Include="Mesnet_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
